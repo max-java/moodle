@@ -35,4 +35,3 @@ VALUES (1, TRUE, 'user@dev', 'dev', 'user', '$2a$10$XizdxtpAW8xUbxSW.3q4k.bwhqMO
 
 INSERT INTO user_role
 VALUES (1, 1);
-
