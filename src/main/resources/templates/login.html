@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-4">&nbsp;</div>
+                    <div class="login-box">
+                        <div class="login-logo">
+                            <a href="../../index2.html"><b>Admin</b>LTE</a>
+                        </div>
+                        <!-- /.login-logo -->
+                        <div class="card">
+                            <div class="card-body login-card-body">
+                                <p class="login-box-msg">Sign in to start your session</p>
+                                <div align="center" th:if="${param.error}">
+                                    <p style="font-size: 20; color: #FF1C19;">User Name or Password invalid, please verify</p>
+                                </div>
+
+                                <form th:action="@{/login}" method="POST">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="User Name" name="user_name">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-user"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" th:placeholder="Password" name="password" class="form-control">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="icheck-primary">
+                                                <input type="checkbox" id="remember">
+                                                <label for="remember">
+                                                    Remember Me
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-4">
+                                            <button type="submit"
+                                                    name="Submit"
+                                                    value="Login"
+                                                    class="btn btn-primary btn-block"
+                                                    th:text="Login">Sign In</button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </form>
+
+                                <p class="mb-1">
+                                    <a href="forgot-password.html">I forgot my password</a>
+                                </p>
+                                <p class="mb-0">
+                                    <a href="register.html" class="text-center">Register a new membership</a>
+                                </p>
+                            </div>
+                            <!-- /.login-card-body -->
+                        </div>
+                    </div>
+                    <!-- /.login-box -->
+                    <div class="col-4">&nbsp;</div>
+
+
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>
