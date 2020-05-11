@@ -39,7 +39,7 @@ public class ProjectController {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Project> project = projectService.findById(id);
         if (project.isPresent()) {
-            mov.addObject("qAndA", project.get());
+            mov.addObject("project", project.get());
             mov.setViewName(View.PROJECT);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);

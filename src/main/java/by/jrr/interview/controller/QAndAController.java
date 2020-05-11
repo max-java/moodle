@@ -3,7 +3,7 @@ package by.jrr.interview.controller;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
-import by.jrr.interview.QAndAService;
+import by.jrr.interview.service.QAndAService;
 import by.jrr.interview.bean.QAndA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

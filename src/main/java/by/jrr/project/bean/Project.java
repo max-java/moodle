@@ -1,5 +1,6 @@
 package by.jrr.project.bean;
 
+import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,6 @@ public class Project {
     private String name;
     private String description;
     public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return View.PROJECT+"/"+this.getId();
+        return Endpoint.PROJECT+"/"+this.getId();
     }
 }
