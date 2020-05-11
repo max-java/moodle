@@ -16,6 +16,12 @@ public class UserDataToModelService {
     @Autowired
     UserService userService;
 
+    public ModelAndView setData(ModelAndView mov) {
+        setIsAuthenticated(mov);
+        setUserNameAndLastName(mov);
+        return mov;
+    }
+
     public ModelAndView setIsAuthenticated(ModelAndView modelAndView) {
         boolean isUserAuthenticated = false;
         if (SecurityContextHolder.getContext().getAuthentication() != null
