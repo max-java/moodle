@@ -1,5 +1,6 @@
 package by.jrr.moodle.bean;
 
+import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,6 @@ public class Topic {
     @Lob
     private String text;
     public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return View.TOPIC+"/"+this.getId();
+        return Endpoint.TOPIC+"/"+this.getId();
     }
 }

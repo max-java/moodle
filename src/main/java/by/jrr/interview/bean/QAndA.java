@@ -1,5 +1,6 @@
 package by.jrr.interview.bean;
 
+import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,6 @@ public class QAndA {
     @Lob
     private String answer;
     public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return View.Q_AND_A+"/"+this.getId();
+        return Endpoint.Q_AND_A+"/"+this.getId();
     }
 }
