@@ -24,7 +24,7 @@ public class QAndA {
     @Lob
     private String answer;
     public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return View.TOPIC+"/"+this.getId();
+        return View.Q_AND_A+"/"+this.getId();
     }
     public String previewAnswer() {
         return answer.substring(0, answer.length() > 100 ? 99 : answer.length());
