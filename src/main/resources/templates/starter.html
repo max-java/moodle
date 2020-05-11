@@ -154,10 +154,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div th:fragment="asideLeft">
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a class="brand-link" href="/">
-                <img class="brand-image elevation-3" src="http://javaguru.lv/wp-content/uploads/2018/09/jg_280_rgb.svg"
-                     style="opacity: .8">
-                <span class="brand-text font-weight-light">Moodle</span>
+            <a class="brand-link" href="/" style="background-color: white">
+                <img class="brand-image" th:src="@{/dist/img/JG.png}">
+                <span class="brand-text font-weight-normal" style="color: #003e80">Java<strong style="color: orange">Guru</strong></span>
             </a>
 
             <!-- Sidebar -->
