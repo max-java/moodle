@@ -62,8 +62,8 @@ public class ProjectController {
 
     @PostMapping(Endpoint.PROJECT + "/{id}")
     public ModelAndView updateProject(@PathVariable Long id,
-                                     @RequestParam(value = "question", required = false) String name,
-                                     @RequestParam(value = "answer", required = false) String description,
+                                     @RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "description", required = false) String description,
                                      @RequestParam(value = "edit", required = false) boolean edit
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
