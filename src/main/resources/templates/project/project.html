@@ -43,6 +43,7 @@
                                 <hr />
                                 <div th:utext="${project.getDescription()}"></div>
                             </div>
+                            <a th:href="${project.getLink()+'/issue'}">create issue</a>
                         </div>
                     </div>
                 </div>

@@ -25,17 +25,17 @@ public class IssueController {
     @Autowired
     UserDataToModelService userDataToModelService;
 
-    @GetMapping(Endpoint.ISSUE)
-    public ModelAndView createNewIssue() {
+    @GetMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
+    public ModelAndView createNewIssue(@PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.addObject("issue", new Issue());
+        mov.addObject("issue", Issue.builder().projectId(id).build());
         mov.addObject("edit", true);
         mov.setViewName(View.ISSUE);
         return mov;
     }
 
-    @GetMapping(Endpoint.ISSUE + "/{issueId}")
-    public ModelAndView openQAndAById(@PathVariable Long issueId) {
+    @GetMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE + "/{issueId}")
+    public ModelAndView openIssueByIssueId(@PathVariable Long issueId, @PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Issue> issue = issueService.findByIssueId(issueId);
         if (issue.isPresent()) {
@@ -48,15 +48,15 @@ public class IssueController {
         return mov;
     }
 
-    @PostMapping(Endpoint.ISSUE)
-    public ModelAndView saveNewIssue(Issue issue) {
+    @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
+    public ModelAndView saveNewIssue(Issue issue, @PathVariable Long id) {
         issue = issueService.createOrUpdate(issue);
-        return new ModelAndView("redirect:" + Endpoint.ISSUE + "/" + issue.getIssueId());
+        return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
     }
 
-    @PostMapping(Endpoint.ISSUE + "/{issueId}")
+    @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE + "/{issueId}")
     public ModelAndView updateIssue(Issue issue,
-                                    @PathVariable Long issueId,
+                                    @PathVariable Long issueId, @PathVariable Long id,
                                      @RequestParam(value = "edit", required = false) boolean edit
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -71,7 +71,7 @@ public class IssueController {
             }
         } else {
             issue = issueService.createOrUpdate(issue);
-            return new ModelAndView("redirect:" + Endpoint.ISSUE + "/" + issue.getIssueId());
+            return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
 
         }
         return mov;
