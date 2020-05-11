@@ -31,23 +31,9 @@
                         <form method="post">
                             <button type="submit" name="edit" value="true">edit</button>
                         </form>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <h1 class="card-title" th:text="${issue.getName()}"></h1>
-                                </div>
-                                <hr />
-                                <div th:utext="${issue.getDescription()}"></div>
-                            </div>
+                        <div class="card" th:insert="project/issueCard :: issueCard">
                         </div>
-                        <div th:each="row : ${issue.getHistory()}">
-                            <p th:text="${row.toString()}"></p>
-
                     </div>
-                </div>
-
-
-
                 </div>
                 <!-- /.row -->
             </div><!-- /.container-fluid -->

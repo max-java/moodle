@@ -1,8 +1,7 @@
 package by.jrr.project.bean;
 
+import by.jrr.auth.bean.User;
 import by.jrr.constant.Endpoint;
-import by.jrr.user.profile.Profile;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,17 +38,20 @@ public class Issue {
     private Issue parentIssue;
     private Long parentId;
     @Transient
-    private Profile assignee;
+    private User assignee = new User(); // TODO: 11/05/20 handle npe otherwise
     private Long assigneeUserId;
     private LocalDateTime timeStamp;
     @Transient
-    private Profile submitter;
+    private User submitter = new User(); // TODO: 11/05/20 handle npe otherwise
     private Long submitterUserId;
     private boolean lastInHistory;
     @Transient
     private List<Issue> history = new ArrayList<>();
     public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return Endpoint.ISSUE+"/"+this.getIssueId();
+        return Endpoint.PROJECT+"/"+projectId+Endpoint.ISSUE+"/"+this.getIssueId();
+    }
+    public String getProjectLink() { // TODO: 11/05/20 model should be divided from view
+        return Endpoint.PROJECT+"/"+projectId;
     }
 
     @Override

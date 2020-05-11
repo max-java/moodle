@@ -1,5 +1,7 @@
 package by.jrr.project.service;
 
+import by.jrr.auth.bean.User;
+import by.jrr.auth.service.UserService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class IssueService {
 
     @Autowired
     IssueRepository issueRepository;
+    @Autowired
+    UserService userService;
 
     public Page<Issue> findAll(String page, String items) {
         Page<Issue> issuePage;
@@ -59,17 +63,29 @@ public class IssueService {
             Optional<Issue> issue = issueList.stream().max(Comparator.comparing(Issue::getTimeStamp));
             if (issue.isPresent()) {
                 issue.get().setHistory(issueList);
+                issue = this.setUsersToIssue(issue);
             }
             return issue;
         } else {
             return Optional.ofNullable(null);
         }
     }
+
     public Optional<List<Issue>> findHistoryByIssueId(Long issueId) {
         return Optional.ofNullable(issueRepository.findByIssueId(issueId));
     }
 
-
+    private Optional<Issue> setUsersToIssue(Optional<Issue> issue) {
+        if (issue.isPresent()) {
+            if (issue.get().getAssigneeUserId() != null) {
+                issue.get().setAssignee(userService.findUserById(issue.get().getAssigneeUserId()).orElse(new User()));
+            }
+            if (issue.get().getSubmitterUserId() != null) {
+                issue.get().setSubmitter(userService.findUserById(issue.get().getSubmitterUserId()).orElse(new User()));
+            }
+        }
+        return issue;
+    }
 
 
 }
