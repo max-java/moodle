@@ -23,11 +23,7 @@
                     <div class="col-md-12" th:if="${edit}">
                         <div class="card">
                             <div class="card-body">
-                                <form method="post">
-                                    <input type="text" name="name" placeholder="name" th:value="${issue.getName()}"/>
-                                    <input type="text" name="description" placeholder="description" th:value="${issue.getDescription()}"/>
-                                    <button type="submit">save</button>
-                                </form>
+                                <form method="post" th:insert="project/issueForm :: issueForm"></form>
                             </div>
                         </div>
                     </div>
@@ -72,5 +68,21 @@
 
 <!-- REQUIRED SCRIPTS -->
 <div th:include="starter :: scripts"></div>
+<!-- Select2 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#description',
+        min_height: 300,
+        plugins: 'autoresize'
+    });
+</script>
 </body>
 </html>

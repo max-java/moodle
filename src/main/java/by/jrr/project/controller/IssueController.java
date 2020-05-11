@@ -49,39 +49,28 @@ public class IssueController {
     }
 
     @PostMapping(Endpoint.ISSUE)
-    public ModelAndView saveNewIssue(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "description", required = false) String description
-    ) {
-        Issue issue = issueService.createOrUpdate(Issue.builder()
-                .name(name)
-                .description(description)
-                .build());
+    public ModelAndView saveNewIssue(Issue issue) {
+        issue = issueService.createOrUpdate(issue);
         return new ModelAndView("redirect:" + Endpoint.ISSUE + "/" + issue.getIssueId());
     }
 
     @PostMapping(Endpoint.ISSUE + "/{issueId}")
-    public ModelAndView updateIssue(@PathVariable Long issueId,
-                                     @RequestParam(value = "name", required = false) String name,
-                                     @RequestParam(value = "description", required = false) String description,
+    public ModelAndView updateIssue(Issue issue,
+                                    @PathVariable Long issueId,
                                      @RequestParam(value = "edit", required = false) boolean edit
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.ISSUE);
         if (edit) {
-            Optional<Issue> issue = issueService.findByIssueId(issueId);
-            if (issue.isPresent()) {
-                mov.addObject("issue", issue.get());
+            Optional<Issue> issueToUpdate = issueService.findByIssueId(issue.getIssueId());
+            if (issueToUpdate.isPresent()) {
+                mov.addObject("issue", issueToUpdate.get());
                 mov.addObject("edit", true);
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
         } else {
-            Issue issue = issueService.createOrUpdate(Issue.builder()
-                    .name(name)
-                    .description(description)
-                    .issueId(issueId)
-                    .build());
+            issue = issueService.createOrUpdate(issue);
             return new ModelAndView("redirect:" + Endpoint.ISSUE + "/" + issue.getIssueId());
 
         }

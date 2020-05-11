@@ -19,6 +19,7 @@ public class UserDataToModelService {
     public ModelAndView setData(ModelAndView mov) {
         setIsAuthenticated(mov);
         setUserNameAndLastName(mov);
+        setListOfUsers(mov);
         return mov;
     }
 
@@ -38,5 +39,9 @@ public class UserDataToModelService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         return modelAndView.addObject(UserData.USER_NAME_AND_LASTNAME.name(), user.getName() + " " + user.getLastName());
+    }
+
+    public ModelAndView setListOfUsers(ModelAndView mov) {
+        return mov.addObject(UserData.USER_LIST.name(), userService.findAllUsers());
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -43,4 +44,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 }
