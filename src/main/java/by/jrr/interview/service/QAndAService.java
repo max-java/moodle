@@ -1,4 +1,4 @@
-package by.jrr.interview;
+package by.jrr.interview.service;
 
 import by.jrr.interview.bean.QAndA;
 import by.jrr.interview.repository.QAndARepository;
