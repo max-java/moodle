@@ -4,6 +4,7 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.project.bean.Project;
+import by.jrr.project.service.IssueService;
 import by.jrr.project.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
     @Autowired
+    IssueService issueService;
+    @Autowired
     UserDataToModelService userDataToModelService;
 
     @GetMapping(Endpoint.PROJECT)
@@ -35,11 +38,12 @@ public class ProjectController {
     }
 
     @GetMapping(Endpoint.PROJECT + "/{id}")
-    public ModelAndView openQAndAById(@PathVariable Long id) {
+    public ModelAndView openProjectById(@PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Project> project = projectService.findById(id);
         if (project.isPresent()) {
             mov.addObject("project", project.get());
+            mov.addObject("issueList", issueService.findAllByProjectId(project.get().getId()));
             mov.setViewName(View.PROJECT);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);

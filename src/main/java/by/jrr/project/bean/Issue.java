@@ -23,6 +23,8 @@ public class Issue {
     @GeneratedValue
     private Long Id;
     private Long issueId;
+    @Transient
+    private Project project = new Project(); // TODO: 11/05/20 handle npe otherwise
     private Long projectId;
     @Enumerated(value = EnumType.STRING)
     private IssueType issueType;

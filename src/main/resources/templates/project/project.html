@@ -24,8 +24,9 @@
                         <div class="card">
                             <div class="card-body">
                                 <form method="post">
-                                    <input type="text" name="name" placeholder="name" th:value="${project.getName()}"/>
-                                    <input type="text" name="description" placeholder="description" th:value="${project.getDescription()}"/>
+                                    <input name="name" placeholder="name" th:value="${project.getName()}" type="text"/>
+                                    <input name="description" placeholder="description" th:value="${project.getDescription()}"
+                                           type="text"/>
                                     <button type="submit">save</button>
                                 </form>
                             </div>
@@ -33,33 +34,67 @@
                     </div>
                     <div class="col-md-12" th:unless="${edit}">
                         <form method="post">
-                            <button type="submit" name="edit" value="true">edit</button>
+                            <button name="edit" type="submit" value="true">edit</button>
                         </form>
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
                                     <h1 class="card-title" th:text="${project.getName()}"></h1>
                                 </div>
-                                <hr />
+                                <hr/>
                                 <div th:utext="${project.getDescription()}"></div>
                             </div>
                             <a th:href="${project.getLink()+'/issue'}">create issue</a>
                         </div>
                     </div>
                 </div>
-
-
-
+                <div class="row d-flex align-items-stretch">
+                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" th:each="issue : ${issueList}">
+                        <div class="card bg-light">
+                            <a th:href="${issue.getLink()}">
+                                <div class="card-header text-muted border-bottom-0"
+                                     th:text="${issue.getProject().getName()}">
+                                </div>
+                                <div class="card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <h1 class="lead" th:text="${issue.getName()}"></h1>
+                                            <h2 class="lead" th:text="${issue.getSummary()}"> </h2>
+                                            <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span>
+                                                    Submitter: <span th:text="${issue.getSubmitter().getFullUserName()}"></span> </li>
+                                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span>
+                                                    Assigned: <span th:text="${issue.getAssignee().getFullUserName()}"></span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-5 text-center">
+                                            <img alt="" class="img-circle img-fluid" src="https://www.iconninja.com/files/854/364/1/develop-programming-software-java-language-code-command-icon.png">
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="card-footer">
+                                <div class="text-right">
+                                    <a href="#" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-bug"><span th:text="${issue.getIssueStatus()}"></span></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-bug"><span th:text="${issue.getIssueType()}"></span></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <div th:include="starter :: asideRight"></div>
+<!-- Control Sidebar -->
+<div th:include="starter :: asideRight"></div>
 </div>
 <!-- /.control-sidebar -->
 

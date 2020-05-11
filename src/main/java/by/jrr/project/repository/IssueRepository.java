@@ -12,4 +12,6 @@ import java.util.List;
 public interface IssueRepository extends PagingAndSortingRepository<Issue, Long> {
     List<Issue> findByIssueId(Long issueId);
     Page<Issue> findByLastInHistory(boolean isLast, Pageable var1);
+    Page<Issue> findByProjectIdAndLastInHistory(Long projectId, boolean isLast, Pageable var1);
+    List<Issue> findByProjectIdAndLastInHistory(Long projectId, boolean isLast);
 }

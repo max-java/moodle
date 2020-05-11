@@ -3,6 +3,7 @@ package by.jrr.project.service;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.service.UserService;
 import by.jrr.project.bean.Issue;
+import by.jrr.project.bean.Project;
 import by.jrr.project.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -21,16 +23,43 @@ public class IssueService {
     IssueRepository issueRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    ProjectService projectService;
 
     public Page<Issue> findAll(String page, String items) {
         Page<Issue> issuePage;
         try {
             issuePage = issueRepository.findByLastInHistory(true, PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
+            issuePage.forEach(this::setUsersAndProjectToIssue);
         } catch (Exception ex) {
             issuePage = issueRepository.findByLastInHistory(true, PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
+            issuePage.forEach(this::setUsersAndProjectToIssue);
         }
         return issuePage;
     }
+    public Page<Issue> findAllByProjectIdPageable(Long projectId, String page, String items) {
+        Page<Issue> issuePage;
+        try {
+            issuePage = issueRepository.findByProjectIdAndLastInHistory(projectId,true, PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
+            issuePage.forEach(this::setUsersAndProjectToIssue);
+        } catch (Exception ex) {
+            issuePage = issueRepository.findByProjectIdAndLastInHistory(projectId, true, PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
+            issuePage.forEach(this::setUsersAndProjectToIssue);
+        }
+        return issuePage;
+    }
+    public List<Issue> findAllByProjectId(Long projectId) {
+        List<Issue> issuePage = new ArrayList<>();
+        try {
+            issuePage = issueRepository.findByProjectIdAndLastInHistory(projectId,true);
+            issuePage.forEach(this::setUsersAndProjectToIssue);
+        } catch (Exception ex) {
+            issuePage = issueRepository.findByProjectIdAndLastInHistory(projectId, true);
+            issuePage.forEach(this::setUsersAndProjectToIssue);
+        }
+        return issuePage;
+    }
+
 
     public Issue createOrUpdate(Issue issue) {
         //issue could not be updated, only new record with new data storied to enable history
@@ -63,7 +92,7 @@ public class IssueService {
             Optional<Issue> issue = issueList.stream().max(Comparator.comparing(Issue::getTimeStamp));
             if (issue.isPresent()) {
                 issue.get().setHistory(issueList);
-                issue = this.setUsersToIssue(issue);
+                issue = this.setUsersAndProjectToIssue(issue);
             }
             return issue;
         } else {
@@ -75,7 +104,7 @@ public class IssueService {
         return Optional.ofNullable(issueRepository.findByIssueId(issueId));
     }
 
-    private Optional<Issue> setUsersToIssue(Optional<Issue> issue) {
+    private Optional<Issue> setUsersAndProjectToIssue(Optional<Issue> issue) {
         if (issue.isPresent()) {
             if (issue.get().getAssigneeUserId() != null) {
                 issue.get().setAssignee(userService.findUserById(issue.get().getAssigneeUserId()).orElse(new User()));
@@ -83,7 +112,24 @@ public class IssueService {
             if (issue.get().getSubmitterUserId() != null) {
                 issue.get().setSubmitter(userService.findUserById(issue.get().getSubmitterUserId()).orElse(new User()));
             }
+            if (issue.get().getProjectId() != null) {
+                issue.get().setProject(projectService.findById(issue.get().getProjectId()).orElse(new Project()));
+            }
         }
+        return issue;
+    }
+    private Issue setUsersAndProjectToIssue(Issue issue) {
+
+            if (issue.getAssigneeUserId() != null) {
+                issue.setAssignee(userService.findUserById(issue.getAssigneeUserId()).orElse(new User()));
+            }
+            if (issue.getSubmitterUserId() != null) {
+                issue.setSubmitter(userService.findUserById(issue.getSubmitterUserId()).orElse(new User()));
+            }
+            if (issue.getProjectId() != null) {
+                issue.setProject(projectService.findById(issue.getProjectId()).orElse(new Project()));
+            }
+
         return issue;
     }
 
