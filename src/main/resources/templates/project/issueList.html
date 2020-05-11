@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+                        <a th:href="@{'/issue'}"> create Issue </a>
+                    </div>
+                    <!-- /.row -->
+                    <div class="row d-flex align-items-stretch">
+                        <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" th:each="issue : ${issuePage}">
+                            <div class="card bg-light">
+                                <a th:href="${issue.getLink()}">
+                                    <div class="card-body pt-0">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h1 class="lead">&nbsp;</h1>
+                                                <h2 class="lead" th:text="${issue.getName()}"> </h2>
+                                                <p th:text="${issue.getDescription()}"></p>
+                                            </div>
+                                            <div class="col-5 text-center">
+                                                <img alt="" class="img-circle img-fluid" src="https://www.iconninja.com/files/854/364/1/develop-programming-software-java-language-code-command-icon.png">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="card-footer">
+                                    <p th:text="${issue.getIssueId()}"></p>
+                                    <p th:text="${issue.getTimeStamp()}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Control Sidebar -->
+<div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

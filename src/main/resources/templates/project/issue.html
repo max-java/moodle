@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12" th:if="${edit}">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="post">
+                                    <input type="text" name="name" placeholder="name" th:value="${issue.getName()}"/>
+                                    <input type="text" name="description" placeholder="description" th:value="${issue.getDescription()}"/>
+                                    <button type="submit">save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" th:unless="${edit}">
+                        <form method="post">
+                            <button type="submit" name="edit" value="true">edit</button>
+                        </form>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <h1 class="card-title" th:text="${issue.getName()}"></h1>
+                                </div>
+                                <hr />
+                                <div th:utext="${issue.getDescription()}"></div>
+                            </div>
+                        </div>
+                        <div th:each="row : ${issue.getHistory()}">
+                            <p th:text="${row.toString()}"></p>
+
+                    </div>
+                </div>
+
+
+
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>
