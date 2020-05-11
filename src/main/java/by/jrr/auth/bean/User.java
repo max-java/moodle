@@ -22,7 +22,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private Integer id;
+    private Long id;
     @Column(name = "user_name")
     @Length(min = 5, message = "Имя пользователя не может быть меньше 5 символов")
     @NotEmpty(message = "Пожалуйста, заполните имя пользователя")
