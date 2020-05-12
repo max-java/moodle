@@ -126,6 +126,52 @@
                     <a class="dropdown-item dropdown-footer" href="#">See All Notifications</a>
                 </div>
             </li>
+            <!--dropdown user menu -->
+            <li class="nav-item dropdown user-menu">
+                <a class="nav-link btn-primary text-white" th:href="@{/login}" th:unless="${IS_AUTHENTICATED}" >
+                    Login
+                </a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" th:if="${IS_AUTHENTICATED}">
+                    <img src="https://cdn.icon-icons.com/icons2/1161/PNG/512/1487716857-user_81635.png"
+                         class="user-image img-circle elevation-2"
+                         alt="User Image">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right" th:if="${IS_AUTHENTICATED}">
+                    <!-- User image -->
+                    <li class="user-header bg-primary">
+                        <img src="https://cdn.icon-icons.com/icons2/1161/PNG/512/1487716857-user_81635.png"
+                             class="img-circle elevation-2"
+                             alt="User Image">
+                        <p th:text="${USER_NAME_AND_LASTNAME}">
+                            Alexander Pierce - Web Developer
+                            <small>Member since Nov. 2012</small>
+                        </p>
+                    </li>
+                    <!-- Menu Body -->
+                    <li class="user-body">
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <a href="#">Followers</a>
+                            </div>
+                            <div class="col-4 text-center">
+                                <a href="#">Sales</a>
+                            </div>
+                            <div class="col-4 text-center">
+                                <a href="#">Friends</a>
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                    </li>
+                    <!-- Menu Footer-->
+                    <li class="user-footer">
+                        <form class="nav-link" method="get" th:action="@{/logout}" th:if="${IS_AUTHENTICATED}">
+                            <button class="btn btn-md btn-outline-success btn-block" name="registration"
+                                    type="Submit">Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" data-slide="true" data-widget="control-sidebar" href="#" role="button"><i
                         class="fas fa-th-large"></i></a>
