@@ -1,5 +1,5 @@
 package by.jrr.project.bean;
 
 public enum IssueType {
-    BUG, STORY, TASK
+    BLANK, BUG, STORY, TASK
 }

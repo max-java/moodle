@@ -49,6 +49,7 @@
                 <div class="form-group">
                     <label>assigneeUserId</label>
                     <select class="form-control select2" th:field="*{assigneeUserId}" style="width: 100%;">
+                        <option value="">не указан</option>
                         <option th:each="user : ${USER_LIST}"
                                 th:value="${user.getId()}" th:text="${user.getFullUserName()}"
                                 th:selected="${user.getId()} == ${issue.getAssigneeUserId()}"></option>
@@ -57,6 +58,7 @@
                 <div class="form-group">
                     <label>submitterUserId</label>
                     <select class="form-control select2" th:field="*{submitterUserId}" style="width: 100%; ">
+                        <option value="">не указан</option>
                         <option th:each="user : ${USER_LIST}"
                                 th:value="${user.getId()}" th:text="${user.getFullUserName()}"
                                 th:selected="${user.getId()} == ${issue.getSubmitterUserId()}"></option>
