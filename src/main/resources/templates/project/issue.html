@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12" th:if="${edit}">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="post" th:insert="project/issueForm :: issueForm"></form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" th:unless="${edit}">
+                        <form method="post">
+                            <button type="submit" name="edit" value="true">edit</button>
+                        </form>
+                        <div class="card" th:insert="project/issueCard :: issueCard">
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+<!-- Select2 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#description',
+        min_height: 300,
+        plugins: 'autoresize'
+    });
+</script>
+</body>
+</html>

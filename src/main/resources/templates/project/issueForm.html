@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form role="form" th:object="${issue}" method="post" th:fragment="issueForm">
+    <div class="card-body">
+            <input type="hidden" class="form-control" th:field="*{id}" disabled>
+            <input type="hidden" class="form-control" th:field="*{issueId}">
+            <input type="hidden" class="form-control" th:field="*{projectId}" placeholder="projectId">
+        <div class="form-group">
+            <label>name</label>
+            <input type="text" class="form-control" th:field="*{name}" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label>summary</label>
+            <input type="text" class="form-control" th:field="*{summary}" placeholder="Enter summary">
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>description</label>
+                    <textarea class="form-control" rows="3" th:field="*{description}" > </textarea>
+                </div>
+                <div class="form-group">
+                    <label>reproSteps</label>
+                    <textarea class="form-control" rows="3" th:field="*{reproSteps}" > </textarea>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>issueType</label>
+                    <select class="form-control" th:field="*{issueType}">
+
+                        <option th:each="type : ${T(by.jrr.project.bean.IssueType).values()}"
+                                th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>issueStatus</label>
+                    <select class="form-control" th:field="*{issueStatus}">
+
+                        <option th:each="status : ${T(by.jrr.project.bean.IssueStatus).values()}"
+                                th:value="${status}" th:text="${status}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>assigneeUserId</label>
+                    <select class="form-control select2" th:field="*{assigneeUserId}" style="width: 100%;">
+                        <option value="">не указан</option>
+                        <option th:each="user : ${USER_LIST}"
+                                th:value="${user.getId()}" th:text="${user.getFullUserName()}"
+                                th:selected="${user.getId()} == ${issue.getAssigneeUserId()}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>submitterUserId</label>
+                    <select class="form-control select2" th:field="*{submitterUserId}" style="width: 100%; ">
+                        <option value="">не указан</option>
+                        <option th:each="user : ${USER_LIST}"
+                                th:value="${user.getId()}" th:text="${user.getFullUserName()}"
+                                th:selected="${user.getId()} == ${issue.getSubmitterUserId()}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</body>
+</html>
