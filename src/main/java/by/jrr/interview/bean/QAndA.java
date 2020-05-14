@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Lob;
@@ -21,6 +23,8 @@ public class QAndA {
     @javax.persistence.Id
     @GeneratedValue
     private Long Id;
+    private String theme;
+    @Column(columnDefinition = "TEXT")
     private String question;
     @Lob
     private String answer;
