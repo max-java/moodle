@@ -10,4 +10,5 @@ public class Endpoint {
     public static final String PROJECT_LIST = "/projects";
     public static final String ISSUE = "/issue";
     public static final String ISSUE_LIST = "/issues";
+    public static final String PROFILE_CARD = "/profile";
 }
