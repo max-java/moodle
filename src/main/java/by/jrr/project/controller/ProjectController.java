@@ -54,8 +54,8 @@ public class ProjectController {
 
     @PostMapping(Endpoint.PROJECT)
     public ModelAndView saveNewProject(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "description", required = false) String description
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "description") String description
     ) {
         Project project = projectService.create(Project.builder()
                 .name(name)
