@@ -35,10 +35,14 @@ public class UserDataToModelService {
         return modelAndView.addObject(UserData.IS_AUTHENTICATED.name(), isUserAuthenticated);
     }
 
+    /** set authenticated user data */
     public ModelAndView setUserNameAndLastName(ModelAndView modelAndView) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
-        return modelAndView.addObject(UserData.USER_NAME_AND_LASTNAME.name(), user.getName() + " " + user.getLastName());
+        if (user != null) {
+            modelAndView.addObject(UserData.USER_NAME_AND_LASTNAME.name(), user.getName() + " " + user.getLastName());
+        }
+        return modelAndView;
     }
 
     public ModelAndView setListOfUsers(ModelAndView mov) {
