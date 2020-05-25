@@ -11,4 +11,5 @@ public class View {
     public static final String ISSUE = "project/issue";
     public static final String ISSUE_LIST = "project/issueList";
     public static final String PROFILE_CARD = "profile/profileCard";
+    public static final String PROFILE_LIST = "profile/profileList";
 }

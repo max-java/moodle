@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Students and Teachers</h3>
+
+                                    <div class="card-tools">
+                                        <div class="input-group input-group-sm" style="width: 150px;">
+                                            <input class="form-control float-right" name="table_search"
+                                                   placeholder="Search"
+                                                   type="text">
+
+                                            <div class="input-group-append">
+                                                <button class="btn btn-default" type="submit"><i
+                                                        class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover text-nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Card</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="profile : ${profilePage}">
+                                            <td th:text="${profile.getUser().getFullUserName()}"></td>
+                                            <td><a th:href="${'/profile/'+profile.getId()}">open</a></td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <ul class="pagination pagination-lg m-0">
+                            <li class="page-item"
+                                th:if="${profilePage.hasPrevious()}">
+                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()-1)}">&laquo;</a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${profilePage.hasPrevious()}">
+                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()-1)}" th:text="${(profilePage.getNumber())}"></a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link text-danger" th:href="${'/profiles/'+(profilePage.getNumber())}" th:text="${(profilePage.getNumber()+1)}"></a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${profilePage.hasNext()}">
+                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+2)}"></a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${profilePage.hasNext()}"}>
+                                <a class="page-link" href="#">...</a></li>
+
+                            <li class="page-item"
+                                th:if="${profilePage.hasNext()}">
+                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getTotalPages()-1)}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${profilePage.hasNext()}">
+                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()+1)}">&raquo;</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>
