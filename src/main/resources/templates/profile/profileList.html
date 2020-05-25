@@ -66,18 +66,18 @@
                         <ul class="pagination pagination-lg m-0">
                             <li class="page-item"
                                 th:if="${profilePage.hasPrevious()}">
-                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()-1)}">&laquo;</a>
+                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber())}">&laquo;</a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasPrevious()}">
-                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()-1)}" th:text="${(profilePage.getNumber())}"></a>
+                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber())}" th:text="${(profilePage.getNumber())}"></a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link text-danger" th:href="${'/profiles/'+(profilePage.getNumber())}" th:text="${(profilePage.getNumber()+1)}"></a>
+                                <a class="page-link text-danger" th:href="${'/profiles/?page='+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+1)}"></a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+2)}"></a>
+                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber()+2)}" th:text="${(profilePage.getNumber()+2)}"></a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}"}>
@@ -85,11 +85,11 @@
 
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getTotalPages()-1)}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
+                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getTotalPages())}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles/'+(profilePage.getNumber()+1)}">&raquo;</a>
+                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber()+2)}">&raquo;</a>
                             </li>
                         </ul>
 

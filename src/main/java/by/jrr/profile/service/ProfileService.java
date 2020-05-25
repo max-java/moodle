@@ -12,31 +12,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class ProfileService {
+    private final Supplier<Integer> DEFAULT_PAGE_NUMBER = () -> 1;
+    private final Supplier<Integer> DEFAULT_ELEMENTS_PER_PAGE = () -> 3;
 
     @Autowired
     UserService userService;
     @Autowired
     ProfileRepository profileRepository;
 
-    public Page<Profile> findAllProfilesPageable(String page, String items) {
-        Page<Profile> profilePage;
-        try {
-            profilePage = profileRepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
-        } catch (Exception ex) {
-            profilePage = profileRepository.findAll(PageRequest.of(Integer.valueOf(3), Integer.valueOf(3)));
-        }
+    public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
+                                                 Optional<Integer> numberOfElementsPerPage,
+                                                 Optional<String> searchTerm) {
+        // pages are begins from 0, but userFriendly is to begin from 1
+        int page = userFriendlyNumberOfPage.orElseGet(DEFAULT_PAGE_NUMBER) - 1;
+        int elem = numberOfElementsPerPage.orElseGet(DEFAULT_ELEMENTS_PER_PAGE);
+        Page<Profile> profilePage = profileRepository.findAll(PageRequest.of(page, elem)); // TODO: 26/05/20 test for NPE
         profilePage.forEach(a -> setUserDataToProfile(a));
-        for (Profile p : profilePage) {
-            p.getUser().getName();
-        }
-
-        profilePage.getTotalElements();
-        System.out.println("profilePage.hasPrevious() = " + profilePage.hasPrevious());
-        System.out.println("profilePage.hasNext() = " + profilePage.hasNext());
-
         return profilePage;
     }
 
@@ -55,6 +50,7 @@ public class ProfileService {
             }
         }
     }
+
     private Profile createAndSaveProfileForUser(User user) {
         return profileRepository.save(Profile.builder().userId(user.getId()).build());
     }
