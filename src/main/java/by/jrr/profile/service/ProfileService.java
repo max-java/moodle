@@ -57,7 +57,7 @@ public class ProfileService {
     }
 
     private void setUserDataToProfile(Profile profile) {
-        userService.findUserById(profile.getId()).ifPresent(user -> profile.setUser(user));
+        userService.findUserById(profile.getUserId()).ifPresent(user -> profile.setUser(user));
     }
 
     public void createProfileForUsers() {
@@ -70,6 +70,13 @@ public class ProfileService {
                 createAndSaveProfileForUser(user);
             }
         }
+    }
+
+    public Optional<Profile> findProfileByProfileId(Long id) {
+        Optional<Profile> profile = profileRepository.findById(id);
+        profile.ifPresent(p -> setUserDataToProfile(p));
+        return profile;
+
     }
 
     private Profile createAndSaveProfileForUser(User user) {
