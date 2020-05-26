@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -49,6 +50,9 @@ public class User {
 
     public String getFullUserName() {
         return userName + " " + lastName;
+    }
+    public String getAllRoles() {
+        return roles.stream().map(role -> role.getRole()).collect(Collectors.joining(", ", "{", "}"));
     }
 
 }
