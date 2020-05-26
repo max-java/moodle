@@ -33,6 +33,7 @@ public class ProfileListController {
 
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.addObject("profilePage", profileService.findAllProfilesPageable(page, elem, searchTerm));
+        mov.addObject("searchTerm", searchTerm.orElse(""));
         mov.setViewName(View.PROFILE_LIST);
         return mov;
     }

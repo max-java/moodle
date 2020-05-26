@@ -29,16 +29,19 @@
                                     <h3 class="card-title">Students and Teachers</h3>
 
                                     <div class="card-tools">
-                                        <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input class="form-control float-right" name="table_search"
-                                                   placeholder="Search"
-                                                   type="text">
+                                        <form>
+                                            <div class="input-group input-group-sm" style="width: 150px;">
 
-                                            <div class="input-group-append">
-                                                <button class="btn btn-default" type="submit"><i
-                                                        class="fas fa-search"></i></button>
+                                                <input class="form-control float-right" name="searchTerm"
+                                                       placeholder="Search"
+                                                       type="text">
+
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-default" type="submit"><i
+                                                            class="fas fa-search"></i></button>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
@@ -66,18 +69,26 @@
                         <ul class="pagination pagination-lg m-0">
                             <li class="page-item"
                                 th:if="${profilePage.hasPrevious()}">
-                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber())}">&laquo;</a>
+                                <a class="page-link" th:href="${'/profiles/?searchTerm='
+                                +searchTerm+
+                                '&page='+(profilePage.getNumber())}">&laquo;</a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasPrevious()}">
-                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber())}" th:text="${(profilePage.getNumber())}"></a>
+                                <a class="page-link" th:href="${'/profiles/?searchTerm='
+                                +searchTerm+
+                                '&page='+(profilePage.getNumber())}" th:text="${(profilePage.getNumber())}"></a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link text-danger" th:href="${'/profiles/?page='+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+1)}"></a>
+                                <a class="page-link text-danger" th:href="${'/profiles/?searchTerm='
+                                +searchTerm+
+                                '&page='+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+1)}"></a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber()+2)}" th:text="${(profilePage.getNumber()+2)}"></a>
+                                <a class="page-link" th:href="${'/profiles/?searchTerm='
+                                +searchTerm+
+                                '&page='+(profilePage.getNumber()+2)}" th:text="${(profilePage.getNumber()+2)}"></a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}"}>
@@ -85,11 +96,15 @@
 
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getTotalPages())}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
+                                <a class="page-link" th:href="${'/profiles/?searchTerm='
+                                +searchTerm+
+                                '&page='+(profilePage.getTotalPages())}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
                             </li>
                             <li class="page-item"
                                 th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles/?page='+(profilePage.getNumber()+2)}">&raquo;</a>
+                                <a class="page-link" th:href="${'/profiles/?searchTerm='
+                                +searchTerm+
+                                '&page='+(profilePage.getNumber()+2)}">&raquo;</a>
                             </li>
                         </ul>
 
