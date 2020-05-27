@@ -8,4 +8,6 @@ public interface Reviewable {
 
     Long getId();
     ReviewedEntityType getType();
+    String getName();
+
 }

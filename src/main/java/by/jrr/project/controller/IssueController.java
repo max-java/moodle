@@ -4,7 +4,7 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.feedback.bean.ReviewRequest;
-import by.jrr.feedback.bean.service.FeedbackService;
+import by.jrr.feedback.service.FeedbackService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
@@ -59,16 +60,16 @@ public class IssueController {
     }
 
     @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE + "/{issueId}")
-    public ModelAndView updateIssue(Issue issue,
+    public ModelAndView updateIssue(Issue issue, HttpServletRequest request,
                                     @PathVariable Long issueId, @PathVariable Long id,
                                     @RequestParam(value = "edit", required = false) boolean edit,
                                     @RequestParam Optional<String> requestForReview) {
-        if(requestForReview.isPresent()) {
-            issue = issueService.findByIssueId(issueId).get();
-            ReviewRequest reviewRequest = feedbackService.createNewReviewRequest(issue);
-            return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_FORM+"/"+reviewRequest.getId());
 
+        if(requestForReview.isPresent()) {
+
+            return redirectToCodeReview(issueId, issue, request);
         }
+
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.ISSUE);
         if (edit) {
@@ -95,5 +96,11 @@ public class IssueController {
         mov.addObject("issuePage", issuePage);
         mov.setViewName(View.ISSUE_LIST);
         return mov;
+    }
+
+    private ModelAndView redirectToCodeReview(Long issueId, Issue issue, HttpServletRequest request) {
+        issue = issueService.findByIssueId(issueId).get();
+        ReviewRequest reviewRequest = feedbackService.createNewReviewRequest(issue);
+        return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_FORM+"/"+reviewRequest.getId());
     }
 }

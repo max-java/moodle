@@ -53,7 +53,7 @@ public class Issue implements Reviewable {
     private List<Issue> history = new ArrayList<>();
     public String getLink() { // TODO: 11/05/20 model should be divided from view
         return Endpoint.PROJECT+"/"+projectId+Endpoint.ISSUE+"/"+this.getIssueId();
-    }
+    } // TODO: 27/05/20 link should be independent of bean
     public String getProjectLink() { // TODO: 11/05/20 model should be divided from view
         return Endpoint.PROJECT+"/"+projectId;
     }

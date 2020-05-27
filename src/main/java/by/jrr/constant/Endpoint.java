@@ -15,6 +15,6 @@ public class Endpoint {
 
 
     public static final String REVIEW_REQUEST_FORM = "/review/newRequest"; // TODO: 27/05/20 change mapping names
-
-
+    public static final String REVIEW_REQUEST_CARD = "/review"; // TODO: 27/05/20 change mapping names
+    public static final String REVIEW_REQUEST_LIST = "/reviews"; // TODO: 27/05/20 change mapping names
 }

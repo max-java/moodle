@@ -24,6 +24,8 @@ public class Item {
     private ReviewedEntityType reviewedItemType;
 
     @Transient
+    private Reviewable reviewedEntity;
+    @Transient
     private List<ReviewRequest> reviewRequests;
     @Transient
     private List<Review> reviews;
