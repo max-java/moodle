@@ -12,4 +12,9 @@ public class Endpoint {
     public static final String ISSUE_LIST = "/issues";
     public static final String PROFILE_CARD = "/profile";
     public static final String PROFILE_LIST = "/profiles";
+
+
+    public static final String REVIEW_REQUEST_FORM = "/review/newRequest"; // TODO: 27/05/20 change mapping names
+
+
 }
