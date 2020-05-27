@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,7 +78,11 @@ public class ProfileService {
         Optional<Profile> profile = profileRepository.findById(id);
         profile.ifPresent(p -> setUserDataToProfile(p));
         return profile;
-
+    }
+    public Profile getCurrentUserProfile() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        return profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
     }
 
     private Profile createAndSaveProfileForUser(User user) {
