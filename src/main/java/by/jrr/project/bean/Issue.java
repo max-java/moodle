@@ -2,6 +2,8 @@ package by.jrr.project.bean;
 
 import by.jrr.auth.bean.User;
 import by.jrr.constant.Endpoint;
+import by.jrr.feedback.bean.Reviewable;
+import by.jrr.feedback.bean.ReviewedEntityType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +19,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Issue {
+public class Issue implements Reviewable {
 
     @javax.persistence.Id
     @GeneratedValue
@@ -77,5 +79,10 @@ public class Issue {
                 ", submitterUserId=" + submitterUserId +
                 ", lastInHistory=" + lastInHistory +
                 '}';
+    }
+
+    @Override
+    public ReviewedEntityType getType() {
+        return ReviewedEntityType.ISSUE;
     }
 }

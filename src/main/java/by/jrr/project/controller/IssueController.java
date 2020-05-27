@@ -3,6 +3,8 @@ package by.jrr.project.controller;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.feedback.bean.ReviewRequest;
+import by.jrr.feedback.bean.service.FeedbackService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class IssueController {
     IssueService issueService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    FeedbackService feedbackService;
 
     @GetMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
     public ModelAndView createNewIssue(@PathVariable Long id) {
@@ -57,8 +61,14 @@ public class IssueController {
     @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE + "/{issueId}")
     public ModelAndView updateIssue(Issue issue,
                                     @PathVariable Long issueId, @PathVariable Long id,
-                                     @RequestParam(value = "edit", required = false) boolean edit
-                                    ) {
+                                    @RequestParam(value = "edit", required = false) boolean edit,
+                                    @RequestParam Optional<String> requestForReview) {
+        if(requestForReview.isPresent()) {
+            issue = issueService.findByIssueId(issueId).get();
+            ReviewRequest reviewRequest = feedbackService.createNewReviewRequest(issue);
+            return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_FORM+"/"+reviewRequest.getId());
+
+        }
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.ISSUE);
         if (edit) {

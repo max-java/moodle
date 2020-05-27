@@ -19,7 +19,6 @@ public class Review {
     private Long Id;
     private Long itemId;
     private Long reviewedEntityId; // TODO: 27/05/20 should it be duplicated here alongside with entityId in Item?
-    @Enumerated(value = EnumType.STRING)
     private Long reviewerProfileId;
     @Enumerated(value = EnumType.STRING)
     private ReviewResult reviewResult;

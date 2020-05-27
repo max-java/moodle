@@ -18,8 +18,9 @@ public class Item {
     @javax.persistence.Id
     @GeneratedValue
     private Long Id;
-    @Enumerated(value = EnumType.STRING)
+    @Column(unique=true)
     private Long reviewedEntityId;
+    @Enumerated(value = EnumType.STRING)
     private ReviewedEntityType reviewedItemType;
 
     @Transient

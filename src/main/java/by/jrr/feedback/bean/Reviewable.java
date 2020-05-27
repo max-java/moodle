@@ -5,4 +5,7 @@ package by.jrr.feedback.bean;
  */
 
 public interface Reviewable {
+
+    Long getId();
+    ReviewedEntityType getType();
 }
