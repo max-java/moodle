@@ -37,17 +37,4 @@ public class ReviewRequest implements Cloneable{
 
     @Transient
     private List<Review> reviews;
-
-    public ReviewRequest(ReviewRequest reviewRequest) {
-        this.itemId = reviewRequest.itemId;
-        this.reviewedEntityId = reviewRequest.reviewedEntityId;
-        this.requesterProfileId = reviewRequest.requesterProfileId;
-        this.requesterNotes = reviewRequest.requesterNotes;
-        this.link = reviewRequest.link;
-        this.createdDate = reviewRequest.createdDate;
-        this.closedDate = reviewRequest.closedDate;
-        this.reviewResultOnClosing = reviewRequest.reviewResultOnClosing;
-        this.debugField = reviewRequest.debugField;
-        this.reviews = reviewRequest.reviews;
-    }
 }
