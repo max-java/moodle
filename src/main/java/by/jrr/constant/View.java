@@ -15,6 +15,7 @@ public class View {
 
     public static final String CODE_REVIEW_REQUEST_FORM = "feedback/codeReviewRequest";
     public static final String CODE_REVIEW_REQUEST_CARD = "feedback/codeReviewRequestCard";
+    public static final String CODE_REVIEW_REQUEST_LIST = "feedback/codeReviewRequestList";
     public static final String CODE_REVIEW_FORM = "feedback/codeReviewForm";
     public static final String CODE_REVIEW_CARD = "feedback/codeReviewCard";
 }

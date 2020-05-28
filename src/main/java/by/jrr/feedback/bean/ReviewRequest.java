@@ -1,5 +1,6 @@
 package by.jrr.feedback.bean;
 
+import by.jrr.profile.bean.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,8 +34,11 @@ public class ReviewRequest implements Cloneable{
     private LocalDateTime closedDate;
     @Enumerated(value = EnumType.STRING)
     private ReviewResult reviewResultOnClosing;
-    private String debugField;
 
     @Transient
     private List<Review> reviews;
+    @Transient
+    private Item item;
+    @Transient
+    private Profile requesterProfile;
 }

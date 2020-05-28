@@ -1,5 +1,6 @@
 package by.jrr.feedback.service;
 
+import by.jrr.feedback.bean.EmptyReviewable;
 import by.jrr.feedback.bean.Item;
 import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.bean.Reviewable;
@@ -50,5 +51,13 @@ public class ItemService {
                 item.setReviewedEntity(issue.orElseGet(Issue::new));
                 break;
         }
+    }
+
+    public Reviewable getReviewableByReviewableId(Long reviewedEntityId) {
+        Optional<Issue> issue = issueService.findByIssueId(reviewedEntityId);
+        if (issue.isPresent()) {
+            return issue.get();
+        }
+        return new EmptyReviewable();
     }
 }

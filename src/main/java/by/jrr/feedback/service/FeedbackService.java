@@ -1,15 +1,24 @@
 package by.jrr.feedback.service;
 
+import by.jrr.auth.bean.User;
 import by.jrr.feedback.bean.Item;
 import by.jrr.feedback.bean.Review;
 import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.bean.Reviewable;
 import by.jrr.feedback.repository.ReviewRequestRepository;
+import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Facade for all services
@@ -26,6 +35,8 @@ public class FeedbackService {
     ProfileService profileService;
     @Autowired
     ReviewRequestService reviewRequestService;
+    @Autowired
+    ReviewRequestPageableSearchService reviewRequestPageableSearchService;
     @Autowired
     ReviewService reviewService;
 
@@ -57,5 +68,11 @@ public class FeedbackService {
 
     public void saveReview(Review review) {
         reviewService.save(review);
+    }
+
+    public Page<ReviewRequest> findAllReviewRequestPageable(Optional<Integer> page, Optional<Integer> elem, Optional<String> searchTerm) {
+        return reviewRequestPageableSearchService.findAllReviewRequestPageable(page, elem, searchTerm);
+
+
     }
 }

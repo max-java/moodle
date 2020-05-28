@@ -2,6 +2,7 @@ package by.jrr.feedback.service;
 
 import by.jrr.feedback.bean.Item;
 import by.jrr.feedback.bean.ReviewRequest;
+import by.jrr.feedback.bean.ReviewResult;
 import by.jrr.feedback.bean.Reviewable;
 import by.jrr.feedback.repository.ReviewRequestRepository;
 import by.jrr.profile.service.ProfileService;
@@ -25,6 +26,7 @@ public class ReviewRequestService {
         reviewRequest.setReviewedEntityId(reviewable.getId());
         reviewRequest.setRequesterProfileId(profileService.getCurrentUserProfile().getId());
         reviewRequest.setCreatedDate(LocalDateTime.now());
+        reviewRequest.setReviewResultOnClosing(ReviewResult.NONE);
         return reviewRequestRepository.save(reviewRequest);
     }
 
