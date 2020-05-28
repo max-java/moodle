@@ -16,7 +16,7 @@ public class UserDataToModelService {
     @Autowired
     UserService userService;
 
-    public ModelAndView setData(ModelAndView mov) {
+    public ModelAndView setData(ModelAndView mov) { // TODO: 28/05/20 replace by different methods simmilar to getInstance with zero parameters and cache it
         setIsAuthenticated(mov);
         setUserNameAndLastName(mov);
         setListOfUsers(mov);
