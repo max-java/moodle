@@ -40,12 +40,28 @@
                                     <h3>1. Message</h3>
                                     <p th:utext="${reviewRequest.requesterNotes}"></p>
                                     <h3>2. Code review Request Link</h3>
-                                    <p><a th:href="${reviewRequest.link}" th:text="${reviewRequest.link}" /></p>
+                                    <p><a th:href="${reviewRequest.link}" th:text="${reviewRequest.link}"></a></p>
                                 </div>
                                 <div class="col-md-6">
                                     <p>Requested by </p>
-
-                                    <h3><a th:href="${requesterProfileLink}" th:text="${requesterProfile.getUser().getFullUserName()}" /></h3>
+                                    <h3><a th:href="${requesterProfileLink}" th:text="${requesterProfile.getUser().getFullUserName()}"></a></h3>
+                                    <p>Date created </p>
+                                    <h3 th:text="${reviewRequest.createdDate}"></h3>
+                                    <form method="post" role="form" th:object="${reviewRequest}">
+                                        <div class="form-group">
+                                            <label>Review Result</label>
+                                            <select class="form-control" name="reviewResultOnClosing">
+                                                <option th:each="type : ${T(by.jrr.feedback.bean.ReviewResult).values()}"
+                                                        th:value="${type}" th:text="${type}"
+                                                        th:selected="${type} == *{reviewResultOnClosing}"></option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="submit" name="closeRequest" value="closeRequest" class="btn btn-primary">Close request</button>
+                                        </div>
+                                    </form>
+                                    <p>Date closed </p>
+                                    <h3 th:text="${reviewRequest.closedDate}"></h3>
                                 </div>
                             </div>
                         </div>

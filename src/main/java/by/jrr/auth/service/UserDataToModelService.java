@@ -15,6 +15,8 @@ public class UserDataToModelService {
 
     @Autowired
     UserService userService;
+    @Autowired
+    UserAccessService userAccessService;
 
     public ModelAndView setData(ModelAndView mov) { // TODO: 28/05/20 replace by different methods simmilar to getInstance with zero parameters and cache it
         setIsAuthenticated(mov);
@@ -24,15 +26,7 @@ public class UserDataToModelService {
     }
 
     public ModelAndView setIsAuthenticated(ModelAndView modelAndView) {
-        boolean isUserAuthenticated = false;
-        if (SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                //when Anonymous Authentication is enabled
-                && !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            isUserAuthenticated = true;
-            modelAndView = setUserNameAndLastName(modelAndView);
-        }
-        return modelAndView.addObject(UserData.IS_AUTHENTICATED.name(), isUserAuthenticated);
+        return modelAndView.addObject(UserData.IS_AUTHENTICATED.name(), userAccessService.isCurrentUserAuthenticated());
     }
 
     /** set authenticated user data */

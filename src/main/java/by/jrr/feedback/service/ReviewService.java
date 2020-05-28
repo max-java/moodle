@@ -7,6 +7,7 @@ import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,9 @@ public class ReviewService {
     ProfileService profileService;
 
     public Review save(Review review) {
+        if (review.getId()== null) {
+            review.setCreatedDate(LocalDateTime.now()); //set created timestamp
+        }
         return reviewRepository.save(review);
     }
 

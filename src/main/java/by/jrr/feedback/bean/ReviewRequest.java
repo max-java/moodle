@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -13,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewRequest {
+public class ReviewRequest implements Cloneable{
 
     @javax.persistence.Id
     @GeneratedValue
@@ -25,6 +28,26 @@ public class ReviewRequest {
     private String requesterNotes;
     private String link;
 
+    @CreatedDate
+    private LocalDateTime createdDate;
+    private LocalDateTime closedDate;
+    @Enumerated(value = EnumType.STRING)
+    private ReviewResult reviewResultOnClosing;
+    private String debugField;
+
     @Transient
     private List<Review> reviews;
+
+    public ReviewRequest(ReviewRequest reviewRequest) {
+        this.itemId = reviewRequest.itemId;
+        this.reviewedEntityId = reviewRequest.reviewedEntityId;
+        this.requesterProfileId = reviewRequest.requesterProfileId;
+        this.requesterNotes = reviewRequest.requesterNotes;
+        this.link = reviewRequest.link;
+        this.createdDate = reviewRequest.createdDate;
+        this.closedDate = reviewRequest.closedDate;
+        this.reviewResultOnClosing = reviewRequest.reviewResultOnClosing;
+        this.debugField = reviewRequest.debugField;
+        this.reviews = reviewRequest.reviews;
+    }
 }

@@ -48,8 +48,11 @@ public class FeedbackService {
         return itemService.getItemByReviewRequest(reviewRequest);
     }
 
-    public ReviewRequest saveOrUpdateReviewRequest(ReviewRequest reviewRequest) {
-        return reviewRequestService.saveOrUpdateReviewRequest(reviewRequest);
+    public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {
+        return reviewRequestService.updateMessageAndLinkOnReviewRequest(reviewRequest);
+    }
+    public ReviewRequest closeReviewRequest(ReviewRequest reviewRequest) {
+        return reviewRequestService.closeReviewRequest(reviewRequest);
     }
 
     public void saveReview(Review review) {
