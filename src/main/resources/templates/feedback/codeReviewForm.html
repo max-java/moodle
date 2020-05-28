@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+
+                    <div class="row">
+                        &nbsp; <!-- todo insert here codeReviewRequestCard as a fragment -->
+
+                    </div>
+                    <hr />
+
+                    <form role="form" th:object="${review}" method="post" th:fragment="reviewForm">
+                        <div class="card-body">
+                            <input type="hidden" class="form-control" th:field="*{itemId}">
+                            <input type="hidden" class="form-control" th:field="*{reviewedEntityId}">
+                            <input type="hidden" class="form-control" th:field="*{reviewRequestId}">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Comment</label>
+                                        <textarea class="form-control" rows="3" th:field="*{reviewerNotes}" > </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Review Result</label>
+                                        <select class="form-control" th:field="*{reviewResult}">
+
+                                            <option th:each="type : ${T(by.jrr.feedback.bean.ReviewResult).values()}"
+                                                    th:value="${type}" th:text="${type}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button type="submit" name="saveReview" value="saveReview" class="btn btn-primary">Add review</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

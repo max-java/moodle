@@ -1,5 +1,6 @@
 package by.jrr.feedback.bean;
 
+import by.jrr.profile.bean.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +20,13 @@ public class Review {
     private Long Id;
     private Long itemId;
     private Long reviewedEntityId; // TODO: 27/05/20 should it be duplicated here alongside with entityId in Item?
+    private Long reviewRequestId;
     private Long reviewerProfileId;
     @Enumerated(value = EnumType.STRING)
     private ReviewResult reviewResult;
     @Lob
     private String reviewerNotes;
+
+    @Transient
+    private Profile reviewerProfile;
 }

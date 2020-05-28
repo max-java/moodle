@@ -26,6 +26,8 @@ public class FeedbackService {
     ProfileService profileService;
     @Autowired
     ReviewRequestService reviewRequestService;
+    @Autowired
+    ReviewService reviewService;
 
     public ReviewRequest createNewReviewRequest(Reviewable reviewable) {
         Item item = itemService.getItemByReviewable(reviewable);
@@ -33,6 +35,12 @@ public class FeedbackService {
     }
 
     public Optional<ReviewRequest> getReviewRequestById(Long id) {
+        Optional<ReviewRequest> reviewRequest = reviewRequestRepository.findById(id); // TODO: 28/05/20 move to reviewRequestService!!
+        if (reviewRequest.isPresent()) {
+            ReviewRequest revReq = reviewRequest.get();
+            revReq.setReviews(reviewService.findAllByReviewRequestId(id));
+            return Optional.of(revReq);
+        }
         return reviewRequestRepository.findById(id);
     }
 
@@ -42,5 +50,9 @@ public class FeedbackService {
 
     public ReviewRequest saveOrUpdateReviewRequest(ReviewRequest reviewRequest) {
         return reviewRequestService.saveOrUpdateReviewRequest(reviewRequest);
+    }
+
+    public void saveReview(Review review) {
+        reviewService.save(review);
     }
 }

@@ -51,22 +51,6 @@
                         </div>
                     </div>
 
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Review Result</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="review : ${reviewRequest.getReviews()}">
-                            <td th:text="${review.getReviewerProfile().getUser().getFullUserName()}"></td>
-                            <td th:text="${review.getReviewResult()}"></td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-
                 </div>
             </div>
         </section>
