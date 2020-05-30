@@ -21,7 +21,7 @@ public class Item {
     @Column(unique=true)
     private Long reviewedEntityId;
     @Enumerated(value = EnumType.STRING)
-    private ReviewedEntityType reviewedItemType;
+    private EntityType reviewedItemType;
 
     @Transient
     private Reviewable reviewedEntity;

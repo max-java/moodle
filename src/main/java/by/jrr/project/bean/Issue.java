@@ -3,7 +3,7 @@ package by.jrr.project.bean;
 import by.jrr.auth.bean.User;
 import by.jrr.constant.Endpoint;
 import by.jrr.feedback.bean.Reviewable;
-import by.jrr.feedback.bean.ReviewedEntityType;
+import by.jrr.feedback.bean.EntityType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -82,7 +82,7 @@ public class Issue implements Reviewable {
     }
 
     @Override
-    public ReviewedEntityType getType() {
-        return ReviewedEntityType.ISSUE;
+    public EntityType getType() {
+        return EntityType.ISSUE;
     }
 }

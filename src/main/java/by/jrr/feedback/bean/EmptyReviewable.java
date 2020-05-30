@@ -7,7 +7,7 @@ public class EmptyReviewable implements Reviewable {
     }
 
     @Override
-    public ReviewedEntityType getType() {
+    public EntityType getType() {
         return null;
     }
 
