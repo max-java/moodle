@@ -1,5 +1,7 @@
 package by.jrr.constant;
 
+import by.jrr.moodle.bean.Course;
+import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.profile.bean.Profile;
 import by.jrr.project.bean.Issue;
@@ -18,6 +20,14 @@ public class LinkGenerator {
         if (o instanceof Topic) {
             Topic topic = (Topic) o;
             return Endpoint.TOPIC + "/" + topic.getId();
+        }
+        if (o instanceof Lecture) {
+            Lecture lecture = (Lecture) o;
+            return Endpoint.LECTURE + "/" + lecture.getId();
+        }
+        if (o instanceof Course) {
+            Course course = (Course) o;
+            return Endpoint.COURSE + "/" + course.getId();
         }
         return "#";
     }
