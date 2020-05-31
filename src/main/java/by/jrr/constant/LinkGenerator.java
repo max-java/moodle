@@ -1,5 +1,6 @@
 package by.jrr.constant;
 
+import by.jrr.interview.bean.QAndA;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.bean.PracticeQuestion;
@@ -33,6 +34,10 @@ public class LinkGenerator {
         if (o instanceof PracticeQuestion) {
             PracticeQuestion practiceQuestion = (PracticeQuestion) o;
             return Endpoint.PRACTICE + "/" + practiceQuestion.getId();
+        }
+        if (o instanceof QAndA) {
+            QAndA qAndA = (QAndA) o;
+            return Endpoint.Q_AND_A + "/" + qAndA.getId();
         }
 
         return "#";

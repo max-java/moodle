@@ -120,13 +120,4 @@ public class QAndAController {
         return mov;
         // TODO: 11/05/20 replace if-else with private methods
     }
-
-    @GetMapping(Endpoint.Q_AND_A_LIST)
-    public ModelAndView findAll(@PathVariable(required = false) String page, @PathVariable(required = false) String size) {
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Page<QAndA> qAndAPage = qAndAService.findAll(page, size);
-        mov.addObject("qAndAPage", qAndAPage);
-        mov.setViewName(View.Q_AND_A_LIST);
-        return mov;
-    }
 }
