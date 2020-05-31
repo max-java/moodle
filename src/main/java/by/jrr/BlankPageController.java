@@ -1,4 +1,4 @@
-package by.jrr.moodle.controller;
+package by.jrr;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Code review Requests</h3>
+
+                                    <div class="card-tools">
+                                        <form>
+                                            <div class="input-group input-group-sm" style="width: 150px;">
+
+                                                <input class="form-control float-right" name="searchTerm"
+                                                       placeholder="Search"
+                                                       type="text">
+
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-default" type="submit"><i
+                                                            class="fas fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover text-nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Профиль</th>
+                                            <th>Что ревьювать</th>
+                                            <th>Дата создания</th>
+                                            <th>Статус</th>
+                                            <th>Тип</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="rr : ${reviewRequestPage}">
+                                            <td th:text="${rr.getRequesterProfile().getUser().getFullUserName()}"></td>
+                                            <td><a th:href="${'/profile/'+rr.getRequesterProfileId()}">open Profile</a></td>
+                                            <td th:text="${rr.getItem().getReviewedEntity().getName()}"></td>
+                                            <td th:text="${rr.getCreatedDate()}"></td>
+                                            <td th:text="${rr.getReviewResultOnClosing()}"></td>
+                                            <td th:text="${rr.getItem().getReviewedItemType()}"></td>
+                                            <td><a th:href="${'/reviewRequest/'+rr.getId()}">open Review Request</a></td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <ul class="pagination pagination-lg m-0">
+                            <li class="page-item"
+                                th:if="${reviewRequestPage.hasPrevious()}">
+                                <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
+                                +searchTerm+
+                                '&page='+(reviewRequestPage.getNumber())}">&laquo;</a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${reviewRequestPage.hasPrevious()}">
+                                <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
+                                +searchTerm+
+                                '&page='+(reviewRequestPage.getNumber())}" th:text="${(reviewRequestPage.getNumber())}"></a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link text-danger" th:href="${'/reviewRequests/?searchTerm='
+                                +searchTerm+
+                                '&page='+(reviewRequestPage.getNumber()+1)}" th:text="${(reviewRequestPage.getNumber()+1)}"></a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${reviewRequestPage.hasNext()}">
+                                <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
+                                +searchTerm+
+                                '&page='+(reviewRequestPage.getNumber()+2)}" th:text="${(reviewRequestPage.getNumber()+2)}"></a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${reviewRequestPage.hasNext()}"}>
+                                <a class="page-link" href="#">...</a></li>
+
+                            <li class="page-item"
+                                th:if="${reviewRequestPage.hasNext()}">
+                                <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
+                                +searchTerm+
+                                '&page='+(reviewRequestPage.getTotalPages())}" th:text="${(reviewRequestPage.getTotalPages())}">&laquo;</a>
+                            </li>
+                            <li class="page-item"
+                                th:if="${reviewRequestPage.hasNext()}">
+                                <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
+                                +searchTerm+
+                                '&page='+(reviewRequestPage.getNumber()+2)}">&raquo;</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

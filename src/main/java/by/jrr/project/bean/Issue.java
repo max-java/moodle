@@ -2,6 +2,8 @@ package by.jrr.project.bean;
 
 import by.jrr.auth.bean.User;
 import by.jrr.constant.Endpoint;
+import by.jrr.feedback.bean.Reviewable;
+import by.jrr.feedback.bean.EntityType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +19,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Issue {
+public class Issue implements Reviewable {
 
     @javax.persistence.Id
     @GeneratedValue
     private Long Id;
-    private Long issueId;
+    private Long issueId; //it has two ids: on for issue, one for row - to create a history
     @Transient
     private Project project = new Project(); // TODO: 11/05/20 handle npe otherwise
     private Long projectId;
@@ -51,7 +53,7 @@ public class Issue {
     private List<Issue> history = new ArrayList<>();
     public String getLink() { // TODO: 11/05/20 model should be divided from view
         return Endpoint.PROJECT+"/"+projectId+Endpoint.ISSUE+"/"+this.getIssueId();
-    }
+    } // TODO: 27/05/20 link should be independent of bean
     public String getProjectLink() { // TODO: 11/05/20 model should be divided from view
         return Endpoint.PROJECT+"/"+projectId;
     }
@@ -77,5 +79,10 @@ public class Issue {
                 ", submitterUserId=" + submitterUserId +
                 ", lastInHistory=" + lastInHistory +
                 '}';
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityType.ISSUE;
     }
 }

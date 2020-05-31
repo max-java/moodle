@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -30,10 +31,12 @@ public class UserService {
     }
 
     public User findUserByEmail(String email) {
+//        return erasePasswordDataBeforeResponse(userRepository.findByEmail(email)); todo: delete user password data if necessary
         return userRepository.findByEmail(email);
     }
 
     public User findUserByUserName(String userName) {
+//        return erasePasswordDataBeforeResponse(userRepository.findByUserName(userName)); todo: delete user password data if necessary
         return userRepository.findByUserName(userName);
     }
 
@@ -46,9 +49,21 @@ public class UserService {
     }
 
     public List<User> findAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAll().stream()
+//                .map(user -> erasePasswordDataBeforeResponse(user)) //todo: delete user password data if necessary
+                .collect(Collectors.toList());
     }
+
     public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) {
+//            user = Optional.of(erasePasswordDataBeforeResponse(user.get())); todo: delete user password data if necessary
+        }
+        return user;
+    }
+
+    public static User erasePasswordDataBeforeResponse(User user) {
+        user.setPassword("");
+        return user;
     }
 }

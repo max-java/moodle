@@ -5,6 +5,10 @@ import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.interview.service.QAndAService;
 import by.jrr.interview.bean.QAndA;
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfileService;
+import by.jrr.statistic.bean.TrackStatus;
+import by.jrr.statistic.service.UserProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,6 +28,9 @@ public class QAndAController {
     QAndAService qAndAService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    UserProgressService userProgressService;
+
 
     @GetMapping(Endpoint.Q_AND_A)
     public ModelAndView createNewQAndA() {
@@ -40,6 +47,11 @@ public class QAndAController {
         Optional<QAndA> qAndA = qAndAService.findById(id);
         if (qAndA.isPresent()) {
             mov.addObject("qAndA", qAndA.get());
+            TrackStatus trackStatus = userProgressService.getUserProfileForTrackable(qAndA.get());
+            if(trackStatus.equals(TrackStatus.NONE)) {
+                userProgressService.saveProgress(qAndA.get(), TrackStatus.READ);
+            }
+            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(qAndA.get()));
             mov.setViewName(View.Q_AND_A);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
@@ -64,26 +76,46 @@ public class QAndAController {
     public ModelAndView saveNewQAndA(@PathVariable Long id,
                                      @RequestParam(value = "question", required = false) String question,
                                      @RequestParam(value = "answer", required = false) String answer,
-                                     @RequestParam(value = "edit", required = false) boolean edit
+                                     @RequestParam(value = "edit", required = false) boolean edit,
+                                     @RequestParam Optional<String> setLearned,
+                                     @RequestParam Optional<String> save
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.Q_AND_A);
         if (edit) {
             Optional<QAndA> qAndA = qAndAService.findById(id);
             if (qAndA.isPresent()) {
+
                 mov.addObject("qAndA", qAndA.get());
                 mov.addObject("edit", true);
+                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(qAndA.get()));
+
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if(save.isPresent()) {
             QAndA qAndA = qAndAService.update(QAndA.builder()
                     .question(question)
                     .answer(answer)
                     .Id(id)
                     .build());
+
             mov.addObject("qAndA", qAndA);
             mov.addObject("edit", false);
+            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(qAndA));
+
+        } else if(setLearned.isPresent()) {
+            Optional<QAndA> qAndA = qAndAService.findById(id);
+            if (qAndA.isPresent()) {
+                userProgressService.saveProgress(qAndA.get(), TrackStatus.LEARNED);
+
+                mov.addObject("qAndA", qAndA.get());
+                mov.addObject("edit", false);
+                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(qAndA.get()));
+
+            } else {
+                mov.setViewName(View.PAGE_404);
+            }
         }
         return mov;
         // TODO: 11/05/20 replace if-else with private methods

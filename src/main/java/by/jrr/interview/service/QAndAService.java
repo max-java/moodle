@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,7 +22,7 @@ public class QAndAService {
         try {
             qAndAPage = qAndARepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
         } catch (Exception ex) {
-            qAndAPage = qAndARepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
+            qAndAPage = qAndARepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(500)));
         }
         return qAndAPage;
     }
@@ -38,6 +39,9 @@ public class QAndAService {
     }
     public Optional<QAndA> findById(Long id) {
         return qAndARepository.findById(id);
+    }
+    public void saveAll(List<QAndA> topicList) {
+        qAndARepository.saveAll(topicList);
     }
 
 

@@ -1,4 +1,4 @@
-package by.jrr.moodle.controller;
+package by.jrr;
 
 import by.jrr.auth.service.UserDataToModelService;
 import org.springframework.beans.factory.annotation.Autowired;
