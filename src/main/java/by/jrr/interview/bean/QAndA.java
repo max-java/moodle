@@ -30,9 +30,6 @@ public class QAndA implements Trackable {
     private String question;
     @Lob
     private String answer;
-    public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return Endpoint.Q_AND_A+"/"+this.getId();
-    }
 
     @Override
     public EntityType getType() {
@@ -42,5 +39,13 @@ public class QAndA implements Trackable {
     @Override
     public String getName() {
         return ""; // TODO: 30/05/20 consider for names
+    }
+
+    // TODO: 31/05/20 see QAndAService.class comment wich is  // TODO: 31/05/20 see QAndA.class comment
+    public String getTheme() {
+        if (this.theme == null) {
+            theme = "";
+        }
+        return theme;
     }
 }
