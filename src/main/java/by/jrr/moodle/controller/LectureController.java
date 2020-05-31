@@ -34,7 +34,7 @@ public class LectureController {
     @GetMapping(Endpoint.LECTURE)
     public ModelAndView createNewTopic() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.addObject("topic", new Topic());
+        mov.addObject("topic", new Lecture());
         mov.addObject("edit", true);
         mov.setViewName(View.LECTURE);
         return mov;

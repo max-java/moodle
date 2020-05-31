@@ -6,6 +6,8 @@ import by.jrr.constant.View;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.repository.TopicRepository;
 import by.jrr.moodle.service.TopicService;
+import by.jrr.statistic.bean.TrackStatus;
+import by.jrr.statistic.service.UserProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class TopicController {
     TopicService topicService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    UserProgressService userProgressService;
 
     @GetMapping(Endpoint.TOPIC)
     public ModelAndView createNewTopic() {
@@ -43,6 +47,11 @@ public class TopicController {
         Optional<Topic> topic = topicService.findById(id);
         if (topic.isPresent()) {
             mov.addObject("topic", topic.get());
+            TrackStatus trackStatus = userProgressService.getUserProfileForTrackable(topic.get());
+            if(trackStatus.equals(TrackStatus.NONE)) {
+                userProgressService.saveProgress(topic.get(), TrackStatus.READ); // TODO: 31/05/20 consider to move this to model
+            }
+            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
             mov.setViewName(View.TOPIC);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
@@ -70,19 +79,24 @@ public class TopicController {
                                      @RequestParam(value = "title", required = false) String title,
                                      @RequestParam(value = "subtitle", required = false) String subtitle,
                                      @RequestParam(value = "text", required = false) String text,
-                                     @RequestParam(value = "edit", required = false) boolean edit
+                                     @RequestParam(value = "edit", required = false) boolean edit,
+                                     @RequestParam Optional<String> setLearned,
+                                     @RequestParam Optional<String> save
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.TOPIC);
         if (edit) {
             Optional<Topic> topic = topicService.findById(id);
             if (topic.isPresent()) {
+
                 mov.addObject("topic", topic.get());
                 mov.addObject("edit", true);
+                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
+
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if (save.isPresent()){
             Topic topic = topicService.update(Topic.builder()
                     .title(title)
                     .subtitle(subtitle)
@@ -91,6 +105,19 @@ public class TopicController {
                     .build());
             mov.addObject("topic", topic);
             mov.addObject("edit", false);
+            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic));
+        } else if (setLearned.isPresent()) {
+            Optional<Topic> topic = topicService.findById(id);
+            if (topic.isPresent()) {
+                userProgressService.saveProgress(topic.get(), TrackStatus.LEARNED);
+
+                mov.addObject("topic", topic.get());
+                mov.addObject("edit", false);
+                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
+
+            } else {
+                mov.setViewName(View.PAGE_404);
+            }
         }
         return mov;
         // TODO: 11/05/20 replace if-else with private methods

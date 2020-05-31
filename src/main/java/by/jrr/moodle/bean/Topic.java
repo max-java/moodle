@@ -2,6 +2,8 @@ package by.jrr.moodle.bean;
 
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.feedback.bean.EntityType;
+import by.jrr.statistic.bean.Trackable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Topic {
+public class Topic implements Trackable {
 
     @javax.persistence.Id
     @GeneratedValue
@@ -23,7 +25,14 @@ public class Topic {
     private String subtitle;
     @Lob
     private String text;
-    public String getLink() { // TODO: 11/05/20 model should be divided from view
-        return Endpoint.TOPIC+"/"+this.getId();
+
+    @Override
+    public EntityType getType() {
+        return EntityType.TOPIC;
+    }
+
+    @Override
+    public String getName() {
+        return title;
     }
 }
