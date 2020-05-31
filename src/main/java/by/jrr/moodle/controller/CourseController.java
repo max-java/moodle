@@ -3,55 +3,45 @@ package by.jrr.moodle.controller;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Topic;
-import by.jrr.moodle.repository.TopicRepository;
+import by.jrr.moodle.service.CourseService;
 import by.jrr.moodle.service.TopicService;
-import by.jrr.statistic.bean.TrackStatus;
-import by.jrr.statistic.service.UserProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class TopicController {
+public class CourseController { // TODO: 30/05/20  make it like in userProfile & qAndA Trackable
 
     @Autowired
-    TopicService topicService;
+    CourseService courseService;
     @Autowired
     UserDataToModelService userDataToModelService;
-    @Autowired
-    UserProgressService userProgressService;
 
-    @GetMapping(Endpoint.TOPIC)
+    @GetMapping(Endpoint.COURSE)
     public ModelAndView createNewTopic() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.addObject("topic", new Topic());
+        mov.addObject("topic", new Course());
         mov.addObject("edit", true);
         mov.setViewName(View.TOPIC);
         return mov;
     }
 
-    @GetMapping(Endpoint.TOPIC + "/{id}")
+    @GetMapping(Endpoint.COURSE + "/{id}")
     public ModelAndView openTopicById(@PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Optional<Topic> topic = topicService.findById(id);
+        Optional<Course> topic = courseService.findById(id);
         if (topic.isPresent()) {
             mov.addObject("topic", topic.get());
-            TrackStatus trackStatus = userProgressService.getUserProfileForTrackable(topic.get());
-            if(trackStatus.equals(TrackStatus.NONE)) {
-                userProgressService.saveProgress(topic.get(), TrackStatus.READ); // TODO: 31/05/20 consider to move this to model
-            }
-            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
             mov.setViewName(View.TOPIC);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
@@ -60,44 +50,39 @@ public class TopicController {
         return mov;
     }
 
-    @PostMapping(Endpoint.TOPIC)
+    @PostMapping(Endpoint.COURSE)
     public ModelAndView saveNewTopic(
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "subtitle", required = false) String subtitle,
             @RequestParam(value = "text", required = false) String text
     ) {
-        Topic topic = topicService.create(Topic.builder()
+        Course topic = courseService.create(Course.builder()
                 .title(title)
                 .subtitle(subtitle)
                 .text(text)
                 .build());
-        return new ModelAndView("redirect:" + Endpoint.TOPIC + "/" + topic.getId());
+        return new ModelAndView("redirect:" + Endpoint.COURSE + "/" + topic.getId());
     }
 
-    @PostMapping(Endpoint.TOPIC + "/{id}")
+    @PostMapping(Endpoint.COURSE + "/{id}")
     public ModelAndView saveNewTopic(@PathVariable Long id,
                                      @RequestParam(value = "title", required = false) String title,
                                      @RequestParam(value = "subtitle", required = false) String subtitle,
                                      @RequestParam(value = "text", required = false) String text,
-                                     @RequestParam(value = "edit", required = false) boolean edit,
-                                     @RequestParam Optional<String> setLearned,
-                                     @RequestParam Optional<String> save
+                                     @RequestParam(value = "edit", required = false) boolean edit
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.setViewName(View.TOPIC);
+        mov.setViewName(View.COURSE);
         if (edit) {
-            Optional<Topic> topic = topicService.findById(id);
+            Optional<Course> topic = courseService.findById(id);
             if (topic.isPresent()) {
-
                 mov.addObject("topic", topic.get());
                 mov.addObject("edit", true);
-                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
-
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else if (save.isPresent()){
-            Topic topic = topicService.update(Topic.builder()
+        } else {
+            Course topic = courseService.update(Course.builder()
                     .title(title)
                     .subtitle(subtitle)
                     .text(text)
@@ -105,30 +90,17 @@ public class TopicController {
                     .build());
             mov.addObject("topic", topic);
             mov.addObject("edit", false);
-            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic));
-        } else if (setLearned.isPresent()) {
-            Optional<Topic> topic = topicService.findById(id);
-            if (topic.isPresent()) {
-                userProgressService.saveProgress(topic.get(), TrackStatus.LEARNED);
-
-                mov.addObject("topic", topic.get());
-                mov.addObject("edit", false);
-                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
-
-            } else {
-                mov.setViewName(View.PAGE_404);
-            }
         }
         return mov;
         // TODO: 11/05/20 replace if-else with private methods
     }
 
-    @GetMapping(Endpoint.TOPIC_LIST)
+    @GetMapping(Endpoint.COURSE_LIST)
     public ModelAndView findAll(@PathVariable(required = false) String page, @PathVariable(required = false) String size) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Page<Topic> topicList = topicService.findAll(page, size);
+        Page<Course> topicList = courseService.findAll(page, size);
         mov.addObject("topicList", topicList);
-        mov.setViewName(View.TOPIC_LIST);
+        mov.setViewName(View.COURSE_LIST);
         return mov;
     }
 }

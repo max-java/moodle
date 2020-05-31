@@ -1,7 +1,5 @@
 package by.jrr.moodle.bean;
 
-import by.jrr.constant.Endpoint;
-import by.jrr.constant.View;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.statistic.bean.Trackable;
 import lombok.AllArgsConstructor;
@@ -9,14 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Lob;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Topic implements Trackable {
+public class Lecture implements Trackable {
 
     @javax.persistence.Id
     @GeneratedValue
@@ -28,7 +28,7 @@ public class Topic implements Trackable {
 
     @Override
     public EntityType getType() {
-        return EntityType.TOPIC;
+        return EntityType.LECTURE;
     }
 
     @Override

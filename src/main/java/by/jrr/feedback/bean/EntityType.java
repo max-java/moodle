@@ -5,7 +5,8 @@ package by.jrr.feedback.bean;
  */
 public enum EntityType { // TODO: 27/05/20 bind them with classes
     TOPIC,
-    HOME_WORK,
+    LECTURE,
+    PRACTICE_QUESTION,
     INTERVIEW_QUESTION,
     BOOK,
     PROFILE,

@@ -22,13 +22,13 @@
             <div class="card card-solid">
                 <div class="card-body">
                     <div class="row">
-                        <a th:href="@{'/topic'}"> create </a>
+                        <a th:href="@{'/lecture'}"> create </a>
                     </div>
                     <!-- /.row -->
                     <div class="row d-flex align-items-stretch">
                         <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" th:each="topic : ${topicList}">
                             <div class="card bg-light">
-                                <a th:href="${topic.getLink()}">
+                                <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(topic)}">
                                     <div class="card-body pt-0">
                                         <div class="row">
                                             <div class="col-7">

@@ -1,38 +1,36 @@
 package by.jrr.moodle.bean;
 
-import by.jrr.constant.Endpoint;
-import by.jrr.constant.View;
 import by.jrr.feedback.bean.EntityType;
-import by.jrr.statistic.bean.Trackable;
+import by.jrr.feedback.bean.Reviewable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Lob;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Topic implements Trackable {
+public class PracticeQuestion implements Reviewable {
 
     @javax.persistence.Id
     @GeneratedValue
     private Long Id;
-    private String title;
-    private String subtitle;
+
+    private String name;
+    private String summary;
     @Lob
-    private String text;
+    private String description;
+    @Lob
+    private String reproSteps;
 
     @Override
     public EntityType getType() {
-        return EntityType.TOPIC;
-    }
-
-    @Override
-    public String getName() {
-        return title;
+        return EntityType.PRACTICE_QUESTION;
     }
 }

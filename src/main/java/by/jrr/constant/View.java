@@ -1,9 +1,18 @@
 package by.jrr.constant;
 
 public class View {
-    public static final String TOPIC = "topic";
-    public static final String TOPIC_LIST = "topicList";
     public static final String PAGE_404 = "error";
+
+    public static final String TOPIC = "moodle/topic";
+    public static final String TOPIC_LIST = "moodle/topicList";
+    public static final String LECTURE = "moodle/lecture";
+    public static final String LECTURE_LIST = "moodle/lectureList";
+    public static final String COURSE = "moodle/course";
+    public static final String COURSE_LIST = "moodle/courseList";
+    public static final String PRACTICE = "moodle/practice";
+    public static final String PRACTICE_LIST = "moodle/practiceList";
+
+
     public static final String Q_AND_A = "interview/question";
     public static final String Q_AND_A_LIST = "interview/questionList";
     public static final String PROJECT = "project/project";
