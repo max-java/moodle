@@ -2,6 +2,7 @@ package by.jrr.constant;
 
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Lecture;
+import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.profile.bean.Profile;
 import by.jrr.project.bean.Issue;
@@ -29,6 +30,11 @@ public class LinkGenerator {
             Course course = (Course) o;
             return Endpoint.COURSE + "/" + course.getId();
         }
+        if (o instanceof PracticeQuestion) {
+            PracticeQuestion practiceQuestion = (PracticeQuestion) o;
+            return Endpoint.PRACTICE + "/" + practiceQuestion.getId();
+        }
+
         return "#";
     }
 }

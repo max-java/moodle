@@ -9,6 +9,8 @@ public class View {
     public static final String LECTURE_LIST = "moodle/lectureList";
     public static final String COURSE = "moodle/course";
     public static final String COURSE_LIST = "moodle/courseList";
+    public static final String PRACTICE = "moodle/practice";
+    public static final String PRACTICE_LIST = "moodle/practiceList";
 
 
     public static final String Q_AND_A = "interview/question";

@@ -9,6 +9,8 @@ public class Endpoint {
     public static final String LECTURE_LIST = "/lectures";
     public static final String COURSE = "/course";
     public static final String COURSE_LIST = "/courses";
+    public static final String PRACTICE = "/practice";
+    public static final String PRACTICE_LIST = "/practices";
 
 
     public static final String Q_AND_A = "/question";
