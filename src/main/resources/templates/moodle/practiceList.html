@@ -21,6 +21,10 @@
             <!-- Default box -->
             <div class="card card-solid">
                 <div class="card-body">
+                    <div class="row">
+                        <a th:href="@{'/practice'}"> create </a>
+                    </div>
+                    <!-- /.row -->
                     <div class="row d-flex align-items-stretch">
                         <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" th:each="issue : ${issuePage}">
                             <div class="card bg-light">
