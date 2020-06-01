@@ -132,14 +132,14 @@
                     Login
                 </a>
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" th:if="${IS_AUTHENTICATED}">
-                    <img src="https://cdn.icon-icons.com/icons2/1161/PNG/512/1487716857-user_81635.png"
+                    <img th:src="${'/image/'+CURRENT_PROFILE.getId()}"
                          class="user-image img-circle elevation-2"
                          alt="User Image">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right" th:if="${IS_AUTHENTICATED}">
                     <!-- User image -->
                     <li class="user-header bg-primary">
-                        <img src="https://cdn.icon-icons.com/icons2/1161/PNG/512/1487716857-user_81635.png"
+                        <img th:src="${'/image/'+CURRENT_PROFILE.getId()}"
                              class="img-circle elevation-2"
                              alt="User Image">
                         <p th:text="${USER_NAME_AND_LASTNAME}">
@@ -154,7 +154,7 @@
                                 <a href="#">Followers</a>
                             </div>
                             <div class="col-4 text-center">
-                                <a href="#">Sales</a>
+                                <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(CURRENT_PROFILE)}">MyProfile</a>
                             </div>
                             <div class="col-4 text-center">
                                 <a href="#">Friends</a>

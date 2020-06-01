@@ -14,7 +14,7 @@ public class IndexController {
 
     @GetMapping("/")
     public ModelAndView openIndex() {
-        ModelAndView modelAndView = userDataToModelService.setIsAuthenticated(new ModelAndView());
+        ModelAndView modelAndView = userDataToModelService.setData(new ModelAndView());
         modelAndView.setViewName("starter");
         return modelAndView;
     }
