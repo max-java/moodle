@@ -85,6 +85,10 @@ public class ProfileService {
         return profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
     }
 
+    public Profile saveProfile(Profile profile) {
+        return profileRepository.save(profile);
+    }
+
     private Profile createAndSaveProfileForUser(User user) {
         return profileRepository.save(Profile.builder().userId(user.getId()).build());
     }

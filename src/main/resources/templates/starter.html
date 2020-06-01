@@ -256,6 +256,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE App -->
     <!--<script src="dist/js/adminlte.min.js"></script>-->
     <script th:src="@{/dist/js/adminlte.min.js}"></script>
+    <!-- bs-custom-file-input -->
+    <script th:src="@{/plugins/bs-custom-file-input/bs-custom-file-input.min.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
 </div>
 </body>
 </html>
