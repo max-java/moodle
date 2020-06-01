@@ -5,6 +5,8 @@ import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.bean.Topic;
+import by.jrr.portfolio.bean.Domain;
+import by.jrr.portfolio.bean.Subject;
 import by.jrr.profile.bean.Profile;
 import by.jrr.project.bean.Issue;
 
@@ -14,6 +16,14 @@ public class LinkGenerator {
         if (o instanceof Issue) {
             Issue issue = (Issue) o;
             return Endpoint.PROJECT + "/" + issue.getProjectId() + Endpoint.ISSUE + "/" + issue.getIssueId();
+        }
+        if (o instanceof Domain) {
+            Domain domain = (Domain) o;
+            return Endpoint.DOMAIN + "/" + domain.getId();
+        }
+        if (o instanceof Subject) {
+            Subject subject = (Subject) o;
+            return Endpoint.DOMAIN + "/" + subject.getDomainId() + Endpoint.SUBJECT + "/" + subject.getSubjectId();
         }
         if (o instanceof Profile) {
             Profile profile = (Profile) o;
