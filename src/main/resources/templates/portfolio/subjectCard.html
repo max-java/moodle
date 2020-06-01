@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="card" th:fragment="subjectCard">
+    <div class="card-body">
+        <div class="row">
+            <h1 class="card-title" th:text="${subject.getName()}"></h1>
+            <h3>&nbsp;</h3>
+            <a th:href="${subject.getDomainLink()}">Back To Domain</a>
+        </div>
+        <hr />
+        <div th:utext="${subject.getSummary()}"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>1. Description</h3>
+                <p th:utext="${subject.getDescription()}"></p>
+                <h3>2. Repro Steps</h3>
+                <p th:text="${subject.getReproSteps()}"></p>
+            </div>
+            <div class="col-md-6">
+                <p>type </p>
+                <h3 th:text="${subject.getSubjectType()}"></h3>
+                <p>Status </p>
+                <h3 th:text="${subject.getSubjectStatus()}"></h3>
+                <p>Assigned to </p>
+                <h3 th:text="${subject.getAssignee().getFullUserName()}"></h3>
+                <p>Submitter </p>
+                <h3 th:text="${subject.getSubmitter().getFullUserName()}"></h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
