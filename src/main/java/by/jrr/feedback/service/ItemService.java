@@ -7,12 +7,21 @@ import by.jrr.feedback.bean.Reviewable;
 import by.jrr.feedback.repository.ItemRepository;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.PracticeQuestionService;
+import by.jrr.portfolio.bean.Subject;
+import by.jrr.portfolio.service.SubjectService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
+
+
+/**
+ * get Reviewed methods should be added here for every reviewable to avoid NPE on
+ * org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression:
+ * "item.getReviewedEntity().getName()" (template: "feedback/codeReviewRequest" - line 27, col 52)
+ */
 
 @Controller
 public class ItemService {
@@ -23,6 +32,8 @@ public class ItemService {
     IssueService issueService;
     @Autowired
     PracticeQuestionService practiceQuestionService;
+    @Autowired
+    SubjectService subjectService;
 
     public Item getItemByReviewable(Reviewable reviewedEntity) {
         return itemRepository
@@ -61,6 +72,11 @@ public class ItemService {
                 Optional<PracticeQuestion> practiceQuestion = practiceQuestionService.findById(item.getReviewedEntityId());
                 item.setReviewedEntity(practiceQuestion.orElseGet(PracticeQuestion::new));
                 break;
+            case SUBJECT:
+                Optional<Subject> subject = subjectService.findBySubjectId(item.getReviewedEntityId());
+                item.setReviewedEntity(subject.orElseGet(Subject::new));
+                break;
+
         }
     }
 
@@ -73,6 +89,10 @@ public class ItemService {
         Optional<PracticeQuestion> pq = practiceQuestionService.findById(reviewedEntityId);
         if (pq.isPresent()) {
             return pq.get();
+        }
+        Optional<Subject> subject = subjectService.findBySubjectId(reviewedEntityId);
+        if (subject.isPresent()) {
+            return subject.get();
         }
         return new EmptyReviewable();
     }

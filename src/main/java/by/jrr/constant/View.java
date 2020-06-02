@@ -12,13 +12,19 @@ public class View {
     public static final String PRACTICE = "moodle/practice";
     public static final String PRACTICE_LIST = "moodle/practiceList";
 
-
-    public static final String Q_AND_A = "interview/question";
-    public static final String Q_AND_A_LIST = "interview/questionList";
     public static final String PROJECT = "project/project";
     public static final String PROJECT_LIST = "project/projectList";
     public static final String ISSUE = "project/issue";
     public static final String ISSUE_LIST = "project/issueList";
+
+    public static final String DOMAIN = "portfolio/domain";
+    public static final String DOMAIN_LIST = "portfolio/domainList";
+    public static final String SUBJECT = "portfolio/subject";
+    public static final String SUBJECT_LIST = "portfolio/subjectList";
+
+    public static final String Q_AND_A = "interview/question";
+    public static final String Q_AND_A_LIST = "interview/questionList";
+
     public static final String PROFILE_CARD = "profile/profileCard";
     public static final String PROFILE_LIST = "profile/profileList";
 
