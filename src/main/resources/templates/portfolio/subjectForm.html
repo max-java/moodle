@@ -34,7 +34,7 @@
                     <label>subjectType</label>
                     <select class="form-control" th:field="*{subjectType}">
 
-                        <option th:each="type : ${T(by.jrr.domain.bean.SubjectType).values()}"
+                        <option th:each="type : ${T(by.jrr.portfolio.bean.SubjectType).values()}"
                                 th:value="${type}" th:text="${type}"></option>
                     </select>
                 </div>
@@ -42,7 +42,7 @@
                     <label>subjectStatus</label>
                     <select class="form-control" th:field="*{subjectStatus}">
 
-                        <option th:each="status : ${T(by.jrr.domain.bean.SubjectStatus).values()}"
+                        <option th:each="status : ${T(by.jrr.portfolio.bean.SubjectStatus).values()}"
                                 th:value="${status}" th:text="${status}"></option>
                     </select>
                 </div>

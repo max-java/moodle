@@ -23,7 +23,7 @@
                     <div class="col-md-12" th:if="${edit}">
                         <div class="card">
                             <div class="card-body">
-                                <form method="post" th:insert="domain/subjectForm :: subjectForm"></form>
+                                <form method="post" th:insert="portfolio/subjectForm :: subjectForm"></form>
                             </div>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                             <button type="submit" name="edit" value="true">edit</button>
                             <button type="submit" name="requestForReview" value="requestForReview">Code review request</button>
                         </form>
-                        <div class="card" th:insert="domain/subjectCard :: subjectCard">
+                        <div class="card" th:insert="portfolio/subjectCard :: subjectCard">
                         </div>
                     </div>
                 </div>
