@@ -72,14 +72,15 @@
                         <tr>
                             <th>Name</th>
                             <th>Review Result</th>
+                            <th>Comment</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="review : ${reviewRequest.getReviews()}">
                             <td th:text="${review.getReviewerProfile().getUser().getFullUserName()}"></td>
                             <td th:text="${review.getReviewResult()}"></td>
+                            <td th:text="${review.getReviewerNotes()}"></td>
                         </tr>
-
                         </tbody>
                     </table>
 
