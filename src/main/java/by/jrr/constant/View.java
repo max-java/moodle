@@ -33,4 +33,6 @@ public class View {
     public static final String CODE_REVIEW_REQUEST_LIST = "feedback/codeReviewRequestList";
     public static final String CODE_REVIEW_FORM = "feedback/codeReviewForm";
     public static final String CODE_REVIEW_CARD = "feedback/codeReviewCard";
+
+    public static final String FILE = "files/files";
 }

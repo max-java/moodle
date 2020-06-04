@@ -27,7 +27,7 @@
                             <div class="card-body box-profile">
                                 <div class="text-center">
                                     <img class="profile-user-img img-fluid img-circle"
-                                         th:src="${'/image/'+profile.getId()}"
+                                         th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(profile)}"
                                          alt="User profile picture">
                                 </div>
 

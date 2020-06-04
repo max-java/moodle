@@ -10,6 +10,10 @@ import by.jrr.portfolio.bean.Subject;
 import by.jrr.profile.bean.Profile;
 import by.jrr.project.bean.Issue;
 
+/**
+ * Thi class is Used to simplify link creation in templates
+ */
+
 public class LinkGenerator {
 
     public static String getLinkTo(Object o) {
@@ -49,7 +53,14 @@ public class LinkGenerator {
             QAndA qAndA = (QAndA) o;
             return Endpoint.Q_AND_A + "/" + qAndA.getId();
         }
+        return "#";
+    }
 
+    public static String getLinkToUserpic(Object o) {
+        if (o instanceof Profile) {
+            Profile profile = (Profile) o;
+            return Endpoint.IMAGE + "/" + profile.getAvatarFileName();
+        }
         return "#";
     }
 }

@@ -3,6 +3,7 @@ package by.jrr.profile.controller;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.project.bean.Project;
@@ -22,6 +23,8 @@ public class ProfileCardController {
     UserDataToModelService userDataToModelService;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    FileService fileService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -38,39 +41,24 @@ public class ProfileCardController {
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView saveProfile(@PathVariable Long profileId,
-                                    @RequestParam MultipartFile avatar,
+                                    @RequestParam Optional<MultipartFile> avatar, // TODO: 04/06/20 handle NPE
                                     @RequestParam Optional<String> saveProfile) {
 
         if (saveProfile.isPresent()) {
-            Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-            if (profile.isPresent()) {
-                try {
-                    Profile updatedProfile = profile.get();
-                    updatedProfile.setAvatar(avatar.getBytes());
-                    profileService.saveProfile(updatedProfile);
-                } catch (IOException e) {
-                    // TODO: 01/06/20 log it
-                    e.printStackTrace();
+            if (avatar.isPresent()) {
+                Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
+                if (profile.isPresent()) {
+                    try {
+                        Profile updatedProfile = profile.get();
+                        updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get()));
+                        profileService.saveProfile(updatedProfile);
+                    } catch (IOException e) {
+                        // TODO: 01/06/20 log exceptions
+                        e.printStackTrace();
+                    }
                 }
             }
         }
-
         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
-
-    }
-
-    // TODO: 01/06/20 consider move in separate controller (see Profile.class comment)
-
-    @RequestMapping(value = "/image/{profileId}") // TODO: 01/06/20 add to constants
-    @ResponseBody
-    public byte[] helloWorld(@PathVariable Long profileId)  {
-        Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-        if (profile.isPresent()) {
-            if (profile.get().getAvatar() != null) {
-                return profile.get().getAvatar();
-            }
-        }
-
-        return "no image".getBytes(); // TODO: 01/06/20 return default image
     }
 }
