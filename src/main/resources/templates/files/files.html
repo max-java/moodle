@@ -38,6 +38,61 @@
                             </div>
                         </form>
 
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Files</h3>
+
+                                    <div class="card-tools">
+                                        <form>
+                                            <div class="input-group input-group-sm" style="width: 150px;">
+
+                                                <input class="form-control float-right" name="searchTerm"
+                                                       placeholder="Search"
+                                                       type="text">
+
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-default" type="submit"><i
+                                                            class="fas fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>NameWithExtension</th>
+                                            <th>Description</th>
+                                            <th>Extension</th>
+                                            <th>ContentType</th>
+                                            <th>Size</th>
+                                            <th>Link</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="file : ${files}">
+                                                <td th:text="${file.getName()}"></td>
+                                                <td th:text="${file.getNameWithExtension()}"></td>
+                                                <td th:text="${file.getDescription()}"></td>
+                                                <td th:text="${file.getExtension()}"></td>
+                                                <td th:text="${file.getContentType()}"></td>
+                                                <td th:text="${file.getSize()}"></td>
+                                                <td th:text="${T(by.jrr.constant.LinkGenerator).getLinkTo(file)}">
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+
                     </div>
                     <!-- /.row -->
                 </div>

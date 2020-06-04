@@ -38,4 +38,6 @@ public class Endpoint {
     public static final String REVIEW_LIST = "/reviews";
 
     public static final String IMAGE = "/img";
+    public static final String PDF = "/pdf";
+    public static final String FILES = "/files";
 }

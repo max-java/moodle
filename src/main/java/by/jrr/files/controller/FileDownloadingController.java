@@ -14,9 +14,14 @@ public class FileDownloadingController {
     @Autowired
     FileService fileService;
 
-    @RequestMapping(value = Endpoint.IMAGE+"/{fileName}") // TODO: 01/06/20 add to constants and add link to files
+    @RequestMapping(value = Endpoint.IMAGE+"/{fileName}")
     @ResponseBody
     public byte[] getFileBytesByFilename(@PathVariable String fileName)  {
+        return fileService.getFileBytes(fileName);
+    }
+    @RequestMapping(value = Endpoint.PDF+"/{fileName}")
+    @ResponseBody
+    public byte[] getPdfBytesByFilename(@PathVariable String fileName)  {
         return fileService.getFileBytes(fileName);
     }
 

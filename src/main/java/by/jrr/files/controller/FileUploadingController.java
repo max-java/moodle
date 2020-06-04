@@ -1,6 +1,9 @@
 package by.jrr.files.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.constant.Endpoint;
+import by.jrr.constant.View;
+import by.jrr.files.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -16,31 +21,36 @@ public class FileUploadingController {
 
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    FileService fileService;
 
-    @PostMapping("/files")
+    @PostMapping(Endpoint.FILES)
     public ModelAndView uploadFile(@RequestParam MultipartFile multipartFile,
                                     @RequestParam Optional<String> save) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         if(save.isPresent()) {
-            // TODO: 02/06/20 move to private method
-
+            try {
+                fileService.saveUploaded(multipartFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        mov.setViewName("files");
+        mov.addObject("files", fileService.getAllFileMetas());
+        mov.setViewName(View.FILE);
         return mov;
     }
-    @GetMapping("/files")
+    @GetMapping(Endpoint.FILES)
     public ModelAndView viewFiles() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-
-        mov.setViewName("files");
+        mov.addObject("files", fileService.getAllFileMetas());
+        mov.setViewName(View.FILE);
         return mov;
     }
     @GetMapping("/file")
     public ModelAndView downloadFile() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
 
-        mov.setViewName("files");
+        mov.setViewName(View.FILE);
         return mov;
     }
 }

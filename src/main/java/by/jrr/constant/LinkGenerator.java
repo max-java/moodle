@@ -1,5 +1,6 @@
 package by.jrr.constant;
 
+import by.jrr.files.bean.FileMeta;
 import by.jrr.interview.bean.QAndA;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Lecture;
@@ -53,6 +54,17 @@ public class LinkGenerator {
             QAndA qAndA = (QAndA) o;
             return Endpoint.Q_AND_A + "/" + qAndA.getId();
         }
+        //Files...
+        if (o instanceof FileMeta) {
+            FileMeta fileMeta = (FileMeta) o;
+            if (fileMeta.getContentType().startsWith("image/")) {
+                return Endpoint.IMAGE + "/" + fileMeta.getNameWithExtension();
+            }
+            if (fileMeta.getContentType().endsWith("/pdf")) {
+                return Endpoint.PDF + "/" + fileMeta.getNameWithExtension();
+            }
+        }
+
         return "#";
     }
 
@@ -63,4 +75,5 @@ public class LinkGenerator {
         }
         return "#";
     }
+
 }
