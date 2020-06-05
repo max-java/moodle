@@ -26,11 +26,12 @@ public class FileUploadingController {
 
     @PostMapping(Endpoint.FILES)
     public ModelAndView uploadFile(@RequestParam MultipartFile multipartFile,
+                                    @RequestParam Optional<String> description,
                                     @RequestParam Optional<String> save) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         if(save.isPresent()) {
             try {
-                fileService.saveUploaded(multipartFile);
+                fileService.saveUploaded(multipartFile, description);
             } catch (IOException e) {
                 e.printStackTrace();
             }

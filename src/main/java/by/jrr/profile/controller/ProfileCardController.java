@@ -50,7 +50,7 @@ public class ProfileCardController {
                 if (profile.isPresent()) {
                     try {
                         Profile updatedProfile = profile.get();
-                        updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get()));
+                        updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get(), Optional.empty()));
                         profileService.saveProfile(updatedProfile);
                     } catch (IOException e) {
                         // TODO: 01/06/20 log exceptions

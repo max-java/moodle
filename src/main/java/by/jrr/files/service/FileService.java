@@ -21,8 +21,11 @@ public class FileService {
     FileBytesRepository fileBytesRepository;
 
 
-    public String saveUploaded(MultipartFile file) throws IOException {
+    public String saveUploaded(MultipartFile file, Optional<String> description) throws IOException {
         FileMeta fileMeta = new FileMeta(file);
+        if (description.isPresent()) {
+            fileMeta.setDescription(description.get());
+        }
         fileMeta = fileMetaRepository.save(fileMeta);
         FileBytes fileBytes = new FileBytes(file, fileMeta);
         fileBytesRepository.save(fileBytes);
