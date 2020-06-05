@@ -23,7 +23,7 @@ public class ReviewRequest implements Cloneable{
     @GeneratedValue
     private Long Id;
     private Long itemId;
-    private Long reviewedEntityId; // TODO: 27/05/20 should it be duplicated here alongside with entityId in Item?
+    private Long reviewedEntityId; // TODO: 27/05/20 should it be duplicated here alongside with entityId in Item? 06/06/20 Well, it duplicated, but it quite handy.
     private Long requesterProfileId;
     @Lob
     private String requesterNotes;

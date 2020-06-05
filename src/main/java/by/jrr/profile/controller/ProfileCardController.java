@@ -6,6 +6,7 @@ import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
+import by.jrr.profile.service.ProfileStatisticService;
 import by.jrr.project.bean.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ public class ProfileCardController {
     ProfileService profileService;
     @Autowired
     FileService fileService;
+    @Autowired
+    ProfileStatisticService profileStatisticService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -33,6 +36,7 @@ public class ProfileCardController {
         if (profile.isPresent()) {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
+            mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
         } else {
             mov.setViewName(View.PAGE_404);
         }
