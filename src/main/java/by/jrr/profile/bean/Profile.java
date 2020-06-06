@@ -25,8 +25,6 @@ public class Profile {
     private User user;
     private long userId;
 
-    @Lob
-    private byte[] avatar; // TODO: 01/06/20  consider to save files in separate table, and store here only ids to them
     private String avatarFileName;
 
 }
