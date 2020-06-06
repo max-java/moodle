@@ -52,7 +52,8 @@ public class User {
         return userName + " " + lastName;
     }
     public String getAllRoles() {
-        return roles.stream().map(role -> role.getRole()).collect(Collectors.joining(", ", "{", "}"));
+        return roles.stream()
+                .map(role -> role.getRole().name())
+                .collect(Collectors.joining(", ", "{", "}"));
     }
-
 }

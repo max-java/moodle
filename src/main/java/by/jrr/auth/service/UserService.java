@@ -2,6 +2,7 @@ package by.jrr.auth.service;
 
 import by.jrr.auth.bean.Role;
 import by.jrr.auth.bean.User;
+import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,15 @@ public class UserService {
         return userRepository.findByUserName(userName);
     }
 
+    /** original place where new user has been created */
     public User saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
-        Role userRole = roleRepository.findByRole("USER");
+
+        Role userRole = roleRepository.findByRole(UserRoles.GUEST);
+        if (userRole == null) {
+            userRole = roleRepository.save(new Role(null, UserRoles.GUEST));
+        }
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
