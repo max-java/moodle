@@ -54,6 +54,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// TODO: 06/06/20 replace with template method                                              //
+//                                                                                          //
+    public void addRoleToUser(UserRoles userRole, Long userId) {                            //
+        Role role = roleRepository.findByRole(userRole);
+        if (role == null) {
+            role = roleRepository.save(new Role(null, userRole));
+        }//
+        Optional<User> userOp = userRepository.findById(userId);                            //
+        if(userOp.isPresent()) {                                                            //
+            User user = userOp.get();                                                       //
+            user.getRoles().add(role);                                                      //
+            userRepository.save(user);                                                      //
+        }                                                                                   //
+    }                                                                                       //
+    public void removeRoleFromUser(UserRoles userRole, Long userId) {                       //
+        Role role = roleRepository.findByRole(userRole);                                    //
+        Optional<User> userOp = userRepository.findById(userId);                            //
+        if(userOp.isPresent()) {                                                            //
+            User user = userOp.get();                                                       //
+            user.getRoles().remove(role);                                                   //
+            userRepository.save(user);                                                      //
+        }                                                                                   //
+    }                                                                                       //
+//                                                                                          //
+//                                                                                          //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
     public List<User> findAllUsers() {
         return userRepository.findAll().stream()
 //                .map(user -> erasePasswordDataBeforeResponse(user)) //todo: delete user password data if necessary
