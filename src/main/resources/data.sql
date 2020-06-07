@@ -10,7 +10,8 @@ CREATE TABLE users
     last_name varchar(255) DEFAULT NULL,
     name      varchar(255) DEFAULT NULL,
     password  varchar(255) DEFAULT NULL,
-    user_name varchar(255) DEFAULT NULL
+    user_name varchar(255) DEFAULT NULL,
+    phone varchar(255) DEFAULT NULL
 );
 
 
@@ -31,7 +32,8 @@ INSERT INTO roles
 VALUES (1, 'ADMIN');
 
 INSERT INTO users
-VALUES (1, TRUE, 'user@dev', 'dev', 'user', '$2a$10$XizdxtpAW8xUbxSW.3q4k.bwhqMOcac8OTm8/vKo0VwzKux/8Smnu', 'userdev');
+VALUES (1, TRUE, 'user@dev', 'dev', 'user', '$2a$10$XizdxtpAW8xUbxSW.3q4k.bwhqMOcac8OTm8/vKo0VwzKux/8Smnu', 'userdev', '123123123');
+
 
 INSERT INTO user_role
 VALUES (1, 1);

@@ -42,15 +42,16 @@ public class UserService {
     }
 
     /** original place where new user has been created */
-    public User saveUser(User user) {
+    public User saveUser(User user, Optional<UserRoles> userRoleOp) {
+        UserRoles newUserRole = userRoleOp.orElseGet(() -> UserRoles.GUEST);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
 
-        Role userRole = roleRepository.findByRole(UserRoles.GUEST);
-        if (userRole == null) {
-            userRole = roleRepository.save(new Role(null, UserRoles.GUEST));
+        Role userRole = roleRepository.findByRole(newUserRole);
+        if (userRole == null) { //fix to store new UserRoles ids based on new enum values
+            userRole = roleRepository.save(new Role(null, newUserRole));
         }
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
 

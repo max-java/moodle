@@ -43,6 +43,7 @@ public class ProfileCardController {
             mov.setViewName(View.PAGE_404);
         }
         return mov;
+//        <a href="/stream/register">new Stream</a> | <a href="/team/register">new Team</a> // TODO: 07/06/20
     }
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}")

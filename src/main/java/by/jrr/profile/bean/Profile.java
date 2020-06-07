@@ -26,7 +26,6 @@ public class Profile {
     private long userId;
 
     private String avatarFileName;
-
-
+    private Long ownerProfileId;
 
 }

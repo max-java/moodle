@@ -20,7 +20,6 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-6"><h2><span class="text-success" th:utext="${successMessage}"></span></h2></div>
                     <div class="register-box align-content-center">
                         <div class="register-logo">
                             <a href=""><b>Java</b>Guru</a>
@@ -30,8 +29,10 @@
                             <div class="card-body register-card-body">
                                 <p class="login-box-msg">Register a new membership</p>
 
-                                <form autocomplete="off" action="#" th:action="@{/registration}"
-                                      th:object="${user}" method="post" role="form">
+                                <form autocomplete="off"
+                                      th:object="${user}"
+                                      method="post"
+                                      role="form">
                                     <label th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></label><br />
                                     <div class="input-group mb-3">
                                         <input type="text" th:field="*{userName}" placeholder="Login" class="form-control" />
@@ -52,28 +53,10 @@
                                     </div>
                                     <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></label><br />
                                     <div class="input-group mb-3">
-                                        <input type="text" th:field="*{lastName}" placeholder="Last Name" class="form-control" >
+                                        <input type="text" th:field="*{lastName}" placeholder="Decription" class="form-control" >
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-user"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></label><br />
-                                    <div class="input-group mb-3">
-                                        <input type="text" th:field="*{email}" placeholder="Email" class="form-control" >
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <span class="fas fa-envelope"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <label th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></label><br />
-                                    <div class="input-group mb-3">
-                                        <input type="text" th:field="*{phone}" placeholder="Phone" class="form-control" >
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <span class="fas fa-envelope"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -87,7 +70,7 @@
                                         </div>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Retype password">
+                                        <input type="password" name="retypePassword" placeholder="Retype password" class="form-control" >
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-lock"></span>

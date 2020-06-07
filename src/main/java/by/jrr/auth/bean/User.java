@@ -34,14 +34,17 @@ public class User {
     private String email;
     @Column(name = "password")
     @Length(min = 5, message = "Пожалуйста, выберите пароль длиннее 5 символов")
-    @NotEmpty(message = "Укажите пароль")
+    @NotEmpty(message = "Пожалуйста, укажите  пароль")
     private String password;
     @Column(name = "name")
-    @NotEmpty(message = "Укажите Имя")
+    @NotEmpty(message = "Пожалуйста, укажите  Имя")
     private String name;
     @Column(name = "last_name")
-    @NotEmpty(message = "Укажите Фамилию")
+    @NotEmpty(message = "Пожалуйста, укажите  Фамилию")
     private String lastName;
+    @Column(name = "phone")
+    @NotEmpty(message = "Пожалуйста, укажите номер телефона, по которому с Вами может связаться куратор")
+    private String phone;
     @Column(name = "active")
     private Boolean active;
     @ManyToMany(cascade = CascadeType.MERGE)

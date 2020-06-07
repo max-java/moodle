@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class LoginController {
@@ -37,7 +39,8 @@ public class LoginController {
     }
 
     @PostMapping(value = "/registration")
-    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult,
+                                      @RequestParam Optional<String> retypePassword) { // TODO: 07/06/20 consider to make it optional
         ModelAndView modelAndView = new ModelAndView();
         User userExists = userService.findUserByUserName(user.getUserName());
         if (userExists != null) {
@@ -45,10 +48,17 @@ public class LoginController {
                     .rejectValue("userName", "error.user",
                             "Пользователь с таким именем пользователя уже существует. Пожалуйста, придумайте что-то новое");
         }
+
+        if(!retypePassword.isPresent() || !user.getPassword().equals(retypePassword)) {
+            bindingResult
+                    .rejectValue("password", "error.user",
+                            "Пароли не совпадают");
+        }
+
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("registration");
         } else {
-            userService.saveUser(user);
+            userService.saveUser(user, Optional.empty());
             modelAndView.addObject("successMessage", "Пользователь успешно зарегистрирован");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("registration");

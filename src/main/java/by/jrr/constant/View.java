@@ -27,6 +27,7 @@ public class View {
 
     public static final String PROFILE_CARD = "profile/profileCard";
     public static final String PROFILE_LIST = "profile/profileList";
+    public static final String STREAM_TEAM_REGISTRATION_FORM = "profile/streamTeamRegistration";
 
     public static final String CODE_REVIEW_REQUEST_FORM = "feedback/codeReviewRequest";
     public static final String CODE_REVIEW_REQUEST_CARD = "feedback/codeReviewRequestCard";

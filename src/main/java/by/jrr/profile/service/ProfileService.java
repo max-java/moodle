@@ -82,15 +82,19 @@ public class ProfileService {
     public Profile getCurrentUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
-        return profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
+        Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
+        profile.setUser(user);
+        return profile;
     }
 
     public Profile saveProfile(Profile profile) {
         return profileRepository.save(profile);
     }
 
-    private Profile createAndSaveProfileForUser(User user) {
-        return profileRepository.save(Profile.builder().userId(user.getId()).build());
+    public Profile createAndSaveProfileForUser(User user) {
+        Profile profile = profileRepository.save(Profile.builder().userId(user.getId()).build());
+        profile.setOwnerProfileId(getCurrentUserProfile().getId());
+        return saveProfile(profile);
     }
 
     private List<User> searchUsersByAnyUserField(String searchTerm) {

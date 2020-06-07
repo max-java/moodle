@@ -40,4 +40,9 @@ public class Endpoint {
     public static final String IMAGE = "/img";
     public static final String PDF = "/pdf";
     public static final String FILES = "/files";
+
+
+    public static final String REGISTER_STREAM = "/stream/register";
+    public static final String REGISTER_TEAM = "/team/register";
+
 }
