@@ -49,7 +49,9 @@ public class ProfileCardController {
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView saveProfile(@PathVariable Long profileId,
                                     @RequestParam Optional<MultipartFile> avatar, // TODO: 04/06/20 handle NPE
-                                    @RequestParam Optional<String> saveProfile) {
+                                    @RequestParam Optional<String> saveProfile,
+                                    @RequestParam Optional<String> subscribe
+                                    ) {
 
         if (saveProfile.isPresent()) {
             if (avatar.isPresent()) {
@@ -65,6 +67,9 @@ public class ProfileCardController {
                     }
                 }
             }
+        }
+        if(subscribe.isPresent()) {
+            profileService.requestSubcriptionToProfile(profileId, profileService.getCurrentUserProfile().getId());
         }
         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
     }

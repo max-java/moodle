@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,5 +29,8 @@ public class Profile {
 
     private String avatarFileName;
     private Long ownerProfileId;
+
+    @Transient
+    private List<StreamAndTeamSubscriber> subscribers = new ArrayList<>();
 
 }

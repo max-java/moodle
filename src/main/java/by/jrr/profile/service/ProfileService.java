@@ -5,6 +5,8 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.StreamAndTeamSubscriber;
+import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,8 @@ public class ProfileService {
     UserSearchService userSearchService;
     @Autowired
     ProfileRepository profileRepository;
+    @Autowired
+    StreamAndTeamSubscriberService streamAndTeamSubscriberService;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -61,6 +65,18 @@ public class ProfileService {
 
     private void setUserDataToProfile(Profile profile) {
         userService.findUserById(profile.getUserId()).ifPresent(user -> profile.setUser(user));
+
+        if (profile.getUser().hasRole(UserRoles.STREAM) // TODO: 07/06/20 split to setProfileData & setSubscribers
+                || profile.getUser().hasRole(UserRoles.TEAM)) {
+            List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
+            for (StreamAndTeamSubscriber subscriber : subscribers) {
+                Optional<Profile> optionalProfile = this.findProfileByProfileId(subscriber.getSubscriberProfileId());
+                if (optionalProfile.isPresent()) {
+                    subscriber.setSubscriberProfile(optionalProfile.get()); // TODO: 07/06/20 consider refactoring to Java8 style
+                }
+            }
+            profile.setSubscribers(subscribers);
+        }
     }
 
     public void createProfileForUsers() {
@@ -98,15 +114,22 @@ public class ProfileService {
     // TODO: 07/06/20 возможно, нужно проверять собственника только если юзер тим или стрим. В остальных случаях считать собственником по профиль айди.
     // TODO: 07/06/20 тогда даже если в этом месте косяк, секьюрность не афектнет
     // TODO: 07/06/20 В любом профиле собственник = тот, чей это профиль, кроме стрим или группа.
+    // TODO: 07/06/20 Cito! не работает это, NPE. Consider how to set profile Owner?
     public Profile createAndSaveProfileForUser(User user) {
         Profile profile = profileRepository.save(Profile.builder().userId(user.getId()).build());
-        if (profile.getUser().getRoles().contains(UserRoles.TEAM)
-                || profile.getUser().getRoles().contains(UserRoles.STREAM)) {
-            profile.setOwnerProfileId(getCurrentUserProfile().getId());
-        } else {
-            profile.setOwnerProfileId(profile.getId());
-        }
+//        if (profile.getUser().getRoles().contains(UserRoles.TEAM)
+//                || profile.getUser().getRoles().contains(UserRoles.STREAM)) {
+//            profile.setOwnerProfileId(getCurrentUserProfile().getId());
+//        } else {
+//            profile.setOwnerProfileId(profile.getId());
+//        }
         return saveProfile(profile);
+    }
+
+    public void requestSubcriptionToProfile(Long streamTeamProfileId, Long subscriberProfileId) {
+        streamAndTeamSubscriberService.updateSubscription(streamTeamProfileId,
+                subscriberProfileId,
+                SubscriptionStatus.REQUESTED);
     }
 
     private List<User> searchUsersByAnyUserField(String searchTerm) {

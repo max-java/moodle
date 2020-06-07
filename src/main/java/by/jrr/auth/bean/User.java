@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,5 +59,16 @@ public class User {
         return roles.stream()
                 .map(role -> role.getRole().name())
                 .collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    public boolean hasRole(UserRoles role) { // TODO: 07/06/20 consider to move in userService and profileService
+        List<UserRoles> result = roles.stream()
+                .map(r -> r.getRole())
+                .filter(r -> r.equals(role))
+                .collect(Collectors.toList());
+        if (result.size()>0) {
+            return true;
+        }
+        return false;
     }
 }
