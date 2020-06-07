@@ -1,6 +1,7 @@
 package by.jrr.profile.service;
 
 import by.jrr.auth.bean.User;
+import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.profile.bean.Profile;
@@ -37,9 +38,9 @@ public class ProfileService {
         // pages are begins from 0, but userFriendly is to begin from 1
         int page = userFriendlyNumberOfPage.orElseGet(DEFAULT_PAGE_NUMBER) - 1;
         int elem = numberOfElementsPerPage.orElseGet(DEFAULT_ELEMENTS_PER_PAGE);
-        if(searchTerm.isPresent()) {
+        if (searchTerm.isPresent()) {
             List<User> userList = searchUsersByAnyUserField(searchTerm.get());
-            if (userList.size()!= 0) {
+            if (userList.size() != 0) {
                 Iterable<Long> ids = userList.stream().map(User::getId).collect(Collectors.toList());
                 List<Profile> profiles = profileRepository.findAllByUserIdIn(ids);
 
@@ -47,7 +48,7 @@ public class ProfileService {
                 Pageable pageable = PageRequest.of(page, elem);
                 int pageOffset = (int) pageable.getOffset(); // TODO: 26/05/20 dangerous cast!
                 int toIndex = (pageOffset + elem) > profiles.size() ? profiles.size() : pageOffset + elem;
-                Page<Profile> profilePageImpl  = new PageImpl<>(profiles.subList(pageOffset, toIndex), pageable, profiles.size());
+                Page<Profile> profilePageImpl = new PageImpl<>(profiles.subList(pageOffset, toIndex), pageable, profiles.size());
                 profiles.forEach(profile -> setUserDataToProfile(profile));
                 return profilePageImpl;
             }
@@ -79,6 +80,7 @@ public class ProfileService {
         profile.ifPresent(p -> setUserDataToProfile(p));
         return profile;
     }
+
     public Profile getCurrentUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
@@ -91,9 +93,19 @@ public class ProfileService {
         return profileRepository.save(profile);
     }
 
+
+    // TODO: 07/06/20 выглядит стремно... возможно, если его дернуть не из того места. будет неожиданное поведение. Облажить тестами.
+    // TODO: 07/06/20 возможно, нужно проверять собственника только если юзер тим или стрим. В остальных случаях считать собственником по профиль айди.
+    // TODO: 07/06/20 тогда даже если в этом месте косяк, секьюрность не афектнет
+    // TODO: 07/06/20 В любом профиле собственник = тот, чей это профиль, кроме стрим или группа.
     public Profile createAndSaveProfileForUser(User user) {
         Profile profile = profileRepository.save(Profile.builder().userId(user.getId()).build());
-        profile.setOwnerProfileId(getCurrentUserProfile().getId());
+        if (profile.getUser().getRoles().contains(UserRoles.TEAM)
+                || profile.getUser().getRoles().contains(UserRoles.STREAM)) {
+            profile.setOwnerProfileId(getCurrentUserProfile().getId());
+        } else {
+            profile.setOwnerProfileId(profile.getId());
+        }
         return saveProfile(profile);
     }
 
