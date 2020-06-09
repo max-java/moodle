@@ -45,4 +45,6 @@ public class Endpoint {
     public static final String REGISTER_STREAM = "/stream/register";
     public static final String REGISTER_TEAM = "/team/register";
 
+    public static final String REGISTER_USER_AND_ENROLL_TO_STREAM = "/registerAndSubscribe";
+
 }

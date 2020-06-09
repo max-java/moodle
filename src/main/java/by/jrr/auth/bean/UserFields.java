@@ -9,6 +9,7 @@ public enum UserFields {
     PASSWORD("password"),
     NAME("name"),
     LAST_NAME("lastName"),
+    FIRST_AND_LAST_NAME("firstAndLastName"),
     PHONE("phone");
 
     private String asString;

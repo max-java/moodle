@@ -49,7 +49,7 @@ public class LoginController {
                             "Пользователь с таким именем пользователя уже существует. Пожалуйста, придумайте что-то новое");
         }
 
-        if(!retypePassword.isPresent() || !user.getPassword().equals(retypePassword)) {
+        if(!retypePassword.isPresent() || !user.getPassword().equals(retypePassword.get())) {
             bindingResult
                     .rejectValue("password", "error.user",
                             "Пароли не совпадают");

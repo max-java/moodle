@@ -1,0 +1,71 @@
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--include example-->
+<div th:include="registerAndSubscribeForm :: quickRegisterForm"
+     th:with="user=${user_},
+              courseId=${courseId_},
+              streamAndTeamProfileId=${streamAndTeamProfileId_}">
+</div>
+<!--end of include example-->
+
+<!--registration form: it is need an user object ot bind -->
+<div th:fragment="quickRegisterForm">
+    <form   autocomplete="off"
+            th:action="@{/registerAndSubscribe}"
+            method="post"
+            role="form">
+        <input type="hidden" name="streamAndTeamProfileId" th:value="${streamAndTeamProfileId}">
+        <input type="hidden" name="courseId" th:value="${courseId}">
+        <div class="input-group mb-3">
+            <input  type="text"
+                    name="firstAndLastName"
+                    th:value="${user.firstAndLastName}"
+                    placeholder="Ваше имя и фамилия"
+                    class="form-control" >
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-user"></span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text"
+                   name="email"
+                   th:value="${user.email}"
+                   placeholder="Ваш Email"
+                   class="form-control" >
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text"
+                   name="phone"
+                   th:value="${user.phone}"
+                   placeholder="Номер телефона"
+                   class="form-control" >
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                &nbsp;
+            </div>
+            <!-- /.col -->
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary btn-block"><b>Записаться</b></button>
+            </div>
+            <!-- /.col -->
+        </div>
+    </form>
+</div>
+<!--end of registration form-->
+
+</body>
+</html>

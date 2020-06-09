@@ -116,7 +116,15 @@ public class ProfileService {
     // TODO: 07/06/20 В любом профиле собственник = тот, чей это профиль, кроме стрим или группа.
     // TODO: 07/06/20 Cito! не работает это, NPE. Consider how to set profile Owner?
     public Profile createAndSaveProfileForUser(User user) {
-        Profile profile = profileRepository.save(Profile.builder().userId(user.getId()).build());
+        Profile profile = profileRepository
+                .save(
+                        Profile
+                                .builder()
+                                .userId(
+                                        user
+                                                .getId())
+                                .build());
+        // set profile owner
 //        if (profile.getUser().getRoles().contains(UserRoles.TEAM)
 //                || profile.getUser().getRoles().contains(UserRoles.STREAM)) {
 //            profile.setOwnerProfileId(getCurrentUserProfile().getId());
@@ -126,7 +134,7 @@ public class ProfileService {
         return saveProfile(profile);
     }
 
-    public void requestSubcriptionToProfile(Long streamTeamProfileId, Long subscriberProfileId) {
+    public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
         streamAndTeamSubscriberService.updateSubscription(streamTeamProfileId,
                 subscriberProfileId,
                 SubscriptionStatus.REQUESTED);

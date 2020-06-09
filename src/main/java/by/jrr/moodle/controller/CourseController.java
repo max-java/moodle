@@ -1,5 +1,6 @@
 package by.jrr.moodle.controller;
 
+import by.jrr.auth.bean.User;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -7,6 +8,7 @@ import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.service.CourseService;
 import by.jrr.moodle.service.TopicService;
+import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,10 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.addObject("topic", new Course());
         mov.addObject("edit", true);
-        mov.setViewName(View.TOPIC);
+        mov.addObject( true);
+
+
+        mov.setViewName(View.COURSE);
         return mov;
     }
 
@@ -42,7 +47,11 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         Optional<Course> topic = courseService.findById(id);
         if (topic.isPresent()) {
             mov.addObject("topic", topic.get());
-            mov.setViewName(View.TOPIC);
+
+            mov.addObject("user", User.builder().userName("userNameMy").firstAndLastName("firstAndLastName").email("email").phone("phone").build());
+            mov.addObject("streamAndTeamProfileId", 11L); // TODO: 07/06/20 temp, debugging value
+
+            mov.setViewName(View.COURSE);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
             mov.setViewName(View.PAGE_404);
@@ -90,6 +99,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
                     .build());
             mov.addObject("topic", topic);
             mov.addObject("edit", false);
+            return new ModelAndView("redirect:" + Endpoint.COURSE + "/" + id);
         }
         return mov;
         // TODO: 11/05/20 replace if-else with private methods

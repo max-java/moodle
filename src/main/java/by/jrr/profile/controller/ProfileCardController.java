@@ -69,7 +69,7 @@ public class ProfileCardController {
             }
         }
         if(subscribe.isPresent()) {
-            profileService.requestSubcriptionToProfile(profileId, profileService.getCurrentUserProfile().getId());
+            profileService.enrollToStreamTeamProfile(profileId, profileService.getCurrentUserProfile().getId());
         }
         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
     }
