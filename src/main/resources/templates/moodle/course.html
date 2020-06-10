@@ -50,12 +50,14 @@
                                 </div>
                                 <hr />
 
-                                <div th:include="/profile/registerAndSubscribeForm :: quickRegisterForm"
+                                <div th:unless="${IS_AUTHENTICATED}"
+                                     th:include="/profile/registerAndSubscribeForm :: quickRegisterForm"
                                      th:with="user=${user},
                                               courseId=${topic.getId()}">
                                 </div>
 
-                                <form method="post">
+                                <form th:if="${IS_AUTHENTICATED}"
+                                      method="post">
                                     <button type="submit"
                                             name="subscribe"
                                             value="subscribe"

@@ -1,6 +1,7 @@
 package by.jrr.auth.configuration;
 
 import by.jrr.auth.service.MyUserDetailsService;
+import by.jrr.constant.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -38,10 +39,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.
                 authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/profile/**").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
+                .antMatchers(Endpoint.COURSE+"/*").permitAll()
+                .antMatchers(Endpoint.COURSE_LIST).permitAll()
                 .antMatchers("/registration").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
