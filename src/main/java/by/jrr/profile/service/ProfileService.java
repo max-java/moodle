@@ -164,7 +164,8 @@ public class ProfileService {
 
     public Optional<Profile> findNearestFromNowOpennForEnrolStreamByCourseId(Long courseId) {
         Optional<Profile> profileOp = profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now()).stream()
-                .min(Comparator.comparing(p -> p.getDateEnd()));
+                .filter(p -> p.getDateStart() != null)
+                .min(Comparator.comparing(p -> p.getDateStart()));
         return profileOp;
     }
 }

@@ -89,7 +89,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.COURSE);
         if(subscribe.isPresent()) { // TODO: 10/06/20 move here register and subscribe!!!!
-            enrollCurentUser(id);
+            return enrollCurentUser(id);
         }
         else if (edit) {
             Optional<Course> topic = courseService.findById(id);
@@ -114,12 +114,14 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         // TODO: 11/05/20 replace if-else with private methods
     }
 
-    private void enrollCurentUser(Long courseId) {
+    private ModelAndView enrollCurentUser(Long courseId) {
         Optional<Profile> stream = streamAndTeamSubscriberService.findStreamForCourse(courseId);
         if (stream.isPresent()){
             streamAndTeamSubscriberService.updateSubscription(stream.get().getId(), profileService.getCurrentUserProfile().getId(), SubscriptionStatus.REQUESTED);
+            return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + stream.get().getId());
         } else {
             // TODO: 10/06/20 handle exception no open courses
+            return new ModelAndView("redirect:" + Endpoint.COURSE + "/" + courseId);
         }
     }
 
