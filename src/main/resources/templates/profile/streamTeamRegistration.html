@@ -33,6 +33,7 @@
                                       th:object="${user}"
                                       method="post"
                                       role="form">
+                                    <input name="courseId" th:value="${courseId}" type="hidden" />
                                     <label th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></label><br />
                                     <div class="input-group mb-3">
                                         <input type="text" th:field="*{userName}" placeholder="Login" class="form-control" />

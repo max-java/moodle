@@ -8,7 +8,10 @@ import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.service.CourseService;
 import by.jrr.moodle.service.TopicService;
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.service.ProfileService;
+import by.jrr.profile.service.StreamAndTeamSubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Controller
 public class CourseController { // TODO: 30/05/20  make it like in userProfile & qAndA Trackable
@@ -28,6 +32,10 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
     CourseService courseService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    StreamAndTeamSubscriberService streamAndTeamSubscriberService;
+    @Autowired
+    ProfileService profileService;
 
     @GetMapping(Endpoint.COURSE)
     public ModelAndView createNewTopic() {
@@ -47,10 +55,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         Optional<Course> topic = courseService.findById(id);
         if (topic.isPresent()) {
             mov.addObject("topic", topic.get());
-
-            mov.addObject("user", User.builder().userName("userNameMy").firstAndLastName("firstAndLastName").email("email").phone("phone").build());
-            mov.addObject("streamAndTeamProfileId", 11L); // TODO: 07/06/20 temp, debugging value
-
+            mov.addObject("user", new User()); // TODO: 10/06/20 is it really need?
             mov.setViewName(View.COURSE);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
@@ -78,11 +83,15 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
                                      @RequestParam(value = "title", required = false) String title,
                                      @RequestParam(value = "subtitle", required = false) String subtitle,
                                      @RequestParam(value = "text", required = false) String text,
-                                     @RequestParam(value = "edit", required = false) boolean edit
+                                     @RequestParam(value = "edit", required = false) boolean edit,
+                                     @RequestParam Optional<String> subscribe
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.COURSE);
-        if (edit) {
+        if(subscribe.isPresent()) { // TODO: 10/06/20 move here register and subscribe!!!!
+            enrollCurentUser(id);
+        }
+        else if (edit) {
             Optional<Course> topic = courseService.findById(id);
             if (topic.isPresent()) {
                 mov.addObject("topic", topic.get());
@@ -103,6 +112,15 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         }
         return mov;
         // TODO: 11/05/20 replace if-else with private methods
+    }
+
+    private void enrollCurentUser(Long courseId) {
+        Optional<Profile> stream = streamAndTeamSubscriberService.findStreamForCourse(courseId);
+        if (stream.isPresent()){
+            streamAndTeamSubscriberService.updateSubscription(stream.get().getId(), profileService.getCurrentUserProfile().getId(), SubscriptionStatus.REQUESTED);
+        } else {
+            // TODO: 10/06/20 handle exception no open courses
+        }
     }
 
     @GetMapping(Endpoint.COURSE_LIST)

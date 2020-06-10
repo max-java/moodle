@@ -5,6 +5,7 @@ import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
+import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
@@ -17,6 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+
+// TODO: 10/06/20 I got registration on course at course controller and registration here.
+//  Consider to make one controller that holds all registrations and enrolling (subscriptions)
+//  subscribe (Записаться) is a key to search
 
 @Controller
 public class RegisterAndSubscribeController {
@@ -40,7 +45,6 @@ public class RegisterAndSubscribeController {
     public ModelAndView registerAndSubscribe(@RequestParam Optional<String> firstAndLastName,
                                              @RequestParam Optional<String> phone,
                                              @RequestParam Optional<String> email,
-                                             @RequestParam Optional<Long> streamAndTeamProfileId,
                                              @RequestParam Optional<Long> courseId
     ) {
 
@@ -51,11 +55,15 @@ public class RegisterAndSubscribeController {
                     && email.isPresent()) {
                 User user = quickRegisterUser(firstAndLastName.get(), phone.get(), email.get());
                 Profile newUserProfile = createProfile(user);
-                if (streamAndTeamProfileId.isPresent()) {
-                    enroll(newUserProfile.getId(), streamAndTeamProfileId.get());
-                } else if (courseId.isPresent()) {
-                    Profile courseProfile = findStreamProfileByCourseId(courseId.get());
-                    enroll(courseProfile.getId(), newUserProfile.getId());
+                if (courseId.isPresent()) {
+                    Optional<Profile> courseProfile = findStreamProfileByCourseId(courseId.get());
+                    if(courseProfile.isPresent()) {
+                        enroll(courseProfile.get().getId(), newUserProfile.getId());
+                        return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + courseProfile.get().getId());
+                    }
+                    // TODO: 10/06/20
+                    //  No course or stream id is present.
+                    //  No enrolling info. Add Exception or handle otherwise.
                 } else {
                     // TODO: 09/06/20
                     //  No course or stream id is present.
@@ -65,15 +73,15 @@ public class RegisterAndSubscribeController {
             } else {
                 // TODO: 09/06/20
                 //  user info incomplete. add validation message and redirect back where it come from
-
             }
         } catch (Exception ex) {
             // TODO: 10/06/20 add user message from exceptions
             ex.printStackTrace();
 
         }
-        System.out.println("streamId.isPresent() = " + streamAndTeamProfileId.isPresent());
-        return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + streamAndTeamProfileId.get());
+        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+        mov.setViewName(View.PAGE_404);
+        return mov;
     }
 
     private User quickRegisterUser(String firstAndLastName, String phone, String email) throws UserServiceException {
@@ -88,7 +96,7 @@ public class RegisterAndSubscribeController {
         profileService.enrollToStreamTeamProfile(streamProfileId, currentUserId);
     }
 
-    private Profile findStreamProfileByCourseId(Long courseId) {
-        return new Profile();
+    private Optional<Profile> findStreamProfileByCourseId(Long courseId) {
+        return profileService.findNearestFromNowOpennForEnrolStreamByCourseId(courseId);
     }
 }

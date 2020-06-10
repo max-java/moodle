@@ -1,7 +1,9 @@
 package by.jrr.profile.service;
 
+import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.profile.repository.StreamAndTeamSubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ public class StreamAndTeamSubscriberService {
 
     @Autowired
     StreamAndTeamSubscriberRepository streamAndTeamSubscriberRepository;
+    @Autowired
+    ProfileService profileService;
 
     public List<StreamAndTeamSubscriber> getAllSubscribersForProfileByProfileId(Long id) {
         return streamAndTeamSubscriberRepository.findAllByStreamTeamProfileId(id);
@@ -35,5 +39,9 @@ public class StreamAndTeamSubscriberService {
                     .build();
             return streamAndTeamSubscriberRepository.save(subscriber);
         }
+    }
+
+    public Optional<Profile> findStreamForCourse(Long courseId) {
+        return profileService.findNearestFromNowOpennForEnrolStreamByCourseId(courseId);
     }
 }

@@ -21,6 +21,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12" th:if="${edit}">
+                        <a th:href="'/stream/register/'+${topic.getId()}">new Stream</a>
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">TinyMCE Quick Start Guide</h5>
@@ -51,9 +52,15 @@
 
                                 <div th:include="/profile/registerAndSubscribeForm :: quickRegisterForm"
                                      th:with="user=${user},
-                                              courseId=${topic.getId()},
-                                              streamAndTeamProfileId=${streamAndTeamProfileId}">
+                                              courseId=${topic.getId()}">
                                 </div>
+
+                                <form method="post">
+                                    <button type="submit"
+                                            name="subscribe"
+                                            value="subscribe"
+                                            class="btn btn-primary btn-block"><b>Записаться</b></button>
+                                </form>
 
                                 <div th:utext="${topic.getText()}"></div>
                             </div>

@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -115,6 +117,22 @@ public class ProfileService {
     // TODO: 07/06/20 тогда даже если в этом месте косяк, секьюрность не афектнет
     // TODO: 07/06/20 В любом профиле собственник = тот, чей это профиль, кроме стрим или группа.
     // TODO: 07/06/20 Cito! не работает это, NPE. Consider how to set profile Owner?
+    public Profile createAndSaveProfileForUser(User user, Long courseId) {
+        Profile profile = profileRepository
+                .save(Profile.builder()
+                        .userId(user.getId())
+                        .courseId(courseId)
+                        .build());
+        // set profile owner
+//        if (profile.getUser().getRoles().contains(UserRoles.TEAM)
+//                || profile.getUser().getRoles().contains(UserRoles.STREAM)) {
+//            profile.setOwnerProfileId(getCurrentUserProfile().getId());
+//        } else {
+//            profile.setOwnerProfileId(profile.getId());
+//        }
+        return saveProfile(profile);
+    }
+
     public Profile createAndSaveProfileForUser(User user) {
         Profile profile = profileRepository
                 .save(
@@ -142,5 +160,11 @@ public class ProfileService {
 
     private List<User> searchUsersByAnyUserField(String searchTerm) {
         return userSearchService.searchUserByAllUserFields(searchTerm);
+    }
+
+    public Optional<Profile> findNearestFromNowOpennForEnrolStreamByCourseId(Long courseId) {
+        Optional<Profile> profileOp = profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now()).stream()
+                .min(Comparator.comparing(p -> p.getDateEnd()));
+        return profileOp;
     }
 }
