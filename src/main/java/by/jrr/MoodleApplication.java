@@ -1,5 +1,7 @@
 package by.jrr;
 
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.service.UserService;
 import by.jrr.interview.parser.QAndAParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

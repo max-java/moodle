@@ -51,7 +51,7 @@
                                 <hr />
 
                                 <div th:unless="${IS_AUTHENTICATED}"
-                                     th:include="/profile/registerAndSubscribeForm :: quickRegisterForm"
+                                     th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
                                      th:with="user=${user},
                                               courseId=${topic.getId()}">
                                 </div>

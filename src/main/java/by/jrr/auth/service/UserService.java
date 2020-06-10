@@ -7,6 +7,7 @@ import by.jrr.auth.exceptios.UserNameConversionException;
 import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
+import by.jrr.email.service.EMailService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,14 +26,17 @@ public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private EMailService eMailService;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       EMailService eMailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.eMailService = eMailService;
     }
 
     public User findUserByEmail(String email) {
@@ -73,19 +77,11 @@ public class UserService {
                 .toString();
 
         String login = email;
-        User user = User.builder()
-                .email(email)
-                .userName(login)
-                .phone(phone)
-                .password(password)
-                .active(true)
-                .build();
+        User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
         autoLogin(login, password);
+        eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName);
         user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
-
-
-
         return user;
     }
     private void autoLogin(String username, String password) {
