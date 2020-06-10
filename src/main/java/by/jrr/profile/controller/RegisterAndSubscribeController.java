@@ -11,6 +11,7 @@ import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,6 +60,7 @@ public class RegisterAndSubscribeController {
                     Optional<Profile> courseProfile = findStreamProfileByCourseId(courseId.get());
                     if(courseProfile.isPresent()) {
                         enroll(courseProfile.get().getId(), newUserProfile.getId());
+
                         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + courseProfile.get().getId());
                     }
                     // TODO: 10/06/20

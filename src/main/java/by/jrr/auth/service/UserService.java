@@ -7,8 +7,12 @@ import by.jrr.auth.exceptios.UserNameConversionException;
 import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import sun.security.util.Password;
 
@@ -77,9 +81,16 @@ public class UserService {
                 .active(true)
                 .build();
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
+        autoLogin(login, password);
         user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
-        return user;
 
+
+
+        return user;
+    }
+    private void autoLogin(String username, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////

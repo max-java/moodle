@@ -44,6 +44,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(Endpoint.COURSE+"/*").permitAll()
                 .antMatchers(Endpoint.COURSE_LIST).permitAll()
                 .antMatchers("/registration").permitAll()
+                .antMatchers("/registerAndSubscribe").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
