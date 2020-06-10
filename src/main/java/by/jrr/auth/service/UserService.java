@@ -80,7 +80,7 @@ public class UserService {
         User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
         autoLogin(login, password);
-        eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName);
+        new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
         user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         return user;
     }
