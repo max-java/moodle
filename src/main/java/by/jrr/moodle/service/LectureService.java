@@ -2,6 +2,7 @@ package by.jrr.moodle.service;
 
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.repository.LectureRepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,8 @@ public class LectureService {
 
     @Autowired
     LectureRepository lectureRepository;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Lecture> findAll(String page, String items) {
         Page<Lecture> topics;

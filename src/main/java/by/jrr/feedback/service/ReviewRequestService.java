@@ -3,6 +3,7 @@ package by.jrr.feedback.service;
 import by.jrr.feedback.bean.*;
 import by.jrr.feedback.repository.ReviewRequestRepository;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class ReviewRequestService {
     ReviewService reviewService;
     @Autowired
     ItemService itemService;
+    @Autowired
+    ProfilePossessesService pss;
 
     public ReviewRequest createNewReviewRequest(Item item, Reviewable reviewable) {
         ReviewRequest reviewRequest = new ReviewRequest();

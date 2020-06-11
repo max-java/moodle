@@ -3,6 +3,7 @@ package by.jrr.moodle.service;
 import by.jrr.auth.service.UserService;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.repository.PracticeQuestionRepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,8 @@ public class PracticeQuestionService {
     PracticeQuestionRepository practiceServiceRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    ProfilePossessesService pss;
 
 
     public Page<PracticeQuestion> findAll(String page, String items) {

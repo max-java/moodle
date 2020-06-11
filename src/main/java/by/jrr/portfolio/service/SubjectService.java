@@ -5,6 +5,7 @@ import by.jrr.auth.service.UserService;
 import by.jrr.portfolio.bean.Domain;
 import by.jrr.portfolio.bean.Subject;
 import by.jrr.portfolio.repository.SubjectRepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,8 @@ public class SubjectService {
     UserService userService;
     @Autowired
     DomainService domainService;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Subject> findAll(String page, String items) {
         Page<Subject> subjectPage;

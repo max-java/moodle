@@ -4,6 +4,7 @@ import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
@@ -37,6 +38,8 @@ public class ProfileService {
     ProfileRepository profileRepository;
     @Autowired
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -108,6 +111,8 @@ public class ProfileService {
     }
 
     public Profile saveProfile(Profile profile) {
+        Profile savedProfile = profileRepository.save(profile);
+        pss.savePossessForCurrentUser(savedProfile.getId(), EntityType.PROFILE);
         return profileRepository.save(profile);
     }
 

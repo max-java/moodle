@@ -1,5 +1,6 @@
 package by.jrr.project.service;
 
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Project;
 import by.jrr.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ public class ProjectService {
 
     @Autowired
     ProjectRepository projectRepository;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Project> findAll(String page, String items) {
         Page<Project> projectPage;

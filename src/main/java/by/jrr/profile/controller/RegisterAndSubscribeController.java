@@ -8,6 +8,7 @@ import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,13 @@ public class RegisterAndSubscribeController {
     ProfileStatisticService profileStatisticService;
     @Autowired
     UserService userService;
+    @Autowired
+    ProfilePossessesService pss;
+
 
     @Autowired
     HttpServletRequest request;
+
 
     @PostMapping(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM)
     // TODO: 09/06/20 request params names against UserFields enum validation

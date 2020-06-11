@@ -2,6 +2,7 @@ package by.jrr.interview.service;
 
 import by.jrr.interview.bean.QAndA;
 import by.jrr.interview.repository.QAndARepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +24,8 @@ public class QAndAService {
 
     @Autowired
     QAndARepository qAndARepository;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Map<String, Long> totalQuestions() {
         List<QAndA> qAndAs = (List) qAndARepository.findAll();

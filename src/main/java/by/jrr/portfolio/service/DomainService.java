@@ -2,6 +2,7 @@ package by.jrr.portfolio.service;
 
 import by.jrr.portfolio.bean.Domain;
 import by.jrr.portfolio.repository.DomainRepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,8 @@ public class DomainService {
 
     @Autowired
     DomainRepository domainRepository;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Domain> findAll(String page, String items) {
         Page<Domain> projectPage;

@@ -6,6 +6,7 @@ import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.service.FeedbackService;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class IssueController {
     UserDataToModelService userDataToModelService;
     @Autowired
     FeedbackService feedbackService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @GetMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
     public ModelAndView createNewIssue(@PathVariable Long id) {
@@ -75,7 +78,7 @@ public class IssueController {
 
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.ISSUE);
-        if (edit) {
+        if (edit && pss.isCurrentUserOwner(issueId)) {
             Optional<Issue> issueToUpdate = issueService.findByIssueId(issue.getIssueId());
             if (issueToUpdate.isPresent()) {
                 mov.addObject("issue", issueToUpdate.get());
@@ -83,7 +86,7 @@ public class IssueController {
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if(pss.isCurrentUserOwner(issueId)) {
             issue = issueService.createOrUpdate(issue);
             return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
 

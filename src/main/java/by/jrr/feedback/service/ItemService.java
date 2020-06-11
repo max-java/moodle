@@ -9,6 +9,7 @@ import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.PracticeQuestionService;
 import by.jrr.portfolio.bean.Subject;
 import by.jrr.portfolio.service.SubjectService;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class ItemService {
     PracticeQuestionService practiceQuestionService;
     @Autowired
     SubjectService subjectService;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Item getItemByReviewable(Reviewable reviewedEntity) {
         return itemRepository

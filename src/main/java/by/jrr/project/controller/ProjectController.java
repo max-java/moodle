@@ -4,6 +4,7 @@ import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Project;
 import by.jrr.project.service.IssueService;
 import by.jrr.project.service.ProjectService;
@@ -28,6 +29,9 @@ public class ProjectController {
     IssueService issueService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    ProfilePossessesService pss;
+
 
     @GetMapping(Endpoint.PROJECT)
     public ModelAndView createNewProject() {
@@ -75,7 +79,7 @@ public class ProjectController {
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.PROJECT);
-        if (edit) {
+        if (edit && pss.isCurrentUserOwner(id)) {
             Optional<Project> project = projectService.findById(id);
             if (project.isPresent()) {
                 mov.addObject("project", project.get());
@@ -83,7 +87,7 @@ public class ProjectController {
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if (pss.isCurrentUserOwner(id)){
             Project project = projectService.update(Project.builder()
                     .name(name)
                     .description(description)

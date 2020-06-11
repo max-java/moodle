@@ -22,6 +22,11 @@ public class ProfilePossessesService {
         Optional<ProfilePossesses> possess = profilePossessesRepository.findByProfileIdAndEntityId(profleId, entityId);
         return possess.isPresent();
     }
+    public boolean isCurrentUserOwner(Long entityId) {
+        Optional<ProfilePossesses> possess =
+                profilePossessesRepository.findByProfileIdAndEntityId(profileService.getCurrentUserProfile().getId(), entityId);
+        return possess.isPresent();
+    }
 
     public void savePossessForCurrentUser(Long entityId, EntityType type) {
 
