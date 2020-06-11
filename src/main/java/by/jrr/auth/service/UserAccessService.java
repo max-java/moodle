@@ -1,6 +1,7 @@
 package by.jrr.auth.service;
 
 import by.jrr.auth.bean.UserData;
+import by.jrr.auth.bean.UserRoles;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,9 +31,15 @@ public class UserAccessService {
         if(isCurrentUserAuthenticated()) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-            isCurrentUserIsAdmin = authorities.stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+            isCurrentUserIsAdmin = authorities.stream().anyMatch(ga -> ga.getAuthority().equals(UserRoles.ROLE_ADMIN.name()));
         }
         return isCurrentUserIsAdmin;
+    }
+
+    public static  boolean hasRole (UserRoles role)
+    {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
     }
 }
 /*

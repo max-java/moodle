@@ -1,5 +1,9 @@
 package by.jrr.moodle.controller;
 
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -31,6 +35,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
     @Autowired
     FeedbackService feedbackService;
 
+    @AdminOnly
     @GetMapping(Endpoint.PRACTICE)
     public ModelAndView createNewIssue() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -40,6 +45,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
         return mov;
     }
 
+    @AtLeatStudent
     @GetMapping(Endpoint.PRACTICE + "/{practiceId}")
     public ModelAndView openIssueByIssueId(@PathVariable Long practiceId) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -54,12 +60,14 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.PRACTICE)
     public ModelAndView saveNewIssue(PracticeQuestion issue) {
         issue = practiceQuestionService.create(issue);
         return new ModelAndView("redirect:" + Endpoint.PRACTICE + "/" + issue.getId());
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.PRACTICE + "/{practiceId}")
     public ModelAndView updateIssue(PracticeQuestion issue, HttpServletRequest request,
                                     @PathVariable Long practiceId,
@@ -73,7 +81,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
 
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.PRACTICE);
-        if (edit) {
+        if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             Optional<PracticeQuestion> issueToUpdate = practiceQuestionService.findById(issue.getId());
             if (issueToUpdate.isPresent()) {
                 mov.addObject("issue", issueToUpdate.get());
@@ -81,7 +89,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             issue = practiceQuestionService.update(issue);
             return new ModelAndView("redirect:" + Endpoint.PRACTICE + "/" + issue.getId());
 

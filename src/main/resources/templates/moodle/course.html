@@ -21,10 +21,12 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12" th:if="${edit}">
+                        <a th:href="'/stream/register/'+${topic.getId()}">new Stream</a>
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">TinyMCE Quick Start Guide</h5>
-                                <p>asd</p>
+                                <p>&nbsp;</p>
+
                                 <form method="post">
                                     <input type="text" name="title" placeholder="title" th:value="${topic.getTitle()}"/>
                                     <input type="text" name="subtitle" placeholder="subtitle" th:value="${topic.getSubtitle()}"/>
@@ -47,6 +49,21 @@
                                     <h2 class="card-title" th:text="${topic.getSubtitle()}"></h2>
                                 </div>
                                 <hr />
+
+                                <div th:unless="${IS_AUTHENTICATED}"
+                                     th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
+                                     th:with="user=${user},
+                                              courseId=${topic.getId()}">
+                                </div>
+
+                                <form th:if="${IS_AUTHENTICATED}"
+                                      method="post">
+                                    <button type="submit"
+                                            name="subscribe"
+                                            value="subscribe"
+                                            class="btn btn-primary btn-block"><b>Записаться</b></button>
+                                </form>
+
                                 <div th:utext="${topic.getText()}"></div>
                             </div>
                         </div>

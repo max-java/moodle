@@ -1,5 +1,7 @@
 package by.jrr.portfolio.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -28,6 +30,7 @@ public class DomainController {
     @Autowired
     UserDataToModelService userDataToModelService;
 
+    @AdminOnly
     @GetMapping(Endpoint.DOMAIN)
     public ModelAndView createNewDomain() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -52,6 +55,7 @@ public class DomainController {
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.DOMAIN)
     public ModelAndView saveNewDomain(
             @RequestParam(value = "name") String name,
@@ -64,6 +68,7 @@ public class DomainController {
         return new ModelAndView("redirect:" + Endpoint.DOMAIN + "/" + domain.getId());
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.DOMAIN + "/{id}")
     public ModelAndView updateDomain(@PathVariable Long id,
                                      @RequestParam(value = "name", required = false) String name,

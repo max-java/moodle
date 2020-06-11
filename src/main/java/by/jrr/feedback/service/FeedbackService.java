@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Transient;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -72,7 +73,11 @@ public class FeedbackService {
 
     public Page<ReviewRequest> findAllReviewRequestPageable(Optional<Integer> page, Optional<Integer> elem, Optional<String> searchTerm) {
         return reviewRequestPageableSearchService.findAllReviewRequestPageable(page, elem, searchTerm);
+    }
+    public List<ReviewRequest> fingAllReviewRequestForUser(Long profileId) {
+        List<ReviewRequest> reviewRequestList = reviewRequestService.findReviewRequestForUser(profileId);
 
 
+        return reviewRequestService.findReviewRequestForUser(profileId);
     }
 }

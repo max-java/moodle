@@ -17,7 +17,8 @@ import javax.persistence.*;
 public class UserProgress {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     private Long Id;
     private Long profileId;
 

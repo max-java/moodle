@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Review {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
     private Long itemId;
     private Long reviewedEntityId; // TODO: 27/05/20 should it be duplicated here alongside with entityId in Item?

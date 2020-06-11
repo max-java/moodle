@@ -1,5 +1,9 @@
 package by.jrr.moodle.controller;
 
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -59,6 +63,7 @@ public class LectureController {
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.LECTURE)
     public ModelAndView saveNewTopic(
             @RequestParam(value = "title", required = false) String title,
@@ -73,6 +78,7 @@ public class LectureController {
         return new ModelAndView("redirect:" + Endpoint.LECTURE + "/" + topic.getId());
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.LECTURE + "/{id}")
     public ModelAndView saveNewTopic(@PathVariable Long id,
                                      @RequestParam(value = "title", required = false) String title,
@@ -84,7 +90,7 @@ public class LectureController {
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.LECTURE);
-        if (edit) {
+        if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             Optional<Lecture> topic = lectureService.findById(id);
             if (topic.isPresent()) {
 
@@ -95,7 +101,7 @@ public class LectureController {
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else if (save.isPresent()) {
+        } else if (save.isPresent() && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             Lecture topic = lectureService.update(Lecture.builder()
                     .title(title)
                     .subtitle(subtitle)

@@ -19,7 +19,8 @@ import javax.persistence.*;
 public class Topic implements Trackable {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     private Long Id;
     private String title;
     private String subtitle;

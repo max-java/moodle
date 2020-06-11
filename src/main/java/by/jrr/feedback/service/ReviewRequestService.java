@@ -1,16 +1,16 @@
 package by.jrr.feedback.service;
 
-import by.jrr.feedback.bean.Item;
-import by.jrr.feedback.bean.ReviewRequest;
-import by.jrr.feedback.bean.ReviewResult;
-import by.jrr.feedback.bean.Reviewable;
+import by.jrr.feedback.bean.*;
 import by.jrr.feedback.repository.ReviewRequestRepository;
+import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewRequestService {
@@ -19,6 +19,10 @@ public class ReviewRequestService {
     ReviewRequestRepository reviewRequestRepository;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ReviewService reviewService;
+    @Autowired
+    ItemService itemService;
 
     public ReviewRequest createNewReviewRequest(Item item, Reviewable reviewable) {
         ReviewRequest reviewRequest = new ReviewRequest();
@@ -56,5 +60,34 @@ public class ReviewRequestService {
 
         }
         return null; // TODO: 28/05/20 return Optional and handle it with logger in controller
+    }
+
+    public List<ReviewRequest> findReviewRequestForUser(Long profileId) {
+        List<ReviewRequest> reviewRequestList = reviewRequestRepository.findAllByRequesterProfileId(profileId);
+        reviewRequestList.stream()
+                .map(this::setRequesterProfileToReviewRequest)
+                .map(this::setReviewsToReviewRequest)
+                .map(this::setItemsToReviewRequest)
+                .map(this::setReviewedEntityToItemInReviewRequest)
+                .collect(Collectors.toList());
+        return reviewRequestList;
+    }
+
+    private ReviewRequest setReviewsToReviewRequest(ReviewRequest rr) {
+        rr.setReviews(reviewService.findAllByReviewRequestId(rr.getId()));
+        return rr;
+    }
+    private ReviewRequest setItemsToReviewRequest(ReviewRequest rr) {
+        rr.setItem(itemService.getItemByReviewRequest(rr));
+        return rr;
+    }
+    private ReviewRequest setRequesterProfileToReviewRequest(ReviewRequest rr) {
+        rr.setRequesterProfile(profileService.findProfileByProfileId(rr.getRequesterProfileId()).orElseGet(Profile::new));
+        return rr;
+    }
+    private ReviewRequest setReviewedEntityToItemInReviewRequest(ReviewRequest rr) {
+        rr.getItem()
+            .setReviewedEntity(itemService.getReviewableByReviewableId(rr.getReviewedEntityId()));
+        return rr;
     }
 }

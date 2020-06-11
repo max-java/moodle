@@ -1,5 +1,6 @@
 package by.jrr.portfolio.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -30,6 +31,7 @@ public class SubjectController {
     @Autowired
     FeedbackService feedbackService;
 
+    @AdminOnly
     @GetMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT)
     public ModelAndView createNewSubject(@PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -38,6 +40,7 @@ public class SubjectController {
         mov.setViewName(View.SUBJECT);
         return mov;
     }
+
 
     @GetMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT + "/{subjectId}")
     public ModelAndView openSubjectBySubjectId(@PathVariable Long subjectId, @PathVariable Long id) {
@@ -53,12 +56,14 @@ public class SubjectController {
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT)
     public ModelAndView saveNewSubject(Subject subject, @PathVariable Long id) {
         subject = subjectService.createOrUpdate(subject);
         return new ModelAndView("redirect:" + Endpoint.DOMAIN+"/"+subject.getDomainId()+Endpoint.SUBJECT + "/" + subject.getSubjectId());
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT + "/{subjectId}")
     public ModelAndView updateSubject(Subject subject, HttpServletRequest request,
                                     @PathVariable Long subjectId, @PathVariable Long id,

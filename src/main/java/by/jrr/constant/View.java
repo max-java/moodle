@@ -27,10 +27,13 @@ public class View {
 
     public static final String PROFILE_CARD = "profile/profileCard";
     public static final String PROFILE_LIST = "profile/profileList";
+    public static final String STREAM_TEAM_REGISTRATION_FORM = "profile/streamTeamRegistration";
 
     public static final String CODE_REVIEW_REQUEST_FORM = "feedback/codeReviewRequest";
     public static final String CODE_REVIEW_REQUEST_CARD = "feedback/codeReviewRequestCard";
     public static final String CODE_REVIEW_REQUEST_LIST = "feedback/codeReviewRequestList";
     public static final String CODE_REVIEW_FORM = "feedback/codeReviewForm";
     public static final String CODE_REVIEW_CARD = "feedback/codeReviewCard";
+
+    public static final String FILE = "files/files";
 }

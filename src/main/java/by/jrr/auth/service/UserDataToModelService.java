@@ -36,7 +36,7 @@ public class UserDataToModelService {
         User user = userService.findUserByUserName(auth.getName());
         if (user != null) {
             modelAndView.addObject(UserData.USER_NAME_AND_LASTNAME.name(), user.getName() + " " + user.getLastName());
-            modelAndView.addObject(UserData.CURRENT_PROFILE.name(), profileService.getCurrentUserProfile());
+            modelAndView.addObject(UserData.CURRENT_PROFILE.name(), profileService.getCurrentUserProfile()); // TODO: 04/06/20 erase password data
         }
         return modelAndView;
     }
