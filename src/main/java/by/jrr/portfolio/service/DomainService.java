@@ -1,5 +1,6 @@
 package by.jrr.portfolio.service;
 
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.portfolio.bean.Domain;
 import by.jrr.portfolio.repository.DomainRepository;
 import by.jrr.profile.service.ProfilePossessesService;
@@ -30,10 +31,12 @@ public class DomainService {
 
     public Domain create(Domain domain) {
         domain = domainRepository.save(domain);
+        pss.savePossessForCurrentUser(domain.getId(), EntityType.DOMAIN);
         return domain;
     }
     public Domain update(Domain domain) {
         domain = domainRepository.save(domain);
+        pss.savePossessForCurrentUser(domain.getId(), EntityType.DOMAIN);
         return domain;
     }
     public void delete() {

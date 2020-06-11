@@ -13,5 +13,6 @@ public enum EntityType { // TODO: 27/05/20 bind them with classes
     ISSUE,
     PROJECT,
     DOMAIN,
-    SUBJECT
+    SUBJECT,
+    COURSE
 }

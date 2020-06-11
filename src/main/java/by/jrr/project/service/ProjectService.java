@@ -1,5 +1,6 @@
 package by.jrr.project.service;
 
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Project;
 import by.jrr.project.repository.ProjectRepository;
@@ -30,10 +31,12 @@ public class ProjectService {
 
     public Project create(Project project) {
         project = projectRepository.save(project);
+        pss.savePossessForCurrentUser(project.getId(), EntityType.PROJECT);
         return project;
     }
     public Project update(Project project) {
         project = projectRepository.save(project);
+        pss.savePossessForCurrentUser(project.getId(), EntityType.PROJECT);
         return project;
     }
     public void delete() {

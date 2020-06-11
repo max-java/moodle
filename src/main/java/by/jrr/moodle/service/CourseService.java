@@ -1,5 +1,6 @@
 package by.jrr.moodle.service;
 
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.repository.CourseRepository;
@@ -32,10 +33,12 @@ public class CourseService {
 
     public Course create(Course topic) {
         topic = courseRepository.save(topic);
+        pss.savePossessForCurrentUser(topic.getId(), EntityType.COURSE);
         return topic;
     }
     public Course update(Course topic) {
         topic = courseRepository.save(topic);
+        pss.savePossessForCurrentUser(topic.getId(), EntityType.COURSE);
         return topic;
     }
     public void delete() {

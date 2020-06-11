@@ -1,6 +1,7 @@
 package by.jrr.moodle.service;
 
 import by.jrr.auth.service.UserService;
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.repository.PracticeQuestionRepository;
 import by.jrr.profile.service.ProfilePossessesService;
@@ -34,10 +35,12 @@ public class PracticeQuestionService {
 
     public PracticeQuestion create(PracticeQuestion topic) {
         topic = practiceServiceRepository.save(topic);
+        pss.savePossessForCurrentUser(topic.getId(), EntityType.PRACTICE_QUESTION);
         return topic;
     }
     public PracticeQuestion update(PracticeQuestion topic) {
         topic = practiceServiceRepository.save(topic);
+        pss.savePossessForCurrentUser(topic.getId(), EntityType.PRACTICE_QUESTION);
         return topic;
     }
     public void delete() {

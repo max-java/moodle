@@ -2,6 +2,7 @@ package by.jrr.portfolio.service;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.service.UserService;
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.portfolio.bean.Domain;
 import by.jrr.portfolio.bean.Subject;
 import by.jrr.portfolio.repository.SubjectRepository;
@@ -82,6 +83,7 @@ public class SubjectService {
         if (subject.getSubjectId() == null) { //if it is first history record, that subject id set from id value
             subject.setSubjectId(subject.getId());
             subjectRepository.save(subject);
+            pss.savePossessForCurrentUser(subject.getId(), EntityType.SUBJECT);
         }
         return subject;
     }
