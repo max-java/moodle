@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Lob;
 
 @Entity
@@ -19,7 +20,7 @@ import javax.persistence.Lob;
 public class Lecture implements Trackable {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
     private String title;
     private String subtitle;

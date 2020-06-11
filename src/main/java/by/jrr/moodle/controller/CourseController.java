@@ -1,13 +1,15 @@
 package by.jrr.moodle.controller;
 
 import by.jrr.auth.bean.User;
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.moodle.bean.Course;
-import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.service.CourseService;
-import by.jrr.moodle.service.TopicService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.service.ProfileService;
@@ -15,6 +17,7 @@ import by.jrr.profile.service.StreamAndTeamSubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Controller
 public class CourseController { // TODO: 30/05/20  make it like in userProfile & qAndA Trackable
@@ -37,6 +39,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
     @Autowired
     ProfileService profileService;
 
+    @AdminOnly
     @GetMapping(Endpoint.COURSE)
     public ModelAndView createNewTopic() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -48,6 +51,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         mov.setViewName(View.COURSE);
         return mov;
     }
+
 
     @GetMapping(Endpoint.COURSE + "/{id}")
     public ModelAndView openTopicById(@PathVariable Long id) {
@@ -64,6 +68,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.COURSE)
     public ModelAndView saveNewTopic(
             @RequestParam(value = "title", required = false) String title,
@@ -91,7 +96,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         if(subscribe.isPresent()) { // TODO: 10/06/20 move here register and subscribe!!!!
             return enrollCurentUser(id);
         }
-        else if (edit) {
+        else if (edit  && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             Optional<Course> topic = courseService.findById(id);
             if (topic.isPresent()) {
                 mov.addObject("topic", topic.get());
@@ -99,7 +104,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             Course topic = courseService.update(Course.builder()
                     .title(title)
                     .subtitle(subtitle)

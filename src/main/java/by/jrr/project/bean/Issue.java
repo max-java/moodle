@@ -22,7 +22,8 @@ import java.util.List;
 public class Issue implements Reviewable {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     private Long Id;
     private Long issueId; //it has two ids: on for issue, one for row - to create a history
     @Transient

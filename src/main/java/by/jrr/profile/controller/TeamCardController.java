@@ -3,6 +3,7 @@ package by.jrr.profile.controller;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserFields;
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.configuration.annotations.AtLeastScrumMaster;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
@@ -29,6 +30,7 @@ public class TeamCardController {
     @Autowired
     ProfileService profileService;
 
+    @AtLeastScrumMaster
     @GetMapping(Endpoint.REGISTER_TEAM)
     public ModelAndView openTeamRegistrationForm() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -37,7 +39,7 @@ public class TeamCardController {
         return mov;
     }
 
-
+    @AtLeastScrumMaster
     @PostMapping(Endpoint.REGISTER_TEAM)
     public ModelAndView createNewTeamUser(@Valid User user,
                                       BindingResult bindingResult,
@@ -61,7 +63,7 @@ public class TeamCardController {
         } else{
             user.setEmail(profileService.getCurrentUserProfile().getUser().getEmail()); // TODO: 07/06/20 consider to consider
             user.setPhone(profileService.getCurrentUserProfile().getUser().getPhone()); // TODO: 07/06/20 consider to consider
-            User newUser = userService.saveUser(user, Optional.of(UserRoles.TEAM));
+            User newUser = userService.saveUser(user, Optional.of(UserRoles.ROLE_TEAM));
             Profile profile = profileService.createAndSaveProfileForUser(newUser);
             return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profile.getId());
         }

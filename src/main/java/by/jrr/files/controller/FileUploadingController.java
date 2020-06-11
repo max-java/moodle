@@ -12,17 +12,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import java.io.IOException;
 import java.util.Optional;
 
 @Controller
 public class FileUploadingController {
+    // TODO: 11/06/20 make it like only admins could upload huge files
 
     @Autowired
     UserDataToModelService userDataToModelService;
     @Autowired
     FileService fileService;
+
 
     @PostMapping(Endpoint.FILES)
     public ModelAndView uploadFile(@RequestParam MultipartFile multipartFile,

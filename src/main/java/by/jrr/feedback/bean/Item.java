@@ -16,7 +16,7 @@ import java.util.List;
 public class Item {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
     @Column(unique=true)
     private Long reviewedEntityId;

@@ -3,6 +3,7 @@ package by.jrr.profile.controller;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserFields;
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
@@ -30,6 +31,7 @@ public class StreamCardController {
     @Autowired
     ProfileService profileService;
 
+    @AdminOnly
     @GetMapping(Endpoint.REGISTER_STREAM)
     public ModelAndView openStreamRegistrationForm() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -37,6 +39,8 @@ public class StreamCardController {
         mov.setViewName(View.STREAM_TEAM_REGISTRATION_FORM);
         return mov;
     }
+
+    @AdminOnly
     @GetMapping(Endpoint.REGISTER_STREAM+"/{courseId}")
     public ModelAndView openStreamRegistrationForm(@PathVariable Long courseId) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -47,6 +51,7 @@ public class StreamCardController {
     }
 
 
+    @AdminOnly
     @PostMapping(Endpoint.REGISTER_STREAM)
     public ModelAndView createNewStreamUser(@Valid User user,
                                       BindingResult bindingResult,
@@ -72,12 +77,14 @@ public class StreamCardController {
         } else{
             user.setEmail(profileService.getCurrentUserProfile().getUser().getEmail()); // TODO: 07/06/20 consider to consider
             user.setPhone(profileService.getCurrentUserProfile().getUser().getPhone()); // TODO: 07/06/20 consider to consider
-            User newUser = userService.saveUser(user, Optional.of(UserRoles.STREAM));
+            User newUser = userService.saveUser(user, Optional.of(UserRoles.ROLE_STREAM));
             Profile profile = profileService.createAndSaveProfileForUser(newUser, courseId.orElse(null));
             return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profile.getId());
         }
         return mov;
     }
+
+    @AdminOnly
     @PostMapping(Endpoint.REGISTER_STREAM+"/{courseId}") // TODO: 10/06/20 clean duplicates!!!
     public ModelAndView createNewStreamUser2(@Valid User user,
                                             BindingResult bindingResult,
@@ -103,7 +110,7 @@ public class StreamCardController {
         } else{
             user.setEmail(profileService.getCurrentUserProfile().getUser().getEmail()); // TODO: 07/06/20 consider to consider
             user.setPhone(profileService.getCurrentUserProfile().getUser().getPhone()); // TODO: 07/06/20 consider to consider
-            User newUser = userService.saveUser(user, Optional.of(UserRoles.STREAM));
+            User newUser = userService.saveUser(user, Optional.of(UserRoles.ROLE_STREAM));
             Profile profile = profileService.createAndSaveProfileForUser(newUser, courseId.orElse(null));
             return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profile.getId());
         }

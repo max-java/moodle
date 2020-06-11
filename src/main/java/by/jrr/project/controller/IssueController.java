@@ -1,5 +1,6 @@
 package by.jrr.project.controller;
 
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -53,12 +54,14 @@ public class IssueController {
         return mov;
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
     public ModelAndView saveNewIssue(Issue issue, @PathVariable Long id) {
         issue = issueService.createOrUpdate(issue);
         return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE + "/{issueId}")
     public ModelAndView updateIssue(Issue issue, HttpServletRequest request,
                                     @PathVariable Long issueId, @PathVariable Long id,

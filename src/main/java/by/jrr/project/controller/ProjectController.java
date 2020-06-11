@@ -1,5 +1,6 @@
 package by.jrr.project.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -52,6 +53,7 @@ public class ProjectController {
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.PROJECT)
     public ModelAndView saveNewProject(
             @RequestParam(value = "name") String name,
@@ -64,6 +66,7 @@ public class ProjectController {
         return new ModelAndView("redirect:" + Endpoint.PROJECT + "/" + project.getId());
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.PROJECT + "/{id}")
     public ModelAndView updateProject(@PathVariable Long id,
                                      @RequestParam(value = "name", required = false) String name,

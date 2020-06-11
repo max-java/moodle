@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,9 +24,9 @@ import java.util.stream.Collectors;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "user_id")
-    private Long id;
+    private long id;
 
     @Column(name = "user_name") //it is a login )
     @Length(min = 5, message = "Имя пользователя не может быть меньше 5 символов")

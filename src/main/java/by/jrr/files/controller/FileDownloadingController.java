@@ -1,5 +1,6 @@
 package by.jrr.files.controller;
 
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.constant.Endpoint;
 import by.jrr.files.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class FileDownloadingController {
     public byte[] getFileBytesByFilename(@PathVariable String fileName)  {
         return fileService.getFileBytes(fileName);
     }
+
+    @AtLeatStudent
     @RequestMapping(value = Endpoint.PDF+"/{fileName}", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public byte[] getPdfBytesByFilename(@PathVariable String fileName)  {

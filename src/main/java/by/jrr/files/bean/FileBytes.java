@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.io.IOException;
 
 @Entity
@@ -20,7 +17,7 @@ import java.io.IOException;
 public class FileBytes {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
     private Long fileMetaId;
     @Lob

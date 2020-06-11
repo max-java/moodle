@@ -1,5 +1,6 @@
 package by.jrr.feedback.controller;
 
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
@@ -35,23 +36,27 @@ public class ReviewRequestController {
     UserAccessService userAccessService;
 
 
+    @AtLeatStudent
     @GetMapping(Endpoint.REVIEW_REQUEST_FORM + "/{id}")
     public ModelAndView createNewReviewRequest(@PathVariable Long id) {
         return setModelAndViewDataForReviewRequest(View.CODE_REVIEW_REQUEST_FORM, id);
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.REVIEW_REQUEST_FORM + "/{id}")
     public ModelAndView saveOrUpdateReviewRequest(ReviewRequest reviewRequest, @PathVariable Long id) {
         feedbackService.updateMessageAndLinkOnReviewRequest(reviewRequest);
         return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + id);
     }
 
+    @AtLeatStudent
     @GetMapping(Endpoint.REVIEW_REQUEST_CARD + "/{id}")
     public ModelAndView openReviewRequestCard(@PathVariable Long id) {
 
         return setModelAndViewDataForReviewRequest(View.CODE_REVIEW_REQUEST_CARD, id);
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.REVIEW_REQUEST_CARD + "/{id}") // TODO: 28/05/20 split this to methods, add privileges
     public ModelAndView redirectToReview(@PathVariable Long id,
                                          @RequestParam Optional<String> addReview,

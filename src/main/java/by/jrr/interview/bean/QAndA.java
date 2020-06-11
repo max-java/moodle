@@ -10,10 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -23,7 +20,7 @@ import javax.persistence.Lob;
 public class QAndA implements Trackable {
 
     @javax.persistence.Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
     private String theme;
     @Column(columnDefinition = "TEXT")

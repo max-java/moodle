@@ -1,5 +1,9 @@
 package by.jrr.interview.controller;
 
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -32,6 +36,7 @@ public class QAndAController {
     UserProgressService userProgressService;
 
 
+    @AdminOnly
     @GetMapping(Endpoint.Q_AND_A)
     public ModelAndView createNewQAndA() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -41,6 +46,7 @@ public class QAndAController {
         return mov;
     }
 
+    @AtLeatStudent
     @GetMapping(Endpoint.Q_AND_A + "/{id}")
     public ModelAndView openQAndAById(@PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -60,6 +66,7 @@ public class QAndAController {
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.Q_AND_A)
     public ModelAndView saveNewQAndA(
             @RequestParam(value = "question", required = false) String question,
@@ -72,6 +79,7 @@ public class QAndAController {
         return new ModelAndView("redirect:" + Endpoint.Q_AND_A + "/" + qAndA.getId());
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.Q_AND_A + "/{id}")
     public ModelAndView saveNewQAndA(@PathVariable Long id,
                                      @RequestParam(value = "question", required = false) String question,
@@ -82,7 +90,7 @@ public class QAndAController {
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.Q_AND_A);
-        if (edit) {
+        if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             Optional<QAndA> qAndA = qAndAService.findById(id);
             if (qAndA.isPresent()) {
 
@@ -93,7 +101,7 @@ public class QAndAController {
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else if(save.isPresent()) {
+        } else if(save.isPresent()  && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             QAndA qAndA = qAndAService.update(QAndA.builder()
                     .question(question)
                     .answer(answer)

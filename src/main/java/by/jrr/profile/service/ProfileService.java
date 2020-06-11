@@ -68,8 +68,8 @@ public class ProfileService {
     private void setUserDataToProfile(Profile profile) {
         userService.findUserById(profile.getUserId()).ifPresent(user -> profile.setUser(user));
 
-        if (profile.getUser().hasRole(UserRoles.STREAM) // TODO: 07/06/20 split to setProfileData & setSubscribers
-                || profile.getUser().hasRole(UserRoles.TEAM)) {
+        if (profile.getUser().hasRole(UserRoles.ROLE_STREAM) // TODO: 07/06/20 split to setProfileData & setSubscribers
+                || profile.getUser().hasRole(UserRoles.ROLE_TEAM)) {
             List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
             for (StreamAndTeamSubscriber subscriber : subscribers) {
                 Optional<Profile> optionalProfile = this.findProfileByProfileId(subscriber.getSubscriberProfileId());

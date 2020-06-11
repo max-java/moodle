@@ -56,7 +56,7 @@ public class UserService {
      * original place where new user has been created
      */
     public User saveUser(User user, Optional<UserRoles> userRoleOp) {
-        UserRoles newUserRole = userRoleOp.orElseGet(() -> UserRoles.GUEST);
+        UserRoles newUserRole = userRoleOp.orElseGet(() -> UserRoles.ROLE_GUEST);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
 
@@ -155,5 +155,10 @@ public class UserService {
         user.setName(name[0]);
         user.setLastName(name[1]);
         return user;
+    }
+
+    public static boolean isCurrentUserHasRole (UserRoles role){
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
     }
 }
