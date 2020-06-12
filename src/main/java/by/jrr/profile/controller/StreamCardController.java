@@ -9,6 +9,7 @@ import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,8 @@ public class StreamCardController {
     UserService userService;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @AdminOnly
     @GetMapping(Endpoint.REGISTER_STREAM)

@@ -12,6 +12,7 @@ import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.bean.ReviewResult;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,9 @@ public class ReviewRequestController {
     ProfileService profileService;
     @Autowired
     UserAccessService userAccessService;
+    @Autowired
+    ProfilePossessesService pss;
+
 
 
     @AtLeatStudent
@@ -78,7 +82,7 @@ public class ReviewRequestController {
             }
             mov.addObject("review", newReview);
             return mov;
-        } else if (saveReview.isPresent()) {
+        } else if (saveReview.isPresent() && pss.isCurrentUserOwner(review.get().getId())) {
             Review newReview = review.get();
             newReview.setReviewerProfileId(profileService.getCurrentUserProfile().getId());
             feedbackService.saveReview(review.get());

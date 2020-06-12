@@ -5,6 +5,7 @@ import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class ProfileCardController {
     FileService fileService;
     @Autowired
     ProfileStatisticService profileStatisticService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -53,7 +56,7 @@ public class ProfileCardController {
                                     @RequestParam Optional<String> subscribe
                                     ) {
 
-        if (saveProfile.isPresent()) {
+        if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
             if (avatar.isPresent()) {
                 Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
                 if (profile.isPresent()) {

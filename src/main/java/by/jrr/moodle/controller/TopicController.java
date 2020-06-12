@@ -10,6 +10,7 @@ import by.jrr.constant.View;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.repository.TopicRepository;
 import by.jrr.moodle.service.TopicService;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.statistic.bean.TrackStatus;
 import by.jrr.statistic.service.UserProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class TopicController {
     UserDataToModelService userDataToModelService;
     @Autowired
     UserProgressService userProgressService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @AdminOnly
     @GetMapping(Endpoint.TOPIC)

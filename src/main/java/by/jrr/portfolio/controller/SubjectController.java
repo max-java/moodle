@@ -8,6 +8,7 @@ import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.portfolio.bean.Subject;
 import by.jrr.portfolio.service.SubjectService;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ public class SubjectController {
     UserDataToModelService userDataToModelService;
     @Autowired
     FeedbackService feedbackService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @AdminOnly
     @GetMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT)

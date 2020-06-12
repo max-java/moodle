@@ -18,6 +18,8 @@ public class StreamAndTeamSubscriberService {
     StreamAndTeamSubscriberRepository streamAndTeamSubscriberRepository;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ProfilePossessesService pss;
 
     public List<StreamAndTeamSubscriber> getAllSubscribersForProfileByProfileId(Long id) {
         return streamAndTeamSubscriberRepository.findAllByStreamTeamProfileId(id);

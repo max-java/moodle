@@ -4,6 +4,7 @@ import by.jrr.files.bean.FileBytes;
 import by.jrr.files.bean.FileMeta;
 import by.jrr.files.repository.FileBytesRepository;
 import by.jrr.files.repository.FileMetaRepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,8 @@ public class FileService {
     FileMetaRepository fileMetaRepository;
     @Autowired
     FileBytesRepository fileBytesRepository;
+    @Autowired
+    ProfilePossessesService pss;
 
 
     public String saveUploaded(MultipartFile file, Optional<String> description) throws IOException {

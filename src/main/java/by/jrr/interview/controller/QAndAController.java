@@ -10,6 +10,7 @@ import by.jrr.constant.View;
 import by.jrr.interview.service.QAndAService;
 import by.jrr.interview.bean.QAndA;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.statistic.bean.TrackStatus;
 import by.jrr.statistic.service.UserProgressService;
@@ -34,6 +35,8 @@ public class QAndAController {
     UserDataToModelService userDataToModelService;
     @Autowired
     UserProgressService userProgressService;
+    @Autowired
+    ProfilePossessesService pss;
 
 
     @AdminOnly

@@ -12,6 +12,7 @@ import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.service.CourseService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.StreamAndTeamSubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @AdminOnly
     @GetMapping(Endpoint.COURSE)

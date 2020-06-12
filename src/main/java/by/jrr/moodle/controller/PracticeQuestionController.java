@@ -11,6 +11,7 @@ import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.PracticeQuestionService;
+import by.jrr.profile.service.ProfilePossessesService;
 import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,8 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
     UserDataToModelService userDataToModelService;
     @Autowired
     FeedbackService feedbackService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @AdminOnly
     @GetMapping(Endpoint.PRACTICE)

@@ -8,6 +8,7 @@ import by.jrr.constant.View;
 import by.jrr.portfolio.bean.Domain;
 import by.jrr.portfolio.service.SubjectService;
 import by.jrr.portfolio.service.DomainService;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class DomainController {
     SubjectService subjectService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @AdminOnly
     @GetMapping(Endpoint.DOMAIN)

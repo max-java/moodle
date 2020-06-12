@@ -11,6 +11,7 @@ import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.service.LectureService;
 import by.jrr.moodle.service.TopicService;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.statistic.bean.TrackStatus;
 import by.jrr.statistic.service.UserProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class LectureController {
     UserDataToModelService userDataToModelService;
     @Autowired
     UserProgressService userProgressService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @GetMapping(Endpoint.LECTURE)
     public ModelAndView createNewTopic() {
