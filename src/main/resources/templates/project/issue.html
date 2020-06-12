@@ -30,6 +30,7 @@
                     <div class="col-md-12" th:unless="${edit}">
                         <form method="post">
                             <button type="submit" name="edit" value="true">edit</button>
+                            <button type="submit" name="requestForReview" value="requestForReview">Code review request</button>
                         </form>
                         <div class="card" th:insert="project/issueCard :: issueCard">
                         </div>

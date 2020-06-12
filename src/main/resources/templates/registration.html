@@ -34,7 +34,7 @@
                                       th:object="${user}" method="post" role="form">
                                     <label th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></label><br />
                                     <div class="input-group mb-3">
-                                        <input type="text" th:field="*{userName}" placeholder="User Name" class="form-control" />
+                                        <input type="text" th:field="*{userName}" placeholder="Login" class="form-control" />
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-user"></span>
@@ -68,6 +68,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <label th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></label><br />
+                                    <div class="input-group mb-3">
+                                        <input type="text" th:field="*{phone}" placeholder="Phone" class="form-control" >
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-envelope"></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></label><br />
                                     <div class="input-group mb-3">
                                         <input type="password" th:field="*{password}" placeholder="Password" class="form-control" >
@@ -78,7 +87,7 @@
                                         </div>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Retype password">
+                                        <input type="password" name="retypePassword" class="form-control" placeholder="Retype password">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-lock"></span>

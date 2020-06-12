@@ -1,9 +1,11 @@
 package by.jrr.auth.configuration;
 
 import by.jrr.auth.service.MyUserDetailsService;
+import by.jrr.constant.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -38,10 +41,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.
                 authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
-                .antMatchers("/registration").permitAll()
+                .antMatchers(Endpoint.HOME).permitAll()
+                .antMatchers(Endpoint.COURSE+"/*").permitAll()
+                .antMatchers(Endpoint.COURSE_LIST).permitAll()
+                .antMatchers(Endpoint.TOPIC_LIST).permitAll()
+                .antMatchers(Endpoint.LECTURE_LIST).permitAll()
+                .antMatchers(Endpoint.PRACTICE_LIST).permitAll()
+                .antMatchers(Endpoint.Q_AND_A_LIST).permitAll()
+                .antMatchers(Endpoint.PROJECT_LIST).permitAll()
+                .antMatchers(Endpoint.ISSUE_LIST).permitAll()
+                .antMatchers(Endpoint.DOMAIN_LIST).permitAll()
+                .antMatchers(Endpoint.SUBJECT_LIST).permitAll()
+                .antMatchers(Endpoint.REVIEW_REQUEST_LIST).permitAll()
+                .antMatchers(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM).permitAll()
+                .antMatchers(Endpoint.REGISTER_USER).permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
@@ -55,7 +69,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher(logoutPage))
-                .logoutSuccessUrl("/").and().exceptionHandling();
+                .logoutSuccessUrl("/")
+                .and()
+                .exceptionHandling().accessDeniedPage("/403");
         http.headers().frameOptions().disable(); //this is need to open H2 database console
     }
 
@@ -67,3 +83,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 }
+

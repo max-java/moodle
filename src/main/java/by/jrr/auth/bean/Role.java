@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,10 +17,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "roles")
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+    @javax.persistence.Id
+    @GeneratedValue(strategy = SEQUENCE)
     @Column(name = "role_id")
-    private int id;
-    @Column(name = "role")
-    private String role;
+    private Long id;
+
+    @Column(name = "role", unique = true)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoles role;
 }

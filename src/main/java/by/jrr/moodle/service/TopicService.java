@@ -1,7 +1,9 @@
 package by.jrr.moodle.service;
 
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.repository.TopicRepository;
+import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,8 @@ public class TopicService {
 
     @Autowired
     TopicRepository topicRepository;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Topic> findAll(String page, String items) {
         Page<Topic> topics;
@@ -27,10 +31,12 @@ public class TopicService {
 
     public Topic create(Topic topic) {
         topic = topicRepository.save(topic);
+        pss.savePossessForCurrentUser(topic.getId(), EntityType.TOPIC);
         return topic;
     }
     public Topic update(Topic topic) {
         topic = topicRepository.save(topic);
+        pss.savePossessForCurrentUser(topic.getId(), EntityType.TOPIC);
         return topic;
     }
     public void delete() {

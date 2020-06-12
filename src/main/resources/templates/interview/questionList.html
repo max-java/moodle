@@ -24,28 +24,107 @@
                     <div class="row">
                         <a th:href="@{'/question'}"> create </a>
                     </div>
-                    <!-- /.row -->
-                    <div class="row d-flex align-items-stretch">
-                        <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" th:each="qAndA : ${qAndAPage}">
-                            <div class="card bg-light">
-                                <a th:href="${qAndA.getLink()}">
-                                    <div class="card-body pt-0">
-                                        <div class="row">
-                                            <div class="col-7">
-                                                <h1 class="lead">&nbsp;</h1>
-                                                <h2 class="lead" th:text="${qAndA.getQuestion()}"> </h2>
-                                            </div>
-                                            <div class="col-5 text-center">
-                                                <img alt="" class="img-circle img-fluid" src="https://www.iconninja.com/files/854/364/1/develop-programming-software-java-language-code-command-icon.png">
+
+                    <h3>totalQuestions</h3>
+                    <table>
+                        <tr th:each="instance : ${totalQuestions}">
+                            <td th:text="${instance.key}">keyvalue</td>
+                            <td th:text="${instance.value}">num</td>
+                        </tr>
+                    </table>
+
+
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Interview questions</h3>
+
+                                <div class="card-tools">
+                                    <form>
+                                        <div class="input-group input-group-sm" style="width: 150px;">
+
+                                            <input class="form-control float-right" name="searchTerm"
+                                                   placeholder="Search"
+                                                   type="text">
+
+                                            <div class="input-group-append">
+                                                <button class="btn btn-default" type="submit"><i
+                                                        class="fas fa-search"></i></button>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                                <div class="card-footer">
+                                    </form>
                                 </div>
                             </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Тема</th>
+                                        <th>Вопрос</th>
+                                        <th>Ответ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="qAndA : ${qAndAPage}">
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">
+                                                <i class=""><span th:text="${qAndA.getTheme()}"></span></i>
+                                            </a>
+                                        </td>
+                                        <td th:text="${qAndA.getQuestion()}"></td>
+                                        <td><a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(qAndA)}">Ответ</a></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
+                        <!-- /.card -->
                     </div>
+                    <ul class="pagination pagination-lg m-0">
+                        <li class="page-item"
+                            th:if="${qAndAPage.hasPrevious()}">
+                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                                +searchTerm+
+                                '&page='+(qAndAPage.getNumber())}">&laquo;</a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${qAndAPage.hasPrevious()}">
+                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                                +searchTerm+
+                                '&page='+(qAndAPage.getNumber())}" th:text="${(qAndAPage.getNumber())}"></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link text-danger" th:href="${'/questions/?searchTerm='
+                                +searchTerm+
+                                '&page='+(qAndAPage.getNumber()+1)}" th:text="${(qAndAPage.getNumber()+1)}"></a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${qAndAPage.hasNext()}">
+                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                                +searchTerm+
+                                '&page='+(qAndAPage.getNumber()+2)}" th:text="${(qAndAPage.getNumber()+2)}"></a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${qAndAPage.hasNext()}"}>
+                            <a class="page-link" href="#">...</a></li>
+
+                        <li class="page-item"
+                            th:if="${qAndAPage.hasNext()}">
+                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                                +searchTerm+
+                                '&page='+(qAndAPage.getTotalPages())}" th:text="${(qAndAPage.getTotalPages())}">&laquo;</a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${qAndAPage.hasNext()}">
+                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                                +searchTerm+
+                                '&page='+(qAndAPage.getNumber()+2)}">&raquo;</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>

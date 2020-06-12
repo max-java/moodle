@@ -1,8 +1,12 @@
 package by.jrr.project.controller;
 
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.feedback.bean.ReviewRequest;
+import by.jrr.feedback.service.FeedbackService;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +29,10 @@ public class IssueController {
     IssueService issueService;
     @Autowired
     UserDataToModelService userDataToModelService;
+    @Autowired
+    FeedbackService feedbackService;
+    @Autowired
+    ProfilePossessesService pss;
 
     @GetMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
     public ModelAndView createNewIssue(@PathVariable Long id) {
@@ -48,20 +57,28 @@ public class IssueController {
         return mov;
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE)
     public ModelAndView saveNewIssue(Issue issue, @PathVariable Long id) {
         issue = issueService.createOrUpdate(issue);
         return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
     }
 
+    @AtLeatStudent
     @PostMapping(Endpoint.PROJECT+"/{id}"+Endpoint.ISSUE + "/{issueId}")
-    public ModelAndView updateIssue(Issue issue,
+    public ModelAndView updateIssue(Issue issue, HttpServletRequest request,
                                     @PathVariable Long issueId, @PathVariable Long id,
-                                     @RequestParam(value = "edit", required = false) boolean edit
-                                    ) {
+                                    @RequestParam(value = "edit", required = false) boolean edit,
+                                    @RequestParam Optional<String> requestForReview) {
+
+        if(requestForReview.isPresent()) {
+
+            return redirectToCodeReview(issueId, issue, request);
+        }
+
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.ISSUE);
-        if (edit) {
+        if (edit && pss.isCurrentUserOwner(issueId)) {
             Optional<Issue> issueToUpdate = issueService.findByIssueId(issue.getIssueId());
             if (issueToUpdate.isPresent()) {
                 mov.addObject("issue", issueToUpdate.get());
@@ -69,7 +86,7 @@ public class IssueController {
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else {
+        } else if(pss.isCurrentUserOwner(issueId)) {
             issue = issueService.createOrUpdate(issue);
             return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
 
@@ -85,5 +102,11 @@ public class IssueController {
         mov.addObject("issuePage", issuePage);
         mov.setViewName(View.ISSUE_LIST);
         return mov;
+    }
+
+    private ModelAndView redirectToCodeReview(Long issueId, Issue issue, HttpServletRequest request) {
+        issue = issueService.findByIssueId(issueId).get();
+        ReviewRequest reviewRequest = feedbackService.createNewReviewRequest(issue);
+        return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_FORM+"/"+reviewRequest.getId());
     }
 }

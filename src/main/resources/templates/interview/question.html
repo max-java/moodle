@@ -26,7 +26,7 @@
                                 <form method="post">
                                     <input type="text" name="question" placeholder="question" th:value="${qAndA.getQuestion()}"/>
                                     <textarea id="mytextarea" name="answer" th:text="${qAndA.getAnswer()}" >Hello, World!</textarea>
-                                    <button type="submit">save</button>
+                                    <button type="submit" name="save" value="true">save</button>
                                 </form>
                             </div>
                         </div>
@@ -34,6 +34,8 @@
                     <div class="col-md-12" th:unless="${edit}">
                         <form method="post">
                             <button type="submit" name="edit" value="true">edit</button>
+                            <button type="submit" name="setLearned" value="true">learned</button>
+                            <p th:text="${trackStatus}"></p>
                         </form>
                         <div class="card">
                             <div class="card-body">
@@ -46,8 +48,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
                 </div>
                 <!-- /.row -->

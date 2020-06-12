@@ -55,6 +55,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" th:href="@{/practices}">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Practice
+                                    <span class="right badge badge-danger">New</span>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/lectures}">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Lectures
+                                    <span class="right badge badge-danger">New</span>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/courses}">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Courses
+                                    <span class="right badge badge-danger">New</span>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" th:href="@{/questions}">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -64,7 +91,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/codereviews}">
+                            <a class="nav-link" th:href="@{/reviewRequests}">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Code Review
@@ -86,6 +113,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Issues
+                                    <span class="right badge badge-danger">New</span>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/domains}">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Students activity
                                     <span class="right badge badge-danger">New</span>
                                 </p>
                             </a>
@@ -123,6 +159,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Main content -->
         <div class="content">
             <div class="container-fluid">
+                
+                <h3> new row in trunk </h3>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="card">
@@ -229,6 +267,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE App -->
     <!--<script src="dist/js/adminlte.min.js"></script>-->
     <script th:src="@{/dist/js/adminlte.min.js}"></script>
+    <!-- bs-custom-file-input -->
+    <script th:src="@{/plugins/bs-custom-file-input/bs-custom-file-input.min.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
 </div>
 </body>
 </html>

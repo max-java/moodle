@@ -2,9 +2,12 @@ package by.jrr.project.service;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.service.UserService;
+import by.jrr.feedback.bean.EntityType;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.project.bean.Issue;
 import by.jrr.project.bean.Project;
 import by.jrr.project.repository.IssueRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +28,8 @@ public class IssueService {
     UserService userService;
     @Autowired
     ProjectService projectService;
+    @Autowired
+    ProfilePossessesService pss;
 
     public Page<Issue> findAll(String page, String items) {
         Page<Issue> issuePage;
@@ -78,6 +83,7 @@ public class IssueService {
         issue = issueRepository.save(issue);
         if (issue.getIssueId() == null) { //if it is first history record, that issue id set from id value
             issue.setIssueId(issue.getId());
+            pss.savePossessForCurrentUser(issue.getId(), EntityType.ISSUE);
             issueRepository.save(issue);
         }
         return issue;
