@@ -26,7 +26,7 @@ public class FileDownloadingController {
     @RequestMapping(value = Endpoint.PDF+"/{fileName}", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public byte[] getPdfBytesByFilename(@PathVariable String fileName)  {
-        return fileService.getFileBytes(fileName);
+        return fileService.getPdfFromFileStorage(fileName);
     }
 
 }
