@@ -38,7 +38,7 @@ public class ProfileCardController {
     public ModelAndView openProfileById(@PathVariable Long profileId) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-        if (profile.isPresent()) {
+        if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
@@ -74,7 +74,7 @@ public class ProfileCardController {
 
     private void saveAvatar(Optional<MultipartFile> avatar, Long profileId) {
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-        if (profile.isPresent()) {
+        if (profile.isPresent()  && pss.isCurrentUserOwner(profileId)) {
             try {
                 Profile updatedProfile = profile.get();
                 updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get(), Optional.empty()));

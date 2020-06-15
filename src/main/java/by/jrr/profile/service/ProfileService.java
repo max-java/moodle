@@ -175,9 +175,14 @@ public class ProfileService {
     }
 
     public Optional<Profile> findNearestFromNowOpennForEnrolStreamByCourseId(Long courseId) {
-        Optional<Profile> profileOp = profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now()).stream()
-                .filter(p -> p.getDateStart() != null)
-                .min(Comparator.comparing(p -> p.getDateStart()));
-        return profileOp;
+        try {
+            return profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now()).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .min(Comparator.comparing(p -> p.getDateStart()));
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception on finding man date of course");
+            return Optional.empty();
+        }
     }
 }
