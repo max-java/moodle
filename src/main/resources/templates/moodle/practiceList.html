@@ -54,8 +54,54 @@
                             </div>
                         </div>
                     </div>
+
+                    <ul class="pagination pagination-lg m-0">
+                        <li class="page-item"
+                            th:if="${issuePage.hasPrevious()}">
+                            <a class="page-link" th:href="${'/practices/?searchTerm='
+                                +searchTerm+
+                                '&page='+(issuePage.getNumber())}">&laquo;</a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${issuePage.hasPrevious()}">
+                            <a class="page-link" th:href="${'/practices/?searchTerm='
+                                +searchTerm+
+                                '&page='+(issuePage.getNumber())}" th:text="${(issuePage.getNumber())}"></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link text-danger" th:href="${'/practices/?searchTerm='
+                                +searchTerm+
+                                '&page='+(issuePage.getNumber()+1)}" th:text="${(issuePage.getNumber()+1)}"></a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${issuePage.hasNext()}">
+                            <a class="page-link" th:href="${'/practices/?searchTerm='
+                                +searchTerm+
+                                '&page='+(issuePage.getNumber()+2)}" th:text="${(issuePage.getNumber()+2)}"></a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${issuePage.hasNext()}"}>
+                            <a class="page-link" href="#">...</a></li>
+
+                        <li class="page-item"
+                            th:if="${issuePage.hasNext()}">
+                            <a class="page-link" th:href="${'/practices/?searchTerm='
+                                +searchTerm+
+                                '&page='+(issuePage.getTotalPages())}" th:text="${(issuePage.getTotalPages())}">&laquo;</a>
+                        </li>
+                        <li class="page-item"
+                            th:if="${issuePage.hasNext()}">
+                            <a class="page-link" th:href="${'/practices/?searchTerm='
+                                +searchTerm+
+                                '&page='+(issuePage.getNumber()+2)}">&raquo;</a>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
+
+
+
         </section>
     </div>
     <!-- /.content -->
