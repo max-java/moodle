@@ -48,7 +48,6 @@ public class PracticeQuestionService {
     }
     public PracticeQuestion update(PracticeQuestion topic) {
         topic = practiceQuestionRepository.save(topic);
-        pss.savePossessForCurrentUser(topic.getId(), EntityType.PRACTICE_QUESTION);
         return topic;
     }
     public void delete() {
