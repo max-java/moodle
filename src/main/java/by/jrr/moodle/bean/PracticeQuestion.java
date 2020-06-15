@@ -25,6 +25,7 @@ public class PracticeQuestion implements Reviewable {
 
     private String name;
     private String summary;
+    private String theme;
     @Lob
     private String description;
     @Lob
