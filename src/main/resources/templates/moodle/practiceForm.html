@@ -7,7 +7,7 @@
 <body>
 <form method="post" role="form" th:fragment="issueForm" th:object="${issue}">
     <div class="card-body">
-        <input class="form-control" disabled th:field="*{id}" type="hidden">
+        <input class="form-control" th:field="*{Id}" type="hidden">
         <div class="form-group">
             <label>Theme</label>
             <input class="form-control" placeholder="Enter name" th:field="*{theme}" type="text">
