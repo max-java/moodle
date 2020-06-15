@@ -37,14 +37,15 @@ public class ProfileCardUpdateController {
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}/update")
     public ModelAndView updateProfile(@PathVariable Long profileId,
-                                    @RequestParam Optional<String> dateStart,
-                                    @RequestParam Optional<String> dateEnd,
-                                    @RequestParam Optional<String> updateProfile
-                                    ) {
+                                      @RequestParam Optional<String> dateStart,
+                                      @RequestParam Optional<String> dateEnd,
+                                      @RequestParam Optional<String> about,
+                                      @RequestParam Optional<String> updateProfile
+    ) {
 
-        if(updateProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
+        if (updateProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
             Optional<Profile> profileOp = profileService.findProfileByProfileId(profileId);
-            if(profileOp.isPresent()) {
+            if (profileOp.isPresent()) {
                 Profile profile = profileOp.get();
                 if (dateStart.isPresent()) {
                     try {
@@ -59,6 +60,9 @@ public class ProfileCardUpdateController {
                     } catch (Exception ex) {
                         // TODO: 16/06/20 log exception
                     }
+                }
+                if (about.isPresent()) {
+                    profile.setAbout(about.get());
                 }
                 profileService.updateProfile(profile);
             }
