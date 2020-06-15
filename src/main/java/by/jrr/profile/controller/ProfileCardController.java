@@ -53,27 +53,36 @@ public class ProfileCardController {
     public ModelAndView saveProfile(@PathVariable Long profileId,
                                     @RequestParam Optional<MultipartFile> avatar, // TODO: 04/06/20 handle NPE
                                     @RequestParam Optional<String> saveProfile,
+                                    @RequestParam Optional<String> updateProfile,
+//                                    Optional<Profile> profile, // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it.
                                     @RequestParam Optional<String> subscribe
                                     ) {
 
         if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
             if (avatar.isPresent()) {
-                Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-                if (profile.isPresent()) {
-                    try {
-                        Profile updatedProfile = profile.get();
-                        updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get(), Optional.empty()));
-                        profileService.saveProfile(updatedProfile);
-                    } catch (IOException e) {
-                        // TODO: 01/06/20 log exceptions
-                        e.printStackTrace();
-                    }
-                }
+                saveAvatar(avatar, profileId);
             }
+        }
+        if(updateProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
+            // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it. That is why I moved it in ProfileCardUpdateController
         }
         if(subscribe.isPresent()) {
             profileService.enrollToStreamTeamProfile(profileId, profileService.getCurrentUserProfile().getId());
         }
         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
+    }
+
+    private void saveAvatar(Optional<MultipartFile> avatar, Long profileId) {
+        Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
+        if (profile.isPresent()) {
+            try {
+                Profile updatedProfile = profile.get();
+                updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get(), Optional.empty()));
+                profileService.createProfile(updatedProfile);
+            } catch (IOException e) {
+                // TODO: 01/06/20 log exceptions
+                e.printStackTrace();
+            }
+        }
     }
 }
