@@ -28,9 +28,14 @@
                         </div>
                     </div>
                     <div class="col-md-12" th:unless="${edit}">
-                        <form method="post">
-                            <button type="submit" name="edit" value="true">edit</button>
-                            <button type="submit" name="requestForReview" value="requestForReview">Code review request</button>
+                        <form method="post" th:object="${issue}">
+                            <input th:field="*{id}" type="hidden"/>
+                            <input th:field="*{name}" type="hidden"/>
+                            <input th:field="*{summary}" type="hidden"/>
+                            <input th:field="*{reproSteps}" type="hidden"/>
+                            <button name="edit" type="submit" value="true">edit</button>
+                            <button name="requestForReview" type="submit" value="requestForReview">Code review request
+                            </button>
                         </form>
                         <div class="card" th:insert="moodle/practiceCard :: issueCard">
                         </div>
@@ -63,7 +68,7 @@
         $('.select2').select2()
     })
 </script>
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script referrerpolicy="origin" src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
 <script>
     tinymce.init({
         selector: '#description',
