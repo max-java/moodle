@@ -101,14 +101,6 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
         // TODO: 11/05/20 replace if-else with private methods
     }
 
-    @GetMapping(Endpoint.PRACTICE_LIST)
-    public ModelAndView findAll(@PathVariable(required = false) String page, @PathVariable(required = false) String size) {
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Page<PracticeQuestion> issuePage = practiceQuestionService.findAll(page, size);
-        mov.addObject("issuePage", issuePage);
-        mov.setViewName(View.PRACTICE_LIST);
-        return mov;
-    }
 
     private ModelAndView redirectToCodeReview(Long issueId, PracticeQuestion issue, HttpServletRequest request) {
         issue = practiceQuestionService.findById(issueId).get();
