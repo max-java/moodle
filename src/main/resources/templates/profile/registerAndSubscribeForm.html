@@ -10,6 +10,7 @@
 
 <!--registration form: it is need an user object ot bind -->
 <div th:fragment="quickRegisterForm">
+    <h3 th:text="${error}"></h3>
     <form   autocomplete="off"
             th:action="@{/registerAndSubscribe}"
             method="post"

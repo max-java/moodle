@@ -56,6 +56,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(Endpoint.REVIEW_REQUEST_LIST).permitAll()
                 .antMatchers(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM).permitAll()
                 .antMatchers(Endpoint.REGISTER_USER).permitAll()
+                .antMatchers(Endpoint.PROFILE_LIST).permitAll()
+                .antMatchers(Endpoint.PROFILE_CARD+"/*").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
