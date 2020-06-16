@@ -110,10 +110,16 @@ public class ProfileService {
         return profile;
     }
 
-    public Profile saveProfile(Profile profile) {
+    public Profile createProfile(Profile profile) {
         Profile savedProfile = profileRepository.save(profile);
         pss.savePossessForCurrentUser(savedProfile.getId(), EntityType.PROFILE);
         return profileRepository.save(profile);
+    }
+    public Profile updateProfile(Profile profile) {
+        if(pss.isCurrentUserOwner(profile.getId())){
+            profile = profileRepository.save(profile);
+        }
+        return profile;
     }
 
 
@@ -122,11 +128,12 @@ public class ProfileService {
     // TODO: 07/06/20 тогда даже если в этом месте косяк, секьюрность не афектнет
     // TODO: 07/06/20 В любом профиле собственник = тот, чей это профиль, кроме стрим или группа.
     // TODO: 07/06/20 Cito! не работает это, NPE. Consider how to set profile Owner?
-    public Profile createAndSaveProfileForUser(User user, Long courseId) {
+    public Profile createAndSaveProfileForUser(User user, Long courseId) { // creates profile for stream (of team?)
         Profile profile = profileRepository
                 .save(Profile.builder()
                         .userId(user.getId())
                         .courseId(courseId)
+                        .ownerProfileId(getCurrentUserProfile().getId())
                         .build());
         // set profile owner
 //        if (profile.getUser().getRoles().contains(UserRoles.TEAM)
@@ -135,10 +142,10 @@ public class ProfileService {
 //        } else {
 //            profile.setOwnerProfileId(profile.getId());
 //        }
-        return saveProfile(profile);
+        return createProfile(profile);
     }
 
-    public Profile createAndSaveProfileForUser(User user) {
+    public Profile createAndSaveProfileForUser(User user) { //creates profile for user
         Profile profile = profileRepository
                 .save(
                         Profile
@@ -154,7 +161,7 @@ public class ProfileService {
 //        } else {
 //            profile.setOwnerProfileId(profile.getId());
 //        }
-        return saveProfile(profile);
+        return createProfile(profile);
     }
 
     public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
@@ -168,9 +175,14 @@ public class ProfileService {
     }
 
     public Optional<Profile> findNearestFromNowOpennForEnrolStreamByCourseId(Long courseId) {
-        Optional<Profile> profileOp = profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now()).stream()
-                .filter(p -> p.getDateStart() != null)
-                .min(Comparator.comparing(p -> p.getDateStart()));
-        return profileOp;
+        try {
+            return profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now()).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .min(Comparator.comparing(p -> p.getDateStart()));
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception on finding man date of course");
+            return Optional.empty();
+        }
     }
 }

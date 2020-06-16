@@ -33,6 +33,9 @@ public class Profile {
     private String avatarFileName;
     private Long ownerProfileId;
 
+    @Lob
+    private String about;
+
     @Transient
     private List<StreamAndTeamSubscriber> subscribers = new ArrayList<>();
 

@@ -2,6 +2,7 @@ package by.jrr.auth.service;
 
 import by.jrr.auth.bean.UserData;
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.profile.bean.Profile;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,8 @@ import java.util.Collection;
 
 @Service
 public class UserAccessService {
+
+
 
     public boolean isCurrentUserAuthenticated() {
         boolean isUserAuthenticated = false;
