@@ -153,7 +153,7 @@
                                                 <tr th:each="subscriber : ${profile.getSubscribers()}">
                                                     <td th:text="${subscriber.getStatus()}"></td>
                                                     <td th:text="${subscriber.getFullSubscriberName()}"></td>
-                                                    <td><a th:href="${'/profile/'+subscriber.getSubscriberProfile().getId()}">open</a></td>
+                                                    <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a></td>
                                                 </tr>
 
                                                 </tbody>
