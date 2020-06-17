@@ -54,4 +54,16 @@ public class EMailService {
         message.setText(messageText.toString());
         emailSender.send(message);
     }
+    public void amoCrmTrigger(String userEmail, String firstAndLastName, String userPhone) {
+        StringBuffer messageText = new StringBuffer();
+        messageText.append("Заявка с Java Bootcamp");
+        messageText.append("\nОт: "+firstAndLastName);
+        messageText.append("\nЕ-почта: "+userEmail);
+        messageText.append("\nТелефон: "+userPhone);
+        messageText.append("Заявка на курс: Java free stream 5");
+        messageText.append("\n");
+        messageText.append("http://javaguru.by/java-bootcamp");
+        messageText.append("--");
+        messageText.append("This e-mail was sent from a contact form on JavaGuru");
+    }
 }
