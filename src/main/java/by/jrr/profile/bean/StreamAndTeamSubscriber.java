@@ -28,4 +28,21 @@ public class StreamAndTeamSubscriber {
     @Transient
     private Profile subscriberProfile;
 
+    public String getFullSubscriberName() {
+        try {
+            return this.getSubscriberProfile().getUser().getFullUserName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+    public Long getSubscriberProfileId() {
+        try {
+            return this.getSubscriberProfile().getId();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return null;
+        }
+    }
+
 }
