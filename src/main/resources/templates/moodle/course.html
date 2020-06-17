@@ -28,9 +28,11 @@
                                 <p>&nbsp;</p>
 
                                 <form method="post">
-                                    <input type="text" name="title" placeholder="title" th:value="${topic.getTitle()}"/>
-                                    <input type="text" name="subtitle" placeholder="subtitle" th:value="${topic.getSubtitle()}"/>
-                                    <textarea id="mytextarea" name="text" th:text="${topic.getText()}" >Hello, World!</textarea>
+                                    <input name="title" placeholder="title" th:value="${topic.getTitle()}" type="text"/>
+                                    <input name="subtitle" placeholder="subtitle" th:value="${topic.getSubtitle()}"
+                                           type="text"/>
+                                    <textarea id="mytextarea" name="text"
+                                              th:text="${topic.getText()}">Hello, World!</textarea>
                                     <button type="submit">save</button>
                                 </form>
                             </div>
@@ -38,51 +40,49 @@
                     </div>
                     <div class="col-md-12" th:unless="${edit}">
                         <form method="post">
-                            <button type="submit" name="edit" value="true">edit</button>
+                            <button name="edit" type="submit" value="true">edit</button>
                         </form>
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <h1 class="card-title" th:text="${topic.getTitle()}"></h1>
-                                </div>
-                                <div class="row">
-                                    <h2 class="card-title" th:text="${topic.getSubtitle()}"></h2>
-                                </div>
-                                <hr />
-
-                                <div th:unless="${IS_AUTHENTICATED}"
-                                     th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
-                                     th:with="user=${user},
+                                    <div class="col-md-6">
+                                        <h1 class="display-3" th:text="${topic.getTitle()}"></h1>
+                                        <h2 class="display-4" th:text="${topic.getSubtitle()}"></h2>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
+                                             th:unless="${IS_AUTHENTICATED}"
+                                             th:with="user=${user},
                                               courseId=${topic.getId()}">
+                                        </div>
 
+                                        <form method="post"
+                                              th:if="${IS_AUTHENTICATED}">
+                                            <button class="btn btn-primary btn-block"
+                                                    name="subscribe"
+                                                    type="submit"
+                                                    value="subscribe"><b>Записаться</b></button>
+                                        </form>
+                                    </div>
+                                    <hr/>
+                                    <div th:utext="${topic.getText()}"></div>
                                 </div>
-
-                                <form th:if="${IS_AUTHENTICATED}"
-                                      method="post">
-                                    <button type="submit"
-                                            name="subscribe"
-                                            value="subscribe"
-                                            class="btn btn-primary btn-block"><b>Записаться</b></button>
-                                </form>
-
-                                <div th:utext="${topic.getText()}"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
 
-
-                </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
-        <!-- /.content -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-wrapper -->
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <div th:include="starter :: asideRight"></div>
+<!-- Control Sidebar -->
+<div th:include="starter :: asideRight"></div>
 </div>
 <!-- /.control-sidebar -->
 
@@ -93,12 +93,15 @@
 
 <!-- REQUIRED SCRIPTS -->
 <div th:include="starter :: scripts"></div>
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script referrerpolicy="origin" src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
 <script>
     tinymce.init({
         selector: '#mytextarea',
         min_height: 600,
-        plugins: 'autoresize'
+        plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+        menubar: 'file edit view insert format tools table help',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
     });
 </script>
 </body>
