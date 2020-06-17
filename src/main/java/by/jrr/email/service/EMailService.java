@@ -60,11 +60,11 @@ public class EMailService {
         messageText.append("\nОт: "+firstAndLastName);
         messageText.append("\nЕ-почта: "+userEmail);
         messageText.append("\nТелефон: "+userPhone);
-        messageText.append("Заявка на курс: Java free stream 5");
+        messageText.append("\nЗаявка на курс: Java free stream 5");
         messageText.append("\n");
-        messageText.append("http://javaguru.by/java-bootcamp");
-        messageText.append("--");
-        messageText.append("This e-mail was sent from a contact form on JavaGuru");
+        messageText.append("\nhttp://javaguru.by/java-bootcamp");
+        messageText.append("\n--");
+        messageText.append("\nThis e-mail was sent from a contact form on JavaGuru");
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo("28750003.118405@parser.amocrm.ru");
