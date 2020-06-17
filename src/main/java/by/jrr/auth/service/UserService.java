@@ -81,6 +81,7 @@ public class UserService {
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
         autoLogin(login, password);
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
+        new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
         user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         return user;
     }
