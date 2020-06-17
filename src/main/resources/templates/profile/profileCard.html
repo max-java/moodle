@@ -277,7 +277,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>About</label>
-                                                <textarea class="form-control" rows="3" name="about" id="about" th:value="${profile.getAbout()}" > </textarea>
+                                                <textarea class="form-control" rows="3" name="about" id="about" th:text="${profile.getAbout()}"  > </textarea>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="offset-sm-2 col-sm-10">
