@@ -65,5 +65,11 @@ public class EMailService {
         messageText.append("http://javaguru.by/java-bootcamp");
         messageText.append("--");
         messageText.append("This e-mail was sent from a contact form on JavaGuru");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("28750003.118405@parser.amocrm.ru");
+        message.setSubject("[JavaGuruRequest] - Заявка на бесплантый курс Java free stream 4");
+        message.setText(messageText.toString());
+        emailSender.send(message);
     }
 }
