@@ -154,7 +154,14 @@
                                                     <td th:text="${subscriber.getStatus()}"></td>
                                                     <td th:text="${subscriber.getFullSubscriberName()}"></td>
                                                     <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a></td>
+                                                    <td>
+                                                        <form method="post">
+                                                            <input type="hidden" name="subscriberProfileId" th:value="${subscriber.getSubscriberProfileId()}">
+                                                            <button type="submit" name="command" value="approve" class="btn btn-primary btn-block"><b>Принять</b></button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
+
 
                                                 </tbody>
                                             </table>

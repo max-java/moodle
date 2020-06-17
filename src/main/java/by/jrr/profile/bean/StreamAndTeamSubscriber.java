@@ -36,13 +36,4 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
-    public Long getSubscriberProfileId() {
-        try {
-            return this.getSubscriberProfile().getId();
-        } catch (Exception ex) {
-            // TODO: 17/06/20 log exception with details!!
-            return null;
-        }
-    }
-
 }

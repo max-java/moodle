@@ -66,7 +66,7 @@ public class User {
     private Set<Role> roles;
 
     public String getFullUserName() {
-        return userName + " " + lastName;
+        return name + " " + lastName;
     }
     public String getAllRoles() {
         return roles.stream()
