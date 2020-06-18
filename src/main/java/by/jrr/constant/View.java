@@ -36,4 +36,6 @@ public class View {
     public static final String CODE_REVIEW_CARD = "feedback/codeReviewCard";
 
     public static final String FILE = "files/files";
+
+    public static final String BOOK_LIST = "library/books";
 }

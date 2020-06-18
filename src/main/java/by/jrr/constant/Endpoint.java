@@ -48,4 +48,6 @@ public class Endpoint {
     public static final String REGISTER_USER_AND_ENROLL_TO_STREAM = "/registerAndSubscribe";
     public static final String REGISTER_USER = "/registration";
 
+    public static final String BOOK_LIST = "/library";
+
 }
