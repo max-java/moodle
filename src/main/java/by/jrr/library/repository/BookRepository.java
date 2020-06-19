@@ -9,8 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookRepository extends PagingAndSortingRepository<MyBook, Long> {
     Streamable<MyBook> findByNameContaining(String name);
-    Streamable<MyBook> findBySummaryContaining(String name);
-    Streamable<MyBook> findByThemeContaining(String name);
-    Streamable<MyBook> findByDescriptionContaining(String name);
-    Streamable<MyBook> findByReproStepsContaining(String name);
 }

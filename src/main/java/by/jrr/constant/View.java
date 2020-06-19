@@ -37,5 +37,6 @@ public class View {
 
     public static final String FILE = "files/files";
 
-    public static final String BOOK_LIST = "library/books";
+    public static final String BOOK = "library/book";
+    public static final String BOOK_LIST = "library/bookList";
 }

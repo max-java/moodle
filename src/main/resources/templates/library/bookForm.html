@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" role="form" th:fragment="issueForm" th:object="${issue}">
+    <div class="card-body">
+        <input class="form-control" th:field="*{Id}" type="hidden">
+        <div class="form-group">
+            <label>ISBN</label>
+            <input class="form-control" placeholder="Enter isbn" th:field="*{isbn}" type="text">
+            <label>name</label>
+            <input class="form-control" placeholder="Enter name" th:field="*{name}" type="text">
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+            <button class="btn btn-primary" type="submit">Find</button>
+        </div>
+</form>
+</body>
+</html>
