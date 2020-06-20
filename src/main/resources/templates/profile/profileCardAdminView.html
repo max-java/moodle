@@ -154,7 +154,14 @@
                                                     <td th:text="${subscriber.getStatus()}"></td>
                                                     <td th:text="${subscriber.getFullSubscriberName()}"></td>
                                                     <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a></td>
+                                                    <td>
+                                                        <form method="post">
+                                                            <input type="hidden" name="subscriberProfileId" th:value="${subscriber.getSubscriberProfileId()}">
+                                                            <button type="submit" name="command" value="approve" class="btn btn-primary btn-block"><b>Принять</b></button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
+
 
                                                 </tbody>
                                             </table>
@@ -277,7 +284,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>About</label>
-                                                <textarea class="form-control" rows="3" name="about" id="about" th:text="${profile.getAbout()}"  > </textarea>
+                                                <textarea class="form-control" rows="3" name="about" id="about" th:value="${profile.getAbout()}" > </textarea>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="offset-sm-2 col-sm-10">

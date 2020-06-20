@@ -31,19 +31,29 @@ public class StreamAndTeamSubscriberService {
         Optional<StreamAndTeamSubscriber> subscriberOptional = streamAndTeamSubscriberRepository
                 .findAllByStreamTeamProfileIdAndSubscriberProfileId(streamAndTeamProfileId, subscriberProfileId);
         if(subscriberOptional.isPresent()) {
-            subscriberOptional.get().setStatus(status);
-            return streamAndTeamSubscriberRepository.save(subscriberOptional.get());
+            return updateSubscriptionWithNewStatus(subscriberOptional, status);
         } else {
-            StreamAndTeamSubscriber subscriber = StreamAndTeamSubscriber.builder()
-                    .streamTeamProfileId(streamAndTeamProfileId)
-                    .subscriberProfileId(subscriberProfileId)
-                    .status(status)
-                    .build();
-            return streamAndTeamSubscriberRepository.save(subscriber);
+            return createSubscriptionAndSetStatus(streamAndTeamProfileId, subscriberProfileId, status);
         }
     }
 
     public Optional<Profile> findStreamForCourse(Long courseId) {
         return profileService.findNearestFromNowOpennForEnrolStreamByCourseId(courseId);
     }
+
+    private StreamAndTeamSubscriber createSubscriptionAndSetStatus(Long streamAndTeamProfileId,
+                                                                   Long subscriberProfileId,
+                                                                   SubscriptionStatus status) {
+        StreamAndTeamSubscriber subscriber = StreamAndTeamSubscriber.builder()
+                .streamTeamProfileId(streamAndTeamProfileId)
+                .subscriberProfileId(subscriberProfileId)
+                .status(status)
+                .build();
+        return streamAndTeamSubscriberRepository.save(subscriber);
+    }
+    private StreamAndTeamSubscriber updateSubscriptionWithNewStatus(Optional<StreamAndTeamSubscriber> subscriberOptional, SubscriptionStatus status) {
+        subscriberOptional.get().setStatus(status);
+        return streamAndTeamSubscriberRepository.save(subscriberOptional.get());
+    }
+
 }

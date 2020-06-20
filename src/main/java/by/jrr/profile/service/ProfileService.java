@@ -97,6 +97,13 @@ public class ProfileService {
     }
 
     public Optional<Profile> findProfileByProfileId(Long id) {
+        if(id == null) {
+            return Optional.empty();
+            // TODO: 17/06/20 поймал ошибку на CI, что из Бд пришел null.
+            // возможно, что из-за того, что руками удалял поля с any-to-many//
+            // TODO: 17/06/20 детально залогировать, потому что ложит вьюху
+
+        }
         Optional<Profile> profile = profileRepository.findById(id);
         profile.ifPresent(p -> setUserDataToProfile(p));
         return profile;
