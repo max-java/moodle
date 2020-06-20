@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
-public class LibraryController {
+public class BookController {
     @Autowired
     BookService bookService;
     @Autowired
@@ -65,19 +65,26 @@ public class LibraryController {
 
 
     @PostMapping(Endpoint.BOOK + "/{bookId}")
-    public ModelAndView updateIssue(PracticeQuestion issue, HttpServletRequest request,
+    public ModelAndView updateIssue(MyBook issue, HttpServletRequest request,
                                     @PathVariable Long bookId,
                                     @RequestParam(value = "edit", required = false) boolean edit) {
 
 
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.BOOK);
-        Optional<MyBook> issueToUpdate = bookService.findById(issue.getId());
-        if (issueToUpdate.isPresent()) {
-            mov.addObject("issue", issueToUpdate.get());
-            mov.addObject("edit", true);
-        } else { // TODO: 11/05/20 impossible situation, but should be logged
-            mov.setViewName(View.PAGE_404);
+
+        if (edit) {
+            Optional<MyBook> issueToUpdate = bookService.findById(issue.getId());
+            if (issueToUpdate.isPresent()) {
+                mov.addObject("issue", issueToUpdate.get());
+                mov.addObject("edit", true);
+            } else { // TODO: 11/05/20 impossible situation, but should be logged
+                mov.setViewName(View.PAGE_404);
+            }
+        } else {
+            issue = bookService.update(issue);
+            return new ModelAndView("redirect:" + Endpoint.BOOK + "/" + issue.getId());
+
         }
         return mov;
         // TODO: 11/05/20 replace if-else with private methods

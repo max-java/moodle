@@ -4,8 +4,6 @@ import by.jrr.auth.service.UserService;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.library.bean.MyBook;
 import by.jrr.library.repository.BookRepository;
-import by.jrr.moodle.bean.PracticeQuestion;
-import by.jrr.moodle.repository.PracticeQuestionRepository;
 import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
     private final Supplier<Integer> DEFAULT_PAGE_NUMBER = () -> 1;
-    private final Supplier<Integer> DEFAULT_ELEMENTS_PER_PAGE = () -> 1;
+    private final Supplier<Integer> DEFAULT_ELEMENTS_PER_PAGE = () -> 15;
 
     @Autowired
     BookRepository bookRepository;
@@ -68,7 +66,8 @@ public class BookService {
         if(searchTerm.isPresent()) {
             return searchByAllFieldsPageable(searchTerm.get(), page, elem);
         } else {
-            return bookRepository.findAll(PageRequest.of(page, elem));
+            Page<MyBook> page1 = bookRepository.findAll(PageRequest.of(page, elem));
+            return page1;
         }
     }
 
@@ -88,6 +87,12 @@ public class BookService {
 
     private List<MyBook> serarchBookByAllFields(String searchTerm) {
         return bookRepository.findByNameContaining(searchTerm)
+                .and(bookRepository.findByAuthorContaining(searchTerm)
+                        .and(bookRepository.findByEditionContaining(searchTerm)
+                        .and(bookRepository.findByImgContaining(searchTerm)
+                        .and(bookRepository.findByIsbnContaining(searchTerm)
+                        .and(bookRepository.findByPublishedContaining(searchTerm)
+                        .and(bookRepository.findByPublisherContaining(searchTerm)))))))
                 .stream()
                 .distinct()// TODO: 15/06/20 не дистинктит. переписать equals & hashcode?
                 .collect(Collectors.toList());
