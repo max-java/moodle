@@ -34,6 +34,9 @@ public class StreamAndTeamSubscriberService {
     public List<StreamAndTeamSubscriber> getAllSubscribersForProfileByProfileId(Long id) {
         return streamAndTeamSubscriberRepository.findAllByStreamTeamProfileId(id);
     }
+    public List<StreamAndTeamSubscriber> getAllSubscriptionsForProfileByProfileId(Long id) {
+        return streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
+    }
 
     public StreamAndTeamSubscriber updateSubscription(Long streamAndTeamProfileId,
                                                       Long subscriberProfileId,

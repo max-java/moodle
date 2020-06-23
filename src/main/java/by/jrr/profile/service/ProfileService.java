@@ -25,6 +25,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+// TODO: 24/06/20 got stack overFlow once here on setUserDataToProfile when I set profiles subscribers / subscriptions. Consider to make it clear and simple
+
 @Service
 public class ProfileService {
     private final Supplier<Integer> DEFAULT_PAGE_NUMBER = () -> 1;
@@ -74,6 +76,8 @@ public class ProfileService {
         if (profile.getUser().hasRole(UserRoles.ROLE_STREAM) // TODO: 07/06/20 split to setProfileData & setSubscribers
                 || profile.getUser().hasRole(UserRoles.ROLE_TEAM)) {
             List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
+
+            // TODO: 24/06/20 what happens here? refactor: set subscribers to streamTeam
             for (StreamAndTeamSubscriber subscriber : subscribers) {
                 Optional<Profile> optionalProfile = this.findProfileByProfileId(subscriber.getSubscriberProfileId());
                 if (optionalProfile.isPresent()) {
@@ -81,6 +85,17 @@ public class ProfileService {
                 }
             }
             profile.setSubscribers(subscribers);
+        } else {
+            List<StreamAndTeamSubscriber> subscriptions = streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId());
+            // TODO: 24/06/20 what happens here? refactor: set subscriptions to user profile
+            for (StreamAndTeamSubscriber subscription : subscriptions) {
+                Optional<Profile> optionalProfile = this.findProfileByProfileIdLazy(subscription.getStreamTeamProfileId());
+                if (optionalProfile.isPresent()) {
+                    subscription.setSubscriptionProfile(optionalProfile.get()); // TODO: 07/06/20 consider refactoring to Java8 style
+                    subscription.getSubscriptionProfile().setUser(userService.findUserById(subscription.getSubscriptionProfile().getUserId()).get()); // TODO: 24/06/20 get? consider to handle null
+                }
+            }
+            profile.setSubscriptions(subscriptions);
         }
     }
 
@@ -106,6 +121,17 @@ public class ProfileService {
         }
         Optional<Profile> profile = profileRepository.findById(id);
         profile.ifPresent(p -> setUserDataToProfile(p));
+        return profile;
+    }
+    public Optional<Profile> findProfileByProfileIdLazy(Long id) {
+        if(id == null) {
+            return Optional.empty();
+            // TODO: 17/06/20 поймал ошибку на CI, что из Бд пришел null.
+            // возможно, что из-за того, что руками удалял поля с any-to-many//
+            // TODO: 17/06/20 детально залогировать, потому что ложит вьюху
+
+        }
+        Optional<Profile> profile = profileRepository.findById(id);
         return profile;
     }
 

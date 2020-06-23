@@ -42,6 +42,8 @@ public class Profile {
 
     @Transient
     private List<StreamAndTeamSubscriber> subscribers = new ArrayList<>();
+    @Transient
+    private List<StreamAndTeamSubscriber> subscriptions = new ArrayList<>();
 
     // that is only for streams
     private LocalDate dateStart;
