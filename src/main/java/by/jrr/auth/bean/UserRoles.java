@@ -19,3 +19,6 @@ public enum UserRoles {
 
 //strong
 //    ROLE_GUEST >> ROLE_FREE_STUDENT >> ROLE_STUDENT >> ROLE_SCRUM_MASTER >> ROLE_ALUMNUS >> ROLE_ADMIN >>
+
+//scrum master should go separately.
+//  >> ROLE_SCRUM_MASTER >>

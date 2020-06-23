@@ -1,5 +1,7 @@
 package by.jrr.profile.service;
 
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.service.UserService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
@@ -20,6 +22,9 @@ public class StreamAndTeamSubscriberService {
     ProfileService profileService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    UserService userService;
+
 
     public List<StreamAndTeamSubscriber> getAllSubscribersForProfileByProfileId(Long id) {
         return streamAndTeamSubscriberRepository.findAllByStreamTeamProfileId(id);
@@ -53,6 +58,12 @@ public class StreamAndTeamSubscriberService {
     }
     private StreamAndTeamSubscriber updateSubscriptionWithNewStatus(Optional<StreamAndTeamSubscriber> subscriberOptional, SubscriptionStatus status) {
         subscriberOptional.get().setStatus(status);
+        try {
+            Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fieeld populated in this place
+            userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId());
+        } catch (Exception ex) {
+            System.out.println(" [ error on attempt to extract userId from subscriber]");
+        }
         return streamAndTeamSubscriberRepository.save(subscriberOptional.get());
     }
 
