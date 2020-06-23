@@ -33,6 +33,8 @@ public class Issue implements Reviewable {
     private IssueType issueType;
     @Enumerated(value = EnumType.STRING)
     private IssueStatus issueStatus;
+    @Enumerated(value = EnumType.ORDINAL)
+    private IssuePriority issuePriority;
     private String name;
     private String summary;
     @Lob
