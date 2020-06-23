@@ -33,6 +33,10 @@ public class Profile {
     private String avatarFileName;
     private Long ownerProfileId;
 
+    private String telegramLink;
+    private String telegramLinkText;
+
+
     @Lob
     private String about;
 
