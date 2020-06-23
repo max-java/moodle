@@ -36,4 +36,28 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
+    public String getSubscriberLogin() {
+        try {
+            return this.getSubscriberProfile().getUser().getUserName();
+        } catch (Exception ex) {
+            // TODO: 24/06/20 log exception with details!!
+            return "";
+        }
+    }
+    public String getSubscriberEmail() {
+        try {
+            return this.getSubscriberProfile().getUser().getEmail();
+        } catch (Exception ex) {
+            // TODO: 24/06/20 log exception with details!!
+            return "";
+        }
+    }
+    public String getSubscriberPhone() {
+        try {
+            return this.getSubscriberProfile().getUser().getPhone();
+        } catch (Exception ex) {
+            // TODO: 24/06/20 log exception with details!!
+            return "";
+        }
+    }
 }
