@@ -12,7 +12,7 @@ public class UserValidationService {
 
     public void validateEmail(String email) throws LoginOrEMailExistOnRegistrationException {
         if(checkIfWordExistAsLoginOrEmail(email)) {
-            throw new LoginOrEMailExistOnRegistrationException("email "+ email +"уже зарегистрирован");
+            throw new LoginOrEMailExistOnRegistrationException("email "+ email +" уже зарегистрирован");
         }
         if(email.length() < 6) {
             throw new LoginOrEMailExistOnRegistrationException("email "+ email +" слишком короткий"); // TODO: 23/06/20 создать правильный Exception для этого случая

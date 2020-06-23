@@ -2,6 +2,8 @@ package by.jrr.profile.service;
 
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserService;
+import by.jrr.constant.LinkGenerator;
+import by.jrr.email.service.EMailService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
@@ -9,6 +11,7 @@ import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.profile.repository.StreamAndTeamSubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,8 @@ public class StreamAndTeamSubscriberService {
     ProfilePossessesService pss;
     @Autowired
     UserService userService;
+    @Autowired
+    EMailService eMailService;
 
 
     public List<StreamAndTeamSubscriber> getAllSubscribersForProfileByProfileId(Long id) {
@@ -35,7 +40,7 @@ public class StreamAndTeamSubscriberService {
                                                       SubscriptionStatus status) {
         Optional<StreamAndTeamSubscriber> subscriberOptional = streamAndTeamSubscriberRepository
                 .findAllByStreamTeamProfileIdAndSubscriberProfileId(streamAndTeamProfileId, subscriberProfileId);
-        if(subscriberOptional.isPresent()) {
+        if (subscriberOptional.isPresent()) {
             return updateSubscriptionWithNewStatus(subscriberOptional, status);
         } else {
             return createSubscriptionAndSetStatus(streamAndTeamProfileId, subscriberProfileId, status);
@@ -56,14 +61,38 @@ public class StreamAndTeamSubscriberService {
                 .build();
         return streamAndTeamSubscriberRepository.save(subscriber);
     }
+
     private StreamAndTeamSubscriber updateSubscriptionWithNewStatus(Optional<StreamAndTeamSubscriber> subscriberOptional, SubscriptionStatus status) {
-        subscriberOptional.get().setStatus(status);
+
+        //change role
         try {
-            Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fieeld populated in this place
+            Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fields populated in this place
             userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId());
         } catch (Exception ex) {
             System.out.println(" [ error on attempt to extract userId from subscriber]");
         }
+        //send confirmation email
+        // TODO: 23/06/20 add variables to email template and chose email based on subscription status and profile type. (stream or team)
+        if (subscriberOptional.isPresent()) {
+            if (status.equals(SubscriptionStatus.APPROVED)) {
+                try {
+                    Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fields populated in this place
+                    Profile streamTeamProfile = profileService.findProfileByProfileId(subscriberOptional.get().getStreamTeamProfileId()).get();
+
+                    String firstAndLastName = subscriberProfile.getUser().getFirstAndLastName();
+                    String teamStreamName = streamTeamProfile.getUser().getName() + " " + streamTeamProfile.getUser().getLastName();
+                    String streamTeamLink = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + LinkGenerator.getLinkTo(streamTeamProfile); // TODO: 23/06/20 this is a good Class
+                    String telegramLink = streamTeamProfile.getTelegramLink();
+                    String to = subscriberProfile.getUser().getEmail();
+
+                    eMailService.sendStreamSubscriptionConfirmation(firstAndLastName, teamStreamName, streamTeamLink, telegramLink, to);
+                } catch (Exception ex) {
+                    System.out.println(" [ error on attempt to extract data to send email confirmation from subscriber]");
+                }
+            }
+        }
+        //change subscription status
+        subscriberOptional.get().setStatus(status);
         return streamAndTeamSubscriberRepository.save(subscriberOptional.get());
     }
 
