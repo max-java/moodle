@@ -70,7 +70,7 @@ public class UserService {
 
     public User quickRegisterUser(String firstAndLastName, String phone, String email) throws UserServiceException {
         if (ifWordExistAsLoginOrEmail(email)) {
-            throw new UserServiceException(email + " already exist in database as login or email");
+            throw new UserServiceException(email + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
         }
         String password = new Random().ints(6, 33, 122)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)

@@ -9,6 +9,7 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.moodle.bean.Course;
+import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.service.CourseService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.SubscriptionStatus;
@@ -48,7 +49,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.addObject("topic", new Course());
         mov.addObject("edit", true);
-        mov.addObject( true);
+        mov.addObject(true);
 
 
         mov.setViewName(View.COURSE);
@@ -93,14 +94,14 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
                                      @RequestParam(value = "text", required = false) String text,
                                      @RequestParam(value = "edit", required = false) boolean edit,
                                      @RequestParam Optional<String> subscribe
-                                    ) {
+    ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.COURSE);
-        if(subscribe.isPresent()) { // TODO: 10/06/20 move here register and subscribe!!!!
+        Optional<Course> topic = courseService.findById(id);
+        mov.addObject("topic", topic.orElseGet(Course::new));
+        if (subscribe.isPresent()) { // TODO: 10/06/20 move here register and subscribe!!!!
             return enrollCurentUser(id);
-        }
-        else if (edit  && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
-            Optional<Course> topic = courseService.findById(id);
+        } else if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
             if (topic.isPresent()) {
                 mov.addObject("topic", topic.get());
                 mov.addObject("edit", true);
@@ -108,13 +109,13 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
                 mov.setViewName(View.PAGE_404);
             }
         } else if (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
-            Course topic = courseService.update(Course.builder()
+            Course updatedTopic = courseService.update(Course.builder()
                     .title(title)
                     .subtitle(subtitle)
                     .text(text)
                     .Id(id)
                     .build());
-            mov.addObject("topic", topic);
+            mov.addObject("topic", updatedTopic);
             mov.addObject("edit", false);
             return new ModelAndView("redirect:" + Endpoint.COURSE + "/" + id);
         }
@@ -124,7 +125,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
 
     private ModelAndView enrollCurentUser(Long courseId) {
         Optional<Profile> stream = streamAndTeamSubscriberService.findStreamForCourse(courseId);
-        if (stream.isPresent()){
+        if (stream.isPresent()) {
             streamAndTeamSubscriberService.updateSubscription(stream.get().getId(), profileService.getCurrentUserProfile().getId(), SubscriptionStatus.REQUESTED);
             return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + stream.get().getId());
         } else {
