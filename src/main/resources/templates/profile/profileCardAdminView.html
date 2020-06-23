@@ -158,14 +158,21 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Статус</th>
-                                                    <th>Card</th>
-                                                    <th>Открыть профиль</th>
+                                                    <th>Имя</th>
+                                                    <th>Логин</th>
+                                                    <th>Почта</th>
+                                                    <th>Телефон</th>
+                                                    <th>Профиль</th>
+                                                    <th>Кнопка</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr th:each="subscriber : ${profile.getSubscribers()}">
                                                     <td th:text="${subscriber.getStatus()}"></td>
                                                     <td th:text="${subscriber.getFullSubscriberName()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberLogin()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberEmail()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberPhone()}"></td>
                                                     <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
                                                     </td>
                                                     <td>
