@@ -197,3 +197,7 @@ INSERT INTO `LECTURE` VALUES (40, 'subtitleLecture_1', '<p>fasdfasdf</p>', 'Lect
                              (46, 'subtitleLecture_7', '', 'Lecture_7'),
                              (47, 'subtitleLecture_8', '', 'Lecture_8'),
                              (48, 'subtitleLecture_9', '', 'Lecture_9');
+drop sequence HIBERNATE_SEQUENCE;
+CREATE SEQUENCE "PUBLIC"."HIBERNATE_SEQUENCE" START WITH 1000;
+-- CREATE SEQUENCE "PUBLIC"."SYSTEM_SEQUENCE_9F3699A7_FBAF_4CDF_830E_AFF4F749549D" START WITH 94 BELONGS_TO_TABLE;
+-- CREATE SEQUENCE "PUBLIC"."SYSTEM_SEQUENCE_5E0BE822_A5E8_486E_BD00_D9455A2C0412" START WITH 81 BELONGS_TO_TABLE;
