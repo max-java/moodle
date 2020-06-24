@@ -57,6 +57,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM).permitAll()
                 .antMatchers(Endpoint.REGISTER_USER).permitAll()
                 .antMatchers(Endpoint.PROFILE_LIST).permitAll()
+                .antMatchers("/l/**").permitAll() // TODO: 23/06/20 make it psfs
                 .antMatchers("/api/registerForm/validate/email/*").permitAll() // TODO: 23/06/20 make it psfs
                 .antMatchers("/api/registerForm/validate/firstAndLastName/*").permitAll() // TODO: 23/06/20 make it psfs
                 .antMatchers("/api/registerForm/validate/phone/*").permitAll() // TODO: 23/06/20 make it psfs
