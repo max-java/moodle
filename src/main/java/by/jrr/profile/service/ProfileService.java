@@ -140,6 +140,7 @@ public class ProfileService {
         User user = userService.findUserByUserName(auth.getName());
         Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
         profile.setUser(user);
+        profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
         return profile;
     }
 

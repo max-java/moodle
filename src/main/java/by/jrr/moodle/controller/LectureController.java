@@ -35,6 +35,8 @@ public class LectureController {
     UserProgressService userProgressService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    UserAccessService userAccessService;
 
     @GetMapping(Endpoint.LECTURE)
     public ModelAndView createNewTopic() {
@@ -50,13 +52,17 @@ public class LectureController {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Lecture> topic = lectureService.findById(id);
         if (topic.isPresent()) {
-            mov.addObject("topic", topic.get());
-            TrackStatus trackStatus = userProgressService.getUserProfileForTrackable(topic.get());
-            if(trackStatus.equals(TrackStatus.NONE)) {
-                userProgressService.saveProgress(topic.get(), TrackStatus.READ); // TODO: 31/05/20 consider to move this to model
+            if (userAccessService.isCurrentUserIsAdmin() || pss.isUserHasAccessToLecture(topic.get())) {
+                mov.addObject("topic", topic.get());
+                TrackStatus trackStatus = userProgressService.getUserProfileForTrackable(topic.get());
+                if (trackStatus.equals(TrackStatus.NONE)) {
+                    userProgressService.saveProgress(topic.get(), TrackStatus.READ); // TODO: 31/05/20 consider to move this to model
+                }
+                mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
+                mov.setViewName(View.LECTURE);
+            }else {
+                mov.setViewName(View.PAGE_404); // TODO: 24/06/20 replace with 403 TODO: 24/06/20 create 403 view
             }
-            mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
-            mov.setViewName(View.LECTURE);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
             mov.setViewName(View.PAGE_404);

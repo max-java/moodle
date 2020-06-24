@@ -35,6 +35,8 @@ public class StreamAndTeamSubscriberService {
         return streamAndTeamSubscriberRepository.findAllByStreamTeamProfileId(id);
     }
     public List<StreamAndTeamSubscriber> getAllSubscriptionsForProfileByProfileId(Long id) {
+        List<StreamAndTeamSubscriber> streamAndTeamSubscriberList = streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
+        streamAndTeamSubscriberList.forEach(s -> s.setSubscriptionProfile(profileService.findProfileByProfileIdLazy(s.getStreamTeamProfileId()).get())); // TODO: 24/06/20  get rid of strange .get(), maybe use orElseGet, but what else to get?
         return streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
     }
 
