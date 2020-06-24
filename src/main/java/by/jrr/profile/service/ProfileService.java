@@ -143,6 +143,9 @@ public class ProfileService {
         profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
         return profile;
     }
+    public Long getCurrentUserProfileId() {
+        return getCurrentUserProfile().getId();
+    }
 
     public Profile createProfile(Profile profile) {
         Profile savedProfile = profileRepository.save(profile);
