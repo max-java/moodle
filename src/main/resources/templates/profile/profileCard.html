@@ -140,6 +140,8 @@
                                                             href="#timeline">Timeline</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#settings">Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#lectures">Лекции курса</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -313,8 +315,8 @@
                                         <!--                                            </div>-->
                                         <!--                                        </div>-->
                                     </div>
-                                    <!-- /.tab-pane -->
 
+                                    <!-- /.tab-pane -->
                                     <div class="tab-pane" id="settings">
                                         <form class="form-horizontal" method="post"
                                               th:action="'/profile/'+${profile.getId()}+'/update'">
@@ -386,6 +388,13 @@
                                         </form>
                                     </div>
                                     <!-- /.tab-pane -->
+
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="lectures">
+                                        <div th:insert="moodle/lectureList :: lectureList"></div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
