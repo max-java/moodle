@@ -8,9 +8,7 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.moodle.bean.Lecture;
-import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.service.LectureService;
-import by.jrr.moodle.service.TopicService;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.statistic.bean.TrackStatus;
 import by.jrr.statistic.service.UserProgressService;
@@ -135,7 +133,7 @@ public class LectureController {
     @GetMapping(Endpoint.LECTURE_LIST)
     public ModelAndView findAll(@PathVariable(required = false) String page, @PathVariable(required = false) String size) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Page<Lecture> topicList = lectureService.findAll(page, size);
+        Page<Lecture> topicList = lectureService.findAllPageable(page, size);
         mov.addObject("topicList", topicList);
         mov.setViewName(View.LECTURE_LIST);
         return mov;
