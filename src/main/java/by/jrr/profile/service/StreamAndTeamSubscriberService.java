@@ -72,7 +72,7 @@ public class StreamAndTeamSubscriberService {
         //change role
         try {
             Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fields populated in this place
-            userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId());
+            userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId()); // TODO: 25/06/20 should role be changed here like this?
         } catch (Exception ex) {
             System.out.println(" [ error on attempt to extract userId from subscriber]");
         }
