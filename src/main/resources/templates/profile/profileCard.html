@@ -79,10 +79,10 @@
                                                                   th:text="${statistic.getIssuesCRApprovedBugsR().size()}">543</a>
                                     </li>
                                 </ul>
-                                <form method="post">
-                                    <button class="btn btn-primary btn-block" name="subscribe" type="submit"
-                                            value="subscribe"><b>Записаться</b></button>
-                                </form>
+                                <!--                                <form method="post">-->
+                                <!--                                    <button class="btn btn-primary btn-block" name="subscribe" type="submit"-->
+                                <!--                                            value="subscribe"><b>Записаться</b></button>-->
+                                <!--                                </form>-->
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -140,26 +140,37 @@
                                                             href="#timeline">Timeline</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#settings">Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#lectures">Лекции курса</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
                                 <div class="tab-content">
                                     <div class="active tab-pane" id="activity">
 
-                                        <div class="col-md-6 col-sm-6 col-12">
-                                            <a th:href="${profile.getTelegramLink()}">
-                                                <div class="info-box">
+                                        <div class="col-md-4 col-sm-4 col-12">
+                                            <form action="/l/" method="post">
+                                                <input name="link" th:value="${profile.getTelegramLink()}"
+                                                       type="hidden"/>
+                                                <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                <button class="btn btn-block"
+                                                        name="eventType"
+                                                        th:value="${T(by.jrr.registration.bean.EventType).TELEGRAM_CHAT}"
+                                                        type="submit">
+                                                    <div class="info-box">
                                                     <span class="info-box-icon bg-gradient-blue"><i
                                                             class="fa fa-paper-plane"></i></span>
 
-                                                    <div class="info-box-content">
-                                                        <span class="info-box-text">Чат группы</span>
-                                                        <span class="info-box-text" th:text="${profile.getTelegramLinkText()}"></span>
+                                                        <div class="info-box-content text-left">
+                                                            <span class="info-box-text">Чат группы</span>
+                                                            <span class="info-box-text"
+                                                                  th:text="${profile.getTelegramLinkText()}"></span>
+                                                        </div>
+                                                        <!-- /.info-box-content -->
                                                     </div>
-                                                    <!-- /.info-box-content -->
-                                                </div>
-                                                <!-- /.info-box -->
-                                            </a>
+                                                    <!-- /.info-box -->
+                                                </button>
+                                            </form>
                                         </div>
 
                                         <!-- Post -->
@@ -175,8 +186,8 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Статус</th>
-                                                    <th>Card</th>
-                                                    <th>Открыть профиль</th>
+                                                    <th>Имя</th>
+                                                    <th>Профиль</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -184,6 +195,31 @@
                                                     <td th:text="${subscriber.getStatus()}"></td>
                                                     <td th:text="${subscriber.getFullSubscriberName()}"></td>
                                                     <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.post -->
+
+                                        <!-- Post -->
+                                        <div class="post clearfix" th:if="${profile.getSubscriptions().size()>0}">
+                                            <h2> Подписки </h2>
+                                            <table class="table table-hover text-nowrap">
+                                                <thead>
+                                                <tr>
+                                                    <th>Статус</th>
+                                                    <th>Имя</th>
+                                                    <th>Профиль</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="subscription : ${profile.getSubscriptions()}">
+                                                    <td th:text="${subscription.getStatus()}"></td>
+                                                    <td th:text="${subscription.getFullSubscriptionName()}"></td>
+                                                    <td>
+                                                        <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">open</a>
                                                     </td>
                                                 </tr>
 
@@ -289,8 +325,8 @@
                                         <!--                                            </div>-->
                                         <!--                                        </div>-->
                                     </div>
-                                    <!-- /.tab-pane -->
 
+                                    <!-- /.tab-pane -->
                                     <div class="tab-pane" id="settings">
                                         <form class="form-horizontal" method="post"
                                               th:action="'/profile/'+${profile.getId()}+'/update'">
@@ -301,7 +337,8 @@
                                                     начала</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="inputName"
-                                                           name="dateStart" placeholder="Name" th:value="${profile.getDateStart()}"
+                                                           name="dateStart" placeholder="Name"
+                                                           th:value="${profile.getDateStart()}"
                                                            type="date"/>
                                                 </div>
                                             </div>
@@ -310,22 +347,27 @@
                                                     окончания</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="inputEmail" name="dateEnd"
-                                                           placeholder="Email" th:value="${profile.getDateEnd()}" type="date">
+                                                           placeholder="Email" th:value="${profile.getDateEnd()}"
+                                                           type="date">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на телеграм чат</label>
+                                                <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на
+                                                    телеграм чат</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="telegramLink" name="telegramLink"
-                                                           placeholder="" th:value="${profile.getTelegramLink()}" type="text">
+                                                           placeholder="" th:value="${profile.getTelegramLink()}"
+                                                           type="text">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="telegramLinkName">Планируемая дата
-                                                    окончания</label>
+                                                <label class="col-sm-2 col-form-label" for="telegramLinkName">Название
+                                                    группы в telegram</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" id="telegramLinkName" name="telegramLinkName"
-                                                           placeholder="" th:value="${profile.getTelegramLinkText()}" type="text">
+                                                    <input class="form-control" id="telegramLinkName"
+                                                           name="telegramLinkName"
+                                                           placeholder="" th:value="${profile.getTelegramLinkText()}"
+                                                           type="text">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -363,6 +405,13 @@
                                         </form>
                                     </div>
                                     <!-- /.tab-pane -->
+
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="lectures">
+                                        <div th:insert="moodle/lectureList :: lectureList"></div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->

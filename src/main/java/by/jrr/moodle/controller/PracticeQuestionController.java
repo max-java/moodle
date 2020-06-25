@@ -12,6 +12,7 @@ import by.jrr.feedback.service.FeedbackService;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.PracticeQuestionService;
 import by.jrr.profile.service.ProfilePossessesService;
+import by.jrr.profile.service.ProfileService;
 import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,8 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
     FeedbackService feedbackService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    UserAccessService userAccessService;
 
     @AdminOnly
     @GetMapping(Endpoint.PRACTICE)
@@ -70,7 +73,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
         return new ModelAndView("redirect:" + Endpoint.PRACTICE + "/" + issue.getId());
     }
 
-    @AdminOnly
+    @AtLeatStudent
     @PostMapping(Endpoint.PRACTICE + "/{practiceId}")
     public ModelAndView updateIssue(PracticeQuestion issue, HttpServletRequest request,
                                     @PathVariable Long practiceId,
@@ -78,27 +81,29 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
                                     @RequestParam Optional<String> requestForReview) {
 
         if(requestForReview.isPresent()) {
-
             return redirectToCodeReview(practiceId, issue, request);
         }
 
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.setViewName(View.PRACTICE);
-        if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
-            Optional<PracticeQuestion> issueToUpdate = practiceQuestionService.findById(issue.getId());
-            if (issueToUpdate.isPresent()) {
-                mov.addObject("issue", issueToUpdate.get());
-                mov.addObject("edit", true);
-            } else { // TODO: 11/05/20 impossible situation, but should be logged
-                mov.setViewName(View.PAGE_404);
-            }
-        } else if (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
-            issue = practiceQuestionService.update(issue);
-            return new ModelAndView("redirect:" + Endpoint.PRACTICE + "/" + issue.getId());
+        if (userAccessService.isCurrentUserIsAdmin()) {
+            ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+            mov.setViewName(View.PRACTICE);
+            if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
+                Optional<PracticeQuestion> issueToUpdate = practiceQuestionService.findById(issue.getId());
+                if (issueToUpdate.isPresent()) {
+                    mov.addObject("issue", issueToUpdate.get());
+                    mov.addObject("edit", true);
+                } else { // TODO: 11/05/20 impossible situation, but should be logged
+                    mov.setViewName(View.PAGE_404);
+                }
+            } else if (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
+                issue = practiceQuestionService.update(issue);
+                return new ModelAndView("redirect:" + Endpoint.PRACTICE + "/" + issue.getId());
 
+            }
+            return mov;
+            // TODO: 11/05/20 replace if-else with private methods
         }
-        return mov;
-        // TODO: 11/05/20 replace if-else with private methods
+        return null;
     }
 
 

@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface StreamAndTeamSubscriberRepository extends PagingAndSortingRepository<StreamAndTeamSubscriber, Long>{
     List<StreamAndTeamSubscriber> findAllByStreamTeamProfileId(Long id);
+    List<StreamAndTeamSubscriber> findAllBySubscriberProfileId(Long id);
     Optional<StreamAndTeamSubscriber> findAllByStreamTeamProfileIdAndSubscriberProfileId(Long idL, Long idR);
 
 }

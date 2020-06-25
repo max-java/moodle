@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +20,7 @@ public class LectureService {
     @Autowired
     ProfilePossessesService pss;
 
-    public Page<Lecture> findAll(String page, String items) {
+    public Page<Lecture> findAllPageable(String page, String items) {
         Page<Lecture> topics;
         try {
             topics = lectureRepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
@@ -27,6 +28,10 @@ public class LectureService {
             topics = lectureRepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
         }
         return topics;
+    }
+
+    public List<Lecture> findAll() {
+        return (List) lectureRepository.findAll();
     }
 
     public Lecture create(Lecture topic) {

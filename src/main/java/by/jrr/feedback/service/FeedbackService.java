@@ -7,6 +7,7 @@ import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.bean.Reviewable;
 import by.jrr.feedback.repository.ReviewRequestRepository;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,7 @@ public class FeedbackService {
     ReviewRequestPageableSearchService reviewRequestPageableSearchService;
     @Autowired
     ReviewService reviewService;
+    ProfilePossessesService pss;
 
     public ReviewRequest createNewReviewRequest(Reviewable reviewable) {
         Item item = itemService.getItemByReviewable(reviewable);
