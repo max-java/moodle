@@ -1,29 +1,27 @@
 package by.jrr.moodle.bean;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class CourseToLecture {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
-    private String title;
-    private String subtitle;
-    @Lob
-    private String text;
-    @Transient
-    private List<CourseToLecture> courseToLectureIds;
-
+    private Long courseId;
+    private Long lectureId;
 
 }

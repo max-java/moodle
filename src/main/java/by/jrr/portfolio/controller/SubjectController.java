@@ -1,7 +1,10 @@
 package by.jrr.portfolio.controller;
 
 import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeatStudent;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.feedback.bean.ReviewRequest;
@@ -33,6 +36,8 @@ public class SubjectController {
     FeedbackService feedbackService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    UserAccessService userAccessService;
 
     @AdminOnly
     @GetMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT)
@@ -66,7 +71,7 @@ public class SubjectController {
         return new ModelAndView("redirect:" + Endpoint.DOMAIN+"/"+subject.getDomainId()+Endpoint.SUBJECT + "/" + subject.getSubjectId());
     }
 
-    @AdminOnly
+    @AtLeatStudent
     @PostMapping(Endpoint.DOMAIN+"/{id}"+Endpoint.SUBJECT + "/{subjectId}")
     public ModelAndView updateSubject(Subject subject, HttpServletRequest request,
                                     @PathVariable Long subjectId, @PathVariable Long id,
@@ -77,24 +82,26 @@ public class SubjectController {
 
             return redirectToCodeReview(subjectId, subject, request);
         }
+        if(userAccessService.isCurrentUserIsAdmin()) {
+            ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+            mov.setViewName(View.SUBJECT);
+            if (edit) {
+                Optional<Subject> subjectToUpdate = subjectService.findBySubjectId(subject.getSubjectId());
+                if (subjectToUpdate.isPresent()) {
+                    mov.addObject("subject", subjectToUpdate.get());
+                    mov.addObject("edit", true);
+                } else { // TODO: 11/05/20 impossible situation, but should be logged
+                    mov.setViewName(View.PAGE_404);
+                }
+            } else {
+                subject = subjectService.createOrUpdate(subject);
+                return new ModelAndView("redirect:" + Endpoint.DOMAIN + "/" + subject.getDomainId() + Endpoint.SUBJECT + "/" + subject.getSubjectId());
 
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.setViewName(View.SUBJECT);
-        if (edit) {
-            Optional<Subject> subjectToUpdate = subjectService.findBySubjectId(subject.getSubjectId());
-            if (subjectToUpdate.isPresent()) {
-                mov.addObject("subject", subjectToUpdate.get());
-                mov.addObject("edit", true);
-            } else { // TODO: 11/05/20 impossible situation, but should be logged
-                mov.setViewName(View.PAGE_404);
             }
-        } else {
-            subject = subjectService.createOrUpdate(subject);
-            return new ModelAndView("redirect:" + Endpoint.DOMAIN+"/"+subject.getDomainId()+Endpoint.SUBJECT + "/" + subject.getSubjectId());
-
+            return mov;
+            // TODO: 11/05/20 replace if-else with private methods
         }
-        return mov;
-        // TODO: 11/05/20 replace if-else with private methods
+        return null;
     }
 
     @GetMapping(Endpoint.SUBJECT_LIST)

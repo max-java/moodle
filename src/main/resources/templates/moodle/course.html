@@ -24,7 +24,7 @@
                         <a th:href="'/stream/register/'+${topic.getId()}">new Stream</a>
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">TinyMCE Quick Start Guide</h5>
+                                <h5 class="card-title"></h5>
                                 <p>&nbsp;</p>
 
                                 <form method="post">
@@ -33,6 +33,17 @@
                                            type="text"/>
                                     <textarea id="mytextarea" name="text"
                                               th:text="${topic.getText()}">Hello, World!</textarea>
+
+                                    <table>
+                                        <tr th:each="lecture : ${lectures}">
+                                            <td><input type="checkbox" name="lecturesId" th:value="${lecture.getId()}" th:checked="${courseLectures.contains(lecture.getId())} ? 'checked'"></td>
+                                            <td th:text="${lecture.getName()}"></td>
+                                            <td th:text="${lecture.getTitle()}"></td>
+                                            <td th:text="${lecture.getSubtitle()}"></td>
+                                            <td> <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(lecture)}">open</a></td>
+                                        </tr>
+                                    </table>
+
                                     <button type="submit">save</button>
                                 </form>
                             </div>

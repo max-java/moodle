@@ -70,7 +70,7 @@ public class UserService {
 
     public User quickRegisterUser(String firstAndLastName, String phone, String email) throws UserServiceException {
         if (ifWordExistAsLoginOrEmail(email)) {
-            throw new UserServiceException(email + " already exist in database as login or email");
+            throw new UserServiceException(email + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
         }
         String password = new Random().ints(6, 33, 122)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -90,7 +90,7 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: 06/06/20 replace with template method                                              //
 //                                                                                          //
     public void addRoleToUser(UserRoles userRole, Long userId) {                            //
@@ -99,7 +99,7 @@ public class UserService {
             role = roleRepository.save(new Role(null, userRole));
         }//
         Optional<User> userOp = userRepository.findById(userId);                            //
-        if (userOp.isPresent()) {                                                            //
+        if (userOp.isPresent()) {                                                           //
             User user = userOp.get();                                                       //
             user.getRoles().add(role);                                                      //
             userRepository.save(user);                                                      //
@@ -109,7 +109,7 @@ public class UserService {
     public void removeRoleFromUser(UserRoles userRole, Long userId) {                       //
         Role role = roleRepository.findByRole(userRole);                                    //
         Optional<User> userOp = userRepository.findById(userId);                            //
-        if (userOp.isPresent()) {                                                            //
+        if (userOp.isPresent()) {                                                           //
             User user = userOp.get();                                                       //
             user.getRoles().remove(role);                                                   //
             userRepository.save(user);                                                      //

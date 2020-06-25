@@ -82,7 +82,7 @@ public class ReviewRequestController {
             }
             mov.addObject("review", newReview);
             return mov;
-        } else if (saveReview.isPresent() && pss.isCurrentUserOwner(review.get().getId())) {
+        } else if (saveReview.isPresent()) {
             Review newReview = review.get();
             newReview.setReviewerProfileId(profileService.getCurrentUserProfile().getId());
             feedbackService.saveReview(review.get());
