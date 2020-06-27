@@ -8,7 +8,9 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.moodle.bean.Lecture;
+import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.LectureService;
+import by.jrr.moodle.service.PracticeQuestionService;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.statistic.bean.TrackStatus;
 import by.jrr.statistic.service.UserProgressService;
@@ -22,7 +24,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class LectureController {
@@ -37,6 +43,8 @@ public class LectureController {
     ProfilePossessesService pss;
     @Autowired
     UserAccessService userAccessService;
+    @Autowired
+    PracticeQuestionService practiceQuestionService;
 
     @GetMapping(Endpoint.LECTURE)
     public ModelAndView createNewTopic() {
@@ -93,7 +101,8 @@ public class LectureController {
                                      @RequestParam(value = "text", required = false) String text,
                                      @RequestParam(value = "edit", required = false) boolean edit,
                                      @RequestParam Optional<String> setLearned,
-                                     @RequestParam Optional<String> save
+                                     @RequestParam Optional<String> save,
+                                     @RequestParam Optional<Long[]> practicesId
                                     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.LECTURE);
@@ -104,16 +113,27 @@ public class LectureController {
                 mov.addObject("topic", topic.get());
                 mov.addObject("edit", true);
                 mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
-
+                mov.addObject("practices", practiceQuestionService.findAll());
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
         } else if (save.isPresent() && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
+            List<PracticeQuestion> practiceQuestionList = null;
+            if(practicesId.isPresent()) {
+                //save checked practice Questions for Lecture (set to the lecture)
+                practiceQuestionList = Arrays.stream(practicesId.get())
+                        .map(practiceId -> practiceQuestionService.findById(practiceId))
+                        .map(practiceOptional -> practiceOptional.orElseGet(PracticeQuestion::new))
+                        .filter(a -> a.getId() != null)
+                        .collect(Collectors.toList());
+            }
+
             Lecture topic = lectureService.update(Lecture.builder()
                     .title(title)
                     .subtitle(subtitle)
                     .text(text)
                     .Id(id)
+                    .practiceQuestions(practiceQuestionList)
                     .build());
 
             mov.addObject("topic", topic);

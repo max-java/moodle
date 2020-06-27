@@ -4,10 +4,12 @@
 --
 -- );
 -- INSERT INTO `` VALUES ();
-
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS `lecture` cascade ;
+DROP TABLE IF EXISTS `practice_question` cascade ;
+
 
 CREATE TABLE users
 (
@@ -119,7 +121,7 @@ INSERT INTO `PROFILE_POSSESSES` VALUES (20, 10, 'PROFILE', 10),
 -- Table structure for table `practice_question`
 --
 
-DROP TABLE IF EXISTS `practice_question`;
+-- DROP TABLE IF EXISTS `practice_question`;
 CREATE TABLE `practice_question` (
                                      `id` bigint(20) NOT NULL,
                                      `description` longtext,

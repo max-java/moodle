@@ -7,10 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Lob;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,6 +24,8 @@ public class Lecture implements Trackable {
     private String subtitle;
     @Lob
     private String text;
+    @ManyToMany
+    private List<PracticeQuestion> practiceQuestions;
 
     @Override
     public EntityType getType() {
