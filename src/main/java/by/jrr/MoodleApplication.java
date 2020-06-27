@@ -20,11 +20,8 @@ import java.lang.annotation.Target;
 @SpringBootApplication
 public class MoodleApplication {
 
-	public static void main(String[] args) {
-//		ConfigurableApplicationContext ctx =
-				SpringApplication.run(MoodleApplication.class, args);
-//		QAndAParser qAndAParser = (QAndAParser) ctx.getBean("QAndAParser");
-//		qAndAParser.run();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MoodleApplication.class, args);
+    }
 }
 
