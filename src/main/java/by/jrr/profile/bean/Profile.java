@@ -36,6 +36,9 @@ public class Profile {
     private String telegramLink;
     private String telegramLinkText;
 
+    private String zoomLink;
+    private String zoomLinkText;
+
 
     @Lob
     private String about;
