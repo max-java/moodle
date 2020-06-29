@@ -148,30 +148,64 @@
                                 <div class="tab-content">
                                     <div class="active tab-pane" id="activity">
 
-                                        <div class="col-md-4 col-sm-4 col-12">
-                                            <form action="/l/" method="post">
-                                                <input name="link" th:value="${profile.getTelegramLink()}"
-                                                       type="hidden"/>
-                                                <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
-                                                <button class="btn btn-block"
-                                                        name="eventType"
-                                                        th:value="${T(by.jrr.registration.bean.EventType).TELEGRAM_CHAT}"
-                                                        type="submit">
-                                                    <div class="info-box">
-                                                    <span class="info-box-icon bg-gradient-blue"><i
-                                                            class="fa fa-paper-plane"></i></span>
 
-                                                        <div class="info-box-content text-left">
-                                                            <span class="info-box-text">Чат группы</span>
-                                                            <span class="info-box-text"
-                                                                  th:text="${profile.getTelegramLinkText()}"></span>
-                                                        </div>
-                                                        <!-- /.info-box-content -->
+
+
+                                        <div class="row">
+
+                                            <div class="col-md-3 col-sm-6 col-12">
+                                                <form action="/l/" method="post">
+                                                    <input name="link" th:value="${profile.getTelegramLink()}"
+                                                           type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <button class="btn btn-block"
+                                                            name="eventType"
+                                                            th:value="${T(by.jrr.registration.bean.EventType).TELEGRAM_CHAT}"
+                                                            type="submit">
+                                                <div class="info-box">
+                                                        <span class="info-box-icon bg-gradient-blue"><i
+                                                                class="fa fa-paper-plane"></i></span>
+
+                                                    <div class="info-box-content text-left">
+                                                        <span class="info-box-text">Чат группы</span>
+                                                        <span class="info-box-text"
+                                                              th:text="${profile.getTelegramLinkText()}"></span>
                                                     </div>
-                                                    <!-- /.info-box -->
-                                                </button>
-                                            </form>
+                                                    <!-- /.info-box-content -->
+                                                </div>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <!-- /.col -->
+                                            <div class="col-md-3 col-sm-6 col-12">
+                                                <form action="/l/" method="post">
+                                                    <input name="link" th:value="${profile.getZoomLink()}"
+                                                           type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <button class="btn btn-block"
+                                                            name="eventType"
+                                                            th:value="${T(by.jrr.registration.bean.EventType).TEAM_STAND_UP}"
+                                                            type="submit">
+                                                <div class="info-box">
+                                                        <span class="info-box-icon bg-gradient-blue">
+                                                            <i class="fa fa-video"></i>
+                                                        </span>
+
+                                                    <div class="info-box-content text-left">
+                                                        <span class="info-box-text">Zoom StandUp</span>
+                                                        <span class="info-box-text"
+                                                              th:text="${profile.getZoomLinkText()}"></span>
+                                                    </div>
+                                                    <!-- /.info-box-content -->
+                                                </div>
+                                                <!-- /.info-box -->
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <!-- /.col -->
                                         </div>
+                                        <!-- /.row -->
+
 
                                         <!-- Post -->
                                         <div class="post">
@@ -370,6 +404,26 @@
                                                            type="text">
                                                 </div>
                                             </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="zoomLink">Zoom Stand-Up link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="zoomLink" name="zoomLink"
+                                                           placeholder="" th:value="${profile.getZoomLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="zoomLinkName">Название
+                                                    Zoom link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="zoomLinkName"
+                                                           name="zoomLinkName"
+                                                           placeholder="" th:value="${profile.getZoomLinkText()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
                                             <div class="form-group">
                                                 <label>About</label>
                                                 <textarea class="form-control" id="about" name="about" rows="3"

@@ -4,10 +4,12 @@
 --
 -- );
 -- INSERT INTO `` VALUES ();
-
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS `lecture` cascade ;
+DROP TABLE IF EXISTS `practice_question` cascade ;
+
 
 CREATE TABLE users
 (
@@ -74,17 +76,19 @@ CREATE TABLE `PROFILE` (    "ID" BIGINT NOT NULL,
                             "OWNER_PROFILE_ID" BIGINT,
                             "TELEGRAM_LINK" VARCHAR(255),
                             "TELEGRAM_LINK_TEXT" VARCHAR(255),
+                            "ZOOM_LINK" VARCHAR(255),
+                            "ZOOM_LINK_TEXT" VARCHAR(255),
                             "USER_ID" BIGINT NOT NULL);
-INSERT INTO `PROFILE` VALUES (10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-                             (11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2),
-                             (12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4),
-                             (13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3),
-                             (14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5),
-                             (15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 6),
-                             (16, '', NULL, 30, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', 90),
-                             (17, '', NULL, 31, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', 91),
-                             (18, '', NULL, 32, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', 92),
-                             (19, '', NULL, 33, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', 93);
+INSERT INTO `PROFILE` VALUES (10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+                             (11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2),
+                             (12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4),
+                             (13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3),
+                             (14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5),
+                             (15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 6),
+                             (16, '', NULL, 30, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', '', '', 90),
+                             (17, '', NULL, 31, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', '', '', 91),
+                             (18, '', NULL, 32, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', '', '', 92),
+                             (19, '', NULL, 33, NULL, NOW()+INTERVAL 5 DAY, NULL, 10, '', '', '', '', 93);
 
 
 DROP TABLE IF EXISTS `PROFILE_POSSESSES`;
@@ -119,7 +123,7 @@ INSERT INTO `PROFILE_POSSESSES` VALUES (20, 10, 'PROFILE', 10),
 -- Table structure for table `practice_question`
 --
 
-DROP TABLE IF EXISTS `practice_question`;
+-- DROP TABLE IF EXISTS `practice_question`;
 CREATE TABLE `practice_question` (
                                      `id` bigint(20) NOT NULL,
                                      `description` longtext,

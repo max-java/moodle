@@ -47,6 +47,7 @@ public class LectureService {
     public void delete() {
     }
     public Optional<Lecture> findById(Long id) {
+
         return lectureRepository.findById(id);
     }
 

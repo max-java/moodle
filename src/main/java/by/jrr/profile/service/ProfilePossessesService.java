@@ -4,6 +4,7 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.CourseToLecture;
 import by.jrr.moodle.bean.Lecture;
+import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.ProfilePossesses;
@@ -83,6 +84,32 @@ public class ProfilePossessesService {
                 .flatMap(a -> courseToLectureService.findLecturesForCourse(a, null).stream())
                 .collect(Collectors.toList());
         return lecturesThatUserHasAccessTo.contains(lecture);
+
+
+    }
+    public boolean isUserHasAccessToPractice(PracticeQuestion practiceQuestion) { // TODO: 24/06/20 this should be cached as List of lectures that user has access to and moved into userAccessService
+
+        //user could have access only to subscribed and approved course lectures and practice in course
+        Profile profile = profileService.getCurrentUserProfile();
+
+        List<StreamAndTeamSubscriber> approvedSubscriptions = profile.getSubscriptions().stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
+                .collect(Collectors.toList());
+        List<Long> coursesId = approvedSubscriptions.stream()
+                .map(s -> s.getSubscriptionProfile().getCourseId())
+                .collect(Collectors.toList());
+        List<Lecture> lecturesThatUserHasAccessTo = coursesId.stream()
+                .flatMap(a -> courseToLectureService.findLecturesForCourse(a, null).stream())
+                .collect(Collectors.toList());
+        List<PracticeQuestion> practiceQuestionsUserHasAccessTo = lecturesThatUserHasAccessTo.stream()
+                .flatMap(lecture -> lecture.getPracticeQuestions().stream())
+                .collect(Collectors.toList());
+        List<Long> idsOfpracticeQuestionsUserHasAccessTo = practiceQuestionsUserHasAccessTo.stream()
+                .map(qa -> qa.getId())
+                .collect(Collectors.toList());
+
+
+        return idsOfpracticeQuestionsUserHasAccessTo.contains(practiceQuestion.getId());
 
 
     }
