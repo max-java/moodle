@@ -5,6 +5,7 @@ import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.feedback.bean.ReviewRequest;
@@ -40,6 +41,8 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
     ProfilePossessesService pss;
     @Autowired
     UserAccessService userAccessService;
+    @Autowired
+    UserService userService;
 
     @AdminOnly
     @GetMapping(Endpoint.PRACTICE)
@@ -51,14 +54,18 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
         return mov;
     }
 
-    @AtLeatStudent
     @GetMapping(Endpoint.PRACTICE + "/{practiceId}")
     public ModelAndView openIssueByIssueId(@PathVariable Long practiceId) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<PracticeQuestion> issue = practiceQuestionService.findById(practiceId);
         if (issue.isPresent()) {
-            mov.addObject("issue", issue.get());
-            mov.setViewName(View.PRACTICE);
+            if (userAccessService.isCurrentUserIsAdmin() || pss.isUserHasAccessToPractice(issue.get())) {
+                mov.addObject("issue", issue.get());
+                mov.setViewName(View.PRACTICE);
+            } else {
+                mov.setViewName(View.PAGE_404); // TODO: 24/06/20 replace with 403 TODO: 24/06/20 create 403 view
+            }
+
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
             mov.setViewName(View.PAGE_404);
@@ -73,7 +80,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
         return new ModelAndView("redirect:" + Endpoint.PRACTICE + "/" + issue.getId());
     }
 
-    @AtLeatStudent
+
     @PostMapping(Endpoint.PRACTICE + "/{practiceId}")
     public ModelAndView updateIssue(PracticeQuestion issue, HttpServletRequest request,
                                     @PathVariable Long practiceId,
@@ -81,7 +88,16 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
                                     @RequestParam Optional<String> requestForReview) {
 
         if(requestForReview.isPresent()) {
-            return redirectToCodeReview(practiceId, issue, request);
+            if (pss.isUserHasAccessToPractice(issue) &&
+                    (// TODO: 28/06/20 move to accessService and consider accesses
+                        userService.isCurrentUserHasRole(UserRoles.ROLE_STUDENT)
+                        || userService.isCurrentUserHasRole(UserRoles.ROLE_ALUMNUS)
+                        || userService.isCurrentUserHasRole(UserRoles.ROLE_ADMIN)
+                    )
+                )
+            {
+                return redirectToCodeReview(practiceId, issue, request);
+            }
         }
 
         if (userAccessService.isCurrentUserIsAdmin()) {
@@ -103,7 +119,9 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
             return mov;
             // TODO: 11/05/20 replace if-else with private methods
         }
-        return null;
+        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+        mov.setViewName(View.PAGE_404); // TODO: 29/06/20  replace with 403
+        return mov;
     }
 
 
