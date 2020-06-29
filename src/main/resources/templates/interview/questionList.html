@@ -87,24 +87,24 @@
                     <ul class="pagination pagination-lg m-0">
                         <li class="page-item"
                             th:if="${qAndAPage.hasPrevious()}">
-                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                            <a class="page-link" th:href="${'/questions?searchTerm='
                                 +searchTerm+
                                 '&page='+(qAndAPage.getNumber())}">&laquo;</a>
                         </li>
                         <li class="page-item"
                             th:if="${qAndAPage.hasPrevious()}">
-                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                            <a class="page-link" th:href="${'/questions?searchTerm='
                                 +searchTerm+
                                 '&page='+(qAndAPage.getNumber())}" th:text="${(qAndAPage.getNumber())}"></a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link text-danger" th:href="${'/questions/?searchTerm='
+                            <a class="page-link text-danger" th:href="${'/questions?searchTerm='
                                 +searchTerm+
                                 '&page='+(qAndAPage.getNumber()+1)}" th:text="${(qAndAPage.getNumber()+1)}"></a>
                         </li>
                         <li class="page-item"
                             th:if="${qAndAPage.hasNext()}">
-                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                            <a class="page-link" th:href="${'/questions?searchTerm='
                                 +searchTerm+
                                 '&page='+(qAndAPage.getNumber()+2)}" th:text="${(qAndAPage.getNumber()+2)}"></a>
                         </li>
@@ -114,13 +114,13 @@
 
                         <li class="page-item"
                             th:if="${qAndAPage.hasNext()}">
-                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                            <a class="page-link" th:href="${'/questions?searchTerm='
                                 +searchTerm+
                                 '&page='+(qAndAPage.getTotalPages())}" th:text="${(qAndAPage.getTotalPages())}">&laquo;</a>
                         </li>
                         <li class="page-item"
                             th:if="${qAndAPage.hasNext()}">
-                            <a class="page-link" th:href="${'/questions/?searchTerm='
+                            <a class="page-link" th:href="${'/questions?searchTerm='
                                 +searchTerm+
                                 '&page='+(qAndAPage.getNumber()+2)}">&raquo;</a>
                         </li>
