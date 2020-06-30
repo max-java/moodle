@@ -16,6 +16,8 @@
         <div th:include="starter :: page_header"></div>
         <!-- /.content-header -->
 
+        <h1 id="alert"></h1>
+
         <a href="/stream/register">new Stream</a> | <a href="/team/register">new Team</a>
 
         <!-- Main content -->
@@ -307,6 +309,19 @@
                                             </div>
                                         </div>
 
+                                        <h3> secret admin operations </h3>
+                                        <div class="margin">
+                                            <div class="btn-group">
+                                                <button
+                                                        class="btn btn-sm btn-outline-light bg-gradient-red"
+                                                        onclick="generateNewPassword(this.value)"
+                                                        th:value="${profile.getId()}"
+                                                        type="button">
+                                                    "Сгенерирвать новый пароль"
+                                                </button> &nbsp;
+                                            </div>
+                                        </div>
+
                                         <form class="form-horizontal" method="post"
                                               th:action="'/profile/'+${profile.getId()}+'/update'">
                                             <input class="form-control" id="id" name="id" th:value="${profile.getId()}"
@@ -371,7 +386,7 @@
                                                         getResponse(this);
                                                     }
                                                 };
-                                                xmlhttp.open("GET", "/admin/profile/api/"+userProfileId+"?userRole=" + userRole, true);
+                                                xmlhttp.open("GET", "/admin/profile/api//updateRole/"+userProfileId+"?userRole=" + userRole, true);
                                                 xmlhttp.send();
                                             }
 
@@ -382,6 +397,22 @@
 
                                                 document.getElementById("userRoles").innerHTML = userRoles;
 
+                                            }
+
+                                            function generateNewPassword(id) {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var userProfileId = document.getElementById("id").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        var xmlDoc = this.responseXML;
+                                                        var response = xmlDoc.getElementsByTagName("userPasswordDTO");
+                                                        var password = response[0].getElementsByTagName("password")[0].childNodes[0].nodeValue;
+
+                                                        document.getElementById("alert").innerHTML = "Сгенерирован новый пароль "+ password;
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/profile/api/generateNewPassword/"+userProfileId, true);
+                                                xmlhttp.send();
                                             }
                                         </script>
                                     </div>

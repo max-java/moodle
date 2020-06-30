@@ -18,11 +18,9 @@ public class UserProgress {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-
     private Long Id;
     private Long profileId;
 
-    @Column(unique = true)
     private Long trackableId;
     @Enumerated(value = EnumType.STRING)
     private EntityType trackableType;
