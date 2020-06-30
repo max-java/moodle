@@ -1,5 +1,6 @@
 package by.jrr.profile.controller;
 
+import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
@@ -91,7 +92,7 @@ public class ProfileCardAdminViewController {
     }
 
     @AdminOnly // TODO: 23/06/20 move to appropriate place
-    @GetMapping(value = Endpoint.PROFILE_CARD_ADMIN_VIEW + "/api/{profileId}", produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping(value = Endpoint.PROFILE_CARD_ADMIN_VIEW + "/api/updateRole/{profileId}", produces = MediaType.APPLICATION_XML_VALUE)
     public @ResponseBody UserRolesDTO updateUserRole(@PathVariable Long profileId,
                                    @RequestParam String userRole) {
         UserRolesDTO userRolesDTO = new UserRolesDTO();
@@ -114,5 +115,25 @@ public class ProfileCardAdminViewController {
     @XmlRootElement
     public static class UserRolesDTO {
         String userRoles;
+    }
+
+    @AdminOnly // TODO: 23/06/20 move to appropriate place
+    @GetMapping(value = Endpoint.PROFILE_CARD_ADMIN_VIEW + "/api/generateNewPassword/{profileId}", produces = MediaType.APPLICATION_XML_VALUE)
+    public @ResponseBody UserPasswordDTO generateNewPassword(@PathVariable Long profileId) {
+        UserPasswordDTO userPasswordDTO = new UserPasswordDTO();
+        Optional<Profile> userProfileOP = profileService.findProfileByProfileId(profileId);
+        if(userProfileOP.isPresent()) {
+            userPasswordDTO.setPassword(userService.generateNewPasswordForUser(userProfileOP.get().getUserId()));
+        } else {
+            userPasswordDTO.setPassword("error on updating password");
+        }
+        return userPasswordDTO;
+    }
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @XmlRootElement
+    public static class UserPasswordDTO {
+        String password;
     }
 }
