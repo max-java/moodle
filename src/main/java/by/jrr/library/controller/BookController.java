@@ -1,14 +1,11 @@
 package by.jrr.library.controller;
 
-import by.jrr.auth.bean.UserRoles;
-import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.feedback.service.FeedbackService;
-import by.jrr.library.bean.MyBook;
+import by.jrr.library.bean.Book;
 import by.jrr.library.service.BookService;
-import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +33,7 @@ public class BookController {
     @GetMapping(Endpoint.BOOK)
     public ModelAndView createNewIssue() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.addObject("issue", MyBook.builder().build());
+        mov.addObject("issue", Book.builder().build());
         mov.addObject("edit", true);
         mov.setViewName(View.BOOK);
         return mov;
@@ -45,7 +42,7 @@ public class BookController {
     @GetMapping(Endpoint.BOOK + "/{bookId}")
     public ModelAndView openIssueByIssueId(@PathVariable Long bookId) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Optional<MyBook> issue = bookService.findById(bookId);
+        Optional<Book> issue = bookService.findById(bookId);
 
         if (issue.isPresent()) {
             mov.addObject("issue", issue.get());
@@ -58,14 +55,14 @@ public class BookController {
     }
 
     @PostMapping(Endpoint.BOOK)
-    public ModelAndView saveNewIssue(MyBook issue) {
+    public ModelAndView saveNewIssue(Book issue) {
         issue = bookService.create(issue);
         return new ModelAndView("redirect:" + Endpoint.BOOK + "/" + issue.getId());
     }
 
 
     @PostMapping(Endpoint.BOOK + "/{bookId}")
-    public ModelAndView updateIssue(MyBook issue, HttpServletRequest request,
+    public ModelAndView updateIssue(Book issue, HttpServletRequest request,
                                     @PathVariable Long bookId,
                                     @RequestParam(value = "edit", required = false) boolean edit) {
 
@@ -74,7 +71,7 @@ public class BookController {
         mov.setViewName(View.BOOK);
 
         if (edit) {
-            Optional<MyBook> issueToUpdate = bookService.findById(issue.getId());
+            Optional<Book> issueToUpdate = bookService.findById(issue.getId());
             if (issueToUpdate.isPresent()) {
                 mov.addObject("issue", issueToUpdate.get());
                 mov.addObject("edit", true);

@@ -2,7 +2,7 @@ package by.jrr.library.service;
 
 import by.jrr.auth.service.UserService;
 import by.jrr.feedback.bean.EntityType;
-import by.jrr.library.bean.MyBook;
+import by.jrr.library.bean.Book;
 import by.jrr.library.repository.BookRepository;
 import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ public class BookService {
     ProfilePossessesService pss;
 
 
-    public Page<MyBook> findAll(String page, String items) {
-        Page<MyBook> books;
+    public Page<Book> findAll(String page, String items) {
+        Page<Book> books;
         try {
             books = bookRepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
         } catch (Exception ex) {
@@ -40,25 +40,25 @@ public class BookService {
         return books;
     }
 
-    public MyBook create(MyBook book) {
+    public Book create(Book book) {
         book = bookRepository.save(book);
         pss.savePossessForCurrentUser(book.getId(), EntityType.BOOK);
         return book;
     }
-    public MyBook update(MyBook book) {
+    public Book update(Book book) {
         book = bookRepository.save(book);
         return book;
     }
     public void delete() {
     }
-    public Optional<MyBook> findById(Long id) {
+    public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 
 
-    public Page<MyBook> findAllPageable(Optional<Integer> userFriendlyNumberOfPage,
-                                                  Optional<Integer> numberOfElementsPerPage,
-                                                  Optional<String> searchTerm) {
+    public Page<Book> findAllPageable(Optional<Integer> userFriendlyNumberOfPage,
+                                      Optional<Integer> numberOfElementsPerPage,
+                                      Optional<String> searchTerm) {
         // pages are begins from 0, but userFriendly is to begin from 1
         int page = userFriendlyNumberOfPage.orElseGet(DEFAULT_PAGE_NUMBER) - 1;
         int elem = numberOfElementsPerPage.orElseGet(DEFAULT_ELEMENTS_PER_PAGE);
@@ -66,26 +66,26 @@ public class BookService {
         if(searchTerm.isPresent()) {
             return searchByAllFieldsPageable(searchTerm.get(), page, elem);
         } else {
-            Page<MyBook> page1 = bookRepository.findAll(PageRequest.of(page, elem));
+            Page<Book> page1 = bookRepository.findAll(PageRequest.of(page, elem));
             return page1;
         }
     }
 
-    private Page<MyBook> searchByAllFieldsPageable(String searchTerm, int page, int elem) {
-        List<MyBook> bookList = serarchBookByAllFields(searchTerm);
+    private Page<Book> searchByAllFieldsPageable(String searchTerm, int page, int elem) {
+        List<Book> bookList = serarchBookByAllFields(searchTerm);
         if(bookList.size() != 0) {
             // TODO: 26/05/20 this pagination should be moved in a static method
             Pageable pageable = PageRequest.of(page, elem);
             int pageOffset = (int) pageable.getOffset(); // TODO: 26/05/20 dangerous cast!
             int toIndex = (pageOffset + elem) > bookList.size() ? bookList.size() : pageOffset + elem;
-            Page<MyBook> bookPageImpl  = new PageImpl<>(bookList.subList(pageOffset, toIndex), pageable, bookList.size());
+            Page<Book> bookPageImpl  = new PageImpl<>(bookList.subList(pageOffset, toIndex), pageable, bookList.size());
             return bookPageImpl;
         } else {
             return Page.empty();
         }
     }
 
-    private List<MyBook> serarchBookByAllFields(String searchTerm) {
+    private List<Book> serarchBookByAllFields(String searchTerm) {
         return bookRepository.findByNameContaining(searchTerm)
                 .and(bookRepository.findByAuthorContaining(searchTerm)
                         .and(bookRepository.findByEditionContaining(searchTerm)

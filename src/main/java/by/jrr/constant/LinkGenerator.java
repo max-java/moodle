@@ -2,7 +2,7 @@ package by.jrr.constant;
 
 import by.jrr.files.bean.FileMeta;
 import by.jrr.interview.bean.QAndA;
-import by.jrr.library.bean.MyBook;
+import by.jrr.library.bean.Book;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.bean.PracticeQuestion;
@@ -55,9 +55,9 @@ public class LinkGenerator {
             QAndA qAndA = (QAndA) o;
             return Endpoint.Q_AND_A + "/" + qAndA.getId();
         }
-        if (o instanceof MyBook) {
-            MyBook myBook = (MyBook) o;
-            return Endpoint.BOOK + "/" + myBook.getId();
+        if (o instanceof Book) {
+            Book book = (Book) o;
+            return Endpoint.BOOK + "/" + book.getId();
         }
         //Files...
         if (o instanceof FileMeta) {

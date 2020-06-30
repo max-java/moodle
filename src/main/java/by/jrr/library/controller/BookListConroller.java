@@ -4,7 +4,7 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.feedback.service.FeedbackService;
-import by.jrr.library.bean.MyBook;
+import by.jrr.library.bean.Book;
 import by.jrr.library.service.BookService;
 import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class BookListConroller {
                                 @RequestParam Optional<Integer> elem,
                                 @RequestParam Optional<String> searchTerm) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        Page<MyBook> issuePage = bookService.findAllPageable(page, elem, searchTerm);
+        Page<Book> issuePage = bookService.findAllPageable(page, elem, searchTerm);
 
         mov.addObject("issuePage", issuePage);
 
