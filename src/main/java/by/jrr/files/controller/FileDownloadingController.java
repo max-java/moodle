@@ -1,5 +1,6 @@
 package by.jrr.files.controller;
 
+import by.jrr.auth.configuration.annotations.AtLeastFreeStudent;
 import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.constant.Endpoint;
 import by.jrr.files.service.FileService;
@@ -22,7 +23,7 @@ public class FileDownloadingController {
         return fileService.getFileBytes(fileName);
     }
 
-    @AtLeatStudent
+    @AtLeastFreeStudent // TODO: 30/06/20 make this restriction by TOA
     @RequestMapping(value = Endpoint.PDF+"/{fileName}", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public byte[] getPdfBytesByFilename(@PathVariable String fileName)  {
