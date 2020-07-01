@@ -1,5 +1,6 @@
 package by.jrr.library.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -30,6 +31,7 @@ public class BookController {
     @Autowired
     ProfilePossessesService pss;
 
+    @AdminOnly
     @GetMapping(Endpoint.BOOK)
     public ModelAndView createNewIssue() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -54,6 +56,7 @@ public class BookController {
         return mov;
     }
 
+    @AdminOnly
     @PostMapping(Endpoint.BOOK)
     public ModelAndView saveNewIssue(Book issue) {
         issue = bookService.create(issue);
