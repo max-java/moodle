@@ -24,7 +24,7 @@ public class TopicService {
         try {
             topics = topicRepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
         } catch (Exception ex) {
-            topics = topicRepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
+            topics = topicRepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(100)));
         }
         return topics;
     }
