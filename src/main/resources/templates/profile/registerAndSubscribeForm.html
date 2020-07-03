@@ -1,4 +1,4 @@
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <!--include example-->
 <div th:include="registerAndSubscribeForm :: quickRegisterForm"
@@ -10,18 +10,22 @@
 
 <!--registration form: it is need an user object ot bind -->
 <div th:fragment="quickRegisterForm">
-    <h3 th:text="${error}"></h3>
-    <form   autocomplete="off"
-            th:action="@{/registerAndSubscribe}"
-            method="post"
-            role="form">
-        <input type="hidden" name="courseId" th:value="${courseId}">
+
+    <form autocomplete="off"
+          method="post"
+          role="form"
+          th:action="@{/registerAndSubscribe}">
+        <input name="courseId" th:value="${courseId}" type="hidden">
         <div class="input-group mb-3">
-            <input  type="text"
-                    name="firstAndLastName"
-                    th:value="${user.firstAndLastName}"
-                    placeholder="Ваше имя и фамилия"
-                    class="form-control" >
+            <input class="form-control"
+                   id="firstAndLastName"
+                   name="firstAndLastName"
+                   onblur="validateName(this.value)"
+                   onkeyup="validateName(this.value)"
+                   placeholder="Ваше имя и фамилия"
+                   th:value="${user.firstAndLastName}"
+                   type="text"
+                   required>
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-user"></span>
@@ -29,11 +33,15 @@
             </div>
         </div>
         <div class="input-group mb-3">
-            <input type="text"
+            <input class="form-control"
+                   id="email"
                    name="email"
-                   th:value="${user.email}"
+                   onblur="validateEmail(this.value)"
+                   onkeyup="validateEmail(this.value)"
                    placeholder="Ваш Email"
-                   class="form-control" >
+                   th:value="${user.email}"
+                   type="text"
+                   required>
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
@@ -41,11 +49,15 @@
             </div>
         </div>
         <div class="input-group mb-3">
-            <input type="text"
+            <input class="form-control"
+                   id="phone"
                    name="phone"
-                   th:value="${user.phone}"
+                   onblur="validatePhone(this.value)"
+                   onkeyup="validatePhone(this.value)"
                    placeholder="Номер телефона"
-                   class="form-control" >
+                   th:value="${user.phone}"
+                   type="text"
+                   required>
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
@@ -59,11 +71,60 @@
             </div>
             <!-- /.col -->
             <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block"><b>Записаться</b></button>
+                <button class="btn btn-primary btn-block" id="button" type="submit"><b>Записаться</b></button>
             </div>
             <!-- /.col -->
         </div>
+        <br/> <br/> <br/> <br/>
+        <p class="text-danger" id="errors" th:text="${error}"></p>
     </form>
+    <script>
+        function validateEmail(userEmail) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    getResponse(this);
+                }
+            };
+            xmlhttp.open("GET", "/api/registerForm/validate/email/?email=" + userEmail, true);
+            xmlhttp.send();
+        }
+
+        function validateName(userName) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    getResponse(this);
+                }
+            };
+            xmlhttp.open("GET", "/api/registerForm/validate/firstAndLastName/?firstAndLastName=" + userName, true);
+            xmlhttp.send();
+        }
+
+        function validatePhone(userPhone) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    getResponse(this);
+                }
+            };
+            xmlhttp.open("GET", "/api/registerForm/validate/phone/?phone=" + userPhone, true);
+            xmlhttp.send();
+        }
+
+        function getResponse(xml) {
+            var xmlDoc = xml.responseXML;
+            var restResponse = xmlDoc.getElementsByTagName("restResponse");
+            var validationPassed = restResponse[0].getElementsByTagName("validationPassed")[0].childNodes[0].nodeValue;
+            console.log("validation passed? : " + validationPassed);
+            if (validationPassed === "false") {
+                var error = restResponse[0].getElementsByTagName("error");
+                document.getElementById("errors").innerHTML = error[0].childNodes[0].nodeValue;
+            } else {
+                document.getElementById("errors").innerHTML = "";
+            }
+        }
+    </script>
 </div>
 <!--end of registration form-->
 

@@ -1,5 +1,6 @@
 package by.jrr.feedback.service;
 
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.feedback.bean.*;
 import by.jrr.feedback.repository.ReviewRequestRepository;
 import by.jrr.profile.bean.Profile;
@@ -26,6 +27,8 @@ public class ReviewRequestService {
     ItemService itemService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    UserAccessService userAccessService;
 
     public ReviewRequest createNewReviewRequest(Item item, Reviewable reviewable) {
         ReviewRequest reviewRequest = new ReviewRequest();
@@ -34,19 +37,23 @@ public class ReviewRequestService {
         reviewRequest.setRequesterProfileId(profileService.getCurrentUserProfile().getId());
         reviewRequest.setCreatedDate(LocalDateTime.now());
         reviewRequest.setReviewResultOnClosing(ReviewResult.NONE);
+        ReviewRequest rr = reviewRequestRepository.save(reviewRequest);
+        pss.savePossessForCurrentUser(rr.getId(), EntityType.REVIEW_REQUEST);
         return reviewRequestRepository.save(reviewRequest);
     }
 
-    public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {
+    public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) { // TODO: 24/06/20 consider if it should be deleted: RR could not be updated! (or could it?)
         // only reviewer notes and link to request could be updated,
         // because other fields from save form data endpoint comes empty (todo is it true and whY? Is it fixable and should it be? Otherwise could be secure? could user modify fields in POST and save new IDs?
         Optional<ReviewRequest> savedReviewRequest = reviewRequestRepository.findById(reviewRequest.getId());
         if (savedReviewRequest.isPresent()) {
-            ReviewRequest updatedRequest = savedReviewRequest.get();
-            updatedRequest.setRequesterNotes(reviewRequest.getRequesterNotes());
-            updatedRequest.setLink(reviewRequest.getLink());
-            return reviewRequestRepository.save(updatedRequest);
-
+            if(userAccessService.isCurrentUserIsAdmin()
+                    || pss.isUserOwner(profileService.getCurrentUserProfileId(), reviewRequest.getId())) {
+                ReviewRequest updatedRequest = savedReviewRequest.get();
+                updatedRequest.setRequesterNotes(reviewRequest.getRequesterNotes());
+                updatedRequest.setLink(reviewRequest.getLink());
+                return reviewRequestRepository.save(updatedRequest);
+            }
         }
         return null; // TODO: 28/05/20 return Optional and handle it with logger in controller
     }
@@ -55,7 +62,7 @@ public class ReviewRequestService {
         // only status on close and closed date could be updated
         // because other fields from save form data endpoint comes empty
         Optional<ReviewRequest> savedReviewRequest = reviewRequestRepository.findById(reviewRequest.getId());
-        if (savedReviewRequest.isPresent()) {
+        if (savedReviewRequest.isPresent() && userAccessService.isCurrentUserIsAdmin()) {
             ReviewRequest updatedRequest = savedReviewRequest.get();
             updatedRequest.setReviewResultOnClosing(reviewRequest.getReviewResultOnClosing());
             updatedRequest.setClosedDate(LocalDateTime.now());

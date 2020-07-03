@@ -25,7 +25,7 @@
                         <a th:href="@{'/lecture'}"> create </a>
                     </div>
                     <!-- /.row -->
-                    <div class="row d-flex align-items-stretch">
+                    <div class="row d-flex align-items-stretch" th:fragment="lectureList">
                         <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" th:each="topic : ${topicList}">
                             <div class="card bg-light">
                                 <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(topic)}">

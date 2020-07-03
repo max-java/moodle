@@ -1,5 +1,8 @@
 package by.jrr.auth.bean;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public enum UserRoles {
     ROLE_ADMIN("Has full access"),
     ROLE_GUEST("Registered, but not participate in any courses"),
@@ -14,8 +17,12 @@ public enum UserRoles {
 
     UserRoles(String info) {
         this.info = info;
+
     }
 }
 
 //strong
 //    ROLE_GUEST >> ROLE_FREE_STUDENT >> ROLE_STUDENT >> ROLE_SCRUM_MASTER >> ROLE_ALUMNUS >> ROLE_ADMIN >>
+
+//scrum master should go separately.
+//  >> ROLE_SCRUM_MASTER >>

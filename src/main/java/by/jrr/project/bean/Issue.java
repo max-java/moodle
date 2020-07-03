@@ -23,9 +23,9 @@ public class Issue implements Reviewable {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-
     private Long Id;
     private Long issueId; //it has two ids: on for issue, one for row - to create a history
+
     @Transient
     private Project project = new Project(); // TODO: 11/05/20 handle npe otherwise
     private Long projectId;

@@ -4,6 +4,10 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
+import by.jrr.moodle.bean.Course;
+import by.jrr.moodle.bean.CourseToLecture;
+import by.jrr.moodle.bean.Lecture;
+import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
@@ -18,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Controller
@@ -33,6 +39,8 @@ public class ProfileCardController {
     ProfileStatisticService profileStatisticService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    CourseToLectureService courseToLectureService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -42,6 +50,12 @@ public class ProfileCardController {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
+            if(profile.get().getCourseId() != null) {
+                mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
+            } else {
+                mov.addObject("topicList", new ArrayList<>());
+            }
+
         } else {
             mov.setViewName(View.PAGE_404);
         }

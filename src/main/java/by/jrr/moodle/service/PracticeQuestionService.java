@@ -31,14 +31,8 @@ public class PracticeQuestionService {
     ProfilePossessesService pss;
 
 
-    public Page<PracticeQuestion> findAll(String page, String items) {
-        Page<PracticeQuestion> topics;
-        try {
-            topics = practiceQuestionRepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
-        } catch (Exception ex) {
-            topics = practiceQuestionRepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
-        }
-        return topics;
+    public List<PracticeQuestion> findAll() {
+        return (List) practiceQuestionRepository.findAll();
     }
 
     public PracticeQuestion create(PracticeQuestion topic) {

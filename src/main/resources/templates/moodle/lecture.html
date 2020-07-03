@@ -23,12 +23,24 @@
                     <div class="col-md-12" th:if="${edit}">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">TinyMCE Quick Start Guide</h5>
+                                <h5 class="card-title"></h5>
                                 <p>asd</p>
                                 <form method="post">
                                     <input type="text" name="title" placeholder="title" th:value="${topic.getTitle()}"/>
                                     <input type="text" name="subtitle" placeholder="subtitle" th:value="${topic.getSubtitle()}"/>
                                     <textarea id="mytextarea" name="text" th:text="${topic.getText()}" >Hello, World!</textarea>
+
+
+                                    <table>
+                                        <tr th:each="practice : ${practices}">
+                                            <td><input type="checkbox" name="practicesId" th:value="${practice.getId()}" th:checked="${topic.getPracticeQuestions().contains(practice)} ? 'checked'"></td>
+                                            <td th:text="${practice.getName()}"></td>
+                                            <td th:text="${practice.getSummary()}"></td>
+                                            <td th:text="${practice.getTheme()}"></td>
+                                            <td> <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(practice)}">open</a></td>
+                                        </tr>
+                                    </table>
+
                                     <button type="submit" name="save" value="true">save</button>
                                 </form>
                             </div>

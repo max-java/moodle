@@ -33,11 +33,20 @@ public class Profile {
     private String avatarFileName;
     private Long ownerProfileId;
 
+    private String telegramLink;
+    private String telegramLinkText;
+
+    private String zoomLink;
+    private String zoomLinkText;
+
+
     @Lob
     private String about;
 
     @Transient
     private List<StreamAndTeamSubscriber> subscribers = new ArrayList<>();
+    @Transient
+    private List<StreamAndTeamSubscriber> subscriptions = new ArrayList<>();
 
     // that is only for streams
     private LocalDate dateStart;

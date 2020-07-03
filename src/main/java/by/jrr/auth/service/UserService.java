@@ -67,14 +67,17 @@ public class UserService {
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
+    private User updateUserPassword(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
 
     public User quickRegisterUser(String firstAndLastName, String phone, String email) throws UserServiceException {
         if (ifWordExistAsLoginOrEmail(email)) {
-            throw new UserServiceException(email + " already exist in database as login or email");
+            throw new UserServiceException(email + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
         }
-        String password = new Random().ints(6, 33, 122)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+        String password = getRandomPassword();
 
         String login = email;
         User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
@@ -89,8 +92,26 @@ public class UserService {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
+    private String getRandomPassword() {
+        return new Random().ints(6, 33, 122)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+    public String generateNewPasswordForUser(Long id) {
+        Optional<User> userOp = userRepository.findById(id);
+        if(userOp.isPresent()) {
+            User user = userOp.get();
+            String newPass = getRandomPassword();
+            user.setPassword(newPass);
+            this.updateUserPassword(user);
+            // TODO: 30/06/20 send email with hew password
+            return newPass;
+        } else {
+            return "error on updating user Password";
+        }
+    }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: 06/06/20 replace with template method                                              //
 //                                                                                          //
     public void addRoleToUser(UserRoles userRole, Long userId) {                            //
@@ -99,7 +120,7 @@ public class UserService {
             role = roleRepository.save(new Role(null, userRole));
         }//
         Optional<User> userOp = userRepository.findById(userId);                            //
-        if (userOp.isPresent()) {                                                            //
+        if (userOp.isPresent()) {                                                           //
             User user = userOp.get();                                                       //
             user.getRoles().add(role);                                                      //
             userRepository.save(user);                                                      //
@@ -109,7 +130,7 @@ public class UserService {
     public void removeRoleFromUser(UserRoles userRole, Long userId) {                       //
         Role role = roleRepository.findByRole(userRole);                                    //
         Optional<User> userOp = userRepository.findById(userId);                            //
-        if (userOp.isPresent()) {                                                            //
+        if (userOp.isPresent()) {                                                           //
             User user = userOp.get();                                                       //
             user.getRoles().remove(role);                                                   //
             userRepository.save(user);                                                      //
