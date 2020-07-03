@@ -1,5 +1,5 @@
 package by.jrr.project.bean;
 
 public enum IssuePriority {
-    LOWEST, LOW, MEDIUM, HIGH, HIGHEST
+    NONE, HIGHEST, HIGH, MEDIUM, LOW, LOWEST
 }
