@@ -60,6 +60,13 @@ public class StudentActionToLogService {
             }
         }
 
+        notActiveOfSubscribers = notActiveOfSubscribers.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        active = active.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
         userActivityDTO.setActive(active);
         userActivityDTO.setNotActive(notActiveOfSubscribers);
         return userActivityDTO;

@@ -12,6 +12,7 @@ import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseToLectureService {
@@ -37,7 +38,11 @@ public class CourseToLectureService {
             courseToLectures.forEach(ctl -> lectures.add(lectureService.findById(ctl.getLectureId()).orElseGet(Lecture::new)));
             // TODO: 24/06/20 if it is empty lecture, than lecture for course has been deleted, but not deleted from courde. Should be logged and deleted from course.
         }
-        return lectures;
+        // TODO: 05/07/20 investigate, why for https://moodle.jrr.by/profile/230 and user  https://moodle.jrr.by/profile/22 Lectures are duplicated?
+        return lectures.stream()
+                .distinct()
+                .collect(Collectors.toList()); // TODO: 05/07/20 replace this HotFix
+        
     }
     public List<Long> findLecturesIdForCourse(@Nullable Long id, @Nullable Course course) {
         List<Long> lecturesId = new ArrayList<>();
