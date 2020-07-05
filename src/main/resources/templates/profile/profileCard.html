@@ -153,7 +153,8 @@
 
                                         <div class="row">
 
-                                            <div class="col-md-3 col-sm-6 col-12">
+                                            <div class="col-md-3 col-sm-6 col-12"
+                                                 th:if="${profile.isLinkPresent(profile.getTelegramLink())}">
                                                 <form action="/l/" method="post">
                                                     <input name="link" th:value="${profile.getTelegramLink()}"
                                                            type="hidden"/>
@@ -177,7 +178,8 @@
                                                 </form>
                                             </div>
                                             <!-- /.col -->
-                                            <div class="col-md-3 col-sm-6 col-12">
+                                            <div class="col-md-3 col-sm-6 col-12"
+                                                 th:if="${profile.isLinkPresent(profile.getZoomLink())}">
                                                 <form action="/l/" method="post">
                                                     <input name="link" th:value="${profile.getZoomLink()}"
                                                            type="hidden"/>

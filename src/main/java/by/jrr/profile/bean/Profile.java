@@ -55,4 +55,13 @@ public class Profile {
     private Long courseId;
     @Transient
     private Course course;
+
+    public boolean isLinkPresent(String link) { // TODO: 05/07/20 this need to make UI button visible if link is present
+        if (link == null) {
+            return false;
+        } else if(link.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }
