@@ -166,6 +166,7 @@
                                                     <th>Логин</th>
                                                     <th>Почта</th>
                                                     <th>Телефон</th>
+                                                    <th>Git</th>
                                                     <th>Профиль</th>
                                                     <th>Кнопка</th>
                                                 </tr>
@@ -177,6 +178,7 @@
                                                     <td th:text="${subscriber.getSubscriberLogin()}"></td>
                                                     <td th:text="${subscriber.getSubscriberEmail()}"></td>
                                                     <td th:text="${subscriber.getSubscriberPhone()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberGitHubUsername()}"></td>
                                                     <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
                                                     </td>
                                                     <td>
