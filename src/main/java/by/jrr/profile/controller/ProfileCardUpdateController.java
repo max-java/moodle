@@ -44,6 +44,8 @@ public class ProfileCardUpdateController {
                                       @RequestParam Optional<String> telegramLinkName,
                                       @RequestParam Optional<String> zoomLink,
                                       @RequestParam Optional<String> zoomLinkName,
+                                      @RequestParam Optional<String> gitLink,
+                                      @RequestParam Optional<String> gitUsername,
                                       @RequestParam Optional<String> updateProfile
     ) {
 
@@ -79,6 +81,12 @@ public class ProfileCardUpdateController {
                 }
                 if (zoomLinkName.isPresent()) {
                     profile.setZoomLinkText(zoomLinkName.get());
+                }
+                if(gitLink.isPresent()) {
+                    profile.setGitLink(gitLink.get());
+                }
+                if (gitUsername.isPresent()) {
+                    profile.setGitUsername(gitUsername.get());
                 }
                 profileService.updateProfile(profile);
             }
