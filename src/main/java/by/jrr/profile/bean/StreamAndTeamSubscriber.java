@@ -70,4 +70,12 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
+    public String getSubscriberGitHubUsername() {
+        try {
+            return this.getSubscriberProfile().getGitUsername();
+        } catch (Exception ex) {
+            // TODO: 24/06/20 log exception with details!!
+            return "";
+        }
+    }
 }

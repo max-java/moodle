@@ -136,12 +136,14 @@
                         <div class="card">
                             <div class="card-header p-2">
                                 <ul class="nav nav-pills">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#activity">Activity</a>
-                                    </li>
+                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab"
+                                                            href="#activity">Activity</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#timeline">Timeline</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#settings">Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#userAction">UserAction</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -164,6 +166,7 @@
                                                     <th>Логин</th>
                                                     <th>Почта</th>
                                                     <th>Телефон</th>
+                                                    <th>Git</th>
                                                     <th>Профиль</th>
                                                     <th>Кнопка</th>
                                                 </tr>
@@ -175,6 +178,7 @@
                                                     <td th:text="${subscriber.getSubscriberLogin()}"></td>
                                                     <td th:text="${subscriber.getSubscriberEmail()}"></td>
                                                     <td th:text="${subscriber.getSubscriberPhone()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberGitHubUsername()}"></td>
                                                     <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
                                                     </td>
                                                     <td>
@@ -386,7 +390,7 @@
                                                         getResponse(this);
                                                     }
                                                 };
-                                                xmlhttp.open("GET", "/admin/profile/api//updateRole/"+userProfileId+"?userRole=" + userRole, true);
+                                                xmlhttp.open("GET", "/admin/profile/api/updateRole/" + userProfileId + "?userRole=" + userRole, true);
                                                 xmlhttp.send();
                                             }
 
@@ -408,15 +412,98 @@
                                                         var response = xmlDoc.getElementsByTagName("userPasswordDTO");
                                                         var password = response[0].getElementsByTagName("password")[0].childNodes[0].nodeValue;
 
-                                                        document.getElementById("alert").innerHTML = "Сгенерирован новый пароль "+ password;
+                                                        document.getElementById("alert").innerHTML = "Сгенерирован новый пароль " + password;
                                                     }
                                                 };
-                                                xmlhttp.open("GET", "/admin/profile/api/generateNewPassword/"+userProfileId, true);
+                                                xmlhttp.open("GET", "/admin/profile/api/generateNewPassword/" + userProfileId, true);
                                                 xmlhttp.send();
                                             }
                                         </script>
                                     </div>
                                     <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="userAction">
+                                        <!-- Post -->
+                                        <form class="form-horizontal" method="get" action="/admin/action">
+                                            <input id="from"  type="datetime-local" name="from" />
+                                            <input id="to" type="datetime-local" name="to" />
+                                            <button type="button" class="button" onclick="getStreamActions()">обновить</button>
+                                        </form>
+
+                                        <hr />
+                                        <h1> неАктивные</h1>
+                                        <table id="notActive" class="table table-hover text-nowrap"></table>
+                                        <hr />
+                                        <h1> перешли по ссылке</h1>
+                                        <table id="active" class="table table-hover text-nowrap"></table>
+                                        <script>
+                                            function getStreamActions() {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var streamId = document.getElementById("id").value;
+                                                var from = document.getElementById("from").value;
+                                                var to = document.getElementById("to").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        updateTableActive(this);
+                                                        updateTableNotActive(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/action?streamId="+streamId+"&from="+from+"&to="+to, true);
+                                                xmlhttp.send();
+                                            }
+                                            function updateTableActive(xml) {
+                                                var i;
+                                                var xmlDoc = xml.responseXML;
+                                                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                                                var x = xmlDoc.getElementsByTagName("userActivityDTO")[0].getElementsByTagName("active");
+                                                for (i = 0; i <x.length; i++) {
+                                                    try {
+                                                        table += "<tr><td>" +
+                                                            x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("email")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue +
+                                                            "</td></tr>";
+                                                    }catch (e) {
+                                                        console.log(e.toString());
+                                                    }
+                                                }
+                                                document.getElementById("active").innerHTML = table;
+                                            }
+                                            function updateTableNotActive(xml) {
+                                                var i;
+                                                var xmlDoc = xml.responseXML;
+                                                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                                                var x = xmlDoc.getElementsByTagName("notActive");
+                                                for (i = 0; i <x.length; i++) {
+                                                    try {
+                                                        table += "<tr><td>" +
+                                                            x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("email")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue +
+                                                            "</td></tr>";
+                                                    }catch (e) {
+                                                        console.log(e.toString());
+                                                    }
+                                                }
+                                                document.getElementById("notActive").innerHTML = table;
+                                            }
+                                        </script>
+
+                                    </div>
+
+
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
