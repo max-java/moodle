@@ -39,6 +39,9 @@ public class Profile {
     private String zoomLink;
     private String zoomLinkText;
 
+    private String gitLink;
+    private String gitUsername;
+
 
     @Lob
     private String about;

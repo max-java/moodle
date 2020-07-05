@@ -205,9 +205,35 @@
                                                 </form>
                                             </div>
                                             <!-- /.col -->
+                                            <div class="col-md-3 col-sm-6 col-12"
+                                                 th:if="${profile.isLinkPresent(profile.getGitLink())}">
+                                                <form action="/l/" method="post">
+                                                    <input name="link" th:value="${profile.getGitLink()}"
+                                                           type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <button class="btn btn-block"
+                                                            name="eventType"
+                                                            th:value="${T(by.jrr.registration.bean.EventType).GIT_LINK}"
+                                                            type="submit">
+                                                        <div class="info-box">
+                                                        <span class="info-box-icon bg-gradient-blue">
+                                                            <i class="fa fa-github"></i>
+                                                        </span>
+
+                                                            <div class="info-box-content text-left">
+                                                                <span class="info-box-text">My GitHub</span>
+                                                                <span class="info-box-text"
+                                                                      th:text="${profile.getGitUsername()}"></span>
+                                                            </div>
+                                                            <!-- /.info-box-content -->
+                                                        </div>
+                                                        <!-- /.info-box -->
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <!-- /.col -->
                                         </div>
                                         <!-- /.row -->
-
 
                                         <!-- Post -->
                                         <div class="post">
@@ -387,6 +413,25 @@
                                                            type="date">
                                                 </div>
                                             </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="telegramLink">GitHub link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="gitLink" name="gitLink"
+                                                           placeholder="" th:value="${profile.getGitLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="telegramLinkName">GitHub username</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="gitUsername"
+                                                           name="gitUsername"
+                                                           placeholder="" th:value="${profile.getGitUsername()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на
                                                     телеграм чат</label>
@@ -506,5 +551,6 @@
 
     });
 </script>
+<script src="https://use.fontawesome.com/eec5925178.js"></script>
 </body>
 </html>
