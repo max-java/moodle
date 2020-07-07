@@ -126,5 +126,26 @@ public class EMailService {
         message.setText(messageText.toString());
         emailSender.send(message);
     }
+
+    public void sendTeamSubscriptionConfirmation(String firstName,
+                                                 String teamStreamName,
+                                                 String streamTeamLink,
+                                                 String to) {
+        StringBuffer messageText = new StringBuffer();
+        messageText.append("Привек, " + firstName + "!");
+        messageText.append("\n\nТвоя заявка на участие в группе " + teamStreamName + " одобрена.");
+        messageText.append("\nНе забывай, что теперь тебе нужно принимать участи в стендапах ежедневно.");
+        messageText.append("\nОткрывать ссылку на стендап ОБЯЗАТЕЛЬНО через платформу, что бы твой контрибьют в комьюнити был залогирован");
+
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("{JG} Добро пожаловать в команду!");
+        messageText.append("\nТеперь тебе доступны ресурсы группы.");
+        messageText.append("\n\n\t сохрани в закладки прямую ссылку на группу: "+streamTeamLink);
+        message.setText(messageText.toString());
+        emailSender.send(message);
+        System.out.println(message); // TODO: 07/07/20 log emails
+    }
 }
 
