@@ -40,6 +40,11 @@ public class UserAccessService {
     }
 
     public static  boolean hasRole (UserRoles role)
+    { // TODO: 07/07/20 concider to make unified conception of access this functionality
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
+    }
+    public boolean isUserhasRole (UserRoles role)
     {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));

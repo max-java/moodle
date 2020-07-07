@@ -202,6 +202,8 @@ public class ProfileService {
     }
 
     public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
+
+
         streamAndTeamSubscriberService.updateSubscription(streamTeamProfileId,
                 subscriberProfileId,
                 SubscriptionStatus.REQUESTED);
