@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProfileService {
     private final Supplier<Integer> DEFAULT_PAGE_NUMBER = () -> 1;
-    private final Supplier<Integer> DEFAULT_ELEMENTS_PER_PAGE = () -> 15;
+    private final Supplier<Integer> DEFAULT_ELEMENTS_PER_PAGE = () -> 30;
 
     @Autowired
     UserService userService;
