@@ -77,11 +77,15 @@ public class StreamAndTeamSubscriberService {
     private StreamAndTeamSubscriber createSubscriptionAndSetStatus(Long streamAndTeamProfileId,
                                                                    Long subscriberProfileId,
                                                                    SubscriptionStatus status) {
-        StreamAndTeamSubscriber subscriber = StreamAndTeamSubscriber.builder()
-                .streamTeamProfileId(streamAndTeamProfileId)
-                .subscriberProfileId(subscriberProfileId)
-                .status(status)
-                .build();
+        if(!streamAndTeamProfileId.equals(subscriberProfileId)) {
+            throw new IllegalArgumentException("streamAndTeamProfileId and subscriberProfileId should not be equal");
+        }
+            StreamAndTeamSubscriber subscriber = StreamAndTeamSubscriber.builder()
+                    .streamTeamProfileId(streamAndTeamProfileId)
+                    .subscriberProfileId(subscriberProfileId)
+                    .status(status)
+                    .build();
+
         return streamAndTeamSubscriberRepository.save(subscriber);
     }
 
@@ -124,7 +128,8 @@ public class StreamAndTeamSubscriberService {
                         eMailService.sendTeamSubscriptionConfirmation(firstAndLastName, teamStreamName, streamTeamLink, to);
                     }
                 } catch (Exception ex) {
-                    System.out.println(" [ error on attempt to extract data to send email confirmation from subscriber]");
+                    System.out.println(" [ error on attempt to extract data to send email confirmation from subscriber]"); // TODO: 07/07/20 continue from here. catch ex and debug
+
                 }
             }
         }

@@ -54,7 +54,7 @@ public class ProfileCardController {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
-            mov.addObject("isUserSubscribed", streamAndTeamSubscriberService.isUserSubscribedForProfile(profileId, profileService.getCurrentUserProfileId()));
+            mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
             if(profile.get().getCourseId() != null) {
                 mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
@@ -67,6 +67,13 @@ public class ProfileCardController {
         }
         return mov;
 //        <a href="/stream/register">new Stream</a> | <a href="/team/register">new Team</a> // TODO: 07/06/20
+    }
+
+    private boolean isSubscribeAble(Long profileId) {
+//        SUBSCRIBE IS inactive if user is subscribed
+//        could not subscribe on self profile
+        return profileId.equals(profileService.getCurrentUserProfileId())
+                || streamAndTeamSubscriberService.isUserSubscribedForProfile(profileId, profileService.getCurrentUserProfileId());
     }
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}")

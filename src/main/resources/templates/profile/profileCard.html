@@ -79,7 +79,7 @@
                                                                   th:text="${statistic.getIssuesCRApprovedBugsR().size()}">543</a>
                                     </li>
                                 </ul>
-                                <form method="post" th:unless="${isUserSubscribed}">
+                                <form method="post" th:unless="${isSubscribeAble}">
                                     <button class="btn btn-primary btn-block" name="subscribe" type="submit"
                                             value="subscribe"><b>Записаться</b></button>
                                 </form>
