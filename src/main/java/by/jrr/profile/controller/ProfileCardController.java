@@ -9,9 +9,11 @@ import by.jrr.moodle.bean.CourseToLecture;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
+import by.jrr.profile.service.StreamAndTeamSubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,8 @@ public class ProfileCardController {
     ProfilePossessesService pss;
     @Autowired
     CourseToLectureService courseToLectureService;
+    @Autowired
+    StreamAndTeamSubscriberService streamAndTeamSubscriberService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -50,6 +54,8 @@ public class ProfileCardController {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
+            mov.addObject("isUserSubscribed", streamAndTeamSubscriberService.isUserSubscribedForProfile(profileId, profileService.getCurrentUserProfileId()));
+            mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
             if(profile.get().getCourseId() != null) {
                 mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
             } else {
@@ -69,7 +75,9 @@ public class ProfileCardController {
                                     @RequestParam Optional<String> saveProfile,
                                     @RequestParam Optional<String> updateProfile,
 //                                    Optional<Profile> profile, // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it.
-                                    @RequestParam Optional<String> subscribe
+                                    @RequestParam Optional<String> subscribe,
+                                    @RequestParam Optional<Long> subscriberProfileId,
+                                    @RequestParam Optional<String> command
                                     ) {
 
         if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
@@ -83,8 +91,33 @@ public class ProfileCardController {
         if(subscribe.isPresent()) {
             profileService.enrollToStreamTeamProfile(profileId, profileService.getCurrentUserProfile().getId());
         }
+        if(pss.isCurrentUserOwner(profileId)) {
+            if (command.isPresent() && command.get().equals(ProfileCardController.Commands.APPROVE_SUBSCRIPTION)) {
+                approveSubscription(profileId, subscriberProfileId);
+            }
+            if (command.isPresent() && command.get().equals(ProfileCardController.Commands.REJECT_SUBSCRIPTION)) {
+                rejectSubscription(profileId, subscriberProfileId);
+            }
+        }
+
         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
     }
+
+    private void approveSubscription(Long profileId, Optional<Long> subscriberProfileIdOp) {
+        if (subscriberProfileIdOp.isPresent()) {
+            streamAndTeamSubscriberService.updateSubscription(profileId, subscriberProfileIdOp.get(), SubscriptionStatus.APPROVED);
+        }
+    }
+    private void rejectSubscription(Long profileId, Optional<Long> subscriberProfileIdOp) {
+        if (subscriberProfileIdOp.isPresent()) {
+            streamAndTeamSubscriberService.deleteSubscription(profileId, subscriberProfileIdOp.get());
+        }
+    }
+    private class Commands {
+        public static final String APPROVE_SUBSCRIPTION = "approve";
+        public static final String REJECT_SUBSCRIPTION = "reject";
+    }
+
 
     private void saveAvatar(Optional<MultipartFile> avatar, Long profileId) {
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
