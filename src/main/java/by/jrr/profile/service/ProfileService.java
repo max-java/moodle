@@ -152,8 +152,11 @@ public class ProfileService {
         pss.savePossessForCurrentUser(savedProfile.getId(), EntityType.PROFILE);
         return profileRepository.save(profile);
     }
+
     public Profile updateProfile(Profile profile) {
-        if(pss.isCurrentUserOwner(profile.getId())){
+        //user could update his own profile or profile stream/team he possess
+        if (profile.getId().equals(this.getCurrentUserProfileId())
+                || pss.isCurrentUserOwner(profile.getId())) {
             profile = profileRepository.save(profile);
         }
         return profile;
