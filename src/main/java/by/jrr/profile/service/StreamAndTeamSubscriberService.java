@@ -77,7 +77,7 @@ public class StreamAndTeamSubscriberService {
     private StreamAndTeamSubscriber createSubscriptionAndSetStatus(Long streamAndTeamProfileId,
                                                                    Long subscriberProfileId,
                                                                    SubscriptionStatus status) {
-        if(!streamAndTeamProfileId.equals(subscriberProfileId)) {
+        if(streamAndTeamProfileId.equals(subscriberProfileId)) {
             throw new IllegalArgumentException("streamAndTeamProfileId and subscriberProfileId should not be equal");
         }
             StreamAndTeamSubscriber subscriber = StreamAndTeamSubscriber.builder()
