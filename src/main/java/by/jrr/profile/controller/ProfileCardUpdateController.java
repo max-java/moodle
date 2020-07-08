@@ -49,46 +49,50 @@ public class ProfileCardUpdateController {
                                       @RequestParam Optional<String> updateProfile
     ) {
 
-        if (updateProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
-            Optional<Profile> profileOp = profileService.findProfileByProfileId(profileId);
-            if (profileOp.isPresent()) {
-                Profile profile = profileOp.get();
-                if (dateStart.isPresent()) {
-                    try {
-                        profile.setDateStart(LocalDate.parse(dateStart.get()));
-                    } catch (Exception ex) {
-                        // TODO: 16/06/20 log exception
+        if (updateProfile.isPresent()) {
+            if(profileId.equals(profileService.getCurrentUserProfileId())
+                    || pss.isCurrentUserOwner(profileId)) {
+
+                Optional<Profile> profileOp = profileService.findProfileByProfileId(profileId);
+                if (profileOp.isPresent()) {
+                    Profile profile = profileOp.get();
+                    if (dateStart.isPresent()) {
+                        try {
+                            profile.setDateStart(LocalDate.parse(dateStart.get()));
+                        } catch (Exception ex) {
+                            // TODO: 16/06/20 log exception
+                        }
                     }
-                }
-                if (dateEnd.isPresent()) {
-                    try {
-                        profile.setDateEnd(LocalDate.parse(dateEnd.get()));
-                    } catch (Exception ex) {
-                        // TODO: 16/06/20 log exception
+                    if (dateEnd.isPresent()) {
+                        try {
+                            profile.setDateEnd(LocalDate.parse(dateEnd.get()));
+                        } catch (Exception ex) {
+                            // TODO: 16/06/20 log exception
+                        }
                     }
+                    if (about.isPresent()) {
+                        profile.setAbout(about.get());
+                    }
+                    if (telegramLink.isPresent()) {
+                        profile.setTelegramLink(telegramLink.get());
+                    }
+                    if (telegramLinkName.isPresent()) {
+                        profile.setTelegramLinkText(telegramLinkName.get());
+                    }
+                    if (zoomLink.isPresent()) {
+                        profile.setZoomLink(zoomLink.get());
+                    }
+                    if (zoomLinkName.isPresent()) {
+                        profile.setZoomLinkText(zoomLinkName.get());
+                    }
+                    if (gitLink.isPresent()) {
+                        profile.setGitLink(gitLink.get());
+                    }
+                    if (gitUsername.isPresent()) {
+                        profile.setGitUsername(gitUsername.get());
+                    }
+                    profileService.updateProfile(profile);
                 }
-                if (about.isPresent()) {
-                    profile.setAbout(about.get());
-                }
-                if(telegramLink.isPresent()) {
-                    profile.setTelegramLink(telegramLink.get());
-                }
-                if (telegramLinkName.isPresent()) {
-                    profile.setTelegramLinkText(telegramLinkName.get());
-                }
-                if(zoomLink.isPresent()) {
-                    profile.setZoomLink(zoomLink.get());
-                }
-                if (zoomLinkName.isPresent()) {
-                    profile.setZoomLinkText(zoomLinkName.get());
-                }
-                if(gitLink.isPresent()) {
-                    profile.setGitLink(gitLink.get());
-                }
-                if (gitUsername.isPresent()) {
-                    profile.setGitUsername(gitUsername.get());
-                }
-                profileService.updateProfile(profile);
             }
         }
         return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
