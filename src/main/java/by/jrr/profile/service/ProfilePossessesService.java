@@ -38,6 +38,7 @@ public class ProfilePossessesService {
     public boolean isCurrentUserOwner(Long entityId) {
         Optional<ProfilePossesses> possess =
                 profilePossessesRepository.findByProfileIdAndEntityId(profileService.getCurrentUserProfile().getId(), entityId);
+        // TODO: 08/07/20 add log here with info of response user got for entity ID
         return possess.isPresent();
     }
 
