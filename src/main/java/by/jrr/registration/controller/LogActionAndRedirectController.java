@@ -29,9 +29,10 @@ public class LogActionAndRedirectController {
 
     @PostMapping("/l/") // TODO: 24/06/20 add to endpoint mapping
     public RedirectView logAndRedirectFromPost(@RequestParam Long streamTeamId,
-                               @RequestParam String link,
-                               @RequestParam String eventType) { // TODO: 24/06/20 try to use enum here
-        satls.saveAction(streamTeamId, eventType, link);
+                                               @RequestParam String link,
+                                               @RequestParam String linkName,
+                                               @RequestParam String eventType) { // TODO: 24/06/20 try to use enum here
+        satls.saveAction(streamTeamId, eventType, link, linkName);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(link);
         return redirectView;
@@ -39,19 +40,22 @@ public class LogActionAndRedirectController {
 
     @GetMapping("/l/{link}/{streamTeamId}/{eventType}")
     public RedirectView logAndRedirectByGet(@PathVariable Long streamTeamId,
-                               @PathVariable String link,
-                               @PathVariable String eventType) { // TODO: 24/06/20 try to use enum here
-        satls.saveAction(streamTeamId, eventType, link);
+                                            @PathVariable String link,
+                                            @PathVariable String linkName,
+                                            @PathVariable String eventType) { // TODO: 24/06/20 try to use enum here
+        satls.saveAction(streamTeamId, eventType, link, linkName);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(link);
         return redirectView;
     }
+
     @GetMapping(value = "/admin/action", produces = MediaType.APPLICATION_XML_VALUE)
-    public @ResponseBody UserActivityDTO findStudentWhoTakeNoAction(@RequestParam Optional<Long> streamId,
+    public @ResponseBody
+    UserActivityDTO findStudentWhoTakeNoAction(@RequestParam Optional<Long> streamId,
                                                @RequestParam Optional<String> from,
                                                @RequestParam Optional<String> to) {
         UserActivityDTO userActivityDTO = new UserActivityDTO();
-        if(streamId.isPresent() && from.isPresent() && to.isPresent()) {
+        if (streamId.isPresent() && from.isPresent() && to.isPresent()) {
             try {
                 LocalDateTime startDate = LocalDateTime.parse(from.get());
                 LocalDateTime endDate = LocalDateTime.parse(to.get());
@@ -64,14 +68,16 @@ public class LogActionAndRedirectController {
 
         return userActivityDTO;
     }
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
     @XmlRootElement
     public static class UserActivityDTO {
         List<UserActivityElementDTO> active = new ArrayList<>();
-        List<UserActivityElementDTO> notActive= new ArrayList<>();
+        List<UserActivityElementDTO> notActive = new ArrayList<>();
     }
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Data

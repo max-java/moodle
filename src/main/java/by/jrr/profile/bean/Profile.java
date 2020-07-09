@@ -42,6 +42,8 @@ public class Profile {
     private String gitLink;
     private String gitUsername;
 
+    private String feedbackLink;
+    private String feedbackName;
 
     @Lob
     private String about;
