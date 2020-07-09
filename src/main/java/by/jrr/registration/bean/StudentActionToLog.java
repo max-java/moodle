@@ -35,5 +35,6 @@ public class StudentActionToLog {
     private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
     private EventType eventType;
+    private String eventName;
 
 }

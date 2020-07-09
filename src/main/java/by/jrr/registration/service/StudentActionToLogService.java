@@ -25,13 +25,14 @@ public class StudentActionToLogService {
     @Autowired
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
 
-    public void saveAction(Long streamTeamId, String eventType, String link) {
+    public void saveAction(Long streamTeamId, String eventType, String link, String linkName) {
 
         satlR.save(
                 StudentActionToLog.builder()
                         .streamTeamProfileId(streamTeamId)
                         .studentProfileId(profileService.getCurrentUserProfileId())
                         .eventType(EventType.valueOf(eventType))
+                        .eventName(linkName)
                         .timestamp(LocalDateTime.now())
                         .urlToRedirect(link)
                         .build()
