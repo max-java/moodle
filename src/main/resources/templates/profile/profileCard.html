@@ -158,6 +158,8 @@
                                                 <form action="/l/" method="post">
                                                     <input name="link" th:value="${profile.getTelegramLink()}"
                                                            type="hidden"/>
+                                                    <input name="linkName" th:value="${profile.getTelegramLinkText()}"
+                                                           type="hidden"/>
                                                     <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
                                                     <button class="btn btn-block"
                                                             name="eventType"
@@ -182,6 +184,8 @@
                                                  th:if="${profile.isLinkPresent(profile.getZoomLink())}">
                                                 <form action="/l/" method="post">
                                                     <input name="link" th:value="${profile.getZoomLink()}"
+                                                           type="hidden"/>
+                                                    <input name="linkName" th:value="${profile.getZoomLinkText()}"
                                                            type="hidden"/>
                                                     <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
                                                     <button class="btn btn-block"
@@ -210,6 +214,8 @@
                                                 <form action="/l/" method="post">
                                                     <input name="link" th:value="${profile.getGitLink()}"
                                                            type="hidden"/>
+                                                    <input name="linkName" th:value="${profile.getGitUsername()}"
+                                                           type="hidden"/>
                                                     <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
                                                     <button class="btn btn-block"
                                                             name="eventType"
@@ -224,6 +230,34 @@
                                                                 <span class="info-box-text">My GitHub</span>
                                                                 <span class="info-box-text"
                                                                       th:text="${profile.getGitUsername()}"></span>
+                                                            </div>
+                                                            <!-- /.info-box-content -->
+                                                        </div>
+                                                        <!-- /.info-box -->
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 col-12"
+                                                 th:if="${profile.isLinkPresent(profile.getFeedbackLink())}">
+                                                <form action="/l/" method="post">
+                                                    <input name="link" th:value="${profile.getFeedbackLink()}"
+                                                           type="hidden"/>
+                                                    <input name="linkName" th:value="${profile.getFeedbackName()}"
+                                                           type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <button class="btn btn-block"
+                                                            name="eventType"
+                                                            th:value="${T(by.jrr.registration.bean.EventType).FEEDBACK}"
+                                                            type="submit">
+                                                        <div class="info-box">
+                                                        <span class="info-box-icon bg-gradient-blue">
+                                                            <i class="far fa-comment"></i>
+                                                        </span>
+
+                                                            <div class="info-box-content text-left">
+                                                                <span class="info-box-text">Feedback</span>
+                                                                <span class="info-box-text"
+                                                                      th:text="${profile.getFeedbackName()}"></span>
                                                             </div>
                                                             <!-- /.info-box-content -->
                                                         </div>
@@ -417,17 +451,17 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="inputEmail">Планируемая дата
+                                                <label class="col-sm-2 col-form-label" for="dateEnd">Планируемая дата
                                                     окончания</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" id="inputEmail" name="dateEnd"
+                                                    <input class="form-control" id="dateEnd" name="dateEnd"
                                                            placeholder="Email" th:value="${profile.getDateEnd()}"
                                                            type="date">
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="telegramLink">GitHub link</label>
+                                                <label class="col-sm-2 col-form-label" for="gitLink">GitHub link</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="gitLink" name="gitLink"
                                                            placeholder="" th:value="${profile.getGitLink()}"
@@ -435,7 +469,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="telegramLinkName">GitHub username</label>
+                                                <label class="col-sm-2 col-form-label" for="gitUsername">GitHub username</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="gitUsername"
                                                            name="gitUsername"
@@ -479,6 +513,24 @@
                                                     <input class="form-control" id="zoomLinkName"
                                                            name="zoomLinkName"
                                                            placeholder="" th:value="${profile.getZoomLinkText()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback form link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="feedbackLink" name="feedbackLink"
+                                                           placeholder="" th:value="${profile.getFeedbackLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="feedbackName">Название feedback Формы</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="feedbackName"
+                                                           name="feedbackName"
+                                                           placeholder="" th:value="${profile.getFeedbackName()}"
                                                            type="text">
                                                 </div>
                                             </div>
