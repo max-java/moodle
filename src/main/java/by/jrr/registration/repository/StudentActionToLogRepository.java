@@ -9,4 +9,6 @@ import java.util.List;
 public interface StudentActionToLogRepository extends PagingAndSortingRepository<StudentActionToLog, Long> {
     List<StudentActionToLog> findAllByTimestampBetween(LocalDateTime start, LocalDateTime finish);
     List<StudentActionToLog> findAllByStreamTeamProfileIdAndTimestampBetween(Long id, LocalDateTime start, LocalDateTime finish);
+    List<StudentActionToLog> findAllBystudentProfileIdAndTimestampBetween(Long id, LocalDateTime start, LocalDateTime finish);
+    List<StudentActionToLog> findAllBystudentProfileId(Long id);
 }

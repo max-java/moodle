@@ -37,11 +37,15 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Message</label>
-                                            <textarea class="form-control" rows="3" th:field="*{requesterNotes}" > </textarea>
+                                            <textarea class="form-control" rows="3" th:field="*{requesterNotes}" required> </textarea>
                                         </div>
                                         <div class="form-group">
                                             <label>Code review request link</label>
-                                            <input type="text" class="form-control" th:field="*{link}" placeholder="Put link to gitHub here">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   th:field="*{link}"
+                                                   placeholder="Put link to gitHub here"
+                                                   required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
