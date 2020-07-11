@@ -110,8 +110,18 @@ public class StudentActionToLogService {
             dto.setEventName(studentActionToLog.getEventName());
             dto.setTimestamp(studentActionToLog.getTimestamp().toString());
 
+            if(dto.getEventType() == null) {
+                dto.setEventType("");
+            }
+            if(dto.getEventName() == null) {
+                dto.setEventName("");
+            }
+            if(dto.getTimestamp() == null) {
+                dto.setTimestamp("");
+            }
             dtoList.add(dto);
         }
+
         return dtoList;
     }
 }
