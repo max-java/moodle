@@ -93,4 +93,25 @@ public class StudentActionToLogService {
         }
         return elementDTO;
     }
+
+    public List<StudentActionToLog> findAllActionsForProfileId(Long profileId) {
+        return satlR.findAllBystudentProfileId(profileId);
+    }
+    public List<StudentActionToLog> findAllActionsForProfileIdBetwenDates(Long profileId, LocalDateTime start, LocalDateTime finish) {
+        return satlR.findAllBystudentProfileIdAndTimestampBetween(profileId, start, finish);
+    }
+    public List<LogActionAndRedirectController.UserActivityElementDTO> convertUserActivityListToDTO(List<StudentActionToLog> studentActionToLogList) {
+        List<LogActionAndRedirectController.UserActivityElementDTO> dtoList = new ArrayList<>();
+
+        for (StudentActionToLog studentActionToLog : studentActionToLogList) {
+
+            LogActionAndRedirectController.UserActivityElementDTO dto = new LogActionAndRedirectController.UserActivityElementDTO();
+            dto.setEventType(studentActionToLog.getEventType().name());
+            dto.setEventName(studentActionToLog.getEventName());
+            dto.setTimestamp(studentActionToLog.getTimestamp().toString());
+
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 }
