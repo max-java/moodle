@@ -69,7 +69,7 @@ public class LectureController {
                 mov.addObject("trackStatus", userProgressService.getUserProfileForTrackable(topic.get()));
                 mov.setViewName(View.LECTURE);
             }else {
-                mov.setViewName(View.PAGE_404); // TODO: 24/06/20 replace with 403 TODO: 24/06/20 create 403 view
+                mov.setViewName(View.PAGE_403);
             }
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);

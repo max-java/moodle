@@ -73,14 +73,20 @@ public class ReviewRequestPageableSearchService {
         Iterator<ReviewRequest> reviewRequestIterator = reviewRequests.iterator(); //iterate and select pairs of searching fields and requests ids
         List<Pair<Long, String>> allFields = new ArrayList<>();
         while (reviewRequestIterator.hasNext()) {
-            ReviewRequest reviewRequest = reviewRequestIterator.next(); // TODO: 28/05/20 add more fields
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getLink()));
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getItem().getReviewedItemType().name()));
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getItem().getReviewedItemType().name()));
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getItem().getReviewedEntity().getName()));
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getRequesterProfile().getUser().getFullUserName()));
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getRequesterNotes()));
-            allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.getReviewResultOnClosing().name()));
+            try {
+                ReviewRequest reviewRequest = reviewRequestIterator.next(); // TODO: 28/05/20 add more fields
+                allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.addLinkToSearch()));
+                allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.addReviewdItemTypeNameToSearch()));
+                allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.addReviewdEntityNameToSearch()));
+                allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.addRequesterFullUserNameToSearch()));
+                allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.addRequesterNotesToSearch()));
+                allFields.add(Pair.of(reviewRequest.getId(), reviewRequest.addReviewResultOnClosingSearch()));
+
+            } catch (Exception ex) {
+                // TODO: 11/07/20 handle and log exception
+                // TODO: 11/07/20 java.lang.IllegalArgumentException: second is marked non-null but is null
+            }
+
         }
 
         Set<Long> selectedIds = allFields.stream() //select all ids where search term is present

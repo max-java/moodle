@@ -52,9 +52,11 @@ public class LogActionAndRedirectController {
     @GetMapping(value = "/admin/action", produces = MediaType.APPLICATION_XML_VALUE)
     public @ResponseBody
     UserActivityDTO findStudentWhoTakeNoAction(@RequestParam Optional<Long> streamId,
+                                               @RequestParam Optional<Long> userProfileId,
                                                @RequestParam Optional<String> from,
                                                @RequestParam Optional<String> to) {
         UserActivityDTO userActivityDTO = new UserActivityDTO();
+        // search active users for team / stream
         if (streamId.isPresent() && from.isPresent() && to.isPresent()) {
             try {
                 LocalDateTime startDate = LocalDateTime.parse(from.get());
@@ -65,7 +67,32 @@ public class LogActionAndRedirectController {
                 ex.printStackTrace();
             }
         }
+        return userActivityDTO;
+    }
+    @GetMapping(value = "/admin/userActivity", produces = MediaType.APPLICATION_XML_VALUE)
+    public @ResponseBody
+    UserActivityDTO findUserActivity(@RequestParam Optional<Long> userProfileId,
+                                               @RequestParam Optional<String> from,
+                                               @RequestParam Optional<String> to) {
+        UserActivityDTO userActivityDTO = new UserActivityDTO();
 
+        if (userProfileId.isPresent() && from.isPresent() && to.isPresent() && !from.get().isEmpty() && !to.get().isEmpty()) {
+            try {
+                LocalDateTime startDate = LocalDateTime.parse(from.get());
+                LocalDateTime endDate = LocalDateTime.parse(to.get());
+                userActivityDTO.setUserActivity(satls.convertUserActivityListToDTO(
+                        satls.findAllActionsForProfileIdBetwenDates(userProfileId.get(), startDate, endDate)));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else if (userProfileId.isPresent()) {
+            try {
+                userActivityDTO.setUserActivity(satls.convertUserActivityListToDTO(
+                        satls.findAllActionsForProfileId(userProfileId.get())));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
         return userActivityDTO;
     }
 
@@ -76,6 +103,7 @@ public class LogActionAndRedirectController {
     public static class UserActivityDTO {
         List<UserActivityElementDTO> active = new ArrayList<>();
         List<UserActivityElementDTO> notActive = new ArrayList<>();
+        List<UserActivityElementDTO> userActivity = new ArrayList<>();
     }
 
     @AllArgsConstructor
@@ -88,5 +116,8 @@ public class LogActionAndRedirectController {
         String email;
         String userName;
         String phone;
+        String eventType;
+        String eventName;
+        String timestamp;
     }
 }

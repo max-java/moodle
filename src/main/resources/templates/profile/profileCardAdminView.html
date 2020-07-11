@@ -139,7 +139,9 @@
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#settings">Settings</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#userAction">UserAction</a></li>
+                                                            href="#groupActions">Actions In Group</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#userAction">User Actions</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -418,7 +420,7 @@
                                     </div>
                                     <!-- /.tab-pane -->
 
-                                    <div class="tab-pane" id="userAction">
+                                    <div class="tab-pane" id="groupActions">
                                         <!-- Post -->
                                         <form class="form-horizontal" method="get" action="/admin/action">
                                             <input id="from"  type="datetime-local" name="from" />
@@ -494,6 +496,58 @@
                                                     }
                                                 }
                                                 document.getElementById("notActive").innerHTML = table;
+                                            }
+                                        </script>
+
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="userAction">
+                                        <!-- Post -->
+                                        <form class="form-horizontal" method="get" action="/admin/action">
+                                            <input id="activityFrom"  type="datetime-local" name="from" />
+                                            <input id="activityTo" type="datetime-local" name="to" />
+                                            <button type="button" class="button" onclick="getUserActions()">обновить</button>
+                                        </form>
+
+                                        <hr />
+                                        <h1> Активность</h1>
+                                        <table id="activityTable" class="table table-hover text-nowrap"></table>
+                                        <hr />
+
+                                        <script>
+                                            function getUserActions() {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var profileId = document.getElementById("id").value;
+                                                var from = document.getElementById("activityFrom").value;
+                                                var to = document.getElementById("activityTo").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        updateActivityTable(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/userActivity?userProfileId="+profileId+"&from="+from+"&to="+to, true);
+                                                xmlhttp.send();
+                                            }
+                                            function updateActivityTable(xml) {
+                                                var i;
+                                                var xmlDoc = xml.responseXML;
+                                                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                                                var x = xmlDoc.getElementsByTagName("userActivityDTO")[0].getElementsByTagName("userActivity");
+                                                for (i = 0; i <x.length; i++) {
+                                                    try {
+                                                        table += "<tr><td>" +
+                                                            x[i].getElementsByTagName("timestamp")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("eventType")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("eventName")[0].childNodes[0].nodeValue +
+                                                            "</td></tr>";
+                                                    }catch (e) {
+                                                        console.log(e.toString());
+                                                    }
+                                                }
+                                                document.getElementById("activityTable").innerHTML = table;
                                             }
                                         </script>
 

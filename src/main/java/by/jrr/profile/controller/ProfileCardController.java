@@ -56,6 +56,8 @@ public class ProfileCardController {
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
+            mov.addObject("couldUpdate", profileId.equals(profileService.getCurrentUserProfileId())
+                    || pss.isCurrentUserOwner(profileId));
             if(profile.get().getCourseId() != null) {
                 mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
             } else {

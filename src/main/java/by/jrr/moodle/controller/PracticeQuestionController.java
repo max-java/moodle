@@ -63,7 +63,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
                 mov.addObject("issue", issue.get());
                 mov.setViewName(View.PRACTICE);
             } else {
-                mov.setViewName(View.PAGE_404); // TODO: 24/06/20 replace with 403 TODO: 24/06/20 create 403 view
+                mov.setViewName(View.PAGE_403);
             }
 
         } else {
@@ -87,6 +87,8 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
                                     @RequestParam(value = "edit", required = false) boolean edit,
                                     @RequestParam Optional<String> requestForReview) {
 
+
+
         if(requestForReview.isPresent()) {
             if (pss.isUserHasAccessToPractice(issue) &&
                     (// TODO: 28/06/20 move to accessService and consider accesses
@@ -94,13 +96,17 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
                         || userService.isCurrentUserHasRole(UserRoles.ROLE_ALUMNUS)
                         || userService.isCurrentUserHasRole(UserRoles.ROLE_ADMIN)
                     )
-                )
-            {
+                ){
+
                 return redirectToCodeReview(practiceId, issue, request);
+            } else {
+                ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+                mov.setViewName(View.PAGE_403);
+                return mov;
             }
         }
 
-        if (userAccessService.isCurrentUserIsAdmin()) {
+        else if (userAccessService.isCurrentUserIsAdmin()) {
             ModelAndView mov = userDataToModelService.setData(new ModelAndView());
             mov.setViewName(View.PRACTICE);
             if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) {
@@ -120,7 +126,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
             // TODO: 11/05/20 replace if-else with private methods
         }
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.setViewName(View.PAGE_404); // TODO: 29/06/20  replace with 403
+        mov.setViewName(View.PAGE_403);
         return mov;
     }
 

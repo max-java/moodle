@@ -1,7 +1,8 @@
 package by.jrr.constant;
 
 public class View {
-    public static final String PAGE_404 = "error";
+    public static final String PAGE_404 = "404";
+    public static final String PAGE_403 = "403";
 
     public static final String TOPIC = "moodle/topic";
     public static final String TOPIC_LIST = "moodle/topicList";
