@@ -80,17 +80,37 @@ public class StudentActionToLogService {
             elementDTO.setEmail(profile.getUser().getEmail());
             elementDTO.setPhone(profile.getUser().getPhone());
             elementDTO.setUserName(profile.getUser().getUserName());
+            elementDTO.setProfileLink("/admin/profile/" + profile.getId());
+
         } else {
             elementDTO.setFirstName(".");
             elementDTO.setLastName(".");
             elementDTO.setEmail(".");
             elementDTO.setPhone(".");
             elementDTO.setUserName(".");
+            elementDTO.setProfileLink(".");
         }
         //костыль для тех, кто зарегался, когда фелефон был необязательным полем (для того, что бы на хендлить каждое значение на стороне JS)
         if (elementDTO.getPhone() == null) {
             elementDTO.setPhone(".");
         }
+        //и на всякий случай для всех остальных полей
+        if (elementDTO.getFirstName() == null) {
+            elementDTO.setFirstName(".");
+        }
+        if (elementDTO.getLastName() == null) {
+            elementDTO.setLastName(".");
+        }
+        if (elementDTO.getEmail() == null) {
+            elementDTO.setEmail(".");
+        }
+        if (elementDTO.getUserName() == null) {
+            elementDTO.setUserName(".");
+        }
+        if (elementDTO.getProfileLink() == null) {
+            elementDTO.setProfileLink(".");
+        }
+
         return elementDTO;
     }
 

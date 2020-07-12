@@ -482,7 +482,9 @@
                                                     try {
                                                         table += "<tr><td>" +
                                                             x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
-                                                            "</td><td>" +
+                                                            "</td><td><a href=\"" +
+                                                            x[i].getElementsByTagName("profileLink")[0].childNodes[0].nodeValue +
+                                                            "\">open</a></td><td>" +
                                                             x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
                                                             "</td><td>" +
                                                             x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
@@ -493,7 +495,7 @@
                                                             "</td></tr>";
                                                     }catch (e) {
                                                         console.log(e.toString());
-                                                    }
+                                                                                                        }
                                                 }
                                                 document.getElementById("notActive").innerHTML = table;
                                             }
