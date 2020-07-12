@@ -119,5 +119,6 @@ public class LogActionAndRedirectController {
         String eventType;
         String eventName;
         String timestamp;
+        String profileLink;
     }
 }
