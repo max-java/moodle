@@ -93,6 +93,14 @@ public class QAndAService {
                 .collect(Collectors.toList());
     } // M.Shelkovich: see https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.details
 
-
-
+    public QAndA getRandomQuestion() {
+        Long total = qAndARepository.count();
+        int idx = (int)(Math.random() * total);
+        Page<QAndA> questionPage = qAndARepository.findAll(PageRequest.of(idx, 1));
+        QAndA q = null;
+        if (questionPage.hasContent()) {
+            q = questionPage.getContent().get(0);
+        }
+        return q;
+    }
 }
