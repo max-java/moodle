@@ -209,3 +209,24 @@ drop sequence HIBERNATE_SEQUENCE;
 CREATE SEQUENCE "PUBLIC"."HIBERNATE_SEQUENCE" START WITH 1000;
 -- CREATE SEQUENCE "PUBLIC"."SYSTEM_SEQUENCE_9F3699A7_FBAF_4CDF_830E_AFF4F749549D" START WITH 94 BELONGS_TO_TABLE;
 -- CREATE SEQUENCE "PUBLIC"."SYSTEM_SEQUENCE_5E0BE822_A5E8_486E_BD00_D9455A2C0412" START WITH 81 BELONGS_TO_TABLE;
+
+DROP TABLE  IF EXISTS `book`;
+
+CREATE TABLE `book` (
+    `id` int(20) NOT NULL,
+    `img` varchar(255) DEFAULT NULL,
+    `name` varchar(255) DEFAULT NULL,
+    `author` varchar(100) DEFAULT NULL,
+    `edition` varchar(32) DEFAULT NULL,
+    `publisher` varchar(255) DEFAULT NULL,
+    `published` varchar(255) DEFAULT NULL,
+    `isbn` varchar(30) DEFAULT NULL
+);
+
+INSERT INTO `book` VALUES (1, 'https://www.iconninja.com/files/854/364/1/develop-programming-software-java-language-code-command-icon.png',
+                              'book1',
+                              'author1',
+                              'edition1',
+                              'publisher1',
+                              'published1',
+                              'isbn1');
