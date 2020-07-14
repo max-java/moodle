@@ -25,7 +25,11 @@ public class BroadcastService {
             LocalTime now = LocalTime.now();
             if (now.isAfter(LocalTime.of(10, 00)) && now.isBefore(LocalTime.of(20, 00))) {
                 System.out.println("broadcast - it is right time to send message");
-                QAndA qAndA = qAndAService.getRandomQuestion();
+                QAndA qAndA = qAndAService.getRandomQuestion()
+                        .orElseGet(() -> QAndA.builder()
+                                .question("Как подготовиться к собесу?")
+                                .answer("Job Interview Questions на сайте JavaGuru")
+                                .build());
                 String text = qAndA.getQuestion();
                 messageService.sendMessage(Chat.JG_ALUMNI, text);
                 text = qAndA.getAnswer();
