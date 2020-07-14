@@ -11,7 +11,6 @@ public class IsbnBookSearchService {
         try{
             document = Jsoup.connect(baseUri+isbn).get();
         } catch (Exception ex) {
-
             ex.printStackTrace();
         }
         System.out.println("document = " + document);

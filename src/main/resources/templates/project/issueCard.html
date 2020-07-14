@@ -26,6 +26,8 @@
                 <h3 th:text="${issue.getIssueType()}"></h3>
                 <p>Status </p>
                 <h3 th:text="${issue.getIssueStatus()}"></h3>
+                <p>Priority </p>
+                <h3 th:text="${issue.getIssuePriority()}"></h3>
                 <p>Assigned to </p>
                 <h3 th:text="${issue.getAssignee().getFullUserName()}"></h3>
                 <p>Submitter </p>

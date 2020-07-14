@@ -47,6 +47,14 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>issuePriority</label>
+                    <select class="form-control" th:field="*{issuePriority}">
+
+                        <option th:each="priority : ${T(by.jrr.project.bean.IssuePriority).values()}"
+                                th:value="${priority}" th:text="${priority}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>assigneeUserId</label>
                     <select class="form-control select2" th:field="*{assigneeUserId}" style="width: 100%;">
                         <option value="">не указан</option>
