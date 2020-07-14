@@ -36,4 +36,16 @@ public class MessageService {
             e.printStackTrace();
         }
     }
+    public void sendHtmlMessage(Long chatId, String text) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setParseMode("HTML");
+        sendMessage.setChatId(chatId.toString());
+        sendMessage.setText(text);
+        try {
+            javaQuestionBot.execute(sendMessage);
+        }
+        catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 }

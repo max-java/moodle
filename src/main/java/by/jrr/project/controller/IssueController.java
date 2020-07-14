@@ -78,7 +78,7 @@ public class IssueController {
 
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName(View.ISSUE);
-        if (edit && pss.isCurrentUserOwner(issueId)) {
+        if (edit) {
             Optional<Issue> issueToUpdate = issueService.findByIssueId(issue.getIssueId());
             if (issueToUpdate.isPresent()) {
                 mov.addObject("issue", issueToUpdate.get());
@@ -86,7 +86,7 @@ public class IssueController {
             } else { // TODO: 11/05/20 impossible situation, but should be logged
                 mov.setViewName(View.PAGE_404);
             }
-        } else if(pss.isCurrentUserOwner(issueId)) {
+        } else {
             issue = issueService.createOrUpdate(issue);
             return new ModelAndView("redirect:" + Endpoint.PROJECT+"/"+issue.getProjectId()+Endpoint.ISSUE + "/" + issue.getIssueId());
 
