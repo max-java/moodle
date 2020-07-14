@@ -6,7 +6,6 @@ import by.jrr.telegram.bot.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
@@ -33,7 +32,7 @@ public class BroadcastService {
                 String text = qAndA.getQuestion();
                 messageService.sendMessage(Chat.JG_ALUMNI, text);
                 text = qAndA.getAnswer();
-                messageService.sendMessage(Chat.JG_ALUMNI, text);
+                messageService.sendHtmlMessage(Chat.JG_ALUMNI, text);
             }
             try {
                 System.out.println("\"broadcast is sleeping\" = " + "broadcast is sleeping");
