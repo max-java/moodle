@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="card" th:fragment="issueCard">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+<!--                <h3 th:text="${issue.getName()}"></h3>-->
+            </div>
+        </div>
+        <hr/>
+<!--        <div th:utext="${issue.getName()}"></div>-->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Name</h3>
+                <p th:utext="${issue.getName()}"></p>
+                <h3>Author</h3>
+                <p th:utext="${issue.getAuthor()}"></p>
+                <h3>Edition</h3>
+                <p th:utext="${issue.getEdition()}"></p>
+                <h3>Publisher</h3>
+                <p th:utext="${issue.getPublisher()}"></p>
+                <h3>Published</h3>
+                <p th:utext="${issue.getPublished()}"></p>
+            </div>
+            <div class="col-md-6">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
