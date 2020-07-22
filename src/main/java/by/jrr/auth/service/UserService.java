@@ -8,6 +8,7 @@ import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
 import by.jrr.email.service.EMailService;
+import by.jrr.profile.admin.bean.UserDTO;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -67,9 +68,28 @@ public class UserService {
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         return userRepository.save(user);
     }
+
     private User updateUserPassword(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public void registerNewUserAsAdmin(UserDTO userDTO) throws UserServiceException {
+        if (ifWordExistAsLoginOrEmail(userDTO.getEmail())) {
+            throw new UserServiceException(userDTO.getEmail() + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
+        }
+        String password = getRandomPassword();
+        User user = User.builder()
+                .email(userDTO.getEmail())
+                .userName(userDTO.getEmail())
+                .name(userDTO.getName())
+                .lastName(userDTO.getLastName())
+                .firstAndLastName(userDTO.getName() + " " + userDTO.getLastName())
+                .phone(userDTO.getPhone())
+                .password(password)
+                .active(true)
+                .build();
+        this.saveUser(user, Optional.empty());
     }
 
 
@@ -88,18 +108,21 @@ public class UserService {
         user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         return user;
     }
+
     private void autoLogin(String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
+
     private String getRandomPassword() {
         return new Random().ints(6, 33, 122)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
+
     public String generateNewPasswordForUser(Long id) {
         Optional<User> userOp = userRepository.findById(id);
-        if(userOp.isPresent()) {
+        if (userOp.isPresent()) {
             User user = userOp.get();
             String newPass = getRandomPassword();
             user.setPassword(newPass);
@@ -111,7 +134,7 @@ public class UserService {
         }
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: 06/06/20 replace with template method                                              //
 //                                                                                          //
     public void addRoleToUser(UserRoles userRole, Long userId) {                            //
@@ -179,7 +202,7 @@ public class UserService {
         return user;
     }
 
-    public static boolean isCurrentUserHasRole (UserRoles role){
+    public static boolean isCurrentUserHasRole(UserRoles role) {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
     }
