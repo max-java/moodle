@@ -147,5 +147,38 @@ public class EMailService {
         emailSender.send(message);
         System.out.println(message); // TODO: 07/07/20 log emails
     }
+
+    public void sendAdminRegisterYouEmailConfirmation(String firstName, String emailTo, String password) {
+        StringBuffer messageText = new StringBuffer();
+        messageText.append("Добрый день, "+firstName+"!");
+        messageText.append("\n\nВы оставляли в этом году заявку или даже приходили на наши бесплатные курсы по Java, но по какой-то причине передумали и пропали из команды.");
+        messageText.append("\n\n");
+        messageText.append("\nЗа это время силами комьюнити мы создали новую образовательную платформу по Java, где ты можешь:");
+        messageText.append("\n1. Подготовиться к собеседованию в режиме вопрос-ответ");
+        messageText.append("\n2. Посмотреть, какие задачи сейчас задают на технических интерью");
+        messageText.append("\n3. Проработать и прокачать свой профиль в соцсети с помощью живых инструкций");
+        messageText.append("\n4. Получить реальный production опыт в проектах комьюнити, который так часто спрашивают HRы");
+        messageText.append("\n5. Участвовать в еженедельных разборах, техтоках и хакатонах");
+        messageText.append("\n\n");
+        messageText.append("\n А главное - присоединиться к нашей движухе - дорога в Google!");
+        messageText.append("\n\n");
+        messageText.append("\n Я сделал для Вас аккаунт:");
+        messageText.append("\n\t логин:"+emailTo);
+        messageText.append("\n\t пароль:"+password);
+        messageText.append("\nадрес новой платформы - https://moodle.jrr.by/");
+
+        messageText.append("\n\nЕсли что-то не получается - позвоните Илье: +375(29) 3333-600.");
+
+        messageText.append("\nС уважением,");
+        messageText.append("\nУправляющий JavaGuru в Беларуси");
+        messageText.append("\nМаксим Шелкович");
+        messageText.append("\n+375(44) 750 6666");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailTo);
+        message.setSubject("{JG} Возвращайся в комьюнити! Мы растем!!!");
+        message.setText(messageText.toString());
+        emailSender.send(message);
+    }
 }
 

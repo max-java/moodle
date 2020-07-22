@@ -1,4 +1,4 @@
-package by.jrr.profile.controller;
+package by.jrr.profile.admin;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
