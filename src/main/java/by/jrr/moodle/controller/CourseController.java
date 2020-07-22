@@ -5,6 +5,9 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.common.bean.UrchinTracking;
+import by.jrr.common.repository.UrchinTrackingRepository;
+import by.jrr.common.service.UtmService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.moodle.bean.Course;
@@ -27,8 +30,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -48,6 +53,10 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
     LectureService lectureService;
     @Autowired
     CourseToLectureService courseToLectureService;
+    @Autowired
+    UrchinTrackingRepository urchinTrackingRepository;
+    @Autowired
+    UtmService utmService;
 
     @AdminOnly
     @GetMapping(Endpoint.COURSE)
@@ -64,7 +73,9 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
 
 
     @GetMapping(Endpoint.COURSE + "/{id}")
-    public ModelAndView openTopicById(@PathVariable Long id) {
+    public ModelAndView openTopicById(@PathVariable Long id, @RequestParam Map<String,String> allParams) {
+        utmService.setTrack(allParams);
+
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Course> topic = courseService.findById(id);
         if (topic.isPresent()) {
