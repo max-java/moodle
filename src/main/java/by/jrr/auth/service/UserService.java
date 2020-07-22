@@ -89,8 +89,8 @@ public class UserService {
                 .password(password)
                 .active(true)
                 .build();
-        new Thread(() -> eMailService.sendAdminRegisterYouEmailConfirmation(user.getName(), user.getEmail(), user.getPassword())).start();
         this.saveUser(user, Optional.empty());
+        new Thread(() -> eMailService.sendAdminRegisterYouEmailConfirmation(user.getName(), user.getEmail(), user.getPassword())).start();
     }
 
 
@@ -104,9 +104,9 @@ public class UserService {
         User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
         autoLogin(login, password);
+        user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
         new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
-        user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         return user;
     }
 
