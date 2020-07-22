@@ -69,6 +69,7 @@ public class UserRegistrationAdminRestController {
 
 
             ErrorsLog errorsLog = new ErrorsLog();
+            errorsLog.setUserDto(user.toString());
             errorsLog.setTimestamp(LocalDateTime.now());
             errorsLog.setExName(ex.toString());
             errorsLog.setExMessage(ex.getMessage());
