@@ -38,13 +38,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
 
                 <!-- Sidebar -->
-                <div class="sidebar">
+                <div class="sidebar" style="position: fixed">
                     <!-- Sidebar Menu -->
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-accordion="false" data-widget="treeview"
                             role="menu">
                             <!-- Add icons to the links using the .nav-icon class
                                  with font-awesome or any other icon font library -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <!--remove in future versions -->
+                                    <p>
+                                        &nbsp;
+                                        <!--                                    <span class="right badge badge-danger">New</span>-->
+                                    </p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" th:href="@{/topics}">
                                     <i class="nav-icon fas fa-th"></i>
@@ -488,7 +497,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </footer>
 </div>
 <!-- ./wrapper -->
-
+</body>
 <!-- REQUIRED SCRIPTS -->
 <div th:fragment="scripts">
     <!-- jQuery -->
