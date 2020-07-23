@@ -159,23 +159,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div th:fragment="page_header">
-            <!-- Content Header (Page header) -->
-            <div class="content-header" th:fragment="page_header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <!--                                <h1 class="m-0 text-dark">Starter Page</h1>-->
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <!--                                <ol class="breadcrumb float-sm-right">-->
-                            <!--                                    <li class="breadcrumb-item"><a href="#">Home</a></li>-->
-                            <!--                                    <li class="breadcrumb-item active">Starter Page</li>-->
-                            <!--                                </ol>-->
-                        </div>
-                        <!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
+            <div th:include="starter/pageHeader :: pageHeader"></div>
         </div>
         <!-- /.content-header -->
 
@@ -183,6 +167,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="content">
             <div class="container-fluid">
 
+                <div class="row mt-5">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-8">
+                        <div th:include="starter/statWidgets :: moodleWidgets"></div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
 
                 <div class="row mt-5">
                     <div class="col-md-2">
@@ -219,65 +212,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-lg-3 col-6">
-                                <!-- small card -->
-                                <div class="small-box bg-info">
-                                    <div class="inner">
-                                        <h3>2500</h3>
-
-                                        <p>Выпускников</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-graduation-cap"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-6">
-                                <!-- small card -->
-                                <div class="small-box bg-success">
-                                    <div class="inner">
-                                        <h3>1300</h3>
-
-                                        <p>Facebook Likes</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-thumbs-up"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-6">
-                                <!-- small card -->
-                                <div class="small-box bg-warning">
-                                    <div class="inner">
-                                        <h3>70 %</h3>
-
-                                        <p>Трудоустройство</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-credit-card"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-6">
-                                <!-- small card -->
-                                <div class="small-box bg-danger">
-                                    <div class="inner">
-                                        <h3>>10</h3>
-
-                                        <p>Лет на рынке</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ./col -->
-                        </div>
-
+                        <div th:include="starter/statWidgets :: companyWidgets"></div>
                     </div>
                     <div class="col-md-2">
                     </div>
