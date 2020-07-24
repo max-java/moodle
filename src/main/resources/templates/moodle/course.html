@@ -50,35 +50,14 @@
                         </div>
                     </div>
                     <div class="col-md-12" th:unless="${edit}">
-                        <form method="post">
+                        <form method="post"th:if="${IS_AUTHENTICATED}">
                             <button name="edit" type="submit" value="true">edit</button>
                         </form>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h1 class="display-3" th:text="${topic.getTitle()}"></h1>
-                                        <h2 class="display-4" th:text="${topic.getSubtitle()}"></h2>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
-                                             th:unless="${IS_AUTHENTICATED}"
-                                             th:with="user=${user},
-                                              courseId=${topic.getId()}">
-                                        </div>
+                        <div class="col-md-12" th:unless="${edit}">
 
-                                        <form method="post"
-                                              th:if="${IS_AUTHENTICATED}">
-                                            <button class="btn btn-primary btn-block"
-                                                    name="subscribe"
-                                                    type="submit"
-                                                    value="subscribe"><b>Записаться</b></button>
-                                        </form>
-                                    </div>
-                                    <hr/>
-                                    <div th:utext="${topic.getText()}"></div>
-                                </div>
-                            </div>
+                            <div th:include="moodle/course/readView :: readView2"/>
+
+
                         </div>
                     </div>
                 </div>

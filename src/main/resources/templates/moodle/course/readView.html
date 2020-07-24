@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="readView1">
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class="display-3" th:text="${topic.getTitle()}"></h1>
+                    <h2 class="display-4" th:text="${topic.getSubtitle()}"></h2>
+                </div>
+                <div class="col-md-6">
+                    <div th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
+                         th:unless="${IS_AUTHENTICATED}"
+                         th:with="user=${user},
+                                              courseId=${topic.getId()}">
+                    </div>
+
+                    <form method="post"
+                          th:if="${IS_AUTHENTICATED}">
+                        <button class="btn btn-primary btn-block"
+                                name="subscribe"
+                                type="submit"
+                                value="subscribe"><b>Записаться</b></button>
+                    </form>
+                </div>
+                <hr/>
+                <div th:utext="${topic.getText()}"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="readView2">
+    <main id="main">
+        <div class="bg-skew bg-skew-light">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <article class="pb-2">
+                            <h1 class="text-center" th:text="${topic.getTitle()}"></h1>
+                            <p class="lead" th:text="${topic.getSubtitle()}"></p>
+                            <hr/>
+                            <div th:include="moodle/course/subscribeAction :: item"/>
+                            <hr />
+                            <div th:utext="${topic.getText()}"></div>
+                        </article>
+                        <hr class="sep border-primary" role="presentation"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end bg-skew -->
+    </main>
+
+</div>
+</body>
+</html>
