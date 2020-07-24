@@ -27,7 +27,7 @@ public class Course {
     private String imgSrc;
 
     public String getImgSrc() {
-        if (imgSrc.isEmpty()) {
+        if (imgSrc == null || imgSrc.isEmpty()) {
             imgSrc = "/dist/img/courseDefault.jpg";
         }
         return this.imgSrc;
