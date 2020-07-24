@@ -29,8 +29,9 @@
 
                                 <form method="post">
                                     <input name="title" placeholder="title" th:value="${topic.getTitle()}" type="text"/>
-                                    <input name="subtitle" placeholder="subtitle" th:value="${topic.getSubtitle()}"
-                                           type="text"/>
+                                    <input name="subtitle" placeholder="subtitle" th:value="${topic.getSubtitle()}" type="text"/>
+                                    <input name="imgSrc" placeholder="imgSrc" th:value="${topic.getImgSrc()}" type="text"/>
+
                                     <textarea id="mytextarea" name="text"
                                               th:text="${topic.getText()}">Hello, World!</textarea>
 

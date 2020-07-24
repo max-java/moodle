@@ -35,6 +35,11 @@
 
 <div th:fragment="readView2">
     <main id="main">
+        <div class="container">
+            <div class="row justify-content-center text-center my-5">
+                <div class="col-lg-10"><img class="img-fluid img-thumbnail" th:src="${topic.getImgSrc()}" alt="topic promo" /></div>
+            </div>
+        </div>
         <div class="bg-skew bg-skew-light">
             <div class="container">
                 <div class="row justify-content-center">

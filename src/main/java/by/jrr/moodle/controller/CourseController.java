@@ -94,12 +94,14 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
     public ModelAndView saveNewTopic(
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "subtitle", required = false) String subtitle,
-            @RequestParam(value = "text", required = false) String text
+            @RequestParam(value = "text", required = false) String text,
+            @RequestParam(value = "imgSrc", required = false) String imgSrc
     ) {
         Course topic = courseService.create(Course.builder()
                 .title(title)
                 .subtitle(subtitle)
                 .text(text)
+                .imgSrc(imgSrc)
                 .build());
         return new ModelAndView("redirect:" + Endpoint.COURSE + "/" + topic.getId());
     }
@@ -109,6 +111,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
                                      @RequestParam(value = "title", required = false) String title,
                                      @RequestParam(value = "subtitle", required = false) String subtitle,
                                      @RequestParam(value = "text", required = false) String text,
+                                     @RequestParam(value = "imgSrc", required = false) String imgSrc,
                                      @RequestParam(value = "edit", required = false) boolean edit,
                                      @RequestParam Optional<String> subscribe,
                                      @RequestParam Optional<Long[]> lecturesId
@@ -132,6 +135,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
             Course courseToUpdate = Course.builder()
                     .title(title)
                     .subtitle(subtitle)
+                    .imgSrc(imgSrc)
                     .text(text)
                     .Id(id)
                     .build();
