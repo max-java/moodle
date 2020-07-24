@@ -31,127 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main Sidebar Container -->
     <div th:fragment="asideLeft">
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a class="brand-link" href="/" style="background-color: white">
-                <img class="brand-image" th:src="@{/dist/img/JG.png}">
-                <span class="brand-text font-weight-normal" style="color: orange"><strong
-                        style="color: #003e80">Java</strong>Guru</span>
-            </a>
-
-            <!-- Sidebar -->
-            <div class="sidebar" style="position: fixed">
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-accordion="false" data-widget="treeview"
-                        role="menu">
-                        <!-- Add icons to the links using the .nav-icon class
-                             with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <!--remove in future versions -->
-                                <p>
-                                    &nbsp;
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/topics}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Topics
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/practices}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Practice
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/lectures}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Lectures
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/courses}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Courses
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/questions}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Job Interview
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/reviewRequests}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Code Review
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/projects}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Projects
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/books}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Library
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/issues}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Issues
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/domains}">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Students activity
-                                    <!--                                    <span class="right badge badge-danger">New</span>-->
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
+        <div th:include="starter/leftMenu :: menu"></div>
     </div>
 
     <div th:include="starter/slider :: carousel"></div>
@@ -182,8 +62,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <div class="col-md-8">
                         <div class="jumbotron">
-                            <h1 class="display-4">В ИТ может попасть каждый! </h1>
-                            <h1 class="display-4"> Учись бесплатно, плати когда устроишься
+                            <h1>В ИТ может попасть каждый! </h1>
+                            <h1> Учись бесплатно, плати когда устроишься
                                 на работу!</h1>
                             <h2>JavaGuru - это профессиональный учебный центр предоставляющий
                                 возможность БЕСПЛАТНО изучать Информационные Технологии.</h2>
