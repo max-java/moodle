@@ -65,6 +65,13 @@
             </div>
         </div>
 
+        <div class="input-group mb-3">
+            <select class="form-control" name="streamId">
+                <option th:each="stream : ${streams}"
+                        th:text="${stream.getDateStart().toString()}" th:value="${stream.getId()}"></option>
+            </select>
+        </div>
+
         <div class="row">
             <div class="col-8">
                 &nbsp;

@@ -5,7 +5,6 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
-import by.jrr.common.bean.UrchinTracking;
 import by.jrr.common.repository.UrchinTrackingRepository;
 import by.jrr.common.service.UtmService;
 import by.jrr.constant.Endpoint;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +79,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         if (topic.isPresent()) {
             mov.addObject("topic", topic.get());
             mov.addObject("user", new User()); // TODO: 10/06/20 is it really need?
+            mov.addObject("streams", courseService.findTeamsForCourseByCourseIdFomNowAndLastMonth(id));
             mov.setViewName(View.COURSE);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);
@@ -113,6 +112,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
                                      @RequestParam(value = "text", required = false) String text,
                                      @RequestParam(value = "imgSrc", required = false) String imgSrc,
                                      @RequestParam(value = "edit", required = false) boolean edit,
+                                     @RequestParam(value = "streamId", required = false) Long streamId,
                                      @RequestParam Optional<String> subscribe,
                                      @RequestParam Optional<Long[]> lecturesId
     ) {
@@ -121,7 +121,8 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         Optional<Course> topic = courseService.findById(id);
         mov.addObject("topic", topic.orElseGet(Course::new));
         if (subscribe.isPresent()) { // TODO: 10/06/20 move here register and subscribe!!!!
-            return enrollCurentUser(id);
+//            return enrollCurentUser(id);
+            return enrollCurentUser(id, streamId);
         } else if (edit && UserAccessService.hasRole(UserRoles.ROLE_ADMIN)) { // TODO: 24/06/20 encapsulate it to "openForEdit"
             if (topic.isPresent()) {
                 mov.addObject("topic", topic.get());
@@ -156,8 +157,9 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         // TODO: 11/05/20 replace if-else with private methods
     }
 
-    private ModelAndView enrollCurentUser(Long courseId) {
-        Optional<Profile> stream = streamAndTeamSubscriberService.findStreamForCourse(courseId);
+    private ModelAndView enrollCurentUser(Long courseId, Long streamId) {
+//        Optional<Profile> stream = streamAndTeamSubscriberService.findStreamForCourse(courseId);
+        Optional<Profile> stream = profileService.findProfileByProfileId(streamId);
         if (stream.isPresent()) {
             streamAndTeamSubscriberService.updateSubscription(stream.get().getId(), profileService.getCurrentUserProfile().getId(), SubscriptionStatus.REQUESTED);
             return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + stream.get().getId());
