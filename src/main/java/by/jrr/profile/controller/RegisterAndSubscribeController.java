@@ -60,7 +60,8 @@ public class RegisterAndSubscribeController {
     public ModelAndView registerAndSubscribe(@RequestParam Optional<String> firstAndLastName,
                                              @RequestParam Optional<String> phone,
                                              @RequestParam Optional<String> email,
-                                             @RequestParam Optional<Long> courseId
+                                             @RequestParam Optional<Long> courseId,
+                                             @RequestParam Optional<Long> streamId
     ) {
 
         Long courzeId = null;
@@ -74,8 +75,9 @@ public class RegisterAndSubscribeController {
                     && email.isPresent()) {
                 User user = quickRegisterUser(firstAndLastName.get(), phone.get(), email.get());
                 Profile newUserProfile = createProfile(user);
-                if (courseId.isPresent()) {
-                    Optional<Profile> courseProfile = findStreamProfileByCourseId(courseId.get());
+                if (streamId.isPresent()) {
+//                    Optional<Profile> courseProfile = findStreamProfileByCourseId(courseId.get());
+                    Optional<Profile> courseProfile = profileService.findProfileByProfileId(streamId.get());
                     if (courseProfile.isPresent()) {
                         enroll(courseProfile.get().getId(), newUserProfile.getId());
 

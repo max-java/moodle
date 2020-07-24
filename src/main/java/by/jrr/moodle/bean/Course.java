@@ -24,6 +24,15 @@ public class Course {
     private String text;
     @Transient
     private List<CourseToLecture> courseToLectureIds;
+    private String imgSrc;
+
+    public String getImgSrc() {
+        if (imgSrc.isEmpty()) {
+            imgSrc = "/dist/img/courseDefault.jpg";
+        }
+        return this.imgSrc;
+    }
+
 
 
 }

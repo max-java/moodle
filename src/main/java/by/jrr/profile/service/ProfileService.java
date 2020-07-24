@@ -9,6 +9,8 @@ import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.repository.ProfileRepository;
+import org.hibernate.mapping.Collection;
+import org.jsoup.select.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,12 +18,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -226,5 +227,19 @@ public class ProfileService {
             System.out.println("exception on finding man date of course");
             return Optional.empty();
         }
+    }
+    public List<Profile> findStreamsByCourseIdFromNowAndLastMonth(Long courseId) {
+        List<Profile> streams = new ArrayList<>();
+        try {
+            streams = profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now().minusMonths(1)).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .sorted(Comparator.comparing(p -> p.getDateStart()))
+            .collect(Collectors.toList());
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception on finding man date of course");
+            return streams;
+        }
+        return streams;
     }
 }
