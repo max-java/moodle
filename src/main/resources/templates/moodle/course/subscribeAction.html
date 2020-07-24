@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="item">
+    <div class="card">
+        <div class="card-body">
+            <div th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
+                 th:unless="${IS_AUTHENTICATED}"
+                 th:with="user=${user},
+                          streams=${streams},
+                          courseId=${topic.getId()}">
+            </div>
+
+            <form method="post"
+                  th:if="${IS_AUTHENTICATED}">
+                <select class="form-control" name="streamId">
+                    <option th:each="stream : ${streams}"
+                            th:value="${stream.getId()}" th:text="${stream.getDateStart().toString()}"></option>
+                </select>
+                <button class="btn btn-primary btn-block"
+                        name="subscribe"
+                        type="submit"
+                        value="subscribe"><b>Записаться</b></button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

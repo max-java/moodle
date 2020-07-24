@@ -50,6 +50,7 @@ public class Endpoint {
     public static final String REGISTER_USER = "/registration";
     public static final String REGISTER_USER_ADMIN_REST = "/admin/api/users/";
     public static final String REGISTER_USER_ADMIN_REST_ERRORS = "errors";
+    public static final String URCHIN_TRACKING_REST = "utms";
 
     public static final String BOOK_LIST = "/books";
     public static final String BOOK = "/book";

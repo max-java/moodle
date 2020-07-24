@@ -150,12 +150,13 @@ CREATE TABLE `COURSE` (
                           "ID" BIGINT NOT NULL,
                           "SUBTITLE" VARCHAR(255),
                           "TEXT" CLOB,
-                          "TITLE" VARCHAR(255)
+                          "TITLE" VARCHAR(255),
+                          "IMG_SRC" VARCHAR(255)
 );
-INSERT INTO `COURSE` VALUES (30, 'SubTitleCourse_1', '<p>TEXT</p>', 'Course 1'),
-                            (31, 'SubTitleCourse_2', '', 'Course 2'),
-                            (32, 'SubTitleCourse_3', '', 'Course 3'),
-                            (33, 'SubTitleCourse_4', '', 'Course 4');
+INSERT INTO `COURSE` VALUES (30, 'SubTitleCourse_1', '<p>TEXT</p>', 'Course 1', ''),
+                            (31, 'SubTitleCourse_2', '', 'Course 2', ''),
+                            (32, 'SubTitleCourse_3', '', 'Course 3', ''),
+                            (33, 'SubTitleCourse_4', '', 'Course 4', '');
 
 
 DROP TABLE IF EXISTS `COURSE_TO_LECTURE`;

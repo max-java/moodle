@@ -5,12 +5,16 @@ import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.bean.Topic;
 import by.jrr.moodle.repository.CourseRepository;
 import by.jrr.moodle.repository.TopicRepository;
+import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfilePossessesService;
+import by.jrr.profile.service.ProfileService;
+import by.jrr.profile.service.StreamAndTeamSubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +24,10 @@ public class CourseService {
     CourseRepository courseRepository;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    StreamAndTeamSubscriberService streamAndTeamSubscriberService;
+    @Autowired
+    ProfileService profileService;
 
     public Page<Course> findAll(String page, String items) {
         Page<Course> topics;
@@ -46,6 +54,12 @@ public class CourseService {
     public Optional<Course> findById(Long id) {
         return courseRepository.findById(id);
     }
+
+    public List<Profile> findTeamsForCourseByCourseIdFomNowAndLastMonth(Long courseId) {
+        List<Profile> stream = profileService.findStreamsByCourseIdFromNowAndLastMonth(courseId);
+        return stream;
+    }
+
 
 
 
