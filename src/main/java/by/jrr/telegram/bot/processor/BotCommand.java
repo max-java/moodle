@@ -5,7 +5,8 @@ public enum BotCommand {
     START("/start", "начать общение"),
     HELP("/help", "Помощь"),
     SETTING("/settings", "Настройки"),
-    NERD_TERM("/что такое ", "Сленг програмиста");
+    NERD_TERM("/whatis", "Сленг програмиста"),
+    SAY_HELLO("/hello", "Приветствие нового студента!");
 
     String command;
     String description;
