@@ -38,7 +38,7 @@ public class MessageService {
     }
     public void sendHtmlMessage(Long chatId, String text) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setParseMode("HTML");
+//        sendMessage.setParseMode("HTML");
         sendMessage.setChatId(chatId.toString());
         sendMessage.setText(text);
         try {
