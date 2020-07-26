@@ -1,6 +1,7 @@
 package by.jrr.telegram.bot.service;
 
 import by.jrr.telegram.bot.processor.*;
+import by.jrr.telegram.bot.processor.hello.SayHelloNewUserProcessor;
 import by.jrr.telegram.bot.processor.term.NerdTermProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class RequestDispatcher {
     @Autowired
     NerdTermProcessor nerdTermProcessor;
     @Autowired
+    SayHelloNewUserProcessor sayHelloNewUserProcessor;
+    @Autowired
     NoneProcessor noneProcessor;
 
     public void dispatch(Update update) {
@@ -35,6 +38,9 @@ public class RequestDispatcher {
                 break;
             case NERD_TERM:
                 nerdTermProcessor.process(update);
+                break;
+            case SAY_HELLO:
+                sayHelloNewUserProcessor.process(update);
                 break;
             case NONE:
                 messageService.sendMessage(update.getMessage(), noneProcessor.run());
@@ -56,13 +62,23 @@ public class RequestDispatcher {
                     return BotCommand.SETTING;
                 } else if (msgText.startsWith(BotCommand.NERD_TERM.getCommand())) {
                     return BotCommand.NERD_TERM;
-                } else if (msgText.contains(BotCommand.NERD_TERM.getCommand().substring(1))) {
+                } else if (msgText.contains(BotCommand.NERD_TERM.getCommand().substring(1))) { // TODO: 27/07/20 add chat listener
                     return BotCommand.NERD_TERM;
+                } else if (msgText.contains(BotCommand.SAY_HELLO.getCommand())) {
+                    return BotCommand.SAY_HELLO;
+                }
+
+
+            } else if (message != null) {
+                if (message.getGroupchatCreated() != null && message.getGroupchatCreated()) {
+                    return BotCommand.SAY_HELLO;
+                } else if (message.getNewChatMembers() != null && message.getNewChatMembers().size() > 0) {
+                    return BotCommand.SAY_HELLO;
                 }
             }
         }
         return BotCommand.NONE;
+
+
     }
-
-
 }
