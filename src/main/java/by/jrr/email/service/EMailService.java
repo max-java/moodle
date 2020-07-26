@@ -127,6 +127,57 @@ public class EMailService {
         emailSender.send(message);
     }
 
+    public void sendJavaAZSubscriptionConfirmation(String firstAndLastName,
+                                                   String teamStreamName,
+                                                   String streamTeamLink,
+                                                   String telegramLink,
+                                                   String to) {
+        StringBuffer messageText = new StringBuffer();
+        messageText.append("Добрый день, "+firstAndLastName+"!");
+        messageText.append("\n\nВаша заявка на участие в группе "+ teamStreamName + " одобрена.");
+        messageText.append("\nТеперь Вам доступны материалы группы.");
+        messageText.append("\n\n\t адрес группы: "+streamTeamLink);
+        messageText.append("\n\n");
+        messageText.append("\nОбязательно вступите в чат-телеграмм группы, что бы получать актуальную информацию!");
+        messageText.append("\n\n\t telegram: "+telegramLink);
+        messageText.append("\n");
+        messageText.append("\nЗанятие пройдет в формате Zoom конференции.");
+        messageText.append("\nРасписание в профиле группы");
+        messageText.append("\nВаш куратор: Илья +375(29) 3333-600.");
+        messageText.append("\n");
+        messageText.append("\nУ Вас есть есть возможность бесплатно обучиться на курсе Java Intensive!");
+        messageText.append("\nДля этого нужно:");
+        messageText.append("\n1. Записаться подготовительные занятия preIntensive;");
+        messageText.append("\n2. Быть готовым всё свое свободное время на ближайшие 4 месяца посвятить изучению программирования;");
+        messageText.append("\n3. Не бояться трудностей и быть готовым к новым вызовам и испытаниям;");
+        messageText.append("\n4. Освоить навыки командной работы, принципы современной методологии разработки и инструменты production development за 1 месяц подготовительного курса;");
+        messageText.append("\n5. Сделать все возможное и не возможное, что бы достигнуть отличных результатов за время подготовки к Java Intensive!");
+        messageText.append("\n");
+        messageText.append("\nНачните готовиться уже сейчас, что бы получить возможность обучиться на курсе Java Intensive с отсрочкой платежа до трудоустройства!");
+        messageText.append("\nДля этого нужно:");
+        messageText.append("\n");
+        messageText.append("\n1. Подписаться на чат школы в Telegram https://t.me/joinchat/CxUOGRRNPKd3vDxzt9YI4A");
+        messageText.append("\n- здесь уже сейчас Вы можете начать общаться с нашими выпускниками");
+        messageText.append("\n");
+        messageText.append("\n2. Подписаться на чат группы в Telegram "+telegramLink);
+        messageText.append("\n");
+        messageText.append("\n3. Зарегистрироваться в github.com");
+        messageText.append("\n");
+        messageText.append("\nНаша задача - освоить навыки командной работы и инструменты production development за 1 месяц!");
+        messageText.append("\n");
+        messageText.append("\nДо встречи на занятиях!");
+        messageText.append("\nС уважением,");
+        messageText.append("\nУправляющий JavaGuru в Беларуси");
+        messageText.append("\nМаксим Шелкович");
+        messageText.append("\n+375(44) 750 6666");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("{JG} Подтверждение подписки на группу");
+        message.setText(messageText.toString());
+        emailSender.send(message);
+    }
+
     public void sendTeamSubscriptionConfirmation(String firstName,
                                                  String teamStreamName,
                                                  String streamTeamLink,

@@ -122,7 +122,7 @@ public class StreamAndTeamSubscriberService {
                     String to = subscriberProfile.getUser().getEmail();
 
                     if(streamTeamProfile.getUser().getRoles().contains(UserRoles.ROLE_STREAM)) { // TODO: 07/07/20 move all user methods like this to profile
-                        eMailService.sendStreamSubscriptionConfirmation(firstAndLastName, teamStreamName, streamTeamLink, telegramLink, to);
+                        eMailService.sendJavaAZSubscriptionConfirmation(firstAndLastName, teamStreamName, streamTeamLink, telegramLink, to); // TODO: 27/07/20 different emmails for different courses
                     }
                     if(streamTeamProfile.getUser().getRoles().contains(UserRoles.ROLE_TEAM)){
                         eMailService.sendTeamSubscriptionConfirmation(firstAndLastName, teamStreamName, streamTeamLink, to);
