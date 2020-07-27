@@ -350,8 +350,6 @@
                                                     <th>Фидбеки</th>
                                                     <th></th>
                                                     <th>Стендапы</th>
-                                                    <th></th>
-                                                    <th>Телеграммы</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -363,9 +361,6 @@
                                                     <td th:text="${statistic.printFeedbacks()}"></td>
                                                     <td th:text="${statistic.getStandups().size()}"></td>
                                                     <td th:text="${statistic.printStandups()}"></td>
-                                                    <td th:text="${statistic.getTelegram().size()}"></td>
-                                                    <td th:text="${statistic.printTelegram()}"></td>
-
                                                 </tr>
 
                                                 </tbody>
