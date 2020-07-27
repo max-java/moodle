@@ -183,9 +183,9 @@ public class EMailService {
                                                  String streamTeamLink,
                                                  String to) {
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Привек, " + firstName + "!");
+        messageText.append("Привет, " + firstName + "!");
         messageText.append("\n\nТвоя заявка на участие в группе " + teamStreamName + " одобрена.");
-        messageText.append("\nНе забывай, что теперь тебе нужно принимать участи в стендапах ежедневно.");
+        messageText.append("\nНе забывай, что теперь тебе нужно принимать участие в стендапах ежедневно.");
         messageText.append("\nОткрывать ссылку на стендап ОБЯЗАТЕЛЬНО через платформу, что бы твой контрибьют в комьюнити был залогирован");
 
 
