@@ -27,7 +27,7 @@ public class EMailService {
     private void sendQuickRegostrationPassword(String to, String password, String firstAndLastName) {
         StringBuffer messageText = new StringBuffer();
         messageText.append("Добрый день, "+firstAndLastName+"!");
-        messageText.append("\n\nЭто продолжение сообщения об успешной регистрации на образовательной платформе https://moodle.jrr.by!");
+        messageText.append("\n\nЭто продолжение сообщения об успешной регистрации на образовательной платформе https://moodle.jrr.by !");
         messageText.append("\nДля входа в аккаунт используйте пароль.");
         messageText.append("\n\n\t пароль:"+password);
         messageText.append("\n\nДо встречи на занятиях!");
