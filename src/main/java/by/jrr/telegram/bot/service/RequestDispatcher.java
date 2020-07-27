@@ -2,7 +2,9 @@ package by.jrr.telegram.bot.service;
 
 import by.jrr.telegram.bot.processor.*;
 import by.jrr.telegram.bot.processor.hello.SayHelloNewUserProcessor;
+import by.jrr.telegram.bot.processor.term.DeleteTermProcessor;
 import by.jrr.telegram.bot.processor.term.NerdTermProcessor;
+import by.jrr.telegram.bot.processor.term.SaveTermProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -24,6 +26,10 @@ public class RequestDispatcher {
     SayHelloNewUserProcessor sayHelloNewUserProcessor;
     @Autowired
     NoneProcessor noneProcessor;
+    @Autowired
+    SaveTermProcessor saveTermProcessor;
+    @Autowired
+    DeleteTermProcessor deleteTermProcessor;
 
     public void dispatch(Update update) {
         switch (getCommand(update)) {
@@ -38,6 +44,12 @@ public class RequestDispatcher {
                 break;
             case NERD_TERM:
                 nerdTermProcessor.process(update);
+                break;
+            case SAVE_TERM:
+                saveTermProcessor.process(update);
+                break;
+            case DELETE_TERM:
+                deleteTermProcessor.process(update);
                 break;
             case SAY_HELLO:
                 sayHelloNewUserProcessor.process(update);
@@ -62,6 +74,11 @@ public class RequestDispatcher {
                     return BotCommand.SETTING;
                 } else if (msgText.startsWith(BotCommand.NERD_TERM.getCommand())) {
                     return BotCommand.NERD_TERM;
+                } else if (msgText.startsWith(BotCommand.SAVE_TERM.getCommand())) {
+                    return BotCommand.SAVE_TERM;
+                } else if (msgText.startsWith(BotCommand.DELETE_TERM.getCommand())) {
+                    return BotCommand.DELETE_TERM;
+
                 } else if (msgText.contains(BotCommand.NERD_TERM.getCommand().substring(1))) { // TODO: 27/07/20 add chat listener
                     return BotCommand.NERD_TERM;
                 } else if (msgText.contains(BotCommand.SAY_HELLO.getCommand())) {
