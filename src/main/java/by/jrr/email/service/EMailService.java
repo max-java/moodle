@@ -60,7 +60,7 @@ public class EMailService {
         messageText.append("\nОт: "+firstAndLastName);
         messageText.append("\nЕ-почта: "+userEmail);
         messageText.append("\nТелефон: "+userPhone);
-        messageText.append("\nЗаявка на курс: Java free stream 5");
+        messageText.append("\nЗаявка на курс: Java A-Z"); // TODO: 27/07/20 set course name dynamically
         messageText.append("\n");
         messageText.append("\nhttp://javaguru.by/java-bootcamp");
         messageText.append("\n--");
@@ -202,9 +202,11 @@ public class EMailService {
     public void sendAdminRegisterYouEmailConfirmation(String firstName, String emailTo, String password) {
         StringBuffer messageText = new StringBuffer();
         messageText.append("Добрый день, "+firstName+"!");
-        messageText.append("\n\nВы оставляли в этом году заявку или даже приходили на наши бесплатные курсы по Java, но по какой-то причине передумали и пропали из команды.");
+        messageText.append("\n\nВы получили это письмо по одной из двух причин:");
+        messageText.append("\n1. оставляли заявку или даже приходили на наши бесплатные курсы по Java, но по какой-то причине передумали и пропали из команды.\"");
+        messageText.append("\n2. хотите участвовать в челледже gotogoogle.\"");
         messageText.append("\n\n");
-        messageText.append("\nЗа это время силами комьюнити мы создали новую образовательную платформу по Java, где ты можешь:");
+        messageText.append("\nС участием наших студентов создана образовательная платформа, где можно:");
         messageText.append("\n1. Подготовиться к собеседованию в режиме вопрос-ответ");
         messageText.append("\n2. Посмотреть, какие задачи сейчас задают на технических интерью");
         messageText.append("\n3. Проработать и прокачать свой профиль в соцсети с помощью живых инструкций");
@@ -219,6 +221,8 @@ public class EMailService {
         messageText.append("\nадрес новой платформы - https://moodle.jrr.by/");
 
         messageText.append("\n\nЕсли что-то не получается - позвоните Илье: +375(29) 3333-600.");
+        messageText.append("\nЕсли что-то не получается - позвоните Илье: +375(29) 3333-600.");
+        messageText.append("\nВопросы можно задать и боту: @JavaQuestionsBot");
 
         messageText.append("\nС уважением,");
         messageText.append("\nУправляющий JavaGuru в Беларуси");
@@ -227,7 +231,7 @@ public class EMailService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailTo);
-        message.setSubject("{JG} Возвращайся в комьюнити! Мы растем!!!");
+        message.setSubject("{JG} JavaGuru комьюнити! Мы растем!!!");
         message.setText(messageText.toString());
         emailSender.send(message);
     }
