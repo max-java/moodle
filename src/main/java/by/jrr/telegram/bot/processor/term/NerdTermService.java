@@ -20,8 +20,16 @@ public class NerdTermService {
     @Autowired
     private NerdTermToLearnRepository nerdTermToLearnRepository;
 
-    public Optional<NerdTermLibrary> getByTermIfPresent(String term) {
-        return nerdTermLibraryRepository.findByTerm(term);
+    public List<NerdTermLibrary> getByTermIfPresent(String term) {
+        return nerdTermLibraryRepository.findByTermIgnoreCase(term);
+    }
+    public boolean deleteByTermAndDefinition(String term, String definition) {
+        Optional<NerdTermLibrary> nerdTermLibrary = nerdTermLibraryRepository.findByTermAndDefinition(term, definition);
+        if (nerdTermLibrary.isPresent()) {
+            nerdTermLibraryRepository.deleteById(nerdTermLibrary.get().getId());
+            return true;
+        }
+            return false;
     }
 
     public NerdTermLibrary saveToLearn (String term) {
@@ -32,6 +40,9 @@ public class NerdTermService {
         nerdTermLibrary.setTerm(term);
         nerdTermLibrary.setDefinition(randomText());
         return nerdTermLibrary;
+    }
+    public void saveLearned(NerdTermLibrary nerdTermLibrary) {
+        nerdTermLibraryRepository.save(nerdTermLibrary);
     }
 
     private String randomText() {
@@ -80,7 +91,6 @@ public class NerdTermService {
                 "ok, отпишусь");
         int index = ThreadLocalRandom.current().nextInt(0, msg.size() - 1);
         return msg.get(index);
-
     }
 
 
