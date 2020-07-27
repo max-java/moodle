@@ -24,9 +24,11 @@ public class NerdTermService {
         return nerdTermLibraryRepository.findByTermIgnoreCase(term);
     }
     public boolean deleteByTermAndDefinition(String term, String definition) {
-        Optional<NerdTermLibrary> nerdTermLibrary = nerdTermLibraryRepository.findByTermAndDefinition(term, definition);
-        if (nerdTermLibrary.isPresent()) {
-            nerdTermLibraryRepository.deleteById(nerdTermLibrary.get().getId());
+        List<NerdTermLibrary> nerdTermLibraryList = nerdTermLibraryRepository.findByTermAndDefinition(term, definition);
+        if (nerdTermLibraryList.size()>0) {
+            for (NerdTermLibrary nerdTermLibrary :  nerdTermLibraryList) {
+                nerdTermLibraryRepository.deleteById(nerdTermLibrary.getId());
+            }
             return true;
         }
             return false;
