@@ -21,6 +21,7 @@ public class NerdTermToLearn {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long Id;
+    @Column(columnDefinition = "TEXT")
     String term;
     LocalDateTime timestamp;
 

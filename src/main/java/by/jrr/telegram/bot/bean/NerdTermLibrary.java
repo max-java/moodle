@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,5 +21,6 @@ public class NerdTermLibrary {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long Id;
     String term;
+    @Column(columnDefinition = "TEXT")
     String definition;
 }
