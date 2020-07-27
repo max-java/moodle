@@ -14,18 +14,14 @@ public class UserProfileStatisticDTO implements Comparable<UserProfileStatisticD
     List<String> lectures = new ArrayList<>();
     List<String> feedbacks = new ArrayList<>();
     List<LocalDate> standups = new ArrayList<>();
-    List<LocalDate> telegram = new ArrayList<>();
 
     @Override
     public int compareTo(UserProfileStatisticDTO o) {
-        if (lectures.size() - o.lectures.size() == 0) {
-            if (lectures.size() - o.lectures.size() == 0) {
-                if (standups.size() - o.standups.size() == 0) {
-                    return telegram.size() - o.telegram.size();
-                }
-                return standups.size() - o.standups.size();
+        if ((lectures.size() - o.lectures.size()) == 0) {
+            if ((standups.size() - o.standups.size()) == 0) {
+                return feedbacks.size() - o.feedbacks.size();
             }
-            return lectures.size() - o.lectures.size();
+            return standups.size() - o.standups.size();
         }
         return lectures.size() - o.lectures.size();
     }
@@ -39,11 +35,6 @@ public class UserProfileStatisticDTO implements Comparable<UserProfileStatisticD
     }
     public String printStandups() {
         return standups.stream()
-                .map(a -> a.toString())
-                .collect(Collectors.joining(", ", "", ""));
-    }
-    public String printTelegram() {
-        return telegram.stream()
                 .map(a -> a.toString())
                 .collect(Collectors.joining(", ", "", ""));
     }

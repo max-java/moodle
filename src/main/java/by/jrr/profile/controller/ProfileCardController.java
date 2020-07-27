@@ -62,12 +62,12 @@ public class ProfileCardController {
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
             mov.addObject("couldUpdate", profileId.equals(profileService.getCurrentUserProfileId())
                     || pss.isCurrentUserOwner(profileId));
-            if(profile.get().getCourseId() != null) {
+            if (profile.get().getCourseId() != null) {
                 mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
             } else {
                 mov.addObject("topicList", new ArrayList<>());
             }
-            mov.addObject("bestStudentList",calculateBestStudent(profile.get().getSubscribers()));
+            mov.addObject("bestStudentList", calculateBestStudent(profile.get().getSubscribers()));
 
         } else {
             mov.setViewName(View.PAGE_404);
@@ -82,7 +82,7 @@ public class ProfileCardController {
             statistics.add(profileService.caclulateStatisticsForUserProfile(subscriber));
         }
         statistics = statistics.stream()
-                .filter(a -> a.getLectures().size()==4)
+                .filter(a -> a.getLectures().size() > 2)
                 .collect(Collectors.toList());
         Collections.sort(statistics);
         Collections.reverse(statistics);
@@ -106,20 +106,20 @@ public class ProfileCardController {
                                     @RequestParam Optional<String> subscribe,
                                     @RequestParam Optional<Long> subscriberProfileId,
                                     @RequestParam Optional<String> command
-                                    ) {
+    ) {
 
         if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
             if (avatar.isPresent()) {
                 saveAvatar(avatar, profileId);
             }
         }
-        if(updateProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
+        if (updateProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
             // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it. That is why I moved it in ProfileCardUpdateController
         }
-        if(subscribe.isPresent()) {
+        if (subscribe.isPresent()) {
             profileService.enrollToStreamTeamProfile(profileId, profileService.getCurrentUserProfile().getId());
         }
-        if(pss.isCurrentUserOwner(profileId)) {
+        if (pss.isCurrentUserOwner(profileId)) {
             if (command.isPresent() && command.get().equals(ProfileCardController.Commands.APPROVE_SUBSCRIPTION)) {
                 approveSubscription(profileId, subscriberProfileId);
             }
@@ -136,11 +136,13 @@ public class ProfileCardController {
             streamAndTeamSubscriberService.updateSubscription(profileId, subscriberProfileIdOp.get(), SubscriptionStatus.APPROVED);
         }
     }
+
     private void rejectSubscription(Long profileId, Optional<Long> subscriberProfileIdOp) {
         if (subscriberProfileIdOp.isPresent()) {
             streamAndTeamSubscriberService.deleteSubscription(profileId, subscriberProfileIdOp.get());
         }
     }
+
     private class Commands {
         public static final String APPROVE_SUBSCRIPTION = "approve";
         public static final String REJECT_SUBSCRIPTION = "reject";
@@ -149,7 +151,7 @@ public class ProfileCardController {
 
     private void saveAvatar(Optional<MultipartFile> avatar, Long profileId) {
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-        if (profile.isPresent()  && pss.isCurrentUserOwner(profileId)) {
+        if (profile.isPresent() && pss.isCurrentUserOwner(profileId)) {
             try {
                 Profile updatedProfile = profile.get();
                 updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get(), Optional.empty()));
