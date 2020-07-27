@@ -90,7 +90,7 @@ public class UserService {
                 .active(true)
                 .build();
         this.saveUser(user, Optional.empty());
-        new Thread(() -> eMailService.sendAdminRegisterYouEmailConfirmation(user.getName(), user.getEmail(), user.getPassword())).start();
+        new Thread(() -> eMailService.sendAdminRegisterYouEmailConfirmation(user.getName(), user.getEmail(), password)).start();
     }
 
 
