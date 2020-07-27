@@ -83,7 +83,7 @@ public class ProfileCardController {
             statistics.add(profileService.caclulateStatisticsForUserProfile(subscriber));
         }
         statistics = statistics.stream()
-                .filter(a -> a.getLectures().size()<4)
+                .filter(a -> a.getLectures().size()==4)
                 .collect(Collectors.toList());
         Collections.sort(statistics);
         Collections.reverse(statistics);
