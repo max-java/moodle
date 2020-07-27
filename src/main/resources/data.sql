@@ -221,7 +221,8 @@ CREATE TABLE `book` (
     `edition` varchar(32) DEFAULT NULL,
     `publisher` varchar(255) DEFAULT NULL,
     `published` varchar(255) DEFAULT NULL,
-    `isbn` varchar(30) DEFAULT NULL
+    `isbn` varchar(30) DEFAULT NULL,
+    `description` CLOB DEFAULT null
 );
 
 INSERT INTO `book` VALUES (1, 'https://www.iconninja.com/files/854/364/1/develop-programming-software-java-language-code-command-icon.png',
@@ -230,4 +231,5 @@ INSERT INTO `book` VALUES (1, 'https://www.iconninja.com/files/854/364/1/develop
                               'edition1',
                               'publisher1',
                               'published1',
-                              'isbn1');
+                              'isbn1',
+                              'description1');

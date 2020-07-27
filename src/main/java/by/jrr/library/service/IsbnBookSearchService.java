@@ -271,16 +271,45 @@ public class IsbnBookSearchService {
             "</body>\n" +
             "</html>\n";
     public Book findByIsbn(String isbn) {
-        Document document = new Document("");
-        try{
-            document = Jsoup.connect(baseUri+isbn).get();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        Document document = new Document("");
+//        try{
+//            document = Jsoup.connect(baseUri+isbn).get();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+        Document document = Jsoup.parse(html);
         Book book = createBook(document.select("div.bookinfo").select("p"));
         book.setImg(findImgLink(document.select("div.image").select("img").first()));
         book.setName(findName(document.select("div.bookinfo").select("h1").first()));
+
+        book.setDescription(findDescriptionOnAbeBooks(isbn));
+
+        System.out.println(book);
         return book;
+    }
+
+    private String findDescriptionOnAbeBooks(String isbn) {
+        String link = findLinkToBook(isbn);
+        Document document = new Document("");
+        try{
+            document = Jsoup.connect(link).get();
+        } catch (Exception ex){
+
+        }
+        Element element = document.select("div.ms-toggle").first();
+        return element.html();
+    }
+
+    private String findLinkToBook(String isbn) {
+        String uri = "https://www.abebooks.com/servlet/SearchResults?sts=t&isbn=" + isbn;
+        Document document = new Document("");
+        try{
+            document = Jsoup.connect(uri).get();
+        } catch (Exception ex){
+
+        }
+        Element element = document.select("div.result-detail.col-xs-8").select("a").first();
+        return "https://www.abebooks.com/" + element.attr("href");
     }
 
     private String findName(Element element) {

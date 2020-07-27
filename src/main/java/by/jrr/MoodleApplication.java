@@ -14,6 +14,8 @@ public class MoodleApplication {
     public static void main(String[] args) {
         ApiContextInitializer.init();
         SpringApplication.run(MoodleApplication.class, args);
+//        IsbnBookSearchService service = new IsbnBookSearchService();
+//        service.findByIsbn("9781617294945");
     }
 }
 

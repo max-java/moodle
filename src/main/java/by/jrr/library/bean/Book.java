@@ -29,6 +29,7 @@ public class Book implements Reviewable {
     private String publisher;
     private String published;
     private String isbn;
+    private String description;
 
     @Override
     public EntityType getType() {
