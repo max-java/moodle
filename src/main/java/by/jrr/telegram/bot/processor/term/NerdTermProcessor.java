@@ -31,7 +31,7 @@ public class NerdTermProcessor implements Processor {
         String response = "я ничего не понял";
         if (msq.hasText()) {
             final String text = msq.getText();
-            final String term = text.substring(text.indexOf(BotCommand.NERD_TERM.getCommand()) + BotCommand.NERD_TERM.getCommand().length()).trim();
+            final String term = text.substring(text.indexOf(BotCommand.NERD_TERM.getCommand()) + BotCommand.NERD_TERM.getCommand().length()+1).trim();
             List<NerdTermLibrary> nerdTermLibraryList = nerdTermService.getByTermIfPresent(term);
             if (nerdTermLibraryList.size() == 1) {
                 NerdTermLibrary nerdTerm = nerdTermLibraryList.get(0);
