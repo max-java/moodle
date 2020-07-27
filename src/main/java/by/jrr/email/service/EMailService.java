@@ -60,7 +60,7 @@ public class EMailService {
         messageText.append("\nОт: "+firstAndLastName);
         messageText.append("\nЕ-почта: "+userEmail);
         messageText.append("\nТелефон: "+userPhone);
-        messageText.append("\nЗаявка на курс: Java free stream 5");
+        messageText.append("\nЗаявка на курс: Java A-Z"); // TODO: 27/07/20 set course name dynamically
         messageText.append("\n");
         messageText.append("\nhttp://javaguru.by/java-bootcamp");
         messageText.append("\n--");
@@ -127,14 +127,65 @@ public class EMailService {
         emailSender.send(message);
     }
 
+    public void sendJavaAZSubscriptionConfirmation(String firstAndLastName,
+                                                   String teamStreamName,
+                                                   String streamTeamLink,
+                                                   String telegramLink,
+                                                   String to) {
+        StringBuffer messageText = new StringBuffer();
+        messageText.append("Добрый день, "+firstAndLastName+"!");
+        messageText.append("\n\nВаша заявка на участие в группе "+ teamStreamName + " одобрена.");
+        messageText.append("\nТеперь Вам доступны материалы группы.");
+        messageText.append("\n\n\t адрес группы: "+streamTeamLink);
+        messageText.append("\n\n");
+        messageText.append("\nОбязательно вступите в чат-телеграмм группы, что бы получать актуальную информацию!");
+        messageText.append("\n\n\t telegram: "+telegramLink);
+        messageText.append("\n");
+        messageText.append("\nЗанятие пройдет в формате Zoom конференции.");
+        messageText.append("\nРасписание в профиле группы");
+        messageText.append("\nВаш куратор: Илья +375(29) 3333-600.");
+        messageText.append("\n");
+        messageText.append("\nУ Вас есть есть возможность бесплатно обучиться на курсе Java Intensive!");
+        messageText.append("\nДля этого нужно:");
+        messageText.append("\n1. Записаться подготовительные занятия preIntensive;");
+        messageText.append("\n2. Быть готовым всё свое свободное время на ближайшие 4 месяца посвятить изучению программирования;");
+        messageText.append("\n3. Не бояться трудностей и быть готовым к новым вызовам и испытаниям;");
+        messageText.append("\n4. Освоить навыки командной работы, принципы современной методологии разработки и инструменты production development за 1 месяц подготовительного курса;");
+        messageText.append("\n5. Сделать все возможное и не возможное, что бы достигнуть отличных результатов за время подготовки к Java Intensive!");
+        messageText.append("\n");
+        messageText.append("\nНачните готовиться уже сейчас, что бы получить возможность обучиться на курсе Java Intensive с отсрочкой платежа до трудоустройства!");
+        messageText.append("\nДля этого нужно:");
+        messageText.append("\n");
+        messageText.append("\n1. Подписаться на чат школы в Telegram https://t.me/joinchat/CxUOGRRNPKd3vDxzt9YI4A");
+        messageText.append("\n- здесь уже сейчас Вы можете начать общаться с нашими выпускниками");
+        messageText.append("\n");
+        messageText.append("\n2. Подписаться на чат группы в Telegram "+telegramLink);
+        messageText.append("\n");
+        messageText.append("\n3. Зарегистрироваться в github.com");
+        messageText.append("\n");
+        messageText.append("\nНаша задача - освоить навыки командной работы и инструменты production development за 1 месяц!");
+        messageText.append("\n");
+        messageText.append("\nДо встречи на занятиях!");
+        messageText.append("\nС уважением,");
+        messageText.append("\nУправляющий JavaGuru в Беларуси");
+        messageText.append("\nМаксим Шелкович");
+        messageText.append("\n+375(44) 750 6666");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("{JG} Подтверждение подписки на группу");
+        message.setText(messageText.toString());
+        emailSender.send(message);
+    }
+
     public void sendTeamSubscriptionConfirmation(String firstName,
                                                  String teamStreamName,
                                                  String streamTeamLink,
                                                  String to) {
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Привек, " + firstName + "!");
+        messageText.append("Привет, " + firstName + "!");
         messageText.append("\n\nТвоя заявка на участие в группе " + teamStreamName + " одобрена.");
-        messageText.append("\nНе забывай, что теперь тебе нужно принимать участи в стендапах ежедневно.");
+        messageText.append("\nНе забывай, что теперь тебе нужно принимать участие в стендапах ежедневно.");
         messageText.append("\nОткрывать ссылку на стендап ОБЯЗАТЕЛЬНО через платформу, что бы твой контрибьют в комьюнити был залогирован");
 
 
@@ -151,9 +202,11 @@ public class EMailService {
     public void sendAdminRegisterYouEmailConfirmation(String firstName, String emailTo, String password) {
         StringBuffer messageText = new StringBuffer();
         messageText.append("Добрый день, "+firstName+"!");
-        messageText.append("\n\nВы оставляли в этом году заявку или даже приходили на наши бесплатные курсы по Java, но по какой-то причине передумали и пропали из команды.");
+        messageText.append("\n\nВы получили это письмо по одной из двух причин:");
+        messageText.append("\n1. оставляли заявку или даже приходили на наши бесплатные курсы по Java, но по какой-то причине передумали и пропали из команды.\"");
+        messageText.append("\n2. хотите участвовать в челледже gotogoogle.\"");
         messageText.append("\n\n");
-        messageText.append("\nЗа это время силами комьюнити мы создали новую образовательную платформу по Java, где ты можешь:");
+        messageText.append("\nС участием наших студентов создана образовательная платформа, где можно:");
         messageText.append("\n1. Подготовиться к собеседованию в режиме вопрос-ответ");
         messageText.append("\n2. Посмотреть, какие задачи сейчас задают на технических интерью");
         messageText.append("\n3. Проработать и прокачать свой профиль в соцсети с помощью живых инструкций");
@@ -168,6 +221,8 @@ public class EMailService {
         messageText.append("\nадрес новой платформы - https://moodle.jrr.by/");
 
         messageText.append("\n\nЕсли что-то не получается - позвоните Илье: +375(29) 3333-600.");
+        messageText.append("\nЕсли что-то не получается - позвоните Илье: +375(29) 3333-600.");
+        messageText.append("\nВопросы можно задать и боту: @JavaQuestionsBot");
 
         messageText.append("\nС уважением,");
         messageText.append("\nУправляющий JavaGuru в Беларуси");
@@ -176,7 +231,7 @@ public class EMailService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailTo);
-        message.setSubject("{JG} Возвращайся в комьюнити! Мы растем!!!");
+        message.setSubject("{JG} JavaGuru комьюнити! Мы растем!!!");
         message.setText(messageText.toString());
         emailSender.send(message);
     }

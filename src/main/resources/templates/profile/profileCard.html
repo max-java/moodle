@@ -336,6 +336,42 @@
                                             </table>
                                         </div>
                                         <!-- /.post -->
+                                        <h1>Best student</h1>
+                                        <!-- Post -->
+                                        <div class="post clearfix">
+                                            <table class="table table-hover text-nowrap"
+                                                   th:if="${bestStudentList.size()>0}">
+                                                <thead>
+                                                <tr>
+                                                    <th>Имя</th>
+                                                    <th></th>
+                                                    <th>Лекции</th>
+                                                    <th></th>
+                                                    <th>Фидбеки</th>
+                                                    <th></th>
+                                                    <th>Стендапы</th>
+                                                    <th></th>
+                                                    <th>Телеграммы</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="statistic : ${bestStudentList}">
+                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>
+                                                    <td th:text="${statistic.getLectures().size()}"></td>
+                                                    <td th:text="${statistic.printLectures()}"></td>
+                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>
+                                                    <td th:text="${statistic.printFeedbacks()}"></td>
+                                                    <td th:text="${statistic.getStandups().size()}"></td>
+                                                    <td th:text="${statistic.printStandups()}"></td>
+                                                    <td th:text="${statistic.getTelegram().size()}"></td>
+                                                    <td th:text="${statistic.printTelegram()}"></td>
+
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.post -->
 
 
                                     </div>
