@@ -260,7 +260,6 @@ public class ProfileService {
         setLectures(userActionsLog, userProfileStatisticDTO);
         setFeedbacks(userActionsLog, userProfileStatisticDTO);
         setTeamStandups(userActionsLog, userProfileStatisticDTO);
-        setTelegrams(userActionsLog, userProfileStatisticDTO);
         userProfileStatisticDTO.setUserFirstAndLastName(subscriber.getFullSubscriberName());
         return userProfileStatisticDTO;
     }
@@ -322,20 +321,4 @@ public class ProfileService {
         userProfileStatisticDTO.getStandups().addAll(standups);
 
     }
-
-    private void setTelegrams(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
-
-        List<LocalDate> telegrams = userActionsLog.stream()
-                .filter(a -> a.getEventType() != null)
-                .filter(a -> a.getEventName() != null)
-                .filter(a -> a.getTimestamp() != null)
-                .filter(a -> a.getEventType().equals(EventType.TELEGRAM_CHAT))
-                .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
-                .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
-                .distinct()
-                .collect(Collectors.toList());
-        userProfileStatisticDTO.getTelegram().addAll(telegrams);
-
-    }
-
 }
