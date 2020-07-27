@@ -7,6 +7,7 @@ import by.jrr.constant.View;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.library.bean.Book;
 import by.jrr.library.service.BookService;
+import by.jrr.library.service.IsbnBookSearchService;
 import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ public class BookController {
     FeedbackService feedbackService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    IsbnBookSearchService isbnBookSearchService;
 
     @AdminOnly
     @GetMapping(Endpoint.BOOK)
@@ -59,7 +62,9 @@ public class BookController {
     @AdminOnly
     @PostMapping(Endpoint.BOOK)
     public ModelAndView saveNewIssue(Book issue) {
-        issue = bookService.create(issue);
+        //TODO here it is
+        Book book = isbnBookSearchService.findByIsbn(issue.getIsbn());
+        issue = bookService.create(book);
         return new ModelAndView("redirect:" + Endpoint.BOOK + "/" + issue.getId());
     }
 

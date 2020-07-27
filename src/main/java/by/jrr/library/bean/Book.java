@@ -22,8 +22,8 @@ public class Book implements Reviewable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
 
-    private String img;
     private String name;
+    private String img;
     private String author;
     private String edition;
     private String publisher;
