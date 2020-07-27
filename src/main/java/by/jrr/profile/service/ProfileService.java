@@ -279,43 +279,59 @@ public class ProfileService {
     }
 
     private void setLectures(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
-        List<String> lectures = userActionsLog.stream()
-                .filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
-                .filter(a -> a.getEventName().toLowerCase().startsWith("lecture"))
-                .map(StudentActionToLog::getEventName)
-                .distinct()
-                .collect(Collectors.toList());
-        userProfileStatisticDTO.getLectures().addAll(lectures);
+        try {
+            List<String> lectures = userActionsLog.stream()
+                    .filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
+                    .filter(a -> a.getEventName().toLowerCase().startsWith("lecture"))
+                    .map(StudentActionToLog::getEventName)
+                    .distinct()
+                    .collect(Collectors.toList());
+            userProfileStatisticDTO.getLectures().addAll(lectures);
+        } catch (Exception ex) {
+            // TODO: 27/07/20 log exception: lambda ex NPE in filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
+        }
     }
 
     private void setFeedbacks(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
-        List<String> feedbacks = userActionsLog.stream()
-                .filter(a -> a.getEventType().equals(EventType.FEEDBACK))
-                .map(StudentActionToLog::getEventName)
-                .distinct()
-                .collect(Collectors.toList());
-        userProfileStatisticDTO.getFeedbacks().addAll(feedbacks);
+        try {
+            List<String> feedbacks = userActionsLog.stream()
+                    .filter(a -> a.getEventType().equals(EventType.FEEDBACK))
+                    .map(StudentActionToLog::getEventName)
+                    .distinct()
+                    .collect(Collectors.toList());
+            userProfileStatisticDTO.getFeedbacks().addAll(feedbacks);
+        } catch (Exception ex) {
+            // TODO: 27/07/20 log exception: lambda ex
+        }
     }
 
     private void setTeamStandups(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
-        List<LocalDate> standups = userActionsLog.stream()
-                .filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
-                .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
-                .filter(a -> !a.getEventName().toLowerCase().startsWith("lecture"))
-                .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
-                .distinct()
-                .collect(Collectors.toList());
-        userProfileStatisticDTO.getStandups().addAll(standups);
+        try {
+            List<LocalDate> standups = userActionsLog.stream()
+                    .filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
+                    .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
+                    .filter(a -> !a.getEventName().toLowerCase().startsWith("lecture"))
+                    .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
+                    .distinct()
+                    .collect(Collectors.toList());
+            userProfileStatisticDTO.getStandups().addAll(standups);
+        } catch (Exception ex) {
+            // TODO: 27/07/20 log exception: lambda ex NPE
+        }
     }
 
     private void setTelegrams(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
-        List<LocalDate> telegrams = userActionsLog.stream()
-                .filter(a -> a.getEventType().equals(EventType.TELEGRAM_CHAT))
-                .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
-                .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
-                .distinct()
-                .collect(Collectors.toList());
-        userProfileStatisticDTO.getTelegram().addAll(telegrams);
+        try {
+            List<LocalDate> telegrams = userActionsLog.stream()
+                    .filter(a -> a.getEventType().equals(EventType.TELEGRAM_CHAT))
+                    .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
+                    .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
+                    .distinct()
+                    .collect(Collectors.toList());
+            userProfileStatisticDTO.getTelegram().addAll(telegrams);
+        } catch (Exception ex) {
+            // TODO: 27/07/20 log exception: lambda ex NPE
+        }
     }
 
 }
