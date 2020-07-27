@@ -8,7 +8,11 @@ import by.jrr.feedback.bean.EntityType;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.profile.bean.UserProfileStatisticDTO;
 import by.jrr.profile.repository.ProfileRepository;
+import by.jrr.registration.bean.EventType;
+import by.jrr.registration.bean.StudentActionToLog;
+import by.jrr.registration.service.StudentActionToLogService;
 import org.hibernate.mapping.Collection;
 import org.jsoup.select.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -43,6 +48,8 @@ public class ProfileService {
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    StudentActionToLogService satls;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -113,7 +120,7 @@ public class ProfileService {
     }
 
     public Optional<Profile> findProfileByProfileId(Long id) {
-        if(id == null) {
+        if (id == null) {
             return Optional.empty();
             // TODO: 17/06/20 поймал ошибку на CI, что из Бд пришел null.
             // возможно, что из-за того, что руками удалял поля с any-to-many//
@@ -124,8 +131,9 @@ public class ProfileService {
         profile.ifPresent(p -> setUserDataToProfile(p));
         return profile;
     }
+
     public Optional<Profile> findProfileByProfileIdLazy(Long id) {
-        if(id == null) {
+        if (id == null) {
             return Optional.empty();
             // TODO: 17/06/20 поймал ошибку на CI, что из Бд пришел null.
             // возможно, что из-за того, что руками удалял поля с any-to-many//
@@ -144,6 +152,7 @@ public class ProfileService {
         profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
         return profile;
     }
+
     public Long getCurrentUserProfileId() {
         return getCurrentUserProfile().getId();
     }
@@ -228,13 +237,14 @@ public class ProfileService {
             return Optional.empty();
         }
     }
+
     public List<Profile> findStreamsByCourseIdFromNowAndLastMonth(Long courseId) {
         List<Profile> streams = new ArrayList<>();
         try {
             streams = profileRepository.findAllByCourseIdAndDateStartAfter(courseId, LocalDate.now().minusMonths(1)).stream()
                     .filter(p -> p.getDateStart() != null)
                     .sorted(Comparator.comparing(p -> p.getDateStart()))
-            .collect(Collectors.toList());
+                    .collect(Collectors.toList());
         } catch (Exception ex) {
             // TODO: 16/06/20 log exception
             System.out.println("exception on finding man date of course");
@@ -242,4 +252,70 @@ public class ProfileService {
         }
         return streams;
     }
+
+    public UserProfileStatisticDTO caclulateStatisticsForUserProfile(StreamAndTeamSubscriber subscriber) { // TODO: 27/07/20 move this method to salts as statistics
+        List<StudentActionToLog> userActionsLog = satls.findAllActionsForProfileId(subscriber.getSubscriberProfileId());
+        UserProfileStatisticDTO userProfileStatisticDTO = new UserProfileStatisticDTO();
+        setFirstLecture(userActionsLog, userProfileStatisticDTO);
+        setLectures(userActionsLog, userProfileStatisticDTO);
+        setFeedbacks(userActionsLog, userProfileStatisticDTO);
+        setTeamStandups(userActionsLog, userProfileStatisticDTO);
+        setTelegrams(userActionsLog, userProfileStatisticDTO);
+        userProfileStatisticDTO.setUserFirstAndLastName(subscriber.getFullSubscriberName());
+        return userProfileStatisticDTO;
+    }
+
+    private void setFirstLecture(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
+        List<StudentActionToLog> firstLection = userActionsLog.stream()
+//                .peek(e -> System.out.println("before filter date is after: " + e))
+                .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 18, 30)))
+//                .peek(e -> System.out.println("after filter date is after: " + e))
+                .filter(a -> a.getTimestamp().isBefore(LocalDateTime.of(2020, 07, 06, 19, 30)))
+//                .peek(e -> System.out.println("after filter date is Before: " + e))
+                .collect(Collectors.toList());
+        if (firstLection.size() > 0) {
+            userProfileStatisticDTO.getLectures().add("Lecture 1");
+        }
+    }
+
+    private void setLectures(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
+        List<String> lectures = userActionsLog.stream()
+                .filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
+                .filter(a -> a.getEventName().toLowerCase().startsWith("lecture"))
+                .map(StudentActionToLog::getEventName)
+                .distinct()
+                .collect(Collectors.toList());
+        userProfileStatisticDTO.getLectures().addAll(lectures);
+    }
+
+    private void setFeedbacks(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
+        List<String> feedbacks = userActionsLog.stream()
+                .filter(a -> a.getEventType().equals(EventType.FEEDBACK))
+                .map(StudentActionToLog::getEventName)
+                .distinct()
+                .collect(Collectors.toList());
+        userProfileStatisticDTO.getFeedbacks().addAll(feedbacks);
+    }
+
+    private void setTeamStandups(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
+        List<LocalDate> standups = userActionsLog.stream()
+                .filter(a -> a.getEventType().equals(EventType.TEAM_STAND_UP))
+                .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
+                .filter(a -> !a.getEventName().toLowerCase().startsWith("lecture"))
+                .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
+                .distinct()
+                .collect(Collectors.toList());
+        userProfileStatisticDTO.getStandups().addAll(standups);
+    }
+
+    private void setTelegrams(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
+        List<LocalDate> telegrams = userActionsLog.stream()
+                .filter(a -> a.getEventType().equals(EventType.TELEGRAM_CHAT))
+                .filter(a -> a.getTimestamp().isAfter(LocalDateTime.of(2020, 07, 06, 23, 59)))
+                .map(a -> LocalDate.of(a.getTimestamp().getYear(), a.getTimestamp().getMonth(), a.getTimestamp().getDayOfMonth()))
+                .distinct()
+                .collect(Collectors.toList());
+        userProfileStatisticDTO.getTelegram().addAll(telegrams);
+    }
+
 }
