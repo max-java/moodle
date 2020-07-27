@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface NerdTermLibraryRepository extends PagingAndSortingRepository<NerdTermLibrary, Long>{
     List<NerdTermLibrary> findByTermIgnoreCase(String term);
-    Optional<NerdTermLibrary> findByTermAndDefinition(String term, String definition);
+    List<NerdTermLibrary> findByTermAndDefinition(String term, String definition);
 }
 
