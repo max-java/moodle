@@ -9,11 +9,15 @@ import by.jrr.moodle.bean.CourseToLecture;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.profile.bean.UserProfileStatisticDTO;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
 import by.jrr.profile.service.StreamAndTeamSubscriberService;
+import by.jrr.registration.service.StudentActionToLogService;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProfileCardController {
@@ -45,6 +48,8 @@ public class ProfileCardController {
     CourseToLectureService courseToLectureService;
     @Autowired
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
+    @Autowired
+    StudentActionToLogService satls;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -63,12 +68,27 @@ public class ProfileCardController {
             } else {
                 mov.addObject("topicList", new ArrayList<>());
             }
+            mov.addObject("bestStudentList",calculateBestStudent(profile.get().getSubscribers()));
 
         } else {
             mov.setViewName(View.PAGE_404);
         }
         return mov;
 //        <a href="/stream/register">new Stream</a> | <a href="/team/register">new Team</a> // TODO: 07/06/20
+    }
+
+    private List<UserProfileStatisticDTO> calculateBestStudent(List<StreamAndTeamSubscriber> subsribers) {
+        List<UserProfileStatisticDTO> statistics = new ArrayList<>();
+        for (StreamAndTeamSubscriber subscriber : subsribers) {
+            statistics.add(profileService.caclulateStatisticsForUserProfile(subscriber));
+        }
+        statistics = statistics.stream()
+                .filter(a -> a.getLectures().size()<4)
+                .collect(Collectors.toList());
+        Collections.sort(statistics);
+        Collections.reverse(statistics);
+
+        return statistics;
     }
 
     private boolean isSubscribeAble(Long profileId) {

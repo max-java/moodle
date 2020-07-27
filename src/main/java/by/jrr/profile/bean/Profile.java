@@ -69,4 +69,9 @@ public class Profile {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Profile{toString() not implemented}"; // TODO: 27/07/20 insert this because of stack overflow exception
+    }
 }
