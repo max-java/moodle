@@ -25,6 +25,7 @@ public class EMailService {
         sendQuickRegostrationPassword(to, password, firstAndLastName);
     }
     private void sendQuickRegostrationPassword(String to, String password, String firstAndLastName) {
+        System.out.println(">> In sendQuickRegostrationPassword ");
         StringBuffer messageText = new StringBuffer();
         messageText.append("Добрый день, "+firstAndLastName+"!");
         messageText.append("\n\nЭто продолжение сообщения об успешной регистрации на образовательной платформе https://moodle.jrr.by !");
@@ -55,6 +56,7 @@ public class EMailService {
         emailSender.send(message);
     }
     public void amoCrmTrigger(String userEmail, String firstAndLastName, String userPhone) {
+        System.out.println(">> In amoCrmTrigger");
         StringBuffer messageText = new StringBuffer();
         messageText.append("Заявка с Java Bootcamp");
         messageText.append("\nОт: "+firstAndLastName);
