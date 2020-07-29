@@ -22,7 +22,7 @@ public class UserSearchService {
                     )
                 )
                 .stream()
-                .distinct()// TODO: 26/05/20 не дистинктит. переписать equals & hashcode?
+                .distinct()// TODO: 26/05/20 не дистинктит. переписать equals & hashcode? implement test
                 .map(UserService::erasePasswordDataBeforeResponse)
                 .collect(Collectors.toList());
     } // M.Shelkovich: see https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.details

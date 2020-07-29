@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -143,5 +144,13 @@ public class StudentActionToLogService {
         }
 
         return dtoList;
+    }
+
+    public Optional<StudentActionToLog> findLastActionBeforeTimestamp(LocalDateTime timestamp) {
+        List<StudentActionToLog> studentActionToLogList = satlR.findAllByTimestampBetween(timestamp, timestamp.minusSeconds(30));
+        if (studentActionToLogList.size() > 0) {
+            return Optional.of(studentActionToLogList.get(studentActionToLogList.size()-1));
+        }
+        return Optional.empty();
     }
 }
