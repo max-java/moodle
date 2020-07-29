@@ -7,6 +7,6 @@ public class HelpProcessor implements Processor {
 
     @Override
     public String run() {
-        return "Nothing I can help you now, sorry...";
+        return "Magic is happening";
     }
 }

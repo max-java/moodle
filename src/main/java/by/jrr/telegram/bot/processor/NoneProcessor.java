@@ -7,6 +7,6 @@ public class NoneProcessor implements Processor {
 
     @Override
     public String run() {
-        return "Nothing I can help you now, sorry...";
+        return "magic is happening";
     }
 }
