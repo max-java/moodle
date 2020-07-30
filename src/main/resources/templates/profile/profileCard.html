@@ -279,38 +279,8 @@
                                         <!-- /.post -->
 
                                         <!-- Post -->
-                                        <div class="post clearfix">
-                                            <table class="table table-hover text-nowrap"
-                                                   th:if="${profile.getSubscribers().size()>0}">
-                                                <thead>
-                                                <tr>
-                                                    <th>Статус</th>
-                                                    <th>Имя</th>
-                                                    <th>Профиль</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="subscriber : ${profile.getSubscribers()}">
-                                                    <td th:text="${subscriber.getStatus()}"></td>
-                                                    <td th:text="${subscriber.getFullSubscriberName()}"></td>
-                                                    <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
-                                                    </td>
-                                                    <td th:if="${isUserIsOwner}">
-                                                        <form method="post">
-                                                            <input name="subscriberProfileId" th:value="${subscriber.getSubscriberProfileId()}"
-                                                                   type="hidden">
-                                                            <button class="btn btn-primary btn-block" name="command" type="submit"
-                                                                    value="approve"><b>Принять</b>
-                                                            </button>
-                                                            <button class="btn btn-primary btn-block" name="command" type="submit"
-                                                                    value="reject"><b>Отклонить</b>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-
-                                                </tbody>
-                                            </table>
+                                        <div th:if="${profile.getSubscribers().size()>0}">
+                                            <div th:include="profile/list :: subscribers"></div>
                                         </div>
                                         <!-- /.post -->
 

@@ -17,6 +17,7 @@ import by.jrr.project.bean.Issue;
  */
 
 public class LinkGenerator {
+    public static final String DEFAULT_USERPIC = "/dist/img/user5-128x128.jpg";
 
     public static String getLinkTo(Object o) {
         if (o instanceof Issue) {
@@ -78,7 +79,11 @@ public class LinkGenerator {
     public static String getLinkToUserpic(Object o) {
         if (o instanceof Profile) {
             Profile profile = (Profile) o;
-            return Endpoint.IMAGE + "/" + profile.getAvatarFileName();
+            if(profile.getAvatarFileName() != null) {
+                return Endpoint.IMAGE + "/" + profile.getAvatarFileName();
+            } else {
+                return DEFAULT_USERPIC;
+            }
         }
         return "#";
     }
