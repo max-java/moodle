@@ -18,99 +18,136 @@
 
         <!-- Main content -->
         <section class="content">
-            <!-- Default box -->
-            <div class="card card-solid">
-                <div class="card-body">
-                    <div class="row">
+            <div class="row">
+                <div class="col-lg-2">
+                    <form>
+                        <button class="btn btn-primary col-md-12 mt-1" type="submit" name="command" value="">Студенты</button>
+                        <button class="btn btn-primary col-md-12 mt-1" type="submit">Комманды</button>
+                        <button class="btn btn-primary col-md-12 mt-1" type="submit">Стримы</button>
+                    </form>
+                </div>
+                <div class="col-lg-8">
+                    <!-- Default box -->
+                    <div class="card card-solid">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="">
+                                        <div class="card-header">
+                                            <form>
+                                                <div class="input-group input-group-lg">
 
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Students and Teachers</h3>
+                                                    <input class="form-control float-right" name="searchTerm"
+                                                           placeholder="Search"
+                                                           type="text">
 
-                                    <div class="card-tools">
-                                        <form>
-                                            <div class="input-group input-group-sm" style="width: 150px;">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-default" type="submit"><i
+                                                                class="fas fa-search"></i></button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- /.card-header -->
 
-                                                <input class="form-control float-right" name="searchTerm"
-                                                       placeholder="Search"
-                                                       type="text">
+                                        <div class="card-body">
 
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-default" type="submit"><i
-                                                            class="fas fa-search"></i></button>
+                                            <div class="row">
+                                                <div class="col-12" th:each="profile : ${profilePage}">
+                                                    <div class="card">
+                                                        <!--                                                        <div class="card-header">-->
+                                                        <!--                                                            <h3 class="card-title">admin view</h3>-->
+                                                        <!--                                                            <div class="card-tools">-->
+                                                        <!--                                                                <button class="btn btn-tool" data-toggle="tooltip"-->
+                                                        <!--                                                                        style="background: rgb(43, 43, 43) !important;" title="Mark as read"-->
+                                                        <!--                                                                        type="button">-->
+                                                        <!--                                                                    <i class="far fa-circle"></i></button>-->
+                                                        <!--                                                                <button class="btn btn-tool" data-card-widget="collapse"-->
+                                                        <!--                                                                        style="background: rgb(43, 43, 43) !important;"-->
+                                                        <!--                                                                        type="button">-->
+                                                        <!--                                                                    <i class="fas fa-minus"></i>-->
+                                                        <!--                                                                </button>-->
+                                                        <!--                                                                <button class="btn btn-tool" data-card-widget="remove"-->
+                                                        <!--                                                                        style="background: rgb(43, 43, 43) !important;"-->
+                                                        <!--                                                                        type="button">-->
+                                                        <!--                                                                    <i class="fas fa-times"></i>-->
+                                                        <!--                                                                </button>-->
+                                                        <!--                                                            </div>-->
+                                                        <!--                                                            &lt;!&ndash; /.card-tools &ndash;&gt;-->
+                                                        <!--                                                        </div>-->
+                                                        <div class="card-body">
+                                                            <div class="user-block">
+                                                                <img alt="User Image"
+                                                                     class="img-circle"
+                                                                     src="../dist/img/user1-128x128.jpg">
+                                                                <span class="username"><a
+                                                                        th:href="${'/profile/'+profile.getId()}"
+                                                                        th:text="${profile.getUser().getFullUserName()}">Jonathan Burke Jr.</a></span>
+                                                                <span class="description">&nbsp;</span>
+                                                            </div>
+                                                            <!-- /.user-block -->
+                                                        </div>
+                                                        <!-- /.card-body -->
+                                                        <!--                                                        <div class="card-footer">-->
+                                                        <!--                                                            more info-->
+                                                        <!--                                                        </div>-->
+                                                        <!-- /.card-footer-->
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </form>
+                                        </div>
+                                        <!-- /.card-body -->
                                     </div>
+                                    <!-- /.card -->
                                 </div>
-                                <!-- /.card-header -->
-                                <div class="card-body table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
-                                        <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Card</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr th:each="profile : ${profilePage}">
-                                            <td th:text="${profile.getUser().getFullUserName()}"></td>
-                                            <td><a th:href="${'/profile/'+profile.getId()}">open</a></td>
-                                        </tr>
+                                <ul class="pagination pagination-lg m-0">
+                                    <li class="page-item"
+                                        th:if="${profilePage.hasPrevious()}">
+                                        <a class="page-link" th:href="${'/profiles?searchTerm='
+                                    +searchTerm+
+                                    '&page='+(profilePage.getNumber())}">&laquo;</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:if="${profilePage.hasPrevious()}">
+                                        <a class="page-link" th:href="${'/profiles?searchTerm='
+                                    +searchTerm+
+                                    '&page='+(profilePage.getNumber())}" th:text="${(profilePage.getNumber())}"></a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger" th:href="${'/profiles?searchTerm='
+                                    +searchTerm+
+                                    '&page='+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+1)}"></a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:if="${profilePage.hasNext()}">
+                                        <a class="page-link" th:href="${'/profiles?searchTerm='
+                                    +searchTerm+
+                                    '&page='+(profilePage.getNumber()+2)}" th:text="${(profilePage.getNumber()+2)}"></a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:if="${profilePage.hasNext()}" }>
+                                        <a class="page-link" href="#">...</a></li>
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
+                                    <li class="page-item"
+                                        th:if="${profilePage.hasNext()}">
+                                        <a class="page-link" th:href="${'/profiles?searchTerm='
+                                    +searchTerm+
+                                    '&page='+(profilePage.getTotalPages())}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:if="${profilePage.hasNext()}">
+                                        <a class="page-link" th:href="${'/profiles?searchTerm='
+                                    +searchTerm+
+                                    '&page='+(profilePage.getNumber()+2)}">&raquo;</a>
+                                    </li>
+                                </ul>
+
                             </div>
-                            <!-- /.card -->
+                            <!-- /.row -->
                         </div>
-                        <ul class="pagination pagination-lg m-0">
-                            <li class="page-item"
-                                th:if="${profilePage.hasPrevious()}">
-                                <a class="page-link" th:href="${'/profiles?searchTerm='
-                                +searchTerm+
-                                '&page='+(profilePage.getNumber())}">&laquo;</a>
-                            </li>
-                            <li class="page-item"
-                                th:if="${profilePage.hasPrevious()}">
-                                <a class="page-link" th:href="${'/profiles?searchTerm='
-                                +searchTerm+
-                                '&page='+(profilePage.getNumber())}" th:text="${(profilePage.getNumber())}"></a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link text-danger" th:href="${'/profiles?searchTerm='
-                                +searchTerm+
-                                '&page='+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+1)}"></a>
-                            </li>
-                            <li class="page-item"
-                                th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles?searchTerm='
-                                +searchTerm+
-                                '&page='+(profilePage.getNumber()+2)}" th:text="${(profilePage.getNumber()+2)}"></a>
-                            </li>
-                            <li class="page-item"
-                                th:if="${profilePage.hasNext()}"}>
-                                <a class="page-link" href="#">...</a></li>
-
-                            <li class="page-item"
-                                th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles?searchTerm='
-                                +searchTerm+
-                                '&page='+(profilePage.getTotalPages())}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>
-                            </li>
-                            <li class="page-item"
-                                th:if="${profilePage.hasNext()}">
-                                <a class="page-link" th:href="${'/profiles?searchTerm='
-                                +searchTerm+
-                                '&page='+(profilePage.getNumber()+2)}">&raquo;</a>
-                            </li>
-                        </ul>
-
                     </div>
-                    <!-- /.row -->
                 </div>
+                <div class="col-lg-2">&nbsp;</div>
             </div>
         </section>
         <!-- /.content -->
