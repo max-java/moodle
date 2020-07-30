@@ -77,11 +77,4 @@ public class Profile {
     public String toString() {
         return "Profile{toString() not implemented}"; // TODO: 27/07/20 insert this because of stack overflow exception
     }
-    public String getAvatarFileName() {
-        if(this.avatarFileName != null) {
-            return Endpoint.IMAGE + "/" + avatarFileName;
-        } else {
-            return null;
-        }
-    }
 }
