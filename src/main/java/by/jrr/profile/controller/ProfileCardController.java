@@ -108,7 +108,7 @@ public class ProfileCardController {
                                     @RequestParam Optional<String> command
     ) {
 
-        if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
+        if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) { // TODO: 30/07/20 admin should be able to upload avatar
             if (avatar.isPresent()) {
                 saveAvatar(avatar, profileId);
             }
