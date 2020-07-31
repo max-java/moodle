@@ -6,6 +6,7 @@ import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
+import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.Profile;
@@ -52,6 +53,8 @@ public class ProfileCardController {
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
     @Autowired
     StudentActionToLogService satls;
+    @Autowired
+    HistoryItemService historyItemService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -63,7 +66,10 @@ public class ProfileCardController {
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
+//            mov.addObject("isUserIsAdmin", UserAccessService.hasRole(UserRoles.ROLE_ADMIN)); // TODO: 31/07/20 set here null, or "", or  and see result
+            mov.addObject("isUserIsAdmin", true); // TODO: 31/07/20 set here null, or "", or  and see result
             mov.addObject("streamImage", LinkGenerator.getLinkToUserpic(profile.get()));
+            mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
             mov.addObject("STREAM", UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM));
             mov.addObject("TEAM", UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM));
             mov.addObject("STUDENT", !(
