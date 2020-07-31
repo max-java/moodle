@@ -1,14 +1,12 @@
 package by.jrr.crm.bean;
 
+import by.jrr.crm.common.HistoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,14 +14,18 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryItem implements HistoryItemInterface{
+public class Task implements History {
     @Id
     @GeneratedValue
     Long id;
     Long profileId;
     LocalDateTime timestamp;
+    LocalDateTime deadLine;
+    Boolean isFinished;
     @Column(columnDefinition = "TEXT")
     String text;
+    @Transient
+    HistoryType type = HistoryType.TASK;
 
     public Long getProfileId() {
         return profileId;

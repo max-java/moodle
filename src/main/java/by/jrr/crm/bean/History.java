@@ -2,7 +2,7 @@ package by.jrr.crm.bean;
 
 import java.time.LocalDateTime;
 
-public interface HistoryItemInterface {
+public interface History {
 
     Long getId();
 
