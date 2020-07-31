@@ -107,12 +107,12 @@ public class UserService {
         User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
         autoLogin(login, password);
-        user = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
+        final User saveduser = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         System.out.println(" before executing in threads ");
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
         new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
-        new Thread(() -> tgMessageService.sendContactDataToAdministrator(email, firstAndLastName, phone)).start(); // TODO: 29/07/20 consider to handle this as an event
-        return user;
+        new Thread(() -> tgMessageService.sendContactDataToAdministrator(email, saveduser.getName(), saveduser.getLastName(), phone)).start(); // TODO: 29/07/20 consider to handle this as an event
+        return saveduser;
     }
 
     private void autoLogin(String username, String password) {

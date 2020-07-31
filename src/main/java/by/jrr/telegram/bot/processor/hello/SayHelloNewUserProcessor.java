@@ -57,7 +57,8 @@ public class SayHelloNewUserProcessor implements Processor {
                     if(!tgUser.getIsBot()) {
                         messageService.sendMessage(tgUser, response);
                     }
-                    messageService.sendMessage(Chat.JRR_BY, response); // TODO: 29/07/20 Just for test purpouses
+                    messageService.sendMessage(Chat.JRR_BY, getNotificationMessageForAdmin(tgUser, message)); // TODO: 29/07/20 Just for test purpouses
+                    messageService.sendMessage(Chat.CURATOR_JG_MINSK, getNotificationMessageForAdmin(tgUser, message)); // TODO: 29/07/20 Just for test purpouses
                     sendIntroductionMessage(message, tgUser);
                 }
             }
@@ -141,6 +142,13 @@ public class SayHelloNewUserProcessor implements Processor {
             }
             messageService.sendMessage(message, getRandomIntroductionMessage(tgUser));
         }).start();
+    }
+
+    private String getNotificationMessageForAdmin(TgUser tgUser, Message message) {
+        return "first: " + tgUser.getFirstName()
+                + "\n last: " + tgUser.getLastName()
+                + "\n nick: " + tgUser.getUserName()
+                + "\n joined chat - " + message.getChat().getTitle();
     }
 
 }

@@ -23,72 +23,15 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3">
+                        <form method="post" class="mb-2" th:unless="${isSubscribeAble}">
+                            <button class="btn btn-primary btn-block" name="subscribe" type="submit"
+                                    value="subscribe"><b>Записаться</b></button>
+                        </form>
 
-                        <!-- Profile Image -->
-                        <div class="card card-primary card-outline">
-                            <div class="card-body box-profile">
-                                <div class="text-center">
-                                    <img alt="User profile picture"
-                                         class="profile-user-img img-fluid img-circle"
-                                         th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(profile)}">
-                                </div>
+                        <div th:include="profile/stream::card" th:if="${STREAM}"></div>
+                        <div th:include="profile/student::card"th:if="${TEAM}"></div>
+                        <div th:include="profile/student::card"th:if="${STUDENT}"></div>
 
-                                <h3 class="profile-username text-center">
-                                    <span th:text="${profile.getUser().getName()}"></span><br />
-                                    <span th:text="${profile.getUser().getLastName()}"></span>
-                                </h3>
-
-                                <p class="text-muted text-center" th:text="${profile.getUser().getAllRoles()}">Software
-                                    Engineer</p>
-
-                                <h2>Прогресс обучения</h2>
-                                <h3>Теория</h3>
-                                <ul class="list-group list-group-unbordered mb-3">
-                                    <li class="list-group-item">
-                                        <b>Вопросов</b> <a class="float-right"
-                                                           th:text="${statistic.getQAndAsLearnedT().size()}">1,322</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <b>Лекций</b> <a class="float-right"
-                                                         th:text="${statistic.getLecturesLearnedT().size()}">543</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <b>Статей</b> <a class="float-right"
-                                                         th:text="${statistic.getTopicsLearnedT().size()}">13,287</a>
-                                    </li>
-                                </ul>
-
-                                <h3>Практика</h3>
-                                <ul class="list-group list-group-unbordered mb-3">
-                                    <li class="list-group-item">
-                                        <b>Решено задач</b> <a class="float-right"
-                                                               th:text="${statistic.getPracticesApprovedR().size()}">1,322</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <b>Опубликовано постов</b> <a class="float-right"
-                                                                      th:text="${statistic.getSubjectsCRApprovedR().size()}">543</a>
-                                    </li>
-                                </ul>
-
-                                <h3>Реальный опыт</h3>
-                                <ul class="list-group list-group-unbordered mb-3">
-                                    <li class="list-group-item">
-                                        <b>Реализовано сторей</b> <a class="float-right"
-                                                                     th:text="${statistic.getIssuesCRApprovedStoriesR().size()}">1,322</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <b>Пофикшено багов</b> <a class="float-right"
-                                                                  th:text="${statistic.getIssuesCRApprovedBugsR().size()}">543</a>
-                                    </li>
-                                </ul>
-                                <form method="post" th:unless="${isSubscribeAble}">
-                                    <button class="btn btn-primary btn-block" name="subscribe" type="submit"
-                                            value="subscribe"><b>Записаться</b></button>
-                                </form>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
 
                         <!-- About Me Box -->
                         <!--                        <div class="card card-primary">-->
@@ -279,38 +222,8 @@
                                         <!-- /.post -->
 
                                         <!-- Post -->
-                                        <div class="post clearfix">
-                                            <table class="table table-hover text-nowrap"
-                                                   th:if="${profile.getSubscribers().size()>0}">
-                                                <thead>
-                                                <tr>
-                                                    <th>Статус</th>
-                                                    <th>Имя</th>
-                                                    <th>Профиль</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="subscriber : ${profile.getSubscribers()}">
-                                                    <td th:text="${subscriber.getStatus()}"></td>
-                                                    <td th:text="${subscriber.getFullSubscriberName()}"></td>
-                                                    <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
-                                                    </td>
-                                                    <td th:if="${isUserIsOwner}">
-                                                        <form method="post">
-                                                            <input name="subscriberProfileId" th:value="${subscriber.getSubscriberProfileId()}"
-                                                                   type="hidden">
-                                                            <button class="btn btn-primary btn-block" name="command" type="submit"
-                                                                    value="approve"><b>Принять</b>
-                                                            </button>
-                                                            <button class="btn btn-primary btn-block" name="command" type="submit"
-                                                                    value="reject"><b>Отклонить</b>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-
-                                                </tbody>
-                                            </table>
+                                        <div th:if="${profile.getSubscribers().size()>0}">
+                                            <div th:include="profile/list :: subscribers"></div>
                                         </div>
                                         <!-- /.post -->
 

@@ -1,7 +1,10 @@
 package by.jrr.profile.controller;
 
+import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
+import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
 import by.jrr.moodle.service.CourseToLectureService;
@@ -60,6 +63,13 @@ public class ProfileCardController {
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
+            mov.addObject("streamImage", LinkGenerator.getLinkToUserpic(profile.get()));
+            mov.addObject("STREAM", UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM));
+            mov.addObject("TEAM", UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM));
+            mov.addObject("STUDENT", !(
+                            UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM)
+                            || UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM)
+                            ));
             mov.addObject("couldUpdate", profileId.equals(profileService.getCurrentUserProfileId())
                     || pss.isCurrentUserOwner(profileId));
             if (profile.get().getCourseId() != null) {
@@ -108,7 +118,7 @@ public class ProfileCardController {
                                     @RequestParam Optional<String> command
     ) {
 
-        if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) {
+        if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) { // TODO: 30/07/20 admin should be able to upload avatar
             if (avatar.isPresent()) {
                 saveAvatar(avatar, profileId);
             }
@@ -155,7 +165,7 @@ public class ProfileCardController {
             try {
                 Profile updatedProfile = profile.get();
                 updatedProfile.setAvatarFileName(fileService.saveUploaded(avatar.get(), Optional.empty()));
-                profileService.createProfile(updatedProfile);
+                profileService.updateProfile(updatedProfile);
             } catch (IOException e) {
                 // TODO: 01/06/20 log exceptions
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package by.jrr.profile.bean;
 
 import by.jrr.auth.bean.User;
+import by.jrr.constant.Endpoint;
 import by.jrr.moodle.bean.Course;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static by.jrr.constant.LinkGenerator.DEFAULT_USERPIC;
 
 @Entity
 @Data
@@ -61,7 +64,7 @@ public class Profile {
     @Transient
     private Course course;
 
-    public boolean isLinkPresent(String link) { // TODO: 05/07/20 this need to make UI button visible if link is present
+    public boolean isLinkPresent(String link) { // TODO: 05/07/20 this need to make UI button (in ex. zoomLink) visible if link is present
         if (link == null) {
             return false;
         } else if(link.isEmpty()) {
