@@ -1,5 +1,6 @@
 package by.jrr.auth.service;
 
+import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserData;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.profile.bean.Profile;
@@ -48,6 +49,9 @@ public class UserAccessService {
     {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
+    }
+    public static boolean isUserHasRole(User user, UserRoles role) {
+        return user.getAllRoles().contains(role.name());
     }
 }
 /*
