@@ -79,20 +79,40 @@
                         <div class="card">
                             <div class="card-header p-2">
                                 <ul class="nav nav-pills">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#activity">Activity</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                           th:classappend="${isUserIsAdmin} ? '' : active"
+                                           data-toggle="tab"
+                                           href="#activity">Activity</a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#timeline">Timeline</a></li>
-                                    <li class="nav-item"
-                                        th:if="${couldUpdate}"><a class="nav-link" data-toggle="tab"
-                                                            href="#settings">Settings</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#lectures">Лекции курса</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                           data-toggle="tab"
+                                           href="#timeline">Timeline</a>
+                                    </li>
+                                    <li th:if="${couldUpdate}"
+                                        class="nav-item">
+                                        <a class="nav-link"
+                                           data-toggle="tab"
+                                           href="#settings">Settings</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                           data-toggle="tab"
+                                           href="#lectures">Лекции курса</a>
+                                    </li>
+                                    <li th:if="${isUserIsAdmin}"
+                                        class="nav-item" >
+                                        <a class="nav-link"
+                                           th:classappend="${isUserIsAdmin} ? active : ''"
+                                           data-toggle="tab"
+                                           href="#lead-detail">CRM</a>
+                                    </li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
                                 <div class="tab-content">
-                                    <div class="active tab-pane" id="activity">
+                                    <div class="tab-pane" id="activity" th:classappend="${isUserIsAdmin} ? '' : active">
 
 
 
@@ -383,6 +403,7 @@
 
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="settings">
+                                        <form></form>
                                         <form class="form-horizontal" method="post"
                                               th:action="'/profile/'+${profile.getId()}+'/update'">
                                             <input class="form-control" name="id" th:value="${profile.getId()}"
@@ -521,6 +542,11 @@
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="lectures">
                                         <div th:insert="moodle/lectureList :: lectureList"></div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="lead-detail" th:classappend="${isUserIsAdmin} ? active : ''">
+                                        <div th:insert="profile/admin/leadDetailHistory :: history"></div>
                                     </div>
                                     <!-- /.tab-pane -->
 
