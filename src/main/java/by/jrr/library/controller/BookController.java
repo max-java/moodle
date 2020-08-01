@@ -7,6 +7,7 @@ import by.jrr.constant.View;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.library.bean.Book;
 import by.jrr.library.service.BookService;
+import by.jrr.library.service.IsbnBookSearchService;
 import by.jrr.profile.service.ProfilePossessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,9 @@ public class BookController {
     FeedbackService feedbackService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    IsbnBookSearchService isbnBookSearchService;
 
-    @AdminOnly
     @GetMapping(Endpoint.BOOK)
     public ModelAndView createNewIssue() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -56,37 +58,37 @@ public class BookController {
         return mov;
     }
 
-    @AdminOnly
     @PostMapping(Endpoint.BOOK)
     public ModelAndView saveNewIssue(Book issue) {
-        issue = bookService.create(issue);
+        Book book = isbnBookSearchService.findByIsbn(issue.getIsbn());
+        issue = bookService.create(book);
         return new ModelAndView("redirect:" + Endpoint.BOOK + "/" + issue.getId());
     }
 
 
-    @PostMapping(Endpoint.BOOK + "/{bookId}")
-    public ModelAndView updateIssue(Book issue, HttpServletRequest request,
-                                    @PathVariable Long bookId,
-                                    @RequestParam(value = "edit", required = false) boolean edit) {
-
-
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.setViewName(View.BOOK);
-
-        if (edit) {
-            Optional<Book> issueToUpdate = bookService.findById(issue.getId());
-            if (issueToUpdate.isPresent()) {
-                mov.addObject("issue", issueToUpdate.get());
-                mov.addObject("edit", true);
-            } else { // TODO: 11/05/20 impossible situation, but should be logged
-                mov.setViewName(View.PAGE_404);
-            }
-        } else {
-            issue = bookService.update(issue);
-            return new ModelAndView("redirect:" + Endpoint.BOOK + "/" + issue.getId());
-
-        }
-        return mov;
-        // TODO: 11/05/20 replace if-else with private methods
-    }
+//    @PostMapping(Endpoint.BOOK + "/{bookId}")
+//    public ModelAndView updateIssue(Book issue, HttpServletRequest request,
+//                                    @PathVariable Long bookId,
+//                                    @RequestParam(value = "edit", required = false) boolean edit) {
+//
+//
+//        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+//        mov.setViewName(View.BOOK);
+//
+//        if (edit) {
+//            Optional<Book> issueToUpdate = bookService.findById(issue.getId());
+//            if (issueToUpdate.isPresent()) {
+//                mov.addObject("issue", issueToUpdate.get());
+//                mov.addObject("edit", true);
+//            } else { // TODO: 11/05/20 impossible situation, but should be logged
+//                mov.setViewName(View.PAGE_404);
+//            }
+//        } else {
+//            issue = bookService.update(issue);
+//            return new ModelAndView("redirect:" + Endpoint.BOOK + "/" + issue.getId());
+//
+//        }
+//        return mov;
+//        // TODO: 11/05/20 replace if-else with private methods
+//    }
 }

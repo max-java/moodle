@@ -31,7 +31,7 @@
                         <form method="post" th:object="${issue}">
                             <input th:field="*{id}" type="hidden"/>
                             <input th:field="*{name}" type="hidden"/>
-                            <button name="edit" type="submit" value="true">edit</button>
+<!--                            <button name="edit" type="submit" value="true">edit</button>-->
                         </form>
                         <div class="card" th:insert="library/bookCard :: issueCard">
                         </div>

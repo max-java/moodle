@@ -26,9 +26,11 @@
                 <p th:utext="${issue.getPublisher()}"></p>
                 <h3>Published</h3>
                 <p th:utext="${issue.getPublished()}"></p>
+                <h3>Published</h3>
+                <p th:utext="${issue.getDescription()}"></p>
             </div>
             <div class="col-md-6">
-                &nbsp;
+                &nbsp;<img th:src="${issue.getImg()}"/>
             </div>
         </div>
     </div>
