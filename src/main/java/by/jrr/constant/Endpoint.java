@@ -56,5 +56,6 @@ public class Endpoint {
     public static final String BOOK = "/book";
 
     public static final String CRM_NEW_HISTORY_ITEM = "/crm/historyItem";
+    public static final String CRM_DASHBOARD = "/crm/dashboard";
 
 }

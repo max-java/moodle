@@ -41,4 +41,6 @@ public class View {
 
     public static final String BOOK = "library/book";
     public static final String BOOK_LIST = "library/bookList";
+
+    public static final String CRM_DASHBOARD = "crm/dashboard";
 }
