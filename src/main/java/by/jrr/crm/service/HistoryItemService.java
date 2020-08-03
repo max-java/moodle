@@ -83,5 +83,11 @@ public class HistoryItemService {
             taskRepository.delete(task);
         }
     }
+    public List<Task> findAllNotFinishedTasks() {
+        if(uas.isCurrentUserIsAdmin()) {
+            return taskRepository.findByIsFinishedFalse();
+        }
+        return null;
+    }
 
 }
