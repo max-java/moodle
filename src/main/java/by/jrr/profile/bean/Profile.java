@@ -59,7 +59,7 @@ public class Profile {
     // that is only for streams
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private Boolean isEnrolOpen;
+    private Boolean openForEnroll;
     private Long courseId;
     @Transient
     private Course course;

@@ -48,7 +48,8 @@ public class ProfileCardUpdateController {
                                       @RequestParam Optional<String> gitUsername,
                                       @RequestParam Optional<String> feedbackLink,
                                       @RequestParam Optional<String> feedbackName,
-                                      @RequestParam Optional<String> updateProfile
+                                      @RequestParam Optional<String> updateProfile,
+                                      @RequestParam Optional<Boolean> openForEnroll
     ) {
 
         if (updateProfile.isPresent()) {
@@ -98,6 +99,11 @@ public class ProfileCardUpdateController {
                     }
                     if (feedbackName.isPresent()) {
                         profile.setFeedbackName(feedbackName.get());
+                    }
+                    if (openForEnroll.isPresent()) {
+                        profile.setOpenForEnroll(true);
+                    } else {
+                        profile.setOpenForEnroll(false);
                     }
                     profileService.updateProfile(profile);
                 }
