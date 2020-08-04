@@ -321,4 +321,19 @@ public class ProfileService {
         userProfileStatisticDTO.getStandups().addAll(standups);
 
     }
+
+    public List<Profile> findStreamsByCourseIdWhereEnrollIsOpen(Long courseId) {
+        List<Profile> streams = new ArrayList<>();
+        try {
+            streams = profileRepository.findAllByCourseIdAndOpenForEnroll(courseId, true).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .sorted(Comparator.comparing(p -> p.getDateStart()))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception " + ex);
+            return streams;
+        }
+        return streams;
+    }
 }

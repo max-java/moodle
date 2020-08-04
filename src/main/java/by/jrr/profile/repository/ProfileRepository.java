@@ -16,5 +16,6 @@ public interface ProfileRepository extends PagingAndSortingRepository<Profile, L
 
     List<Profile> findAllByCourseIdAndDateStartAfter(Long courseId, LocalDate date);
     List<Profile> findAllByCourseId(Long courseId);
+    List<Profile> findAllByCourseIdAndOpenForEnroll(Long courseId, Boolean openForEnroll);
 }
 
