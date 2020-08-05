@@ -11,12 +11,12 @@
     </form>
 
     <div th:unless="${IS_AUTHENTICATED}" class="mb-2">
-        <button class="btn btn-primary btn-block" data-target="#modal-default"
+        <button class="btn btn-primary btn-block" th:attr="data-target='#modal-default'+${streamId}"
                 data-toggle="modal"
                 type="button">
             <b>Записаться</b>
         </button>
-        <div aria-hidden="true" class="modal fade" id="modal-default"
+        <div aria-hidden="true" class="modal fade" th:id="'modal-default'+${streamId}"
              style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content bg-default">
