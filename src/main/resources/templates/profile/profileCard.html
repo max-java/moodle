@@ -25,7 +25,9 @@
                     <div class="col-md-3">
                         <div th:unless="${isSubscribeAble}">
                             <div th:if="${profile.getOpenForEnroll()}">
-                                <div th:include="profile/enrollButton :: buttonWithModalPopup"></div>
+                                <div th:include="profile/enrollButton :: buttonWithModalPopup"
+                                     th:with="streamId = ${profile.getId()},
+                                              user = ${modalFormUserData}"></div>
                             </div>
                         </div>
 
@@ -116,7 +118,7 @@
                                     <div class="tab-pane" id="activity" th:classappend="${isUserIsAdmin} ? '' : active">
 
 
-                                        <div class="row" th:if="${userAuthenticated}">
+                                        <div class="row" th:if="${IS_AUTHENTICATED}">
 
                                             <div class="col-md-3 col-sm-6 col-12"
                                                  th:if="${profile.isLinkPresent(profile.getTelegramLink())}">
@@ -238,7 +240,7 @@
                                         </div>
                                         <!-- /.row -->
 
-                                        <div class="row" th:unless="${userAuthenticated}"><h3> Please login to have
+                                        <div class="row" th:unless="${IS_AUTHENTICATED}"><h3> Please login to have
                                             access to telegram, zoom, git & feedback links</h3></div>
 
                                         <!-- Post -->
