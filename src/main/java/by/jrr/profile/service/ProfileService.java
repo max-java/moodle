@@ -343,7 +343,10 @@ public class ProfileService {
         try {
             streams = profileRepository.findAllByCourseIdAndOpenForEnroll(courseId, true).stream()
                     .filter(p -> p.getDateStart() != null)
+                    .filter(p -> p.getCourseId() != null)
                     .sorted(Comparator.comparing(p -> p.getDateStart()))
+                    .map(profile -> setCourseDataToStreamProfile(profile))
+                    .map(profile -> setSubscribersToStreamProfile(profile))
                     .collect(Collectors.toList());
         } catch (Exception ex) {
             // TODO: 16/06/20 log exception
@@ -357,6 +360,7 @@ public class ProfileService {
         try {
             streams = profileRepository.findAllByOpenForEnroll(true).stream()
                     .filter(p -> p.getDateStart() != null)
+                    .filter(p -> p.getCourseId() != null)
                     .sorted(Comparator.comparing(p -> p.getDateStart()))
                     .map(profile -> setCourseDataToStreamProfile(profile))
                     .map(profile -> setSubscribersToStreamProfile(profile))
