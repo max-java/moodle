@@ -5,6 +5,8 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.feedback.bean.EntityType;
+import by.jrr.moodle.bean.Course;
+import by.jrr.moodle.service.CourseService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
@@ -50,6 +52,8 @@ public class ProfileService {
     ProfilePossessesService pss;
     @Autowired
     StudentActionToLogService satls;
+    @Autowired
+    CourseService courseService;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -336,4 +340,37 @@ public class ProfileService {
         }
         return streams;
     }
+    public List<Profile> findStreamsWhereEnrollIsOpen() {
+        List<Profile> streams = new ArrayList<>();
+        try {
+            streams = profileRepository.findAllByOpenForEnroll(true).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .sorted(Comparator.comparing(p -> p.getDateStart()))
+                    .map(profile -> setCourseDataToStreamProfile(profile))
+                    .map(profile -> setSubscribersToStreamProfile(profile))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception " + ex);
+            return streams;
+        }
+        return streams;
+    }
+
+    private Profile setCourseDataToStreamProfile(Profile profile) {
+        Optional<Course> courseOp = courseService.findById(profile.getCourseId());
+        if(courseOp.isPresent()) {
+            profile.setCourse(courseOp.get());
+        } else {
+            profile.setCourse(new Course());
+        }
+        return profile;
+    }
+    private Profile setSubscribersToStreamProfile(Profile profile) {
+        List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
+        profile.setSubscribers(subscribers);
+        return profile;
+    }
+
+
 }

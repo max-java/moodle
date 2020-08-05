@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="streamCard">
+    <div class="card card-widget widget-user-2">
+        <!-- Add the bg color to the header using any of the bg-* classes -->
+        <div class="widget-user-header bg-warning">
+            <div class="widget-user-image">
+                <img class="img-circle elevation-2" th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(profile)}" alt="">
+            </div>
+            <!-- /.widget-user-image -->
+            <h3 class="widget-user-username" th:text="${streamData.getCourse().getTitle()}">Nadia Carmichael</h3>
+            <h5 class="widget-user-desc" th:text="${streamData.getCourse().getSubtitle()}">Lead Developer</h5>
+        </div>
+        <div class="card-footer p-0">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a th:href="${'/profile/'+streamData.getId()}" class="nav-link">
+                        Дата начала <span class="float-right badge bg-primary" th:text="${streamData.getDateStart()}">31</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="${'/profile/'+streamData.getId()}" class="nav-link">
+                        Дата окончания <span class="float-right badge bg-info" th:text="${streamData.getDateEnd()}">5</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="${'/profile/'+streamData.getId()}" class="nav-link">
+                        Подано заявок <span class="float-right badge bg-danger" th:text="${streamData.getSubscribers().size()}">12</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="${'/profile/'+streamData.getId()}" class="nav-link">
+                        Одобрено заявок <span class="float-right badge bg-success" th:text="${streamData.getSubscribersApproved().size()}">842</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<!--<p th:text="${stream.getCourse().getTitle()}"></p>-->
+<!--<p th:text="${stream.getCourse().getSubtitle()}"></p>-->
+<!--<p th:text="${stream.getAvatarFileName()}"></p>-->
+<!--<p th:text="${stream.getDateStart()}"></p>-->
+<!--<p th:text="${stream.getDateEnd()}"></p>-->
+<!--<p th:text="${stream.getAvatarFileName()}"></p>-->
+<!--Subscribers-->
+<!--<p th:text="${stream.getSubscribers().size()}"></p>-->
+<!--Approved-->
+<!--<p th:text="${stream.getSubscribersApproved().size()}"></p>-->
+<!--Requested-->
+<!--<p th:text="${stream.getSubscribersRequested().size()}"></p>-->
+<!--th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(profile)}">-->
+<!--<a th:href="${'/profile/'+profile.getId()}"></a>-->

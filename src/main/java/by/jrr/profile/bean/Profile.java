@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static by.jrr.constant.LinkGenerator.DEFAULT_USERPIC;
 
@@ -53,6 +54,22 @@ public class Profile {
 
     @Transient
     private List<StreamAndTeamSubscriber> subscribers = new ArrayList<>();
+    public List<StreamAndTeamSubscriber> getSubscribersApproved() {
+        return this.subscribers.stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
+                .collect(Collectors.toList());
+    }
+    public List<StreamAndTeamSubscriber> getSubscribersRequested() {
+        return this.subscribers.stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.REQUESTED))
+                .collect(Collectors.toList());
+    }
+    public List<StreamAndTeamSubscriber> getSubscribersRejected() {
+        return this.subscribers.stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.REJECTED))
+                .collect(Collectors.toList());
+    }
+
     @Transient
     private List<StreamAndTeamSubscriber> subscriptions = new ArrayList<>();
 
