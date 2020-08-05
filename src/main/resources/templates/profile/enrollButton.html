@@ -10,14 +10,14 @@
                 type="submit" value="subscribe"><b>Записаться</b></button>
     </form>
 
-    <div th:unless="${IS_AUTHENTICATED}" class="mb-2">
-        <button class="btn btn-primary btn-block" th:attr="data-target='#modal-default'+${streamId}"
-                data-toggle="modal"
+    <div class="mb-2" th:unless="${IS_AUTHENTICATED}">
+        <button class="btn btn-primary btn-block" data-toggle="modal"
+                th:attr="data-target='#modal-default'+${streamId}"
                 type="button">
             <b>Записаться</b>
         </button>
-        <div aria-hidden="true" class="modal fade" th:id="'modal-default'+${streamId}"
-             style="display: none;">
+        <div aria-hidden="true" class="modal fade" style="display: none;"
+             th:id="'modal-default'+${streamId}">
             <div class="modal-dialog">
                 <div class="modal-content bg-default">
                     <div class="modal-header">
@@ -43,8 +43,8 @@
                                 <input class="form-control"
                                        id="firstAndLastName"
                                        name="firstAndLastName"
-                                       onblur="validateName(this.value)"
-                                       onkeyup="validateName(this.value)"
+                                       th:onblur="'javascript:validateName(this.value,'+ ${streamId}+')'"
+                                       th:onkeyup="'javascript:validateName(this.value,'+ ${streamId}+')'"
                                        placeholder="Ваше имя и фамилия"
                                        required
                                        th:value="${user.firstAndLastName}"
@@ -59,8 +59,8 @@
                                 <input class="form-control"
                                        id="email"
                                        name="email"
-                                       onblur="validateEmail(this.value)"
-                                       onkeyup="validateEmail(this.value)"
+                                       th:onblur="'javascript:validateEmail(this.value,'+ ${streamId}+')'"
+                                       th:onkeyup="'javascript:validateEmail(this.value,'+ ${streamId}+')'"
                                        placeholder="Ваш Email"
                                        required
                                        th:value="${user.email}"
@@ -75,8 +75,8 @@
                                 <input class="form-control"
                                        id="phone"
                                        name="phone"
-                                       onblur="validatePhone(this.value)"
-                                       onkeyup="validatePhone(this.value)"
+                                       th:onblur="'javascript:validatePhone(this.value,'+ ${streamId}+')'"
+                                       th:onkeyup="'javascript:validatePhone(this.value,'+ ${streamId}+')'"
                                        placeholder="Номер телефона"
                                        required
                                        th:value="${user.phone}"
@@ -101,50 +101,51 @@
                                 <!-- /.col -->
                             </div>
                         </form>
-                        <script>
-                            function validateEmail(userEmail) {
+                        <script th:inline="javascript">
+                            function validateEmail(userEmail, streamId) {
                                 var xmlhttp = new XMLHttpRequest();
                                 xmlhttp.onreadystatechange = function () {
                                     if (this.readyState == 4 && this.status == 200) {
-                                        getResponse(this);
+                                        getResponse(this, streamId);
                                     }
                                 };
                                 xmlhttp.open("GET", "/api/registerForm/validate/email/?email=" + userEmail, true);
                                 xmlhttp.send();
                             }
 
-                            function validateName(userName) {
+                            function validateName(userName, streamId) {
                                 var xmlhttp = new XMLHttpRequest();
                                 xmlhttp.onreadystatechange = function () {
                                     if (this.readyState == 4 && this.status == 200) {
-                                        getResponse(this);
+                                        getResponse(this, streamId);
                                     }
                                 };
                                 xmlhttp.open("GET", "/api/registerForm/validate/firstAndLastName/?firstAndLastName=" + userName, true);
                                 xmlhttp.send();
                             }
 
-                            function validatePhone(userPhone) {
+                            function validatePhone(userPhone, streamId) {
                                 var xmlhttp = new XMLHttpRequest();
                                 xmlhttp.onreadystatechange = function () {
                                     if (this.readyState == 4 && this.status == 200) {
-                                        getResponse(this);
+                                        getResponse(this, streamId);
                                     }
                                 };
                                 xmlhttp.open("GET", "/api/registerForm/validate/phone/?phone=" + userPhone, true);
                                 xmlhttp.send();
                             }
 
-                            function getResponse(xml) {
+                            function getResponse(xml, streamId) {
+                                var tagName = 'errors'+streamId;
                                 var xmlDoc = xml.responseXML;
                                 var restResponse = xmlDoc.getElementsByTagName("restResponse");
                                 var validationPassed = restResponse[0].getElementsByTagName("validationPassed")[0].childNodes[0].nodeValue;
                                 console.log("validation passed? : " + validationPassed);
                                 if (validationPassed === "false") {
                                     var error = restResponse[0].getElementsByTagName("error");
-                                    document.getElementById("errors").innerHTML = error[0].childNodes[0].nodeValue;
+                                    document.getElementById(tagName).innerHTML = error[0].childNodes[0].nodeValue;
                                 } else {
-                                    document.getElementById("errors").innerHTML = "";
+                                    document.getElementById(tagName).innerHTML = "";
                                 }
                             }
                         </script>
@@ -152,7 +153,7 @@
 
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <p class="text-danger" id="errors" th:text="${error}"></p>
+                        <p class="text-danger" id="errors" th:id="'errors'+${streamId}" th:text="${error}"></p>
                     </div>
                 </div>
                 <!-- /.modal-content -->
