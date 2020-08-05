@@ -2,6 +2,7 @@ package by.jrr.profile.service;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.feedback.bean.EntityType;
@@ -54,6 +55,8 @@ public class ProfileService {
     StudentActionToLogService satls;
     @Autowired
     CourseService courseService;
+    @Autowired
+    UserAccessService userAccessService;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -150,15 +153,24 @@ public class ProfileService {
 
     public Profile getCurrentUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUserName(auth.getName());
-        Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
-        profile.setUser(user);
-        profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
-        return profile;
+        if (userAccessService.isCurrentUserAuthenticated()){
+            User user = userService.findUserByUserName(auth.getName());
+            Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
+            profile.setUser(user);
+            profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
+            return profile;
+        }
+        return null;
+
     }
 
     public Long getCurrentUserProfileId() {
-        return getCurrentUserProfile().getId();
+        try {
+            return getCurrentUserProfile().getId();
+        } catch (NullPointerException ex) {
+            System.out.println("User is not logged in"); // TODO: 05/08/20 handle this in gentle way
+            return null;
+        }
     }
 
     public Profile createProfile(Profile profile) {
