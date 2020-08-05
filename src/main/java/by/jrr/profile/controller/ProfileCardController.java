@@ -68,7 +68,7 @@ public class ProfileCardController {
             mov.addObject("profile", profile.get());
             mov.addObject("user", new User()); // need to work with register form. Move this to setData for user not registered to avoid future errors. rename as modalFormUser
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
-            mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
+            mov.addObject("isSubscribeAble", isSubscribeAble(profileId)); // TODO: 05/08/20 consider to make it more clearly (var name and behaviour)
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
             mov.addObject("isUserIsAdmin", userAccessService.isCurrentUserIsAdmin()); // TODO: 31/07/20 set here null, or "", or  and see result
             mov.addObject("userAuthenticated", userAccessService.isCurrentUserAuthenticated());
