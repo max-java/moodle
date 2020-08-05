@@ -69,6 +69,7 @@ public class ProfileCardController {
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
             mov.addObject("isUserIsAdmin", userAccessService.isCurrentUserIsAdmin()); // TODO: 31/07/20 set here null, or "", or  and see result
+            mov.addObject("userAuthenticated", userAccessService.isCurrentUserAuthenticated());
             mov.addObject("streamImage", LinkGenerator.getLinkToUserpic(profile.get()));
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
             mov.addObject("STREAM", UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM));

@@ -117,7 +117,7 @@
 
 
 
-                                        <div class="row">
+                                        <div class="row" th:if="${userAuthenticated}">
 
                                             <div class="col-md-3 col-sm-6 col-12"
                                                  th:if="${profile.isLinkPresent(profile.getTelegramLink())}">
@@ -234,6 +234,8 @@
                                             <!-- /.col -->
                                         </div>
                                         <!-- /.row -->
+
+                                        <div class="row" th:unless="${userAuthenticated}"><h3> Please login to have access to telegram, zoom, git & feedback links</h3></div>
 
                                         <!-- Post -->
                                         <div class="post">
