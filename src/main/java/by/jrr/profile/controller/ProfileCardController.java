@@ -1,5 +1,6 @@
 package by.jrr.profile.controller;
 
+import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
@@ -65,6 +66,7 @@ public class ProfileCardController {
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
+            mov.addObject("user", new User()); // need to work with register form. Move this to setData for user not registered to avoid future errors. rename as modalFormUser
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));

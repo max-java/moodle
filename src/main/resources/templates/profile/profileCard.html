@@ -23,14 +23,155 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3">
-                        <form method="post" class="mb-2" th:unless="${isSubscribeAble}">
-                            <button class="btn btn-primary btn-block" name="subscribe" type="submit"
-                                    value="subscribe" th:if="${profile.getOpenForEnroll()}"><b>Записаться</b></button>
+                        <form class="mb-2" method="post" th:action="${'/profile/' + profile.getId()}"
+                              th:unless="${isSubscribeAble}">
+                            <button class="btn btn-primary btn-block" name="subscribe" th:if="${profile.getOpenForEnroll()}"
+                                    type="submit" value="subscribe"><b>Записаться</b></button>
                         </form>
 
-                        <div th:include="profile/stream::card" th:if="${STREAM}"></div>
-                        <div th:include="profile/student::card"th:if="${TEAM}"></div>
-                        <div th:include="profile/student::card"th:if="${STUDENT}"></div>
+                        <button class="btn btn-default" data-target="#modal-default" data-toggle="modal" type="button">
+                            Launch Primary Modal
+                        </button>
+                        <div aria-hidden="true" class="modal fade" id="modal-default" style="display: none;">
+                            <div class="modal-dialog">
+                                <div class="modal-content bg-default">
+                                    <div class="modal-header">
+
+                                        <h4 class="modal-title">Форма быстрой регистрации</h4>
+                                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                            <span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>После регистрации вы будете записаны на курс, а Ваш логин и пароль будет
+                                            выслан на почту. Дополнительного подтверждения не потребуется. </p>
+                                        <form autocomplete="off"
+                                              method="post"
+                                              role="form"
+                                              th:action="@{/registerAndSubscribe}">
+                                            <input name="streamId" th:value="${profile.getId()}" type="hidden">
+                                            <div class="input-group mb-3">
+                                                <input class="form-control"
+                                                       id="firstAndLastName"
+                                                       name="firstAndLastName"
+                                                       onblur="validateName(this.value)"
+                                                       onkeyup="validateName(this.value)"
+                                                       placeholder="Ваше имя и фамилия"
+                                                       required
+                                                       th:value="${user.firstAndLastName}"
+                                                       type="text">
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text">
+                                                        <span class="fas fa-user"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <input class="form-control"
+                                                       id="email"
+                                                       name="email"
+                                                       onblur="validateEmail(this.value)"
+                                                       onkeyup="validateEmail(this.value)"
+                                                       placeholder="Ваш Email"
+                                                       required
+                                                       th:value="${user.email}"
+                                                       type="text">
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text">
+                                                        <span class="fas fa-envelope"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <input class="form-control"
+                                                       id="phone"
+                                                       name="phone"
+                                                       onblur="validatePhone(this.value)"
+                                                       onkeyup="validatePhone(this.value)"
+                                                       placeholder="Номер телефона"
+                                                       required
+                                                       th:value="${user.phone}"
+                                                       type="text">
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text">
+                                                        <span class="fas fa-envelope"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    &nbsp;
+                                                </div>
+                                                <!-- /.col -->
+                                                <div class="col-4">
+                                                    <button class="btn btn-primary btn-block" id="button" type="submit">
+                                                        <b>Записаться</b></button>
+                                                </div>
+                                                <!-- /.col -->
+                                            </div>
+                                        </form>
+                                        <script>
+                                            function validateEmail(userEmail) {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        getResponse(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/api/registerForm/validate/email/?email=" + userEmail, true);
+                                                xmlhttp.send();
+                                            }
+
+                                            function validateName(userName) {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        getResponse(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/api/registerForm/validate/firstAndLastName/?firstAndLastName=" + userName, true);
+                                                xmlhttp.send();
+                                            }
+
+                                            function validatePhone(userPhone) {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        getResponse(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/api/registerForm/validate/phone/?phone=" + userPhone, true);
+                                                xmlhttp.send();
+                                            }
+
+                                            function getResponse(xml) {
+                                                var xmlDoc = xml.responseXML;
+                                                var restResponse = xmlDoc.getElementsByTagName("restResponse");
+                                                var validationPassed = restResponse[0].getElementsByTagName("validationPassed")[0].childNodes[0].nodeValue;
+                                                console.log("validation passed? : " + validationPassed);
+                                                if (validationPassed === "false") {
+                                                    var error = restResponse[0].getElementsByTagName("error");
+                                                    document.getElementById("errors").innerHTML = error[0].childNodes[0].nodeValue;
+                                                } else {
+                                                    document.getElementById("errors").innerHTML = "";
+                                                }
+                                            }
+                                        </script>
+
+
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <p class="text-danger" id="errors" th:text="${error}"></p>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                        <div th:if="${STREAM}" th:include="profile/stream::card"></div>
+                        <div th:if="${TEAM}" th:include="profile/student::card"></div>
+                        <div th:if="${STUDENT}" th:include="profile/student::card"></div>
 
 
                         <!-- About Me Box -->
@@ -81,17 +222,17 @@
                                 <ul class="nav nav-pills">
                                     <li class="nav-item">
                                         <a class="nav-link"
-                                           th:classappend="${isUserIsAdmin} ? '' : active"
                                            data-toggle="tab"
-                                           href="#activity">Activity</a>
+                                           href="#activity"
+                                           th:classappend="${isUserIsAdmin} ? '' : active">Activity</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link"
                                            data-toggle="tab"
                                            href="#timeline">Timeline</a>
                                     </li>
-                                    <li th:if="${couldUpdate}"
-                                        class="nav-item">
+                                    <li class="nav-item"
+                                        th:if="${couldUpdate}">
                                         <a class="nav-link"
                                            data-toggle="tab"
                                            href="#settings">Settings</a>
@@ -101,20 +242,18 @@
                                            data-toggle="tab"
                                            href="#lectures">Лекции курса</a>
                                     </li>
-                                    <li th:if="${isUserIsAdmin}"
-                                        class="nav-item" >
+                                    <li class="nav-item"
+                                        th:if="${isUserIsAdmin}">
                                         <a class="nav-link"
-                                           th:classappend="${isUserIsAdmin} ? active : ''"
                                            data-toggle="tab"
-                                           href="#lead-detail">CRM</a>
+                                           href="#lead-detail"
+                                           th:classappend="${isUserIsAdmin} ? active : ''">CRM</a>
                                     </li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
                                 <div class="tab-content">
                                     <div class="tab-pane" id="activity" th:classappend="${isUserIsAdmin} ? '' : active">
-
-
 
 
                                         <div class="row" th:if="${userAuthenticated}">
@@ -126,22 +265,23 @@
                                                            type="hidden"/>
                                                     <input name="linkName" th:value="${profile.getTelegramLinkText()}"
                                                            type="hidden"/>
-                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}"
+                                                           type="hidden"/>
                                                     <button class="btn btn-block"
                                                             name="eventType"
                                                             th:value="${T(by.jrr.registration.bean.EventType).TELEGRAM_CHAT}"
                                                             type="submit">
-                                                <div class="info-box">
+                                                        <div class="info-box">
                                                         <span class="info-box-icon bg-gradient-blue"><i
                                                                 class="fa fa-paper-plane"></i></span>
 
-                                                    <div class="info-box-content text-left">
-                                                        <span class="info-box-text">Чат группы</span>
-                                                        <span class="info-box-text"
-                                                              th:text="${profile.getTelegramLinkText()}"></span>
-                                                    </div>
-                                                    <!-- /.info-box-content -->
-                                                </div>
+                                                            <div class="info-box-content text-left">
+                                                                <span class="info-box-text">Чат группы</span>
+                                                                <span class="info-box-text"
+                                                                      th:text="${profile.getTelegramLinkText()}"></span>
+                                                            </div>
+                                                            <!-- /.info-box-content -->
+                                                        </div>
                                                     </button>
                                                 </form>
                                             </div>
@@ -153,24 +293,25 @@
                                                            type="hidden"/>
                                                     <input name="linkName" th:value="${profile.getZoomLinkText()}"
                                                            type="hidden"/>
-                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}"
+                                                           type="hidden"/>
                                                     <button class="btn btn-block"
                                                             name="eventType"
                                                             th:value="${T(by.jrr.registration.bean.EventType).TEAM_STAND_UP}"
                                                             type="submit">
-                                                <div class="info-box">
+                                                        <div class="info-box">
                                                         <span class="info-box-icon bg-gradient-blue">
                                                             <i class="fa fa-video"></i>
                                                         </span>
 
-                                                    <div class="info-box-content text-left">
-                                                        <span class="info-box-text">Zoom StandUp</span>
-                                                        <span class="info-box-text"
-                                                              th:text="${profile.getZoomLinkText()}"></span>
-                                                    </div>
-                                                    <!-- /.info-box-content -->
-                                                </div>
-                                                <!-- /.info-box -->
+                                                            <div class="info-box-content text-left">
+                                                                <span class="info-box-text">Zoom StandUp</span>
+                                                                <span class="info-box-text"
+                                                                      th:text="${profile.getZoomLinkText()}"></span>
+                                                            </div>
+                                                            <!-- /.info-box-content -->
+                                                        </div>
+                                                        <!-- /.info-box -->
                                                     </button>
                                                 </form>
                                             </div>
@@ -182,7 +323,8 @@
                                                            type="hidden"/>
                                                     <input name="linkName" th:value="${profile.getGitUsername()}"
                                                            type="hidden"/>
-                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}"
+                                                           type="hidden"/>
                                                     <button class="btn btn-block"
                                                             name="eventType"
                                                             th:value="${T(by.jrr.registration.bean.EventType).GIT_LINK}"
@@ -210,7 +352,8 @@
                                                            type="hidden"/>
                                                     <input name="linkName" th:value="${profile.getFeedbackName()}"
                                                            type="hidden"/>
-                                                    <input name="streamTeamId" th:value="${profile.getId()}" type="hidden"/>
+                                                    <input name="streamTeamId" th:value="${profile.getId()}"
+                                                           type="hidden"/>
                                                     <button class="btn btn-block"
                                                             name="eventType"
                                                             th:value="${T(by.jrr.registration.bean.EventType).FEEDBACK}"
@@ -235,7 +378,8 @@
                                         </div>
                                         <!-- /.row -->
 
-                                        <div class="row" th:unless="${userAuthenticated}"><h3> Please login to have access to telegram, zoom, git & feedback links</h3></div>
+                                        <div class="row" th:unless="${userAuthenticated}"><h3> Please login to have
+                                            access to telegram, zoom, git & feedback links</h3></div>
 
                                         <!-- Post -->
                                         <div class="post">
@@ -411,13 +555,14 @@
                                             <input class="form-control" name="id" th:value="${profile.getId()}"
                                                    type="hidden">
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="inputName">Открыто для записи</label>
+                                                <label class="col-sm-2 col-form-label" for="inputName">Открыто для
+                                                    записи</label>
                                                 <div class="col-sm-1">
                                                     <input class="form-control" id="openForEnroll"
                                                            name="openForEnroll" placeholder="openForEnroll"
-                                                           value="true"
                                                            th:checked="${profile.getOpenForEnroll()}"
-                                                           type="checkbox"/>
+                                                           type="checkbox"
+                                                           value="true"/>
                                                 </div>
                                                 <div class="9">
 
@@ -452,7 +597,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="gitUsername">GitHub username</label>
+                                                <label class="col-sm-2 col-form-label" for="gitUsername">GitHub
+                                                    username</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="gitUsername"
                                                            name="gitUsername"
@@ -482,7 +628,8 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="zoomLink">Zoom Stand-Up link</label>
+                                                <label class="col-sm-2 col-form-label" for="zoomLink">Zoom Stand-Up
+                                                    link</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="zoomLink" name="zoomLink"
                                                            placeholder="" th:value="${profile.getZoomLink()}"
@@ -501,7 +648,8 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback form link</label>
+                                                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback form
+                                                    link</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="feedbackLink" name="feedbackLink"
                                                            placeholder="" th:value="${profile.getFeedbackLink()}"
@@ -509,7 +657,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="feedbackName">Название feedback Формы</label>
+                                                <label class="col-sm-2 col-form-label" for="feedbackName">Название
+                                                    feedback Формы</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="feedbackName"
                                                            name="feedbackName"
@@ -560,7 +709,8 @@
                                     </div>
                                     <!-- /.tab-pane -->
                                     <!-- /.tab-pane -->
-                                    <div class="tab-pane" id="lead-detail" th:classappend="${isUserIsAdmin} ? active : ''">
+                                    <div class="tab-pane" id="lead-detail"
+                                         th:classappend="${isUserIsAdmin} ? active : ''">
                                         <div th:insert="profile/admin/leadDetailHistory :: history"></div>
                                     </div>
                                     <!-- /.tab-pane -->
