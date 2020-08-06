@@ -54,7 +54,7 @@ public class SayHelloNewUserProcessor implements Processor {
                 } else {
                     TgUser tgUser = tgUserOptional.get();
                     String response = getHelloMessageWhenUserJoinsStreamChat(tgUser);
-                    if(!tgUser.getIsBot()) {
+                    if (!tgUser.getIsBot()) {
                         messageService.sendMessage(tgUser, response);
                     }
                     messageService.sendMessage(Chat.JRR_BY, getNotificationMessageForAdmin(tgUser, message)); // TODO: 29/07/20 Just for test purpouses
@@ -73,11 +73,9 @@ public class SayHelloNewUserProcessor implements Processor {
         Optional<StudentActionToLog> studentActionToLog = studentActionToLogService.findLastActionBeforeTimestamp(messageTimestamp);
         if (studentActionToLog.isPresent()) {
             Long id = studentActionToLog.get().getStudentProfileId();
-            if (!isTgUserIsPresentForProfileId(id).isPresent()) {
-                TgUser tgUser = getTgUserFromMessageFromNewChatMember(message).orElseGet(TgUser::new);
-                tgUser.setProfileId(id);
-                tgUserRepository.save(tgUser);
-            }
+            TgUser tgUser = getTgUserFromMessageFromNewChatMember(message).orElseGet(TgUser::new);
+            tgUser.setProfileId(id);
+            tgUserRepository.save(tgUser);
         }
     }
 
@@ -117,7 +115,7 @@ public class SayHelloNewUserProcessor implements Processor {
     }
 
     private String getRandomIntroductionMessage(TgUser user) {
-        StringBuffer response = new StringBuffer("Привет, " + user.getFirstName()+"\n");
+        StringBuffer response = new StringBuffer("Привет, " + user.getFirstName() + "\n");
         List<String> msg = Arrays.asList(
                 "Расскажи немного о себе? Например, сколько лет, чем занимаешься?",
                 "Тебе понравилася наш рекламый пост?",
@@ -133,6 +131,7 @@ public class SayHelloNewUserProcessor implements Processor {
         response.append(msg.get(index));
         return response.toString();
     }
+
     private void sendIntroductionMessage(Message message, TgUser tgUser) {
         new Thread(() -> {
             try {
