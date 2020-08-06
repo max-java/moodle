@@ -2,9 +2,12 @@ package by.jrr.profile.service;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.feedback.bean.EntityType;
+import by.jrr.moodle.bean.Course;
+import by.jrr.moodle.service.CourseService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
@@ -50,6 +53,10 @@ public class ProfileService {
     ProfilePossessesService pss;
     @Autowired
     StudentActionToLogService satls;
+    @Autowired
+    CourseService courseService;
+    @Autowired
+    UserAccessService userAccessService;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -146,15 +153,24 @@ public class ProfileService {
 
     public Profile getCurrentUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUserName(auth.getName());
-        Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
-        profile.setUser(user);
-        profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
-        return profile;
+        if (userAccessService.isCurrentUserAuthenticated()){
+            User user = userService.findUserByUserName(auth.getName());
+            Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
+            profile.setUser(user);
+            profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
+            return profile;
+        }
+        return null;
+
     }
 
     public Long getCurrentUserProfileId() {
-        return getCurrentUserProfile().getId();
+        try {
+            return getCurrentUserProfile().getId();
+        } catch (NullPointerException ex) {
+            System.out.println("User is not logged in"); // TODO: 05/08/20 handle this in gentle way
+            return null;
+        }
     }
 
     public Profile createProfile(Profile profile) {
@@ -321,4 +337,56 @@ public class ProfileService {
         userProfileStatisticDTO.getStandups().addAll(standups);
 
     }
+
+    public List<Profile> findStreamsByCourseIdWhereEnrollIsOpen(Long courseId) {
+        List<Profile> streams = new ArrayList<>();
+        try {
+            streams = profileRepository.findAllByCourseIdAndOpenForEnroll(courseId, true).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .filter(p -> p.getCourseId() != null)
+                    .sorted(Comparator.comparing(p -> p.getDateStart()))
+                    .map(profile -> setCourseDataToStreamProfile(profile))
+                    .map(profile -> setSubscribersToStreamProfile(profile))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception " + ex);
+            return streams;
+        }
+        return streams;
+    }
+    public List<Profile> findStreamsWhereEnrollIsOpen() {
+        List<Profile> streams = new ArrayList<>();
+        try {
+            streams = profileRepository.findAllByOpenForEnroll(true).stream()
+                    .filter(p -> p.getDateStart() != null)
+                    .filter(p -> p.getCourseId() != null)
+                    .sorted(Comparator.comparing(p -> p.getDateStart()))
+                    .map(profile -> setCourseDataToStreamProfile(profile))
+                    .map(profile -> setSubscribersToStreamProfile(profile))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            // TODO: 16/06/20 log exception
+            System.out.println("exception " + ex);
+            return streams;
+        }
+        return streams;
+    }
+
+    private Profile setCourseDataToStreamProfile(Profile profile) {
+        Optional<Course> courseOp = courseService.findById(profile.getCourseId());
+        if(courseOp.isPresent()) {
+            profile.setCourse(courseOp.get());
+        } else {
+            profile.setCourse(new Course());
+        }
+        return profile;
+    }
+    private Profile setSubscribersToStreamProfile(Profile profile) {
+        List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
+        profile.setSubscribers(subscribers);
+        return profile;
+    }
+
+
 }

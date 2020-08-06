@@ -79,7 +79,7 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         if (topic.isPresent()) {
             mov.addObject("topic", topic.get());
             mov.addObject("user", new User()); // TODO: 10/06/20 is it really need?
-            mov.addObject("streams", courseService.findTeamsForCourseByCourseIdFomNowAndLastMonth(id));
+            mov.addObject("streams", courseService.findTeamsForCourseByCourseIdWhereEnrollIsOpen(id));
             mov.setViewName(View.COURSE);
         } else {
             mov.setStatus(HttpStatus.NOT_FOUND);

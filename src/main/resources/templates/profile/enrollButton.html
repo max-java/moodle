@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="buttonWithModalPopup">
+    <form class="mb-2"
+          method="post"
+          th:action="${'/profile/' + streamId}"
+          th:if="${IS_AUTHENTICATED}">
+        <button class="btn btn-primary btn-block" name="subscribe"
+                type="submit" value="subscribe"><b>Записаться</b></button>
+    </form>
+
+    <div class="mb-2" th:unless="${IS_AUTHENTICATED}">
+        <button class="btn btn-primary btn-block" data-toggle="modal"
+                th:attr="data-target='#modal-default'+${streamId}"
+                type="button">
+            <b>Записаться</b>
+        </button>
+        <div aria-hidden="true" class="modal fade" style="display: none;"
+             th:id="'modal-default'+${streamId}">
+            <div class="modal-dialog">
+                <div class="modal-content bg-default">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Форма быстрой регистрации</h4>
+                        <button aria-label="Close" class="close" data-dismiss="modal"
+                                type="button">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>После регистрации вы будете записаны на курс, а Ваш логин и
+                            пароль
+                            будет
+                            выслан на почту. Дополнительного подтверждения не
+                            потребуется. </p>
+                        <form autocomplete="off"
+                              method="post"
+                              role="form"
+                              th:action="@{/registerAndSubscribe}">
+                            <input name="streamId" th:value="${streamId}"
+                                   type="hidden">
+                            <div class="input-group mb-3">
+                                <input class="form-control"
+                                       id="firstAndLastName"
+                                       name="firstAndLastName"
+                                       th:onblur="'javascript:validateName(this.value,'+ ${streamId}+')'"
+                                       th:onkeyup="'javascript:validateName(this.value,'+ ${streamId}+')'"
+                                       placeholder="Ваше имя и фамилия"
+                                       required
+                                       th:value="${user.firstAndLastName}"
+                                       type="text">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="form-control"
+                                       id="email"
+                                       name="email"
+                                       th:onblur="'javascript:validateEmail(this.value,'+ ${streamId}+')'"
+                                       th:onkeyup="'javascript:validateEmail(this.value,'+ ${streamId}+')'"
+                                       placeholder="Ваш Email"
+                                       required
+                                       th:value="${user.email}"
+                                       type="text">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="form-control"
+                                       id="phone"
+                                       name="phone"
+                                       th:onblur="'javascript:validatePhone(this.value,'+ ${streamId}+')'"
+                                       th:onkeyup="'javascript:validatePhone(this.value,'+ ${streamId}+')'"
+                                       placeholder="Номер телефона"
+                                       required
+                                       th:value="${user.phone}"
+                                       type="text">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    &nbsp;
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-4">
+                                    <button class="btn btn-primary btn-block" id="button"
+                                            type="submit">
+                                        <b>Записаться</b></button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </form>
+                        <script th:inline="javascript">
+                            function validateEmail(userEmail, streamId) {
+                                var xmlhttp = new XMLHttpRequest();
+                                xmlhttp.onreadystatechange = function () {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        getResponse(this, streamId);
+                                    }
+                                };
+                                xmlhttp.open("GET", "/api/registerForm/validate/email/?email=" + userEmail, true);
+                                xmlhttp.send();
+                            }
+
+                            function validateName(userName, streamId) {
+                                var xmlhttp = new XMLHttpRequest();
+                                xmlhttp.onreadystatechange = function () {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        getResponse(this, streamId);
+                                    }
+                                };
+                                xmlhttp.open("GET", "/api/registerForm/validate/firstAndLastName/?firstAndLastName=" + userName, true);
+                                xmlhttp.send();
+                            }
+
+                            function validatePhone(userPhone, streamId) {
+                                var xmlhttp = new XMLHttpRequest();
+                                xmlhttp.onreadystatechange = function () {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        getResponse(this, streamId);
+                                    }
+                                };
+                                xmlhttp.open("GET", "/api/registerForm/validate/phone/?phone=" + userPhone, true);
+                                xmlhttp.send();
+                            }
+
+                            function getResponse(xml, streamId) {
+                                var tagName = 'errors'+streamId;
+                                var xmlDoc = xml.responseXML;
+                                var restResponse = xmlDoc.getElementsByTagName("restResponse");
+                                var validationPassed = restResponse[0].getElementsByTagName("validationPassed")[0].childNodes[0].nodeValue;
+                                console.log("validation passed? : " + validationPassed);
+                                if (validationPassed === "false") {
+                                    var error = restResponse[0].getElementsByTagName("error");
+                                    document.getElementById(tagName).innerHTML = error[0].childNodes[0].nodeValue;
+                                } else {
+                                    document.getElementById(tagName).innerHTML = "";
+                                }
+                            }
+                        </script>
+
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <p class="text-danger" id="errors" th:id="'errors'+${streamId}" th:text="${error}"></p>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

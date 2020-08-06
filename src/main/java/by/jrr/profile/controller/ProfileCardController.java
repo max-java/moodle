@@ -1,5 +1,6 @@
 package by.jrr.profile.controller;
 
+import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
@@ -65,8 +66,9 @@ public class ProfileCardController {
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
+
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
-            mov.addObject("isSubscribeAble", isSubscribeAble(profileId));
+            mov.addObject("isSubscribeAble", isSubscribeAble(profileId)); // TODO: 05/08/20 consider to make it more clearly (var name and behaviour)
             mov.addObject("isUserIsOwner", pss.isCurrentUserOwner(profileId));
             mov.addObject("isUserIsAdmin", userAccessService.isCurrentUserIsAdmin()); // TODO: 31/07/20 set here null, or "", or  and see result
             mov.addObject("streamImage", LinkGenerator.getLinkToUserpic(profile.get()));

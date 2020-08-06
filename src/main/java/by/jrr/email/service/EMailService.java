@@ -1,10 +1,14 @@
 package by.jrr.email.service;
 
 
+import by.jrr.moodle.bean.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import javax.mail.internet.MimeMessage;
 
 @Service
 public class EMailService {
@@ -13,24 +17,25 @@ public class EMailService {
     private JavaMailSender emailSender;
 
     public void sendTestEmail() {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo("6666350@gmail.com");
-            message.setSubject("test message from Moodle");
-            message.setText("Hello! This is a test message from Moodle");
-            emailSender.send(message);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("6666350@gmail.com");
+        message.setSubject("test message from Moodle");
+        message.setText("Hello! This is a test message from Moodle");
+        emailSender.send(message);
     }
 
     public void sendQuickRegostrationConfirmation(String to, String password, String firstAndLastName) {
         sendQuickRegostrationInfoAndLogin(to, firstAndLastName);
         sendQuickRegostrationPassword(to, password, firstAndLastName);
     }
+
     private void sendQuickRegostrationPassword(String to, String password, String firstAndLastName) {
         System.out.println(">> In sendQuickRegostrationPassword ");
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Добрый день, "+firstAndLastName+"!");
+        messageText.append("Добрый день, " + firstAndLastName + "!");
         messageText.append("\n\nЭто продолжение сообщения об успешной регистрации на образовательной платформе https://moodle.jrr.by !");
         messageText.append("\nДля входа в аккаунт используйте пароль.");
-        messageText.append("\n\n\t пароль:"+password);
+        messageText.append("\n\n\t пароль:" + password);
         messageText.append("\n\nДо встречи на занятиях!");
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -39,12 +44,13 @@ public class EMailService {
         message.setText(messageText.toString());
         emailSender.send(message);
     }
+
     private void sendQuickRegostrationInfoAndLogin(String to, String firstAndLastName) {
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Добрый день, "+firstAndLastName+"!");
+        messageText.append("Добрый день, " + firstAndLastName + "!");
         messageText.append("\n\nВы успешно зарегистрировались на образовательной платформе https://moodle.jrr.by!");
         messageText.append("\nИспользуйте адрес электронной почты для входа в аккаунт.");
-        messageText.append("\n\n\t имя пользователя:"+to);
+        messageText.append("\n\n\t имя пользователя:" + to);
         messageText.append("\n\nПароль для входа в аккаунт был сгенерирован автоматически.");
         messageText.append("\nВ таких случаях одним из базовых принципов безопасности является передача логина и пароля в разных отправлениях.");
         messageText.append("\nПароль для входа в аккаунт в следующем письме.");
@@ -55,13 +61,14 @@ public class EMailService {
         message.setText(messageText.toString());
         emailSender.send(message);
     }
+
     public void amoCrmTrigger(String userEmail, String firstAndLastName, String userPhone) {
         System.out.println(">> In amoCrmTrigger");
         StringBuffer messageText = new StringBuffer();
         messageText.append("Заявка с Java Bootcamp");
-        messageText.append("\nОт: "+firstAndLastName);
-        messageText.append("\nЕ-почта: "+userEmail);
-        messageText.append("\nТелефон: "+userPhone);
+        messageText.append("\nОт: " + firstAndLastName);
+        messageText.append("\nЕ-почта: " + userEmail);
+        messageText.append("\nТелефон: " + userPhone);
         messageText.append("\nЗаявка на курс: Java A-Z"); // TODO: 27/07/20 set course name dynamically
         messageText.append("\n");
         messageText.append("\nhttp://javaguru.by/java-bootcamp");
@@ -81,13 +88,13 @@ public class EMailService {
                                                    String telegramLink,
                                                    String to) {
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Добрый день, "+firstAndLastName+"!");
-        messageText.append("\n\nВаша заявка на участие в группе "+ teamStreamName + " одобрена.");
+        messageText.append("Добрый день, " + firstAndLastName + "!");
+        messageText.append("\n\nВаша заявка на участие в группе " + teamStreamName + " одобрена.");
         messageText.append("\nТеперь Вам доступны материалы группы.");
-        messageText.append("\n\n\t адрес группы: "+streamTeamLink);
+        messageText.append("\n\n\t адрес группы: " + streamTeamLink);
         messageText.append("\n\n");
         messageText.append("\nОбязательно вступите в чат-телеграмм группы, что бы получать актуальную информацию!");
-        messageText.append("\n\n\t telegram: "+telegramLink);
+        messageText.append("\n\n\t telegram: " + telegramLink);
         messageText.append("\n");
         messageText.append("\nПервое занятие пройдет 6 июля 2020 в формате Zoom конференции.");
         messageText.append("\nДата: 6 июля 2020 года.");
@@ -110,7 +117,7 @@ public class EMailService {
         messageText.append("\n1. Подписаться на чат школы в Telegram https://t.me/joinchat/CxUOGRRNPKd3vDxzt9YI4A");
         messageText.append("\n- здесь уже сейчас Вы можете начать общаться с нашими выпускниками");
         messageText.append("\n");
-        messageText.append("\n2. Подписаться на чат группы в Telegram "+telegramLink);
+        messageText.append("\n2. Подписаться на чат группы в Telegram " + telegramLink);
         messageText.append("\n");
         messageText.append("\n3. Зарегистрироваться в github.com");
         messageText.append("\n");
@@ -135,13 +142,13 @@ public class EMailService {
                                                    String telegramLink,
                                                    String to) {
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Добрый день, "+firstAndLastName+"!");
-        messageText.append("\n\nВаша заявка на участие в группе "+ teamStreamName + " одобрена.");
+        messageText.append("Добрый день, " + firstAndLastName + "!");
+        messageText.append("\n\nВаша заявка на участие в группе " + teamStreamName + " одобрена.");
         messageText.append("\nТеперь Вам доступны материалы группы.");
-        messageText.append("\n\n\t адрес группы: "+streamTeamLink);
+        messageText.append("\n\n\t адрес группы: " + streamTeamLink);
         messageText.append("\n\n");
         messageText.append("\nОбязательно вступите в чат-телеграмм группы, что бы получать актуальную информацию!");
-        messageText.append("\n\n\t telegram: "+telegramLink);
+        messageText.append("\n\n\t telegram: " + telegramLink);
         messageText.append("\n");
         messageText.append("\nЗанятие пройдет в формате Zoom конференции.");
         messageText.append("\nРасписание в профиле группы");
@@ -161,7 +168,7 @@ public class EMailService {
         messageText.append("\n1. Подписаться на чат школы в Telegram https://t.me/joinchat/CxUOGRRNPKd3vDxzt9YI4A");
         messageText.append("\n- здесь уже сейчас Вы можете начать общаться с нашими выпускниками");
         messageText.append("\n");
-        messageText.append("\n2. Подписаться на чат группы в Telegram "+telegramLink);
+        messageText.append("\n2. Подписаться на чат группы в Telegram " + telegramLink);
         messageText.append("\n");
         messageText.append("\n3. Зарегистрироваться в github.com");
         messageText.append("\n");
@@ -195,7 +202,7 @@ public class EMailService {
         message.setTo(to);
         message.setSubject("{JG} Добро пожаловать в команду!");
         messageText.append("\nТеперь тебе доступны ресурсы группы.");
-        messageText.append("\n\n\t сохрани в закладки прямую ссылку на группу: "+streamTeamLink);
+        messageText.append("\n\n\t сохрани в закладки прямую ссылку на группу: " + streamTeamLink);
         message.setText(messageText.toString());
         emailSender.send(message);
         System.out.println(message); // TODO: 07/07/20 log emails
@@ -203,7 +210,7 @@ public class EMailService {
 
     public void sendAdminRegisterYouEmailConfirmation(String firstName, String emailTo, String password) {
         StringBuffer messageText = new StringBuffer();
-        messageText.append("Добрый день, "+firstName+"!");
+        messageText.append("Добрый день, " + firstName + "!");
         messageText.append("\n\nВы получили это письмо по одной из двух причин:");
         messageText.append("\n1. оставляли заявку или даже приходили на наши бесплатные курсы по Java, но по какой-то причине передумали и пропали из команды.\"");
         messageText.append("\n2. хотите участвовать в челледже gotogoogle.\"");
@@ -218,8 +225,8 @@ public class EMailService {
         messageText.append("\n А главное - присоединиться к нашей движухе - дорога в Google!");
         messageText.append("\n\n");
         messageText.append("\n Я сделал для Вас аккаунт:");
-        messageText.append("\n\t логин:"+emailTo);
-        messageText.append("\n\t пароль:"+password);
+        messageText.append("\n\t логин:" + emailTo);
+        messageText.append("\n\t пароль:" + password);
         messageText.append("\nадрес новой платформы - https://moodle.jrr.by/");
 
         messageText.append("\n\nЕсли что-то не получается - позвоните Илье: +375(29) 3333-600.");
@@ -236,6 +243,21 @@ public class EMailService {
         message.setSubject("{JG} JavaGuru комьюнити! Мы растем!!!");
         message.setText(messageText.toString());
         emailSender.send(message);
+    }
+
+    public void sendLecture1GoToGoogleEmail(String email, Lecture lecture) {
+        try {
+            MimeMessage message = emailSender.createMimeMessage();
+
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(email);
+            helper.setSubject("{JG} " + lecture.getTitle() + " " + lecture.getSubtitle());
+            helper.setText(lecture.getText(), true);
+
+            emailSender.send(message);
+        } catch (Exception ex) {
+            System.out.println("ex = " + ex);
+        }
     }
 }
 

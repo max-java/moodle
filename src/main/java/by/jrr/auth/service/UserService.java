@@ -12,13 +12,17 @@ import by.jrr.profile.admin.bean.UserDTO;
 import by.jrr.telegram.bot.service.MessageService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +35,8 @@ public class UserService {
     private EMailService eMailService;
     @Autowired
     private MessageService tgMessageService;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -106,8 +112,8 @@ public class UserService {
         String login = email;
         User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
-        autoLogin(login, password);
         final User saveduser = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
+        autoLogin(login, password);
         System.out.println(" before executing in threads ");
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
         new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
@@ -116,8 +122,25 @@ public class UserService {
     }
 
     private void autoLogin(String username, String password) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(UserRoles.ROLE_GUEST.name()); // TODO: 05/08/20 this is autologin after registration. consider if I should get it from user object
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(authority));
+        authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        // TODO: 05/08/20 consider if it right way to autologin in Springboot
+
+//        Collection<SimpleGrantedAuthority> oldAuthorities = (Collection<SimpleGrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+//        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_ANOTHER");
+//        List<SimpleGrantedAuthority> updatedAuthorities = new ArrayList<SimpleGrantedAuthority>();
+//        updatedAuthorities.add(authority);
+//        updatedAuthorities.addAll(oldAuthorities);
+//
+//        SecurityContextHolder.getContext().setAuthentication(
+//                new UsernamePasswordAuthenticationToken(
+//                        SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
+//                        SecurityContextHolder.getContext().getAuthentication().getCredentials(),
+//                        updatedAuthorities)
+//        );
+
     }
 
     private String getRandomPassword() {
