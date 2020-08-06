@@ -34,7 +34,7 @@ public class CourseService {
         try {
             topics = courseRepository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(items)));
         } catch (Exception ex) {
-            topics = courseRepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(10)));
+            topics = courseRepository.findAll(PageRequest.of(Integer.valueOf(0), Integer.valueOf(30)));
         }
         return topics;
     }
