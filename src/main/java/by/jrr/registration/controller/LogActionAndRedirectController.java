@@ -2,6 +2,7 @@ package by.jrr.registration.controller;
 
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
+import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.StudentActionToLog;
 import by.jrr.registration.service.StudentActionToLogService;
 import lombok.AllArgsConstructor;
@@ -31,11 +32,22 @@ public class LogActionAndRedirectController {
     public RedirectView logAndRedirectFromPost(@RequestParam Long streamTeamId,
                                                @RequestParam String link,
                                                @RequestParam String linkName,
-                                               @RequestParam String eventType) { // TODO: 24/06/20 try to use enum here
-        satls.saveAction(streamTeamId, eventType, link, linkName);
+                                               @RequestParam EventType eventType,
+                                               @RequestParam(value = "courseId", required = false) Long courseId,
+                                               @RequestParam(value = "lectureId", required = false) Long lectureId
+    ) {
+        satls.saveAction(StudentActionToLog.builder()
+                .streamTeamProfileId(streamTeamId)
+                .urlToRedirect(link)
+                .eventName(linkName)
+                .eventType(eventType)
+                .courseId(courseId)
+                .lectureId(lectureId)
+                .build());
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(link);
         return redirectView;
+
     }
 
     @GetMapping("/l/{link}/{streamTeamId}/{eventType}")
@@ -69,11 +81,12 @@ public class LogActionAndRedirectController {
         }
         return userActivityDTO;
     }
+
     @GetMapping(value = "/admin/userActivity", produces = MediaType.APPLICATION_XML_VALUE)
     public @ResponseBody
     UserActivityDTO findUserActivity(@RequestParam Optional<Long> userProfileId,
-                                               @RequestParam Optional<String> from,
-                                               @RequestParam Optional<String> to) {
+                                     @RequestParam Optional<String> from,
+                                     @RequestParam Optional<String> to) {
         UserActivityDTO userActivityDTO = new UserActivityDTO();
 
         if (userProfileId.isPresent() && from.isPresent() && to.isPresent() && !from.get().isEmpty() && !to.get().isEmpty()) {

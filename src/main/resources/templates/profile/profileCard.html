@@ -315,98 +315,141 @@
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="timeline">
-                                        <!-- The timeline -->
-                                        <!--                                        <div class="timeline timeline-inverse">-->
-                                        <!--                                            &lt;!&ndash; timeline time label &ndash;&gt;-->
-                                        <!--                                            <div class="time-label">-->
-                                        <!--                            <span class="bg-danger">-->
-                                        <!--                              10 Feb. 2014-->
-                                        <!--                            </span>-->
-                                        <!--                                            </div>-->
-                                        <!--                                            &lt;!&ndash; /.timeline-label &ndash;&gt;-->
-                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
-                                        <!--                                            <div>-->
-                                        <!--                                                <i class="fas fa-envelope bg-primary"></i>-->
+                                        The timeline
+                                        <div class="timeline timeline-inverse">
+                                            <th:block th:each="dateline : ${timeLines}">
+                                                <!-- timeline time label -->
+                                                <div class="time-label">
+                                                                        <span class="bg-danger"
+                                                                              th:text="${dateline.getKey()}">
+                                                                          10 Feb. 2014
+                                                                        </span>
+                                                </div>
+                                                <!-- /.timeline-label -->
+                                                <!-- timeline item -->
+                                                <th:block th:each="timelinesForDate : ${dateline.getValue()}">
+                                                    <div th:each="timeline : ${timelinesForDate}">
+                                                        <i class="fas fa-envelope bg-primary"></i>
 
-                                        <!--                                                <div class="timeline-item">-->
-                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
+                                                        <div class="timeline-item">
+                                                            <!--                                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
 
-                                        <!--                                                    <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>-->
+                                                            <h3 class="timeline-header">
+                                                                <a href="#" th:text="${timeline.getEventType()}">
+                                                                    Support Team
+                                                                </a>
+                                                                <span th:text="${timeline.getEventName()}">
+                                                                    sent you an email
+                                                                </span>
+                                                            </h3>
 
-                                        <!--                                                    <div class="timeline-body">-->
-                                        <!--                                                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,-->
-                                        <!--                                                        weebly ning heekya handango imeem plugg dopplr jibjab, movity-->
-                                        <!--                                                        jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle-->
-                                        <!--                                                        quora plaxo ideeli hulu weebly balihoo...-->
-                                        <!--                                                    </div>-->
-                                        <!--                                                    <div class="timeline-footer">-->
-                                        <!--                                                        <a href="#" class="btn btn-primary btn-sm">Read more</a>-->
-                                        <!--                                                        <a href="#" class="btn btn-danger btn-sm">Delete</a>-->
-                                        <!--                                                    </div>-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
-                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
-                                        <!--                                            <div>-->
-                                        <!--                                                <i class="fas fa-user bg-info"></i>-->
+                                                            <div class="timeline-body" th:text="${timeline.getNotes()}">
 
-                                        <!--                                                <div class="timeline-item">-->
-                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 5 mins ago</span>-->
+                                                            </div>
+                                                            <div class="timeline-footer">
+                                                                <form action="/l/" method="post">
+                                                                    <input name="link"
+                                                                           th:value="${timeline.getUrlToRedirect()}"
+                                                                           type="hidden"/>
+                                                                    <input name="linkName"
+                                                                           th:value="${timeline.getEventName()}"
+                                                                           type="hidden"/>
+                                                                    <input name="streamTeamId"
+                                                                           th:value="${timeline.getStreamTeamProfileId()}"
+                                                                           type="hidden"/>
+                                                                    <input name="courseId"
+                                                                           th:value="${timeline.getCourseId()}"
+                                                                           type="hidden"/>
+                                                                    <input name="lectureId"
+                                                                           th:value="${timeline.getLectureId()}"
+                                                                           type="hidden"/>
+                                                                    <button class="btn btn-block col-md-3"
+                                                                            name="eventType"
+                                                                            th:value="${timeline.getEventType()}"
+                                                                            type="submit">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-gradient-blue">
+                                                                                <i class="fa fa-video"></i>
+                                                                            </span>
+                                                                            <div class="info-box-content text-left">
+                                                                                <span class="info-box-text">Zoom</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </th:block>
+                                                <!-- END timeline item -->
+                                            </th:block>
+                                            <!-- timeline item -->
+                                            <div>
+                                                <i class="fas fa-user bg-info"></i>
 
-                                        <!--                                                    <h3 class="timeline-header border-0"><a href="#">Sarah Young</a> accepted your friend request-->
-                                        <!--                                                    </h3>-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
-                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
-                                        <!--                                            <div>-->
-                                        <!--                                                <i class="fas fa-comments bg-warning"></i>-->
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="far fa-clock"></i> 5 mins ago</span>
 
-                                        <!--                                                <div class="timeline-item">-->
-                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 27 mins ago</span>-->
+                                                    <h3 class="timeline-header border-0"><a href="#">Sarah Young</a>
+                                                        accepted your friend request
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <!-- END timeline item -->
+                                            <!-- timeline item -->
+                                            <div>
+                                                <i class="fas fa-comments bg-warning"></i>
 
-                                        <!--                                                    <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>-->
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="far fa-clock"></i> 27 mins ago</span>
 
-                                        <!--                                                    <div class="timeline-body">-->
-                                        <!--                                                        Take me to your leader!-->
-                                        <!--                                                        Switzerland is small and neutral!-->
-                                        <!--                                                        We are more like Germany, ambitious and misunderstood!-->
-                                        <!--                                                    </div>-->
-                                        <!--                                                    <div class="timeline-footer">-->
-                                        <!--                                                        <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>-->
-                                        <!--                                                    </div>-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
-                                        <!--                                            &lt;!&ndash; timeline time label &ndash;&gt;-->
-                                        <!--                                            <div class="time-label">-->
-                                        <!--                        <span class="bg-success">-->
-                                        <!--                          3 Jan. 2014-->
-                                        <!--                        </span>-->
-                                        <!--                                            </div>-->
-                                        <!--                                            &lt;!&ndash; /.timeline-label &ndash;&gt;-->
-                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
-                                        <!--                                            <div>-->
-                                        <!--                                                <i class="fas fa-camera bg-purple"></i>-->
+                                                    <h3 class="timeline-header"><a href="#">Jay White</a> commented on
+                                                        your post</h3>
 
-                                        <!--                                                <div class="timeline-item">-->
-                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 2 days ago</span>-->
+                                                    <div class="timeline-body">
+                                                        Take me to your leader!
+                                                        Switzerland is small and neutral!
+                                                        We are more like Germany, ambitious and misunderstood!
+                                                    </div>
+                                                    <div class="timeline-footer">
+                                                        <a class="btn btn-warning btn-flat btn-sm" href="#">View
+                                                            comment</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- END timeline item -->
+                                            <!-- timeline time label -->
+                                            <div class="time-label">
+                                                                <span class="bg-success">
+                                                                  3 Jan. 2014
+                                                                </span>
+                                            </div>
+                                            <!-- /.timeline-label -->
+                                            <!-- timeline item -->
+                                            <div>
+                                                <i class="fas fa-camera bg-purple"></i>
 
-                                        <!--                                                    <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>-->
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
 
-                                        <!--                                                    <div class="timeline-body">-->
-                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
-                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
-                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
-                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
-                                        <!--                                                    </div>-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
-                                        <!--                                            <div>-->
-                                        <!--                                                <i class="far fa-clock bg-gray"></i>-->
-                                        <!--                                            </div>-->
-                                        <!--                                        </div>-->
+                                                    <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new
+                                                        photos</h3>
+
+                                                    <div class="timeline-body">
+                                                        <img alt="..." src="http://placehold.it/150x100">
+                                                        <img alt="..." src="http://placehold.it/150x100">
+                                                        <img alt="..." src="http://placehold.it/150x100">
+                                                        <img alt="..." src="http://placehold.it/150x100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- END timeline item -->
+                                            <div>
+                                                <i class="far fa-clock bg-gray"></i>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- /.tab-pane -->
@@ -562,6 +605,95 @@
                                                 </div>
                                             </div>
                                         </form>
+
+                                        <!-- add timeline form -->
+                                        <form class="form-horizontal"
+                                              method="post" th:action="${T(by.jrr.constant.Endpoint).PROFILE_TIMELINE}"
+                                              th:if="${isUserIsAdmin}">
+                                            <h1> Add Timeline </h1>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">dateTime</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="dateTime"
+                                                           type="datetime-local"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">streamTeamProfileId</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="streamTeamProfileId"
+                                                           th:value="${profile.getId()}"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">courseId</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="courseId"
+                                                           th:value="${profile.getCourseId()}"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">lectureId</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" name="lectureId">
+                                                        <option></option>
+                                                        <option th:each="lecture : ${topicList}"
+                                                                th:text="${lecture.getTitle() + ' ' + lecture.getSubtitle()}"
+                                                                th:value="${lecture.getId()}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">urlToRedirect</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="urlToRedirect"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">eventType</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" name="eventType">
+                                                        <option th:each="type : ${T(by.jrr.registration.bean.EventType).values()}"
+                                                                th:text="${type}" th:value="${type}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">eventName (goes to log)</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="eventName"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">notes (info for user) </label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="notes"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button class="btn btn-danger" name="command" type="submit"
+                                                            value="saveTimeline">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
                                     </div>
                                     <!-- /.tab-pane -->
 
