@@ -67,7 +67,7 @@ public class SayHelloNewUserProcessor implements Processor {
 
     private void findLatestTelegramChatActionAndBindProfile(Message message) { // TODO: 29/07/20 consider to publish this as a broadcasting event
         LocalDateTime messageTimestamp =
-                Instant.ofEpochMilli(message.getDate())
+                Instant.ofEpochSecond(message.getDate())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime();
         Optional<StudentActionToLog> studentActionToLog = studentActionToLogService.findLastActionBeforeTimestamp(messageTimestamp);

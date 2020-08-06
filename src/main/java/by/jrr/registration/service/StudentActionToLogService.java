@@ -146,8 +146,8 @@ public class StudentActionToLogService {
         return dtoList;
     }
 
-    public Optional<StudentActionToLog> findLastActionBeforeTimestamp(LocalDateTime timestamp) {
-        List<StudentActionToLog> studentActionToLogList = satlR.findAllByTimestampBetween(timestamp, timestamp.minusSeconds(30));
+    public Optional<StudentActionToLog> findLastActionBeforeTimestamp(LocalDateTime timestamp) {// TODO: 06/08/20 save logs with stream / team id, find last log row for stream
+        List<StudentActionToLog> studentActionToLogList = satlR.findAllByTimestampBetween(timestamp.minusSeconds(30), timestamp);
         if (studentActionToLogList.size() > 0) {
             return Optional.of(studentActionToLogList.get(studentActionToLogList.size()-1));
         }
