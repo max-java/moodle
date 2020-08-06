@@ -30,6 +30,14 @@
 
             <div th:include="crm/taskList :: list"></div>
 
+            <table>
+                <tr th:each="profile : ${tgUsers}">
+                    <td th:text="${profile.getTgUser().getLastName()}"></td>
+                    <td th:text="${profile.getTgUser().getFirstName()}"></td>
+                    <td th:text="${profile.getTgUser().getUserName()}"></td>
+                </tr>
+            </table>
+
         </section>
         <!-- /.content -->
     </div>

@@ -3,6 +3,7 @@ package by.jrr.profile.bean;
 import by.jrr.auth.bean.User;
 import by.jrr.constant.Endpoint;
 import by.jrr.moodle.bean.Course;
+import by.jrr.telegram.model.TgUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -80,6 +81,8 @@ public class Profile {
     private Long courseId;
     @Transient
     private Course course;
+    @Transient
+    private TgUser tgUser;
 
     public boolean isLinkPresent(String link) { // TODO: 05/07/20 this need to make UI button (in ex. zoomLink) visible if link is present
         if (link == null) {
