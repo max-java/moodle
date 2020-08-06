@@ -59,6 +59,10 @@ public class CourseService {
         List<Profile> stream = profileService.findStreamsByCourseIdFromNowAndLastMonth(courseId);
         return stream;
     }
+    public List<Profile> findTeamsForCourseByCourseIdWhereEnrollIsOpen(Long courseId) {
+        List<Profile> stream = profileService.findStreamsByCourseIdWhereEnrollIsOpen(courseId);
+        return stream;
+    }
 
 
 

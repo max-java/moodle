@@ -81,7 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
         </div>
     </div>
-    <img class="d-block w-100" th:src="@{/dist/img/QA1free.jpeg}" alt="First slide">
+    <img alt="First slide" class="d-block w-100" th:src="@{/dist/img/QA1free.jpeg}">
     <div class="content-wrapper">
         <!-- Main content -->
         <div class="content">
@@ -97,7 +97,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-md-2">
                     </div>
                 </div>
-
 
 
                 <div class="row mt-5">
@@ -125,13 +124,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <h1 class="m-0 display-4">&nbsp;</h1>
                             </div>
                             <div class="card-body">
-                                <iframe style="position: center; width: -webkit-fill-available;"
-                                        width="560"
+                                <iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen
+                                        frameborder="0"
                                         height="315"
                                         src="https://www.youtube.com/embed/yTX1xhPFfNY"
-                                        frameborder="0"
-                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen>
+                                        style="position: center; width: -webkit-fill-available;"
+                                        width="560">
                                 </iframe>
                             </div>
                         </div><!-- /.card -->
@@ -219,45 +218,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                 </div>
 
-                <div class="row mt-5">
-                    <div class="col-sm-4">
-                        <div class="position-relative p-3 bg-gradient-cyan" style="height: 180px">
-                            <div class="ribbon-wrapper ribbon-lg">
-                                <div class="ribbon bg-success text-lg">
-                                    < 14 мест!
-                                </div>
-                            </div>
-                            JAVA INTENSIVE <br/> Начало: 1 августа 2020 г. <br/>
-                            <small>Вторник с 19:00 до 22:00 <br/>
-                                Суббота с 12:00 до 15:00
-                            </small>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="position-relative p-3 bg-gradient-teal" style="height: 180px">
-                            <div class="ribbon-wrapper ribbon-xl">
-                                <div class="ribbon bg-danger text-xl">
-                                    Бесплатно!
-                                </div>
-                            </div>
-                            JAVA PRE-INTENSIVE <br/>
-                            Подготовительный курс для Java Intensive <br/>
-                            Начало - 1 июля 2020 г. <br/>
-                            <small>Понедельник с 19:00 до 22:00</small>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="position-relative p-3 bg-gradient-success" style="height: 180px">
-                            <div class="ribbon-wrapper ribbon-xl">
-                                <div class="ribbon bg-danger text-xl">
-                                    Бесплатно!
-                                </div>
-                            </div>
-                            JAVA PRE-INTENSIVE <br/>
-                            Подготовительный курс для Java Intensive <br/>
-                            Начало - 1 июля 2020 г. <br/>
-                            <small>Пятница с 19:00 до 22:00</small>
-                        </div>
+                <div class="row mt-5 justify-content-center">
+                    <div class="col-md-4"
+                         th:each="stream : ${streamList}">
+                        <div th:include="starter/streamOpenForEnroll :: streamCard"
+                             th:with="streamData=${stream}"></div>
                     </div>
                 </div>
 
@@ -274,7 +239,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="row mt-5">
                     <div class="col-md-6">
                         <img class="img-fluid float-right"
-                             src="http://javaguru.by/wp-content/uploads/2018/10/weare2.svg">
+                             th:src="@{/dist/img/starter_poster.jpeg}">
                     </div>
 
                     <div class="col-md-6">

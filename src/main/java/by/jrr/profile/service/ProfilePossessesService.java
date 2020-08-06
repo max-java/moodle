@@ -1,6 +1,7 @@
 package by.jrr.profile.service;
 
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.CourseToLecture;
 import by.jrr.moodle.bean.Lecture;
@@ -30,16 +31,21 @@ public class ProfilePossessesService {
     ProfileService profileService;
     @Autowired
     CourseToLectureService courseToLectureService;
+    @Autowired
+    UserAccessService userAccessService;
 
     public boolean isUserOwner(Long profleId, Long entityId) {
         Optional<ProfilePossesses> possess = profilePossessesRepository.findByProfileIdAndEntityId(profleId, entityId);
         return possess.isPresent();
     }
     public boolean isCurrentUserOwner(Long entityId) {
-        Optional<ProfilePossesses> possess =
-                profilePossessesRepository.findByProfileIdAndEntityId(profileService.getCurrentUserProfile().getId(), entityId);
-        // TODO: 08/07/20 add log here with info of response user got for entity ID
-        return possess.isPresent();
+        if(userAccessService.isCurrentUserAuthenticated()) {
+            Optional<ProfilePossesses> possess =
+                    profilePossessesRepository.findByProfileIdAndEntityId(profileService.getCurrentUserProfile().getId(), entityId);
+            return possess.isPresent();
+        }
+        return false;// TODO: 08/07/20 add log here with info of response user got for entity ID
+
     }
 
     public void savePossessForCurrentUser(Long entityId, EntityType type) {

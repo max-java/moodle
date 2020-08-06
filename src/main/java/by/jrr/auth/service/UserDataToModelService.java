@@ -23,6 +23,13 @@ public class UserDataToModelService {
         setIsAuthenticated(mov);
         setCurrentUserProfile(mov);
         setListOfUsers(mov);
+        setUserDTOToRegisterAndEnrollModalForm(mov);
+        return mov;
+    }
+
+    private ModelAndView setUserDTOToRegisterAndEnrollModalForm(ModelAndView mov) {
+        // need to work with quick register form.
+        mov.addObject("modalFormUserData", new User());
         return mov;
     }
 

@@ -3,7 +3,9 @@ package by.jrr.auth.configuration;
 import by.jrr.auth.service.MyUserDetailsService;
 import by.jrr.constant.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +33,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 auth
                     .userDetailsService(userDetailsService)
                     .passwordEncoder(bCryptPasswordEncoder);
+    }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
