@@ -35,7 +35,7 @@ public class TimeLineController {
                         .dateTime(dateTime)
                         .courseId(courseId)
                         .eventType(eventType)
-                        .urlToRedirect(urlToRedirect)
+                        .urlToRedirect(urlToRedirect.trim())
                         .lectureId(lectureId)
                         .eventName(eventName)
                         .notes(notes)
