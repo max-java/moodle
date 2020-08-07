@@ -10,14 +10,8 @@ import by.jrr.constant.View;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
 import by.jrr.moodle.service.CourseToLectureService;
-import by.jrr.profile.bean.Profile;
-import by.jrr.profile.bean.StreamAndTeamSubscriber;
-import by.jrr.profile.bean.SubscriptionStatus;
-import by.jrr.profile.bean.UserProfileStatisticDTO;
-import by.jrr.profile.service.ProfilePossessesService;
-import by.jrr.profile.service.ProfileService;
-import by.jrr.profile.service.ProfileStatisticService;
-import by.jrr.profile.service.StreamAndTeamSubscriberService;
+import by.jrr.profile.bean.*;
+import by.jrr.profile.service.*;
 import by.jrr.registration.service.StudentActionToLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +52,8 @@ public class ProfileCardController {
     HistoryItemService historyItemService;
     @Autowired
     UserAccessService userAccessService;
+    @Autowired
+    TimeLineService timeLineService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -66,6 +62,7 @@ public class ProfileCardController {
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
+            mov.addObject("timeLines", timeLineService.getTimeLineByStreamId(profileId));
 
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId)); // TODO: 05/08/20 consider to make it more clearly (var name and behaviour)

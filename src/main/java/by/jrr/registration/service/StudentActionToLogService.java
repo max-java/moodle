@@ -39,6 +39,11 @@ public class StudentActionToLogService {
                         .build()
         );
     }
+    public void saveAction(StudentActionToLog studentActionToLog) {
+        studentActionToLog.setTimestamp(LocalDateTime.now());
+        studentActionToLog.setStudentProfileId(profileService.getCurrentUserProfileId());
+        satlR.save(studentActionToLog);
+    }
 
     public LogActionAndRedirectController.UserActivityDTO findActionForStreamBetweenTimestamps(Long streamProfileId, LocalDateTime start, LocalDateTime end) {
         LogActionAndRedirectController.UserActivityDTO userActivityDTO = new LogActionAndRedirectController.UserActivityDTO();
