@@ -349,7 +349,7 @@
                                                             <div class="timeline-footer">
                                                                 <form action="/l/" method="post">
                                                                     <input name="link"
-                                                                           th:value="${timeline.getUrlToRedirect()}"
+                                                                           th:value="${timeline.getUrlToRedirect().trim()}"
                                                                            type="hidden"/>
                                                                     <input name="linkName"
                                                                            th:value="${timeline.getEventName()}"
