@@ -24,6 +24,7 @@ public class TimeLineService {
     public Map<LocalDate, List<TimeLine>> getTimeLineByStreamId(Long streamTeamProfileId) {
         List<TimeLine> timeLineList = timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
         Map<LocalDate, List<TimeLine>> result = timeLineList.stream()
+                .filter(timeLine -> timeLine.getDateTime() != null) // TODO: 07/08/20 add default value
                 .collect(Collectors.groupingBy(dt -> dt.getDateTime().toLocalDate(), Collectors.toList()));
         Map<LocalDate, List<TimeLine>> sortedResult = new TreeMap<>(result);
         return sortedResult;
