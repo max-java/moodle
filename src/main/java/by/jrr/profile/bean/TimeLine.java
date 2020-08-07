@@ -1,12 +1,10 @@
-package by.jrr.registration.bean;
+package by.jrr.profile.bean;
 
-import by.jrr.moodle.bean.Course;
-import by.jrr.profile.bean.Profile;
+import by.jrr.registration.bean.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,34 +14,19 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentActionToLog {
-
+public class TimeLine {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
-
-    private Long studentProfileId;
-    @Transient
-    private Profile studentProfile;
-
+    private LocalDateTime dateTime;
     private Long streamTeamProfileId;
-    @Transient
-    private Profile streamTeamProfile;
-
     private Long courseId;
-    @Transient
-    private Course course;
-
     private Long lectureId;
-    @Transient
-    private Course lecture;
-
     private String urlToRedirect;
-    @CreationTimestamp
-    private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
     private EventType eventType;
     private String eventName;
-
+    @Column(columnDefinition = "TEXT")
+    private String notes;
 }

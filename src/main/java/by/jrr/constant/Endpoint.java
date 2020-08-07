@@ -28,6 +28,7 @@ public class Endpoint {
     public static final String PROFILE_CARD = "/profile";
     public static final String PROFILE_CARD_ADMIN_VIEW = "/admin/profile";
     public static final String PROFILE_LIST = "/profiles";
+    public static final String PROFILE_TIMELINE = "/timeline";
 
 
     public static final String REVIEW_REQUEST_FORM = "/reviewRequest/newRequest"; // TODO: 27/05/20 change mapping names, maybe add ?newRequest=true for this?
