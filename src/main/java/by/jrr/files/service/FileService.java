@@ -66,7 +66,7 @@ public class FileService {
         return (List<FileMeta>) result;
     }
 
-    public byte[] getPdfFromFileStorage(String name) {
+    public byte[] getFileBytesFromFileStorage(String name) {
         Path path = Paths.get(FILE_STORAGE + name);
         try {
             return Files.readAllBytes(path);
@@ -74,4 +74,5 @@ public class FileService {
             return "".getBytes();
         }
     }
+
 }
