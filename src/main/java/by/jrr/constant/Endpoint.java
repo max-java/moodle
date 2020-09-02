@@ -41,6 +41,7 @@ public class Endpoint {
 
     public static final String IMAGE = "/img";
     public static final String PDF = "/pdf";
+    public static final String VIDEO = "/video";
     public static final String FILES = "/files";
 
 
