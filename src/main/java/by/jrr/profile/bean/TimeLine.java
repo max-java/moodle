@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Data
@@ -29,4 +30,8 @@ public class TimeLine {
     private String eventName;
     @Column(columnDefinition = "TEXT")
     private String notes;
+
+    public String getTime() {
+        return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
 }
