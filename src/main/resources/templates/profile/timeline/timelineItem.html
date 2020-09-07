@@ -5,8 +5,8 @@
 <th:block th:fragment="item">
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).LECTURE)}">
         <div class="timeline-item">
-            <!--                                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
-
+            <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                    th:text="${timeline.getTime()}">12:05</th:block></h3>
 
             <h3 class="timeline-header">
                 <a href="#" th:text="${timeline.getEventType()}">
@@ -61,7 +61,8 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).TEAM_STAND_UP)}">
         <div class="timeline-item">
-            <!--                                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
+                        <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                                th:text="${timeline.getTime()}">12:05</th:block></h3>
 
 
             <h3 class="timeline-header">
@@ -116,7 +117,8 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).YOUTUBE)}">
         <div class="timeline-item">
-            <!--                                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
+                        <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                                th:text="${timeline.getTime()}">12:05</th:block></h3>
 
 
             <h3 class="timeline-header">
@@ -134,12 +136,12 @@
             <div class="timeline-footer">
                 <div class="row">
                     <div class="col-md-8">
-                        <iframe style="position: center; width: -webkit-fill-available;"
-                                                  th:src="${timeline.getUrlToRedirect().trim()}"
-                                                  width="560"
-                                                  height="315"
-                                                  frameborder="0"
-                                                  allowfullscreen="allowfullscreen">
+                        <iframe allowfullscreen="allowfullscreen"
+                                frameborder="0"
+                                height="315"
+                                style="position: center; width: -webkit-fill-available;"
+                                th:src="${timeline.getUrlToRedirect().trim()}"
+                                width="560">
                         </iframe>
                     </div>
                     <div class="col-md-4">&nbsp;</div>
@@ -150,7 +152,8 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).VIDEO)}">
         <div class="timeline-item">
-            <!--                                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
+                        <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                                th:text="${timeline.getTime()}">12:05</th:block></h3>
 
 
             <h3 class="timeline-header">
@@ -168,7 +171,7 @@
             <div class="timeline-footer">
                 <div class="row">
                     <div class="col-md-8">
-                        <video width="560" height="315" controls>
+                        <video controls height="315" width="560">
                             <source th:src="|/video${timeline.getUrlToRedirect().trim()}|" type="video/mp4">
                         </video>
                     </div>
