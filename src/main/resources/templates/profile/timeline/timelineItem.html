@@ -5,7 +5,7 @@
 <th:block th:fragment="item">
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).LECTURE)}">
         <div class="timeline-item">
-            <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+            <h3 style="padding: 10px;"><i class="far fa-clock"></i><th:block
                     th:text="${timeline.getTime()}">12:05</th:block></h3>
 
             <h3 class="timeline-header">
@@ -61,7 +61,7 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).TEAM_STAND_UP)}">
         <div class="timeline-item">
-                        <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                        <h3 style="padding: 10px;"><i class="far fa-clock"></i><th:block
                                 th:text="${timeline.getTime()}">12:05</th:block></h3>
 
 
@@ -117,7 +117,7 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).YOUTUBE)}">
         <div class="timeline-item">
-                        <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                        <h3 style="padding: 10px;"><i class="far fa-clock"></i><th:block
                                 th:text="${timeline.getTime()}">12:05</th:block></h3>
 
 
@@ -152,7 +152,7 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).VIDEO)}">
         <div class="timeline-item">
-                        <h3 class="time" style="float: unset;"><i class="far fa-clock"></i><th:block
+                        <h3 style="padding: 10px;"><i class="far fa-clock"></i><th:block
                                 th:text="${timeline.getTime()}">12:05</th:block></h3>
 
 
