@@ -3,7 +3,14 @@ package by.jrr.auth.service;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserData;
 import by.jrr.auth.bean.UserRoles;
+import by.jrr.constant.Endpoint;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.StreamAndTeamSubscriber;
+import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.profile.bean.TimeLine;
+import by.jrr.profile.service.ProfileService;
+import by.jrr.profile.service.TimeLineService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,11 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserAccessService {
 
-
+    @Autowired
+    ProfileService profileService;
+    @Autowired
+    TimeLineService timeLineService;
 
     public boolean isCurrentUserAuthenticated() {
         boolean isUserAuthenticated = false;
@@ -52,6 +64,40 @@ public class UserAccessService {
     }
     public static boolean isUserHasRole(User user, UserRoles role) {
         return user.getAllRoles().contains(role.name());
+    }
+
+    public boolean isUserHasAccessToVideoFile(String fileDir, String fileName) {
+        // TODO: 22/09/20 consider to syncronize it with timeline service policy links
+        String link = String.format("/%s/%s", fileDir, fileName);
+        Profile currentUserProfile = profileService.getCurrentUserProfile();
+        List<StreamAndTeamSubscriber> subscriptions = currentUserProfile.getSubscriptions();
+
+        List<Long> idStreamsUserHasAccess = subscriptions.stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
+                .filter(s -> s.getStreamTeamProfileId() != null)
+                .map(s -> s.getStreamTeamProfileId())
+                .collect(Collectors.toList());
+
+        List<TimeLine> items = idStreamsUserHasAccess.stream()
+                .flatMap(id -> timeLineService.getTimelineByStreamId(id).stream())
+                .collect(Collectors.toList());
+
+        List<String> urlsToVideo = items.stream()
+                .map(i -> i.getUrlToRedirect())
+                .collect(Collectors.toList());
+
+        boolean result = urlsToVideo.stream()
+                .anyMatch(i -> i.equals(link));
+
+        return result;
+    }
+
+    public boolean isUserHasAccessToSubcription(Long streamTeamProfileId) {
+        Profile currentUserProfile = profileService.getCurrentUserProfile();
+        List<StreamAndTeamSubscriber> subscriptions = currentUserProfile.getSubscriptions();
+        return subscriptions.stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
+                .anyMatch(s -> s.getStreamTeamProfileId().equals(streamTeamProfileId));
     }
 }
 /*
