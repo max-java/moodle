@@ -62,7 +62,7 @@ public class ProfileCardController {
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
             mov.setViewName(View.PROFILE_CARD);
             mov.addObject("profile", profile.get());
-            mov.addObject("timeLines", timeLineService.getTimelineForProfile(profile.get())); //todo profile.getSubscriptions().size()>0
+            mov.addObject("timeLines", timeLineService.getTimelineForProfile(profile.get()));
 
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId)); // TODO: 05/08/20 consider to make it more clearly (var name and behaviour)

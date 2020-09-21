@@ -1,5 +1,6 @@
 package by.jrr.profile.service;
 
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.TimeLine;
@@ -16,14 +17,32 @@ public class TimeLineService {
 
     @Autowired
     TimeLineRepository timeLineRepository;
+    @Autowired
+    UserAccessService userAccessService;
 
     public void save(TimeLine timeLine) {
         timeLineRepository.save(timeLine);
     }
 
     public List<TimeLine> getTimelineByStreamId(Long streamTeamProfileId) {
-        return timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
+        List<TimeLine> timeline = timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
+        if(!userAccessService.isUserHasAccessToSubcription(streamTeamProfileId)) {
+            closeLinksInTimeline(timeline);
+        }
+        return timeline;
     }
+
+    private void closeLinksInTimeline(List<TimeLine> timeline) {
+        for (TimeLine item : timeline ) {
+            switch (item.getEventType()) {
+                case YOUTUBE: item.setUrlToRedirect("https://www.youtube.com/embed/0BJOOo4Sa7M"); break;
+                case VIDEO: item.setUrlToRedirect("common/403_access_denied.mp4"); break;
+                case TELEGRAM_CHAT: break;
+                default: item.setUrlToRedirect("/403"); break;
+            }
+        }
+    }
+
     public List<TimeLine> getTimelineForProfileSubscriptions(List<StreamAndTeamSubscriber> subscriptions) {
         List<TimeLine> timeLines = new ArrayList<>();
         for(StreamAndTeamSubscriber subscriber : subscriptions) {
