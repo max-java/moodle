@@ -1,14 +1,14 @@
 package by.jrr.profile.service;
 
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.TimeLine;
 import by.jrr.profile.repository.TimeLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,12 +21,46 @@ public class TimeLineService {
         timeLineRepository.save(timeLine);
     }
 
-    public Map<LocalDate, List<TimeLine>> getTimeLineByStreamId(Long streamTeamProfileId) {
-        List<TimeLine> timeLineList = timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
+    public List<TimeLine> getTimelineByStreamId(Long streamTeamProfileId) {
+        return timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
+    }
+    public List<TimeLine> getTimelineForProfileSubscriptions(List<StreamAndTeamSubscriber> subscriptions) {
+        List<TimeLine> timeLines = new ArrayList<>();
+        for(StreamAndTeamSubscriber subscriber : subscriptions) {
+            timeLines.addAll(this.getTimelineByStreamId(subscriber.getStreamTeamProfileId()));
+        }
+        return timeLines;
+    }
+    public void distinctTimelineItems(List<TimeLine> timeline) { // TODO: 21/09/20 not working. Create tests.
+        List<TimeLine> itemsToRemove = new ArrayList<>();
+        for (TimeLine item : timeline) {
+            int i = 0;
+            for (TimeLine item2 : timeline) {
+                if (item.getUrlToRedirect().equals(item2.getUrlToRedirect())) {
+                    i++;
+                    if (i > 1) {
+                        itemsToRemove.add(item2);
+                    }
+                }
+            }
+        }
+        itemsToRemove.removeAll(itemsToRemove);
+    }
+
+    public Map<LocalDate, List<TimeLine>> groupTimelineByDates(List<TimeLine> timeLineList) {
         Map<LocalDate, List<TimeLine>> result = timeLineList.stream()
                 .filter(timeLine -> timeLine.getDateTime() != null) // TODO: 07/08/20 add default value
                 .collect(Collectors.groupingBy(dt -> dt.getDateTime().toLocalDate(), Collectors.toList()));
         Map<LocalDate, List<TimeLine>> sortedResult = new TreeMap<>(result);
         return sortedResult;
     }
+    public Map<LocalDate, List<TimeLine>> getTimelineForProfile(Profile profile) {
+        List<TimeLine> timeline = new ArrayList<>();
+        timeline.addAll(getTimelineByStreamId(profile.getId()));
+        timeline.addAll(getTimelineForProfileSubscriptions(profile.getSubscriptions()));
+        distinctTimelineItems(timeline);
+        return groupTimelineByDates(timeline);
+    }
+
+
 }
