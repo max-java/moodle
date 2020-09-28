@@ -85,6 +85,15 @@ public class ProfileService {
         return profilePage;
     }
 
+    public List<Profile> findAllStreamGroups() {
+        List<Profile> streamGroups = profileRepository.findAllByCourseIdNotNull();
+        streamGroups.forEach(p -> setCourseDataToStreamProfile(p)); // TODO: 28/09/20 move all like this to ProfileDataAgregatorService
+        streamGroups.forEach(p -> setUserDataToProfile(p));
+        return streamGroups;
+
+
+    }
+
     private void setUserDataToProfile(Profile profile) {
         userService.findUserById(profile.getUserId()).ifPresent(user -> profile.setUser(user));
 
