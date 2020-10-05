@@ -388,7 +388,7 @@
                                                         getResponse(this);
                                                     }
                                                 };
-                                                xmlhttp.open("GET", "/admin/profile/api/updateRole/" + userProfileId + "?userRole=" + userRole, true);
+                                                xmlhttp.open("GET", "/crm/profile/api/updateRole/" + userProfileId + "?userRole=" + userRole, true);
                                                 xmlhttp.send();
                                             }
 
@@ -413,7 +413,7 @@
                                                         document.getElementById("alert").innerHTML = "Сгенерирован новый пароль " + password;
                                                     }
                                                 };
-                                                xmlhttp.open("GET", "/admin/profile/api/generateNewPassword/" + userProfileId, true);
+                                                xmlhttp.open("GET", "/crm/profile/api/generateNewPassword/" + userProfileId, true);
                                                 xmlhttp.send();
                                             }
                                         </script>
