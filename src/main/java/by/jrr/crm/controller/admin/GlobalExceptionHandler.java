@@ -1,4 +1,4 @@
-//package by.jrr.profile.admin;
+//package by.jrr.crm.controller.admin;
 //
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;

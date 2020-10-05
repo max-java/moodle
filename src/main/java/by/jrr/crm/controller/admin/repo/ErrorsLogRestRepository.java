@@ -1,8 +1,7 @@
-package by.jrr.profile.admin.repo;
+package by.jrr.crm.controller.admin.repo;
 
-import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.constant.Endpoint;
-import by.jrr.profile.admin.bean.ErrorsLog;
+import by.jrr.crm.controller.admin.bean.ErrorsLog;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

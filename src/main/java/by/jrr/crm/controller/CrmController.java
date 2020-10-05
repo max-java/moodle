@@ -1,6 +1,10 @@
 package by.jrr.crm.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.balance.bean.OperationRow;
+import by.jrr.balance.constant.Action;
+import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.profile.service.ProfileService;
@@ -17,6 +21,9 @@ public class CrmController {
     @Autowired
     ProfileService profileService;
 
+    @Autowired
+    OperationRowService operationRowService;
+
     @GetMapping(Endpoint.CRM)
     public ModelAndView saveNewItem() {
         ModelAndView modelAndView = userDataToModelService.setData(new ModelAndView());
@@ -24,7 +31,18 @@ public class CrmController {
 
         modelAndView.addObject("streams", profileService.findAllStreamGroups());
 
+        modelAndView.addObject("Action", new Action());
+        modelAndView.addObject("FieldName", new FieldName());
+
+        //blank instances for forms can work to add
+        modelAndView.addObject("blankRow", new OperationRow());
+
+        //billing
+        modelAndView.addObject("blankRow", new OperationRow());
+        modelAndView.addObject("total", operationRowService.sumForAll());
+
         return modelAndView;
     }
+
 
 }

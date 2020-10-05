@@ -8,21 +8,17 @@ import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
 import by.jrr.email.service.EMailService;
-import by.jrr.profile.admin.bean.UserDTO;
+import by.jrr.crm.controller.admin.bean.UserDTO;
 import by.jrr.telegram.bot.service.MessageService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 

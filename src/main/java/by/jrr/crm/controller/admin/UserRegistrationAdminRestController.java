@@ -1,40 +1,23 @@
-package by.jrr.profile.admin;
+package by.jrr.crm.controller.admin;
 
-import by.jrr.auth.bean.Role;
-import by.jrr.auth.bean.User;
-import by.jrr.auth.bean.UserRoles;
-import by.jrr.auth.configuration.annotations.AdminOnly;
-import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
-import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
-import by.jrr.profile.admin.bean.ErrorsLog;
-import by.jrr.profile.admin.bean.UserDTO;
-import by.jrr.profile.admin.repo.ErrorsLogRestRepository;
-import by.jrr.profile.bean.Profile;
-import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.crm.controller.admin.bean.ErrorsLog;
+import by.jrr.crm.controller.admin.bean.UserDTO;
+import by.jrr.crm.controller.admin.repo.ErrorsLogRestRepository;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
 import by.jrr.profile.service.StreamAndTeamSubscriberService;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
-import java.util.*;
 
 @RestController
 public class UserRegistrationAdminRestController {

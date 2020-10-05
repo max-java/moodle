@@ -231,3 +231,26 @@ INSERT INTO `book` VALUES (1, 'https://www.iconninja.com/files/854/364/1/develop
                               'publisher1',
                               'published1',
                               'isbn1');
+
+DROP TABLE  IF EXISTS `currency`;
+
+CREATE TABLE `currency` (
+                        `id` int(20) NOT NULL,
+                        `name` varchar(255) DEFAULT NULL,
+                        `code` varchar(255) DEFAULT NULL,
+                        `abbreviation` varchar(100) DEFAULT NULL
+);
+
+INSERT INTO `currency` VALUES (144,
+                           'belarus rubles',
+                           '',
+                           'BYN');
+INSERT INTO `currency` VALUES (145,
+                               'Dollars',
+                               '',
+                               'USD');
+INSERT INTO `currency` VALUES (146,
+                               'Euro',
+                               '',
+                               'EUR');
+

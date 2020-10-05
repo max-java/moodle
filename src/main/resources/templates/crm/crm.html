@@ -48,7 +48,7 @@
                             <tr th:each="profile : ${streams}">
                                 <td th:text="${profile.getCourse().getTitle()}"></td>
                                 <td>
-                                    <a th:href="${'/profile/'+profile.getId()}"
+                                    <a th:href="${'/crm/profile/'+profile.getId()}"
                                        th:text="${profile.getUser().getFullUserName()}">
                                     </a>
                                 </td>
@@ -64,10 +64,35 @@
             </div>
 
             <div class="card card-solid">
+                <div class="card-header">
+                    <h2>Cash Flow</h2>
+                </div>
                 <div class="card-body">
-                    <div class="row">
-
-                    </div>
+<!--                    <div class="row">-->
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="col-md-3">
+                                    <div th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                                         th:with="categoryList=${incomeCategoryList},
+                                   direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
+                                   row=${blankRow},
+                                   buttonText=${'Доход - общие'}">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                                         th:with="categoryList=${incomeCategoryList},
+                                   direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
+                                   row=${blankRow},
+                                   buttonText=${'Расход - общие'}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p th:text="${total}"></p>
+                            </div>
+                        </div>
+<!--                    </div>-->
                     <!-- /.row -->
                 </div>
             </div>
