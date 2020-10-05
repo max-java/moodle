@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="billing">
+
+    <div class="tab-pane" id="billing">
+        <div class="row">
+            <p th:text="${total}"></p>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-3">
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
+                     th:with="categoryList=${incomeCategoryList},
+                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
+                                       row=${blankRow},
+                                       buttonText=${'Приход'}">
+                </th:block>
+            </div>
+            <div class="col-md-3">
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
+                     th:with="categoryList=${incomeCategoryList},
+                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).PLAN_INCOME},
+                                       row=${blankRow},
+                                       buttonText=${'Запланировать приход'}">
+                </th:block>
+            </div>
+            <div class="col-md-3">
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
+                     th:with="categoryList=${incomeCategoryList},
+                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
+                                       row=${blankRow},
+                                       buttonText=${'Расход'}">
+                </th:block>
+            </div>
+            <div class="col-md-3">
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
+                     th:with="categoryList=${incomeCategoryList},
+                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).PLAN_OUTCOME},
+                                       row=${blankRow},
+                                       buttonText=${'Запланировать расход'}">
+                </th:block>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div th:each="operation : ${operationRows}">
+                <p th:text="${operation.toString()}"></p>
+            </div>
+
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

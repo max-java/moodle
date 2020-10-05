@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="operationRowSmall">
+    <table th:id="${tableId}" class="table table-bordered table-striped table-sm">
+        <thead>
+        <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${rows}">
+            <td th:text="${row.date}">dummy</td>
+            <td th:text="${row.sum + ' ' + row.getCurrencyName()}">dummy</td>
+            <td>
+                <button type="button"
+                        class="btn btn-link"
+                        data-toggle="modal"
+                        data-target="#modal-default"
+                        th:attr="data-target='#'+${row.getId()}+'modal-default'+${direction}">
+                    <span th:text="${row.getOperationCategoryName()}"></span>
+                </button>
+                <!-- modal form -->
+                <div class="modal fade" th:id="${row.getId()}+'modal-default'+${direction}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="/" th:action="${Action.ADD_OPERATION_ROW}" method="post">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Default Modal</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-bordered table-striped">
+
+                                        <input type="hidden" name="direction" th:value="${direction}"/>
+                                        <input type="hidden" th:name="${FieldName.ID_OPERATION}"
+                                               th:value="${row.getId()}"/>
+                                        <tr>
+                                            <th><label>data \ дата</label></th>
+                                            <td><input required="required" type="date" th:name="${FieldName.OPERATION_DATE}"
+                                                       th:value="${row.date}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><label>sum \ сумма</label></th>
+                                            <td><input type="number" step=".01" th:name="${FieldName.OPERATION_SUM}"
+                                                       th:value="${row.sum}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><label>currency</label></th>
+                                            <td>
+                                                <select th:name="${FieldName.ID_CURRENCY}">
+                                                    <option></option>
+                                                    <div th:each="cur : ${currency}">
+                                                        <option th:value="${cur.id}" th:text="${cur.name}"
+                                                                th:selected="${cur.id} == ${row.getIdCurrency()}"></option>
+                                                    </div>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><label>income \ статья</label></th>
+                                            <td>
+                                                <select th:name="${FieldName.ID_OPERATION_CATEGORY}">
+                                                    <option></option>
+                                                    <div th:each="category : ${categoryList}">
+                                                        <option th:value="${category.id}" th:text="${category.name}"
+                                                                th:selected="${category.id} == ${row.getIdOperationCategory()}"></option>
+                                                    </div>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><label>note \ пояснения</label></th>
+                                            <td><input type="text" th:name="${FieldName.OPERATION_NOTE}"
+                                                       th:value="${row.note}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <!-- todo add radiobutton to repeat N times & up To Date -->
+                                            <th><label>repeat N times (disabled if up to date is set)</label></th>
+                                            <td><input type="number" th:name="${FieldName.REPEAT_N_TIMES}"
+                                                       value="1"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><label>repeat up to date</label></th>
+                                            <td>
+                                                <input type="date" th:name="${FieldName.END_OF_REPEATING_DATE}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><label>repeat</label></th>
+                                            <td>
+                                                <input type="radio" id="REPEAT_NONE"
+                                                       th:name="${FieldName.REPEAT_RADIO}" th:value="${FieldName.REPEAT_NONE}" />
+                                                <label for="REPEAT_NONE">No repeat</label>
+
+                                                <input type="radio" id="REPEAT_DAILY"
+                                                       th:name="${FieldName.REPEAT_RADIO}" th:value="${FieldName.REPEAT_DAILY}" />
+                                                <label for="REPEAT_DAILY">Daily</label>
+
+                                                <input type="radio" id="REPEAT_MONTHLY"
+                                                       th:name="${FieldName.REPEAT_RADIO}" th:value="${FieldName.REPEAT_MONTHLY}" />
+                                                <label for="REPEAT_MONTHLY">Monthly</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal"> Close </button>
+                                    <div th:if="${toFact}">
+                                        <button type="submit" name="submit" value="move" class="btn btn-success">Move to Fact</button>
+                                    </div>
+                                    <button type="submit" name="submit" value="save" class="btn btn-primary">Save changes</button>
+
+                                    <button type="submit" name="submit" value="delete" class="btn btn-primary"> delete </button>
+                                    <div th:if="${toGoals}">
+                                        <button type="submit" name="submit" value="moveToGoals" class="btn btn-danger">  Goals </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div th:fragment="operationRow">
+
+    <table th:id="${tableId}" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="row : ${rows}">
+            <td th:text="${row.date}">dummy</td>
+            <td th:text="${row.sum}">dummy</td>
+            <td th:text="${row.getCurrencyName()}">dummy</td>
+            <td th:text="${row.getOperationCategoryName()}">dummy</td>
+            <td th:text="${row.note}">dummy</td>
+            <td>
+                <th:block th:fragment="operationRowForm">
+                    <button type="button"
+                            class="btn btn-primary btn-block"
+                            data-toggle="modal"
+                            data-target="#modal-default"
+                            th:attr="data-target='#'+${row.getId()}+'modal-default'+${direction}"
+                    >
+                        <i class="fa fa-edit"></i><span th:text="${buttonText}"></span>
+                    </button>
+                    <br/>
+                    <div class="modal fade" th:id="${row.getId()}+'modal-default'+${direction}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="/" th:action="${Action.ADD_OPERATION_ROW}" method="post">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Default Modal</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-bordered table-striped">
+
+                                            <input type="hidden" name="direction" th:value="${direction}"/>
+                                            <input type="hidden" th:name="${FieldName.ID_OPERATION}" th:value="${row.getId()}"/>
+                                            <input th:if="${profile}" type="hidden" th:name="${FieldName.PROFILE_ID}" th:value="${profile.getId()}" />
+                                            <tr>
+                                                <th><label>data \ дата</label></th>
+                                                <td><input type="date" th:name="${FieldName.OPERATION_DATE}"
+                                                           th:value="${row.date}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th><label>sum \ сумма</label></th>
+                                                <td><input type="number" step=".01" th:name="${FieldName.OPERATION_SUM}"
+                                                           th:value="${row.sum}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th><label>currency</label></th>
+                                                <td>
+                                                    <select th:name="${FieldName.ID_CURRENCY}">
+                                                        <option></option>
+                                                        <option th:each="cur : ${T(by.jrr.balance.bean.Currency).values()}"
+                                                            th:value="${cur}" th:text="${cur}"
+                                                            th:selected="${cur} == ${row.getCurrency()}"></option>
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label>income \ статья</label></th>
+                                                <td>
+                                                    <select th:name="${FieldName.ID_OPERATION_CATEGORY}">
+                                                        <option></option>
+                                                        <div th:each="category : ${categoryList}">
+                                                            <option th:value="${category.id}" th:text="${category.name}"
+                                                                    th:selected="${category.id} == ${row.getIdOperationCategory()}"></option>
+                                                        </div>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${profile}" >
+                                                <th><label>Участник курса</label></th>
+                                                <td>
+                                                    <select th:name="${FieldName.Subscriber}">
+                                                        <option></option>
+                                                        <div  th:each="subscriber : ${profile.getSubscribers()}" >
+                                                            <option th:value="${subscriber.getSubscriberProfileId()}" th:text="${subscriber.getFullSubscriberName()}"></option>
+<!--                                                                    th:selected="${subscriber.getSubscriberProfileId()} == ${row.getIdOperationCategory()}"-->
+
+                                                        </div>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label>note \ пояснения</label></th>
+                                                <td><input type="text" th:name="${FieldName.OPERATION_NOTE}"
+                                                           th:value="${row.note}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <!-- todo add radiobutton to repeat N times & up To Date -->
+                                                <th><label>repeat N times (disabled if up to date is set)</label></th>
+                                                <td><input type="number" th:name="${FieldName.REPEAT_N_TIMES}"
+                                                           value="1"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th><label>repeat up to date</label></th>
+                                                <td>
+                                                    <input type="date" th:name="${FieldName.END_OF_REPEATING_DATE}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label>repeat</label></th>
+                                                <td>
+                                                    <input type="radio" id="REPEAT_NONE"
+                                                           th:name="${FieldName.REPEAT_RADIO}" th:value="${FieldName.REPEAT_NONE}" />
+                                                    <label for="REPEAT_NONE">No repeat</label>
+
+                                                    <input type="radio" id="REPEAT_DAILY"
+                                                           th:name="${FieldName.REPEAT_RADIO}" th:value="${FieldName.REPEAT_DAILY}" />
+                                                    <label for="REPEAT_DAILY">Daily</label>
+
+                                                    <input type="radio" id="REPEAT_MONTHLY"
+                                                           th:name="${FieldName.REPEAT_RADIO}" th:value="${FieldName.REPEAT_MONTHLY}" />
+                                                    <label for="REPEAT_MONTHLY">Monthly</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="submit" name="submit" value="move" class="btn btn-success">Move to Fact
+                                        </button>
+                                        <button type="submit" name="submit" value="save" class="btn btn-primary">Save
+                                            changes
+                                        </button>
+                                        <button type="submit" name="submit" value="delete" class="btn btn-primary">
+                                            delete
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+                </th:block>  <!-- /include form -->
+            </td>
+        </tr>
+
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+
+        </tr>
+        </tfoot>
+    </table>
+</div>
+</body>
+</html>

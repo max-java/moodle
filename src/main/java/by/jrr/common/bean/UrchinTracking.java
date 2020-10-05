@@ -17,8 +17,8 @@ import java.util.Map;
 @NoArgsConstructor
 public class UrchinTracking {
 
-    @Id
-    @GeneratedValue
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
     private LocalDateTime timestamp;
     @ElementCollection

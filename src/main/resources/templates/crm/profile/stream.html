@@ -142,6 +142,8 @@
                                                             href="#groupActions">Actions In Group</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#userAction">User Actions</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#billing">Billing</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -495,7 +497,7 @@
                                                             "</td></tr>";
                                                     }catch (e) {
                                                         console.log(e.toString());
-                                                                                                        }
+                                                    }
                                                 }
                                                 document.getElementById("notActive").innerHTML = table;
                                             }
@@ -554,6 +556,8 @@
                                         </script>
 
                                     </div>
+
+                                <th:block th:include="crm/profile/tab/billing :: billing"></th:block>
 
 
                                 </div>

@@ -1,8 +1,7 @@
-package by.jrr.profile.admin.bean;
+package by.jrr.crm.controller.admin.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.hibernate.annotations.CollectionType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
