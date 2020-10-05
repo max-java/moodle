@@ -12,7 +12,7 @@
 
         <div class="row">
             <div class="col-md-3">
-                <th:block th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
                      th:with="categoryList=${incomeCategoryList},
                                        direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
                                        row=${blankRow},
@@ -20,7 +20,7 @@
                 </th:block>
             </div>
             <div class="col-md-3">
-                <th:block th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
                      th:with="categoryList=${incomeCategoryList},
                                        direction=${T(by.jrr.balance.constant.OperationRowDirection).PLAN_INCOME},
                                        row=${blankRow},
@@ -28,7 +28,7 @@
                 </th:block>
             </div>
             <div class="col-md-3">
-                <th:block th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
                      th:with="categoryList=${incomeCategoryList},
                                        direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
                                        row=${blankRow},
@@ -36,7 +36,7 @@
                 </th:block>
             </div>
             <div class="col-md-3">
-                <th:block th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
                      th:with="categoryList=${incomeCategoryList},
                                        direction=${T(by.jrr.balance.constant.OperationRowDirection).PLAN_OUTCOME},
                                        row=${blankRow},

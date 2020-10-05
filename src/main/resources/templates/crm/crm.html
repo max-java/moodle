@@ -72,7 +72,7 @@
                         <div class="box">
                             <div class="box-body">
                                 <div class="col-md-3">
-                                    <div th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                                    <div th:include="crm/balanceElements/operationRow :: operationRowForm"
                                          th:with="categoryList=${incomeCategoryList},
                                    direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
                                    row=${blankRow},
@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div th:include="/crm/balanceElements/operationRow :: operationRowForm"
+                                    <div th:include="crm/balanceElements/operationRow :: operationRowForm"
                                          th:with="categoryList=${incomeCategoryList},
                                    direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
                                    row=${blankRow},
