@@ -26,7 +26,7 @@ public class Endpoint {
     public static final String Q_AND_A_LIST = "/questions";
 
     public static final String PROFILE_CARD = "/profile";
-    public static final String PROFILE_CARD_ADMIN_VIEW = "/admin/profile";
+    public static final String PROFILE_CARD_ADMIN_VIEW = "/crm/profile";
     public static final String PROFILE_LIST = "/profiles";
     public static final String PROFILE_TIMELINE = "/timeline";
 

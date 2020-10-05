@@ -1,15 +1,17 @@
-package by.jrr.profile.admin;
+package by.jrr.crm.controller.profile;
 
-import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
+import by.jrr.balance.bean.OperationRow;
+import by.jrr.balance.constant.Action;
+import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
-import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
@@ -22,19 +24,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin
-public class ProfileCardAdminViewController {
+public class StreamController {
 
     @Autowired
     UserDataToModelService userDataToModelService;
@@ -51,6 +48,9 @@ public class ProfileCardAdminViewController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    OperationRowService operationRowService;
+
 
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
@@ -58,9 +58,18 @@ public class ProfileCardAdminViewController {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
-            mov.setViewName(View.PROFILE_CARD_ADMIN_VIEW);
+            mov.setViewName(View.CRM_VIEW_STREAM_CARD);
             mov.addObject("profile", profile.get());
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
+
+            //set billing tab items
+            mov.addObject("Action", new Action());
+            mov.addObject("FieldName", new FieldName());
+            //blank instances for forms can work to add
+            mov.addObject("blankRow", new OperationRow());
+            mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
+            mov.addObject("total", operationRowService.sumForStream(profileId));
+
         } else {
             mov.setViewName(View.PAGE_404);
         }
@@ -93,8 +102,9 @@ public class ProfileCardAdminViewController {
 
     @AdminOnly // TODO: 23/06/20 move to appropriate place
     @GetMapping(value = Endpoint.PROFILE_CARD_ADMIN_VIEW + "/api/updateRole/{profileId}", produces = MediaType.APPLICATION_XML_VALUE)
-    public @ResponseBody UserRolesDTO updateUserRole(@PathVariable Long profileId,
-                                   @RequestParam String userRole) {
+    public @ResponseBody
+    UserRolesDTO updateUserRole(@PathVariable Long profileId,
+                                @RequestParam String userRole) {
         UserRolesDTO userRolesDTO = new UserRolesDTO();
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
         if(profile.isPresent()) {

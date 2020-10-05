@@ -1,4 +1,4 @@
-package by.jrr.profile.admin.bean;
+package by.jrr.crm.controller.admin.bean;
 
 
 import lombok.AllArgsConstructor;

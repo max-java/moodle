@@ -28,6 +28,7 @@ public class View {
 
     public static final String PROFILE_CARD = "profile/profileCard";
     public static final String PROFILE_CARD_ADMIN_VIEW = "profile/profileCardAdminView";
+
     public static final String PROFILE_LIST = "profile/profileList";
     public static final String STREAM_TEAM_REGISTRATION_FORM = "profile/streamTeamRegistration";
 
@@ -44,4 +45,5 @@ public class View {
 
     public static final String CRM = "crm/crm";
     public static final String CRM_DASHBOARD = "crm/dashboard";
+    public static final String CRM_VIEW_STREAM_CARD = "crm/profile/stream";
 }

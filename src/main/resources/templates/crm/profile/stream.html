@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="layout-navbar-fixed sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <h1 id="alert"></h1>
+
+        <a href="/stream/register">new Stream</a> | <a href="/team/register">new Team</a>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+
+                        <!-- Profile Image -->
+                        <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    <img alt="User profile picture"
+                                         class="profile-user-img img-fluid img-circle"
+                                         th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(profile)}">
+                                </div>
+
+                                <h3 class="profile-username text-center"
+                                    th:text="${profile.getUser().getFullUserName()}"></h3>
+
+                                <p class="text-muted text-center" id="userRoles" th:text="${profile.getUser().getAllRoles()}">Software
+                                    Engineer</p>
+
+                                <h2>Прогресс обучения</h2>
+                                <h3>Теория</h3>
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item">
+                                        <b>Вопросов</b> <a class="float-right"
+                                                           th:text="${statistic.getQAndAsLearnedT().size()}">1,322</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Лекций</b> <a class="float-right"
+                                                         th:text="${statistic.getLecturesLearnedT().size()}">543</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Статей</b> <a class="float-right"
+                                                         th:text="${statistic.getTopicsLearnedT().size()}">13,287</a>
+                                    </li>
+                                </ul>
+
+                                <h3>Практика</h3>
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item">
+                                        <b>Решено задач</b> <a class="float-right"
+                                                               th:text="${statistic.getPracticesApprovedR().size()}">1,322</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Опубликовано постов</b> <a class="float-right"
+                                                                      th:text="${statistic.getSubjectsCRApprovedR().size()}">543</a>
+                                    </li>
+                                </ul>
+
+                                <h3>Реальный опыт</h3>
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item">
+                                        <b>Реализовано сторей</b> <a class="float-right"
+                                                                     th:text="${statistic.getIssuesCRApprovedStoriesR().size()}">1,322</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Пофикшено багов</b> <a class="float-right"
+                                                                  th:text="${statistic.getIssuesCRApprovedBugsR().size()}">543</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                        <!-- About Me Box -->
+                        <!--                        <div class="card card-primary">-->
+                        <!--                            <div class="card-header">-->
+                        <!--                                <h3 class="card-title">About Me</h3>-->
+                        <!--                            </div>-->
+                        <!--                            &lt;!&ndash; /.card-header &ndash;&gt;-->
+                        <!--                            <div class="card-body">-->
+                        <!--                                <strong><i class="fas fa-book mr-1"></i> Education</strong>-->
+
+                        <!--                                <p class="text-muted">-->
+                        <!--                                    B.S. in Computer Science from the University of Tennessee at Knoxville-->
+                        <!--                                </p>-->
+
+                        <!--                                <hr>-->
+
+                        <!--                                <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>-->
+
+                        <!--                                <p class="text-muted">Malibu, California</p>-->
+
+                        <!--                                <hr>-->
+
+                        <!--                                <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>-->
+
+                        <!--                                <p class="text-muted">-->
+                        <!--                                    <span class="tag tag-danger">UI Design</span>-->
+                        <!--                                    <span class="tag tag-success">Coding</span>-->
+                        <!--                                    <span class="tag tag-info">Javascript</span>-->
+                        <!--                                    <span class="tag tag-warning">PHP</span>-->
+                        <!--                                    <span class="tag tag-primary">Node.js</span>-->
+                        <!--                                </p>-->
+
+                        <!--                                <hr>-->
+
+                        <!--                                <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>-->
+
+                        <!--                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>-->
+                        <!--                            </div>-->
+                        <!--                            &lt;!&ndash; /.card-body &ndash;&gt;-->
+                        <!--                        </div>-->
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab"
+                                                            href="#activity">Activity</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#timeline">Timeline</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#settings">Settings</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#groupActions">Actions In Group</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#userAction">User Actions</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#billing">Billing</a></li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="activity">
+                                        <!-- Post -->
+                                        <div class="post">
+                                            <div th:utext="${profile.getAbout()}"/>
+                                        </div>
+                                        <!-- /.post -->
+
+                                        <!-- Post -->
+                                        <div class="post clearfix">
+                                            <table class="table table-hover text-nowrap"
+                                                   th:if="${profile.getSubscribers().size()>0}">
+                                                <thead>
+                                                <tr>
+                                                    <th>Статус</th>
+                                                    <th>Имя</th>
+                                                    <th>Логин</th>
+                                                    <th>Почта</th>
+                                                    <th>Телефон</th>
+                                                    <th>Git</th>
+                                                    <th>Профиль</th>
+                                                    <th>Кнопка</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="subscriber : ${profile.getSubscribers()}">
+                                                    <td th:text="${subscriber.getStatus()}"></td>
+                                                    <td th:text="${subscriber.getFullSubscriberName()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberLogin()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberEmail()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberPhone()}"></td>
+                                                    <td th:text="${subscriber.getSubscriberGitHubUsername()}"></td>
+                                                    <td><a th:href="${'/profile/'+subscriber.getSubscriberProfileId()}">open</a>
+                                                    </td>
+                                                    <td>
+                                                        <form method="post">
+                                                            <input name="subscriberProfileId" th:value="${subscriber.getSubscriberProfileId()}"
+                                                                   type="hidden">
+                                                            <button class="btn btn-primary btn-block" name="command" type="submit"
+                                                                    value="approve"><b>Принять</b>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.post -->
+
+
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="timeline">
+                                        <!-- The timeline -->
+                                        <!--                                        <div class="timeline timeline-inverse">-->
+                                        <!--                                            &lt;!&ndash; timeline time label &ndash;&gt;-->
+                                        <!--                                            <div class="time-label">-->
+                                        <!--                            <span class="bg-danger">-->
+                                        <!--                              10 Feb. 2014-->
+                                        <!--                            </span>-->
+                                        <!--                                            </div>-->
+                                        <!--                                            &lt;!&ndash; /.timeline-label &ndash;&gt;-->
+                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
+                                        <!--                                            <div>-->
+                                        <!--                                                <i class="fas fa-envelope bg-primary"></i>-->
+
+                                        <!--                                                <div class="timeline-item">-->
+                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 12:05</span>-->
+
+                                        <!--                                                    <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>-->
+
+                                        <!--                                                    <div class="timeline-body">-->
+                                        <!--                                                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,-->
+                                        <!--                                                        weebly ning heekya handango imeem plugg dopplr jibjab, movity-->
+                                        <!--                                                        jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle-->
+                                        <!--                                                        quora plaxo ideeli hulu weebly balihoo...-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                    <div class="timeline-footer">-->
+                                        <!--                                                        <a href="#" class="btn btn-primary btn-sm">Read more</a>-->
+                                        <!--                                                        <a href="#" class="btn btn-danger btn-sm">Delete</a>-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
+                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
+                                        <!--                                            <div>-->
+                                        <!--                                                <i class="fas fa-user bg-info"></i>-->
+
+                                        <!--                                                <div class="timeline-item">-->
+                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 5 mins ago</span>-->
+
+                                        <!--                                                    <h3 class="timeline-header border-0"><a href="#">Sarah Young</a> accepted your friend request-->
+                                        <!--                                                    </h3>-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
+                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
+                                        <!--                                            <div>-->
+                                        <!--                                                <i class="fas fa-comments bg-warning"></i>-->
+
+                                        <!--                                                <div class="timeline-item">-->
+                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 27 mins ago</span>-->
+
+                                        <!--                                                    <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>-->
+
+                                        <!--                                                    <div class="timeline-body">-->
+                                        <!--                                                        Take me to your leader!-->
+                                        <!--                                                        Switzerland is small and neutral!-->
+                                        <!--                                                        We are more like Germany, ambitious and misunderstood!-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                    <div class="timeline-footer">-->
+                                        <!--                                                        <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
+                                        <!--                                            &lt;!&ndash; timeline time label &ndash;&gt;-->
+                                        <!--                                            <div class="time-label">-->
+                                        <!--                        <span class="bg-success">-->
+                                        <!--                          3 Jan. 2014-->
+                                        <!--                        </span>-->
+                                        <!--                                            </div>-->
+                                        <!--                                            &lt;!&ndash; /.timeline-label &ndash;&gt;-->
+                                        <!--                                            &lt;!&ndash; timeline item &ndash;&gt;-->
+                                        <!--                                            <div>-->
+                                        <!--                                                <i class="fas fa-camera bg-purple"></i>-->
+
+                                        <!--                                                <div class="timeline-item">-->
+                                        <!--                                                    <span class="time"><i class="far fa-clock"></i> 2 days ago</span>-->
+
+                                        <!--                                                    <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>-->
+
+                                        <!--                                                    <div class="timeline-body">-->
+                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
+                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
+                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
+                                        <!--                                                        <img src="http://placehold.it/150x100" alt="...">-->
+                                        <!--                                                    </div>-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                            &lt;!&ndash; END timeline item &ndash;&gt;-->
+                                        <!--                                            <div>-->
+                                        <!--                                                <i class="far fa-clock bg-gray"></i>-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </div>-->
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="settings">
+
+                                        <div class="margin">
+                                            <div class="btn-group">
+                                                <div th:each="userRole : ${T(by.jrr.auth.bean.UserRoles).values()}">
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-sm btn-outline-light bg-gradient-teal"
+                                                            onclick="updateRole(this.value)"
+                                                            th:text="${userRole}"
+                                                            th:value="${userRole}">
+                                                    </button> &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h3> secret admin operations </h3>
+                                        <div class="margin">
+                                            <div class="btn-group">
+                                                <button
+                                                        class="btn btn-sm btn-outline-light bg-gradient-red"
+                                                        onclick="generateNewPassword(this.value)"
+                                                        th:value="${profile.getId()}"
+                                                        type="button">
+                                                    "Сгенерирвать новый пароль"
+                                                </button> &nbsp;
+                                            </div>
+                                        </div>
+
+                                        <form class="form-horizontal" method="post"
+                                              th:action="'/profile/'+${profile.getId()}+'/update'">
+                                            <input class="form-control" id="id" name="id" th:value="${profile.getId()}"
+                                                   type="hidden">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="inputName">Дата
+                                                    начала</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="inputName"
+                                                           name="dateStart" placeholder="Name" th:value="${profile.getDateStart()}"
+                                                           type="date"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="inputEmail">Планируемая дата
+                                                    окончания</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="inputEmail" name="dateEnd"
+                                                           placeholder="Email" th:value="${profile.getDateEnd()}" type="date">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>About</label>
+                                                <textarea class="form-control" id="about" name="about" rows="3"
+                                                          th:value="${profile.getAbout()}"> </textarea>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button class="btn btn-danger" name="updateProfile" type="submit">
+                                                        Update
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <form class="form-horizontal" enctype="multipart/form-data" method="post">
+                                            <h1> Set User Picture </h1>
+                                            <div class="form-group row">
+                                                <div class="custom-file">
+                                                    <input class="form-control custom-file-input" id="customFile"
+                                                           name="avatar" placeholder="Upload avatar file"
+                                                           type="file">
+                                                    <label class="custom-file-label" for="customFile">Choose
+                                                        file</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button class="btn btn-danger" name="saveProfile" type="submit">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <script>
+                                            function updateRole(userRole) {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var userProfileId = document.getElementById("id").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        getResponse(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/profile/api/updateRole/" + userProfileId + "?userRole=" + userRole, true);
+                                                xmlhttp.send();
+                                            }
+
+                                            function getResponse(xml) {
+                                                var xmlDoc = xml.responseXML;
+                                                var response = xmlDoc.getElementsByTagName("userRolesDTO");
+                                                var userRoles = response[0].getElementsByTagName("userRoles")[0].childNodes[0].nodeValue;
+
+                                                document.getElementById("userRoles").innerHTML = userRoles;
+
+                                            }
+
+                                            function generateNewPassword(id) {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var userProfileId = document.getElementById("id").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        var xmlDoc = this.responseXML;
+                                                        var response = xmlDoc.getElementsByTagName("userPasswordDTO");
+                                                        var password = response[0].getElementsByTagName("password")[0].childNodes[0].nodeValue;
+
+                                                        document.getElementById("alert").innerHTML = "Сгенерирован новый пароль " + password;
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/profile/api/generateNewPassword/" + userProfileId, true);
+                                                xmlhttp.send();
+                                            }
+                                        </script>
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="groupActions">
+                                        <!-- Post -->
+                                        <form class="form-horizontal" method="get" action="/admin/action">
+                                            <input id="from"  type="datetime-local" name="from" />
+                                            <input id="to" type="datetime-local" name="to" />
+                                            <button type="button" class="button" onclick="getStreamActions()">обновить</button>
+                                        </form>
+
+                                        <hr />
+                                        <h1> неАктивные</h1>
+                                        <table id="notActive" class="table table-hover text-nowrap"></table>
+                                        <hr />
+                                        <h1> перешли по ссылке</h1>
+                                        <table id="active" class="table table-hover text-nowrap"></table>
+                                        <script>
+                                            function getStreamActions() {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var streamId = document.getElementById("id").value;
+                                                var from = document.getElementById("from").value;
+                                                var to = document.getElementById("to").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        updateTableActive(this);
+                                                        updateTableNotActive(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/action?streamId="+streamId+"&from="+from+"&to="+to, true);
+                                                xmlhttp.send();
+                                            }
+                                            function updateTableActive(xml) {
+                                                var i;
+                                                var xmlDoc = xml.responseXML;
+                                                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                                                var x = xmlDoc.getElementsByTagName("userActivityDTO")[0].getElementsByTagName("active");
+                                                for (i = 0; i <x.length; i++) {
+                                                    try {
+                                                        table += "<tr><td>" +
+                                                            x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("email")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue +
+                                                            "</td></tr>";
+                                                    }catch (e) {
+                                                        console.log(e.toString());
+                                                    }
+                                                }
+                                                document.getElementById("active").innerHTML = table;
+                                            }
+                                            function updateTableNotActive(xml) {
+                                                var i;
+                                                var xmlDoc = xml.responseXML;
+                                                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                                                var x = xmlDoc.getElementsByTagName("notActive");
+                                                for (i = 0; i <x.length; i++) {
+                                                    try {
+                                                        table += "<tr><td>" +
+                                                            x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
+                                                            "</td><td><a href=\"" +
+                                                            x[i].getElementsByTagName("profileLink")[0].childNodes[0].nodeValue +
+                                                            "\">open</a></td><td>" +
+                                                            x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("email")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue +
+                                                            "</td></tr>";
+                                                    }catch (e) {
+                                                        console.log(e.toString());
+                                                    }
+                                                }
+                                                document.getElementById("notActive").innerHTML = table;
+                                            }
+                                        </script>
+
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="userAction">
+                                        <!-- Post -->
+                                        <form class="form-horizontal" method="get" action="/admin/action">
+                                            <input id="activityFrom"  type="datetime-local" name="from" />
+                                            <input id="activityTo" type="datetime-local" name="to" />
+                                            <button type="button" class="button" onclick="getUserActions()">обновить</button>
+                                        </form>
+
+                                        <hr />
+                                        <h1> Активность</h1>
+                                        <table id="activityTable" class="table table-hover text-nowrap"></table>
+                                        <hr />
+
+                                        <script>
+                                            function getUserActions() {
+                                                var xmlhttp = new XMLHttpRequest();
+                                                var profileId = document.getElementById("id").value;
+                                                var from = document.getElementById("activityFrom").value;
+                                                var to = document.getElementById("activityTo").value;
+                                                xmlhttp.onreadystatechange = function () {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        updateActivityTable(this);
+                                                    }
+                                                };
+                                                xmlhttp.open("GET", "/admin/userActivity?userProfileId="+profileId+"&from="+from+"&to="+to, true);
+                                                xmlhttp.send();
+                                            }
+                                            function updateActivityTable(xml) {
+                                                var i;
+                                                var xmlDoc = xml.responseXML;
+                                                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                                                var x = xmlDoc.getElementsByTagName("userActivityDTO")[0].getElementsByTagName("userActivity");
+                                                for (i = 0; i <x.length; i++) {
+                                                    try {
+                                                        table += "<tr><td>" +
+                                                            x[i].getElementsByTagName("timestamp")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("eventType")[0].childNodes[0].nodeValue +
+                                                            "</td><td>" +
+                                                            x[i].getElementsByTagName("eventName")[0].childNodes[0].nodeValue +
+                                                            "</td></tr>";
+                                                    }catch (e) {
+                                                        console.log(e.toString());
+                                                    }
+                                                }
+                                                document.getElementById("activityTable").innerHTML = table;
+                                            }
+                                        </script>
+
+                                    </div>
+
+                                <th:block th:include="/crm/profile/tab/billing :: billing"></th:block>
+
+
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+<script referrerpolicy="origin"
+        src="https://cdn.tiny.cloud/1/lnen6exnxklkhdn3do3jx15plj5cxfmtuelx3xt4evmyysnl/tinymce/5/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#about',
+        plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+        menubar: 'file edit view insert format tools table help',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+    });
+</script>
+</body>
+</html>
