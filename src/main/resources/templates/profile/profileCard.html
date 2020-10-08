@@ -104,13 +104,6 @@
                                            data-toggle="tab"
                                            href="#lectures">Лекции курса</a>
                                     </li>
-                                    <li class="nav-item"
-                                        th:if="${isUserIsAdmin}">
-                                        <a class="nav-link"
-                                           data-toggle="tab"
-                                           href="#lead-detail"
-                                           th:classappend="${isUserIsAdmin} ? active : ''">CRM</a>
-                                    </li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -279,37 +272,37 @@
                                             </table>
                                         </div>
                                         <!-- /.post -->
-                                        <h1>Best student</h1>
-                                        <!-- Post -->
-                                        <div class="post clearfix">
-                                            <table class="table table-hover text-nowrap"
-                                                   th:if="${bestStudentList.size()>0}">
-                                                <thead>
-                                                <tr>
-                                                    <th>Имя</th>
-                                                    <th></th>
-                                                    <th>Лекции</th>
-                                                    <th></th>
-                                                    <th>Фидбеки</th>
-                                                    <th></th>
-                                                    <th>Стендапы</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="statistic : ${bestStudentList}">
-                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>
-                                                    <td th:text="${statistic.getLectures().size()}"></td>
-                                                    <td th:text="${statistic.printLectures()}"></td>
-                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>
-                                                    <td th:text="${statistic.printFeedbacks()}"></td>
-                                                    <td th:text="${statistic.getStandups().size()}"></td>
-                                                    <td th:text="${statistic.printStandups()}"></td>
-                                                </tr>
+<!--                                        <h1>Best student</h1>-->
+<!--                                        &lt;!&ndash; Post &ndash;&gt;-->
+<!--                                        <div class="post clearfix">-->
+<!--                                            <table class="table table-hover text-nowrap"-->
+<!--                                                   th:if="${bestStudentList.size()>0}">-->
+<!--                                                <thead>-->
+<!--                                                <tr>-->
+<!--                                                    <th>Имя</th>-->
+<!--                                                    <th></th>-->
+<!--                                                    <th>Лекции</th>-->
+<!--                                                    <th></th>-->
+<!--                                                    <th>Фидбеки</th>-->
+<!--                                                    <th></th>-->
+<!--                                                    <th>Стендапы</th>-->
+<!--                                                </tr>-->
+<!--                                                </thead>-->
+<!--                                                <tbody>-->
+<!--                                                <tr th:each="statistic : ${bestStudentList}">-->
+<!--                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>-->
+<!--                                                    <td th:text="${statistic.getLectures().size()}"></td>-->
+<!--                                                    <td th:text="${statistic.printLectures()}"></td>-->
+<!--                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>-->
+<!--                                                    <td th:text="${statistic.printFeedbacks()}"></td>-->
+<!--                                                    <td th:text="${statistic.getStandups().size()}"></td>-->
+<!--                                                    <td th:text="${statistic.printStandups()}"></td>-->
+<!--                                                </tr>-->
 
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- /.post -->
+<!--                                                </tbody>-->
+<!--                                            </table>-->
+<!--                                        </div>-->
+<!--                                        &lt;!&ndash; /.post &ndash;&gt;-->
 
 
                                     </div>
@@ -332,59 +325,6 @@
                                                         <i class="fas fa-envelope bg-primary"></i>
 
                                                         <th:block th:insert="profile/timeline/timelineItem :: item"></th:block>
-
-<!--                                                        <div class="timeline-item">-->
-<!--                                                            &lt;!&ndash;                                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>&ndash;&gt;-->
-
-
-<!--                                                            <h3 class="timeline-header">-->
-<!--                                                                <a href="#" th:text="${timeline.getEventType()}">-->
-<!--                                                                    Support Team-->
-<!--                                                                </a>-->
-<!--                                                                <span th:text="${timeline.getEventName()}">-->
-<!--                                                                    sent you an email-->
-<!--                                                                </span>-->
-<!--                                                            </h3>-->
-
-<!--                                                            <div class="timeline-body" th:text="${timeline.getNotes()}">-->
-
-<!--                                                            </div>-->
-<!--                                                            <div class="timeline-footer">-->
-<!--                                                                <form></form>-->
-<!--                                                                <form action="/l/" method="post">-->
-<!--                                                                    <input name="link"-->
-<!--                                                                           th:value="${timeline.getUrlToRedirect().trim()}"-->
-<!--                                                                           type="hidden"/>-->
-<!--                                                                    <input name="linkName"-->
-<!--                                                                           th:value="${timeline.getEventName()}"-->
-<!--                                                                           type="hidden"/>-->
-<!--                                                                    <input name="streamTeamId"-->
-<!--                                                                           th:value="${timeline.getStreamTeamProfileId()}"-->
-<!--                                                                           type="hidden"/>-->
-<!--                                                                    <input name="courseId"-->
-<!--                                                                           th:value="${timeline.getCourseId()}"-->
-<!--                                                                           type="hidden"/>-->
-<!--                                                                    <input name="lectureId"-->
-<!--                                                                           th:value="${timeline.getLectureId()}"-->
-<!--                                                                           type="hidden"/>-->
-<!--                                                                    <button class="btn btn-block col-md-3"-->
-<!--                                                                            name="eventType"-->
-<!--                                                                            th:value="${timeline.getEventType()}"-->
-<!--                                                                            type="submit">-->
-<!--                                                                        <div class="info-box">-->
-<!--                                                                            <span class="info-box-icon bg-gradient-blue">-->
-<!--                                                                                <i class="fa fa-video"></i>-->
-<!--                                                                            </span>-->
-<!--                                                                            <div class="info-box-content text-left">-->
-<!--                                                                                <span class="info-box-text">Zoom</span>-->
-<!--                                                                            </div>-->
-<!--                                                                            &lt;!&ndash; /.info-box-content &ndash;&gt;-->
-<!--                                                                        </div>-->
-<!--                                                                        &lt;!&ndash; /.info-box &ndash;&gt;-->
-<!--                                                                    </button>-->
-<!--                                                                </form>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
                                                     </div>
                                                 </th:block>
                                                 <!-- END timeline item -->
@@ -646,14 +586,6 @@
                                     <div class="tab-pane" id="lectures">
                                         <div th:insert="moodle/lectureList :: lectureList"></div>
                                     </div>
-                                    <!-- /.tab-pane -->
-                                    <!-- /.tab-pane -->
-                                    <div class="tab-pane" id="lead-detail"
-                                         th:classappend="${isUserIsAdmin} ? active : ''">
-                                        <div th:insert="profile/admin/leadDetailHistory :: history"></div>
-                                    </div>
-                                    <!-- /.tab-pane -->
-
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->

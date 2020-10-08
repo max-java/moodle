@@ -10,4 +10,5 @@ import java.util.List;
 public interface TaskRepository extends PagingAndSortingRepository<Task, Long> {
     List<Task> findByProfileId(Long id);
     List<Task> findByIsFinishedFalse();
+    List<Task> findByProfileIdAndIsFinishedFalse(Long id);
 }
