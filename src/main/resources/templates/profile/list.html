@@ -5,32 +5,6 @@
     <div class="row">
         <div class="col-12">
             <div class="">
-                <!--                    <div class="card-header">-->
-                <!--                        <form>-->
-                <!--                            <div class="input-group input-group-lg">-->
-
-                <!--                                <input class="form-control float-right" name="searchTerm"-->
-                <!--                                       placeholder="Search"-->
-                <!--                                       type="text">-->
-
-                <!--                                <div class="input-group-prepend">-->
-                <!--                                    <select name="filter" class="btn btn-primary dropdown-toggle">-->
-                <!--                                        <option th:value="${T(by.jrr.constant.Command).NO_FILTER}">Все</option>-->
-                <!--                                        <option th:value="${T(by.jrr.constant.Command).FILTER_STUDENTS}">Студенты</option>-->
-                <!--                                        <option th:value="${T(by.jrr.constant.Command).FILTER_STREAMS}">Комманды</option>-->
-                <!--                                        <option th:value="${T(by.jrr.constant.Command).FILTER_TEAMS}">Стримы</option>-->
-                <!--                                    </select>-->
-                <!--                                </div>-->
-
-                <!--                                <div class="input-group-append">-->
-                <!--                                    <button class="btn btn-primary" type="submit"><i-->
-                <!--                                            class="fas fa-search"></i></button>-->
-                <!--                                </div>-->
-                <!--                            </div>-->
-                <!--                        </form>-->
-                <!--                    </div>-->
-                <!--                    &lt;!&ndash; /.card-header &ndash;&gt;-->
-
                 <div class="row">
                     <div class="col-12" th:each="subscriber : ${profile.getSubscribers()}">
                         <div class="card">
@@ -85,49 +59,6 @@
             </div>
 
         </div>
-
-        <!--            <ul class="pagination pagination-lg m-0">-->
-        <!--                <li class="page-item"-->
-        <!--                    th:if="${profilePage.hasPrevious()}">-->
-        <!--                    <a class="page-link" th:href="${'/profiles?searchTerm='-->
-        <!--                                    +searchTerm+-->
-        <!--                                    '&page='+(profilePage.getNumber())}">&laquo;</a>-->
-        <!--                </li>-->
-        <!--                <li class="page-item"-->
-        <!--                    th:if="${profilePage.hasPrevious()}">-->
-        <!--                    <a class="page-link" th:href="${'/profiles?searchTerm='-->
-        <!--                                    +searchTerm+-->
-        <!--                                    '&page='+(profilePage.getNumber())}" th:text="${(profilePage.getNumber())}"></a>-->
-        <!--                </li>-->
-        <!--                <li class="page-item">-->
-        <!--                    <a class="page-link text-danger" th:href="${'/profiles?searchTerm='-->
-        <!--                                    +searchTerm+-->
-        <!--                                    '&page='+(profilePage.getNumber()+1)}" th:text="${(profilePage.getNumber()+1)}"></a>-->
-        <!--                </li>-->
-        <!--                <li class="page-item"-->
-        <!--                    th:if="${profilePage.hasNext()}">-->
-        <!--                    <a class="page-link" th:href="${'/profiles?searchTerm='-->
-        <!--                                    +searchTerm+-->
-        <!--                                    '&page='+(profilePage.getNumber()+2)}" th:text="${(profilePage.getNumber()+2)}"></a>-->
-        <!--                </li>-->
-        <!--                <li class="page-item"-->
-        <!--                    th:if="${profilePage.hasNext()}" }>-->
-        <!--                    <a class="page-link" href="#">...</a></li>-->
-
-        <!--                <li class="page-item"-->
-        <!--                    th:if="${profilePage.hasNext()}">-->
-        <!--                    <a class="page-link" th:href="${'/profiles?searchTerm='-->
-        <!--                                    +searchTerm+-->
-        <!--                                    '&page='+(profilePage.getTotalPages())}" th:text="${(profilePage.getTotalPages())}">&laquo;</a>-->
-        <!--                </li>-->
-        <!--                <li class="page-item"-->
-        <!--                    th:if="${profilePage.hasNext()}">-->
-        <!--                    <a class="page-link" th:href="${'/profiles?searchTerm='-->
-        <!--                                    +searchTerm+-->
-        <!--                                    '&page='+(profilePage.getNumber()+2)}">&raquo;</a>-->
-        <!--                </li>-->
-        <!--            </ul>-->
-
     </div>
     <!-- /.row -->
 

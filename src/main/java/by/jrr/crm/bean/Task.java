@@ -34,4 +34,32 @@ public class Task implements History {
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
     }
+
+    @Override
+    public LocalDateTime getDate() {
+        if (isFinished) {
+            return timestamp;
+        }
+        return deadLine;
+    }
+
+    public boolean isActiveBreached() {
+        if (!isFinished) {
+            if (LocalDateTime.now().isAfter(deadLine)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBreached() {
+        if (!isFinished) {
+            if (LocalDateTime.now().isAfter(deadLine)) {
+                return true;
+            }
+        } else if (timestamp.isAfter(deadLine)) {
+            return true;
+        }
+        return false;
+    }
 }

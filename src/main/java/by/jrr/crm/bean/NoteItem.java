@@ -33,4 +33,9 @@ public class NoteItem implements History {
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
     }
+
+    @Override
+    public LocalDateTime getDate() {
+        return timestamp;
+    }
 }

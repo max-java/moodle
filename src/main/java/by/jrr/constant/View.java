@@ -46,4 +46,5 @@ public class View {
     public static final String CRM = "crm/crm";
     public static final String CRM_DASHBOARD = "crm/dashboard";
     public static final String CRM_VIEW_STREAM_CARD = "crm/profile/stream";
+    public static final String CRM_VIEW_USER_CARD = "crm/profile/user";
 }

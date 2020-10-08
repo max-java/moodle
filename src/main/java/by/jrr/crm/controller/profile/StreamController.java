@@ -10,13 +10,13 @@ import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.SubscriptionStatus;
-import by.jrr.profile.service.ProfilePossessesService;
-import by.jrr.profile.service.ProfileService;
-import by.jrr.profile.service.ProfileStatisticService;
-import by.jrr.profile.service.StreamAndTeamSubscriberService;
+import by.jrr.profile.bean.TimeLine;
+import by.jrr.profile.service.*;
+import by.jrr.registration.bean.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -51,6 +54,11 @@ public class StreamController {
     @Autowired
     OperationRowService operationRowService;
 
+    @Autowired
+    HistoryItemService historyItemService;
+
+    @Autowired
+    TimeLineService timeLineService;
 
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
@@ -58,7 +66,24 @@ public class StreamController {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
-            mov.setViewName(View.CRM_VIEW_STREAM_CARD);
+
+            if (profile.get().getCourseId() != null) { // TODO: 08/10/2020 split to user and stream profiles
+                mov.setViewName(View.CRM_VIEW_STREAM_CARD);
+            } else {
+                mov.setViewName(View.CRM_VIEW_USER_CARD);
+            }
+
+            Map<LocalDate, List<TimeLine>> timeline = timeLineService.getTimelineForProfile(profile.get());
+            mov.addObject("timeLines", timeline);
+            mov.addObject("totalLectures", timeline
+                    .entrySet()
+                    .stream()
+                    .flatMap(a -> a.getValue().stream())
+                    .filter(l -> l.getEventType().equals(EventType.LECTURE))
+                    .map(l -> l.getUrlToRedirect())
+                    .distinct()
+                    .count());
+
             mov.addObject("profile", profile.get());
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
 
@@ -69,6 +94,8 @@ public class StreamController {
             mov.addObject("blankRow", new OperationRow());
             mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
             mov.addObject("total", operationRowService.sumForStream(profileId));
+
+            mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
 
         } else {
             mov.setViewName(View.PAGE_404);
@@ -107,7 +134,7 @@ public class StreamController {
                                 @RequestParam String userRole) {
         UserRolesDTO userRolesDTO = new UserRolesDTO();
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-        if(profile.isPresent()) {
+        if (profile.isPresent()) {
             UserRoles userRoleToUpdate = UserRoles.valueOf(userRole);
             if (profile.get().getUser().hasRole(userRoleToUpdate)) {
 
@@ -119,6 +146,7 @@ public class StreamController {
         }
         return userRolesDTO;
     }
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
@@ -129,16 +157,18 @@ public class StreamController {
 
     @AdminOnly // TODO: 23/06/20 move to appropriate place
     @GetMapping(value = Endpoint.PROFILE_CARD_ADMIN_VIEW + "/api/generateNewPassword/{profileId}", produces = MediaType.APPLICATION_XML_VALUE)
-    public @ResponseBody UserPasswordDTO generateNewPassword(@PathVariable Long profileId) {
+    public @ResponseBody
+    UserPasswordDTO generateNewPassword(@PathVariable Long profileId) {
         UserPasswordDTO userPasswordDTO = new UserPasswordDTO();
         Optional<Profile> userProfileOP = profileService.findProfileByProfileId(profileId);
-        if(userProfileOP.isPresent()) {
+        if (userProfileOP.isPresent()) {
             userPasswordDTO.setPassword(userService.generateNewPasswordForUser(userProfileOP.get().getUserId()));
         } else {
             userPasswordDTO.setPassword("error on updating password");
         }
         return userPasswordDTO;
     }
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Data

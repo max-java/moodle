@@ -5,6 +5,7 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
+import by.jrr.crm.service.HistoryItemService;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.service.CourseService;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -57,6 +59,8 @@ public class ProfileService {
     CourseService courseService;
     @Autowired
     UserAccessService userAccessService;
+    @Autowired
+    HistoryItemService historyItemService;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -100,6 +104,16 @@ public class ProfileService {
         if (profile.getUser().hasRole(UserRoles.ROLE_STREAM) // TODO: 07/06/20 split to setProfileData & setSubscribers
                 || profile.getUser().hasRole(UserRoles.ROLE_TEAM)) {
             List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
+            subscribers.stream().forEach(s -> s.setActiveTasks(historyItemService.findActiveTasksForProfile(s.getSubscriberProfileId())));
+            try {
+                subscribers.stream().forEach(s -> s.setStudentActivity(satls.findAllActionsForProfileIdBetwenDates(
+                        s.getSubscriberProfileId(),
+                        LocalDateTime.of(profile.getDateStart(), LocalTime.of(00, 00)),
+                        LocalDateTime.of(profile.getDateEnd(), LocalTime.of(23, 59))))
+                );
+            } catch (Exception ex) {
+                // no date end present
+            }
 
             // TODO: 24/06/20 what happens here? refactor: set subscribers to streamTeam
             for (StreamAndTeamSubscriber subscriber : subscribers) {

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="streamActivity">
+
+    <div class="tab-pane" id="groupActions">
+        <!-- Post -->
+        <form class="form-horizontal" method="get" action="/admin/action">
+            <input id="from"  type="datetime-local" name="from" />
+            <input id="to" type="datetime-local" name="to" />
+            <button type="button" class="button" onclick="getStreamActions()">обновить</button>
+        </form>
+
+        <hr />
+        <h1> неАктивные</h1>
+        <table id="notActive" class="table table-hover text-nowrap"></table>
+        <hr />
+        <h1> перешли по ссылке</h1>
+        <table id="active" class="table table-hover text-nowrap"></table>
+        <script>
+            function getStreamActions() {
+                var xmlhttp = new XMLHttpRequest();
+                var streamId = document.getElementById("id").value;
+                var from = document.getElementById("from").value;
+                var to = document.getElementById("to").value;
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        updateTableActive(this);
+                        updateTableNotActive(this);
+                    }
+                };
+                xmlhttp.open("GET", "/admin/action?streamId="+streamId+"&from="+from+"&to="+to, true);
+                xmlhttp.send();
+            }
+            function updateTableActive(xml) {
+                var i;
+                var xmlDoc = xml.responseXML;
+                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                var x = xmlDoc.getElementsByTagName("userActivityDTO")[0].getElementsByTagName("active");
+                for (i = 0; i <x.length; i++) {
+                    try {
+                        table += "<tr><td>" +
+                            x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("email")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue +
+                            "</td></tr>";
+                    }catch (e) {
+                        console.log(e.toString());
+                    }
+                }
+                document.getElementById("active").innerHTML = table;
+            }
+            function updateTableNotActive(xml) {
+                var i;
+                var xmlDoc = xml.responseXML;
+                var table="<tr><th>userName</th><th>firstName</th><th>lastName</th><th>email</th><th>phone</th></tr>";
+                var x = xmlDoc.getElementsByTagName("notActive");
+                for (i = 0; i <x.length; i++) {
+                    try {
+                        table += "<tr><td>" +
+                            x[i].getElementsByTagName("userName")[0].childNodes[0].nodeValue +
+                            "</td><td><a href=\"" +
+                            x[i].getElementsByTagName("profileLink")[0].childNodes[0].nodeValue +
+                            "\">open</a></td><td>" +
+                            x[i].getElementsByTagName("firstName")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("lastName")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("email")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue +
+                            "</td></tr>";
+                    }catch (e) {
+                        console.log(e.toString());
+                    }
+                }
+                document.getElementById("notActive").innerHTML = table;
+            }
+        </script>
+
+    </div>
+
+</th:block>
+</body>
+</html>

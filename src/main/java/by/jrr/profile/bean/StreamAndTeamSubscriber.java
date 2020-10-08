@@ -1,11 +1,18 @@
 package by.jrr.profile.bean;
 
+import by.jrr.crm.bean.History;
+import by.jrr.crm.bean.Task;
+import by.jrr.registration.bean.EventType;
+import by.jrr.registration.bean.StudentActionToLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -29,6 +36,11 @@ public class StreamAndTeamSubscriber {
     private Profile subscriberProfile;
     @Transient
     private Profile subscriptionProfile;
+
+    @Transient // TODO: 08/10/2020 create DTO class for controller
+    private List<Task> activeTasks = new ArrayList<>();
+    @Transient // TODO: 08/10/2020 create DTO class for controller
+    private List<StudentActionToLog> studentActivity = new ArrayList<>();
 
     public String getFullSubscriberName() {
         try {
@@ -77,5 +89,38 @@ public class StreamAndTeamSubscriber {
             // TODO: 24/06/20 log exception with details!!
             return "";
         }
+    }
+
+    public boolean hasBreachedActiveTasks() {
+        return activeTasks.stream()
+                .filter(Task::isActiveBreached)
+                .collect(Collectors.toList()).size() > 0;
+    }
+    public boolean hasActiveTasks() {
+        return activeTasks.stream()
+                .filter(task -> !task.getIsFinished())
+                .collect(Collectors.toList()).size() > 0;
+    }
+
+    public String getCardColor() { // TODO: 08/10/2020 it used to colorize card in stream subscribers based on task status. consider more elegance way
+        if (hasActiveTasks() && !hasBreachedActiveTasks()) {
+            return "card-success";
+        }
+        if (hasBreachedActiveTasks()) {
+            return "card-danger";
+        }
+        return "";
+    }
+
+    public boolean isApproved() {
+        return status.equals(SubscriptionStatus.APPROVED);
+    }
+
+    public int totalLecturesLogged() { // TODO: 08/10/2020 bind this with timeline item by urlToRedirect
+        return studentActivity.stream()
+                .filter(l -> l.getEventType().equals(EventType.LECTURE))
+                .map(l -> l.getUrlToRedirect())
+                .distinct()
+                .collect(Collectors.toList()).size();
     }
 }
