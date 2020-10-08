@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import static by.jrr.common.MyHeaders.cameFrom;
 
 @Controller
 public class ProfileCardUpdateController {
@@ -36,7 +39,7 @@ public class ProfileCardUpdateController {
     ProfilePossessesService pss;
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}/update")
-    public ModelAndView updateProfile(@PathVariable Long profileId,
+    public String updateProfile(@PathVariable Long profileId,
                                       @RequestParam Optional<String> dateStart,
                                       @RequestParam Optional<String> dateEnd,
                                       @RequestParam Optional<String> about,
@@ -49,7 +52,8 @@ public class ProfileCardUpdateController {
                                       @RequestParam Optional<String> feedbackLink,
                                       @RequestParam Optional<String> feedbackName,
                                       @RequestParam Optional<String> updateProfile,
-                                      @RequestParam Optional<Boolean> openForEnroll
+                                      @RequestParam Optional<Boolean> openForEnroll,
+                                      HttpServletRequest request
     ) {
 
         if (updateProfile.isPresent()) {
@@ -109,6 +113,6 @@ public class ProfileCardUpdateController {
                 }
             }
         }
-        return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
+        return "redirect:".concat(cameFrom(request));
     }
 }
