@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="streamAbout">
+
+    <div class="tab-pane" id="activity" th:classappend="${active}">
+        <!-- Post -->
+        <div class="post">
+            <div th:utext="${profile.getAbout()}"/>
+        </div>
+        <!-- /.post -->
+
+        <!-- Post -->
+        <div class="post clearfix">
+            <div th:if="${profile.getSubscribers().size()>0}">
+                <div th:include="crm/profile/tab/streamSubscribers :: subscribers"></div>
+            </div>
+        </div>
+        <!-- /.post -->
+
+
+    </div>
+
+</th:block>
+</body>
+</html>

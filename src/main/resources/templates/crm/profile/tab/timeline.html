@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="timeline">
+    <div class="tab-pane" id="timeline">
+        Расписание занятий
+        <div class="timeline timeline-inverse">
+            <th:block th:each="dateline : ${timeLines}">
+                <!-- timeline time label -->
+                <div class="time-label">
+                    <span class="bg-danger" th:text="${dateline.getKey()}">10 Feb. 2014</span>
+                </div>
+                <!-- /.timeline-label -->
+                <!-- timeline item -->
+                <th:block th:each="timelinesForDate : ${dateline.getValue()}">
+                    <div th:each="timeline : ${timelinesForDate}">
+                        <i class="fas fa-envelope bg-primary"></i>
+                        <th:block th:insert="crm/profile/tab/timelineItem :: item"></th:block>
+
+                    </div>
+                </th:block>
+                <!-- END timeline item -->
+            </th:block>
+
+            <div>
+                <i class="far fa-clock bg-gray"></i>
+            </div>
+        </div>
+    </div>
+
+
+</th:block>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="streamSettings">
+
+    <div class="tab-pane" id="settings">
+
+        <div class="margin">
+            <div class="btn-group">
+                <div th:each="userRole : ${T(by.jrr.auth.bean.UserRoles).values()}">
+                    <button
+                            type="button"
+                            class="btn btn-sm btn-outline-light bg-gradient-teal"
+                            onclick="updateRole(this.value)"
+                            th:text="${userRole}"
+                            th:value="${userRole}">
+                    </button> &nbsp;
+                </div>
+            </div>
+        </div>
+
+        <h3> secret admin operations </h3>
+        <div class="margin">
+            <div class="btn-group">
+                <button
+                        class="btn btn-sm btn-outline-light bg-gradient-red"
+                        onclick="generateNewPassword(this.value)"
+                        th:value="${profile.getId()}"
+                        type="button">
+                    "Сгенерирвать новый пароль"
+                </button> &nbsp;
+            </div>
+        </div>
+
+        <form></form>
+        <form class="form-horizontal" method="post"
+              th:action="'/profile/'+${profile.getId()}+'/update'">
+            <input class="form-control" name="id" th:value="${profile.getId()}"
+                   type="hidden">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="inputName">Открыто для
+                    записи</label>
+                <div class="col-sm-1">
+                    <input class="form-control" id="openForEnroll"
+                           name="openForEnroll" placeholder="openForEnroll"
+                           th:checked="${profile.getOpenForEnroll()}"
+                           type="checkbox"
+                           value="true"/>
+                </div>
+                <div class="9">
+
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="inputName">Дата
+                    начала</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="inputName"
+                           name="dateStart" placeholder="Name"
+                           th:value="${profile.getDateStart()}"
+                           type="date"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="dateEnd">Планируемая дата
+                    окончания</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="dateEnd" name="dateEnd"
+                           placeholder="Email" th:value="${profile.getDateEnd()}"
+                           type="date">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="gitLink">GitHub link</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="gitLink" name="gitLink"
+                           placeholder="" th:value="${profile.getGitLink()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="gitUsername">GitHub
+                    username</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="gitUsername"
+                           name="gitUsername"
+                           placeholder="" th:value="${profile.getGitUsername()}"
+                           type="text">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на
+                    телеграм чат</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="telegramLink" name="telegramLink"
+                           placeholder="" th:value="${profile.getTelegramLink()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="telegramLinkName">Название
+                    группы в telegram</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="telegramLinkName"
+                           name="telegramLinkName"
+                           placeholder="" th:value="${profile.getTelegramLinkText()}"
+                           type="text">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="zoomLink">Zoom Stand-Up
+                    link</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="zoomLink" name="zoomLink"
+                           placeholder="" th:value="${profile.getZoomLink()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="zoomLinkName">Название
+                    Zoom link</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="zoomLinkName"
+                           name="zoomLinkName"
+                           placeholder="" th:value="${profile.getZoomLinkText()}"
+                           type="text">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback form
+                    link</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="feedbackLink" name="feedbackLink"
+                           placeholder="" th:value="${profile.getFeedbackLink()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="feedbackName">Название
+                    feedback Формы</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="feedbackName"
+                           name="feedbackName"
+                           placeholder="" th:value="${profile.getFeedbackName()}"
+                           type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>About</label>
+                <textarea class="form-control" id="about" name="about" rows="3"
+                          th:text="${profile.getAbout()}"> </textarea>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <button class="btn btn-danger" name="updateProfile" type="submit">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <form class="form-horizontal" enctype="multipart/form-data" method="post">
+            <h1> Set User Picture </h1>
+            <div class="form-group row">
+                <div class="custom-file">
+                    <input class="form-control custom-file-input" id="customFile"
+                           name="avatar" placeholder="Upload avatar file"
+                           type="file">
+                    <label class="custom-file-label" for="customFile">Choose
+                        file</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <button class="btn btn-danger" name="saveProfile" type="submit">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- add timeline form -->
+        <form class="form-horizontal"
+              method="post" th:action="${T(by.jrr.constant.Endpoint).PROFILE_TIMELINE}">
+            <h1> Add Timeline </h1>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">dateTime</label>
+                <div class="col-sm-10">
+                    <input class="form-control"
+                           name="dateTime"
+                           required
+                           type="datetime-local"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">streamTeamProfileId</label>
+                <div class="col-sm-10">
+                    <input class="form-control"
+                           name="streamTeamProfileId"
+                           th:value="${profile.getId()}"
+                           type="text"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">courseId</label>
+                <div class="col-sm-10">
+                    <input class="form-control"
+                           name="courseId"
+                           th:value="${profile.getCourseId()}"
+                           type="text"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">lectureId</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="lectureId">
+                        <option></option>
+                        <option th:each="lecture : ${topicList}"
+                                th:text="${lecture.getTitle() + ' ' + lecture.getSubtitle()}"
+                                th:value="${lecture.getId()}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">urlToRedirect</label>
+                <div class="col-sm-10">
+                    <input class="form-control"
+                           name="urlToRedirect"
+                           type="text"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">eventType</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="eventType">
+                        <option th:each="type : ${T(by.jrr.registration.bean.EventType).values()}"
+                                th:text="${type}" th:value="${type}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">eventName (goes to log)</label>
+                <div class="col-sm-10">
+                    <input class="form-control"
+                           name="eventName"
+                           type="text"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">notes (info for user) </label>
+                <div class="col-sm-10">
+                    <input class="form-control"
+                           name="notes"
+                           type="text"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <button class="btn btn-danger" name="command" type="submit"
+                            value="saveTimeline">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+        <script>
+            function updateRole(userRole) {
+                var xmlhttp = new XMLHttpRequest();
+                var userProfileId = document.getElementById("id").value;
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        getResponse(this);
+                    }
+                };
+                xmlhttp.open("GET", "/crm/profile/api/updateRole/" + userProfileId + "?userRole=" + userRole, true);
+                xmlhttp.send();
+            }
+
+            function getResponse(xml) {
+                var xmlDoc = xml.responseXML;
+                var response = xmlDoc.getElementsByTagName("userRolesDTO");
+                var userRoles = response[0].getElementsByTagName("userRoles")[0].childNodes[0].nodeValue;
+
+                document.getElementById("userRoles").innerHTML = userRoles;
+
+            }
+
+            function generateNewPassword(id) {
+                var xmlhttp = new XMLHttpRequest();
+                var userProfileId = document.getElementById("id").value;
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var xmlDoc = this.responseXML;
+                        var response = xmlDoc.getElementsByTagName("userPasswordDTO");
+                        var password = response[0].getElementsByTagName("password")[0].childNodes[0].nodeValue;
+
+                        document.getElementById("alert").innerHTML = "Сгенерирован новый пароль " + password;
+                    }
+                };
+                xmlhttp.open("GET", "/crm/profile/api/generateNewPassword/" + userProfileId, true);
+                xmlhttp.send();
+            }
+        </script>
+    </div>
+
+</th:block>
+</body>
+</html>

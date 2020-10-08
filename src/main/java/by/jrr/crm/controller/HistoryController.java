@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static by.jrr.common.MyHeaders.cameFrom;
 
 @Controller
 public class HistoryController {
@@ -20,13 +23,14 @@ public class HistoryController {
     HistoryItemService historyItemService;
 
     @PostMapping(Endpoint.CRM_NEW_HISTORY_ITEM)
-    public ModelAndView saveNewItem(@RequestParam Long profileId,
+    public String saveNewItem(@RequestParam Long profileId,
                                     @RequestParam CrmCommand command,
                                     @RequestParam Optional<String> task,
                                     @RequestParam Optional<String> taskDL,
                                     @RequestParam Optional<Boolean> isFinished,
                                     @RequestParam Optional<Long> taskId,
-                                    @RequestParam Optional<String> note
+                                    @RequestParam Optional<String> note,
+                                    HttpServletRequest request
     ) {
         switch (command) {
             case SAVE_NOTE:
@@ -40,7 +44,7 @@ public class HistoryController {
 
         }
 
-        return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
+        return "redirect:".concat(cameFrom(request));
     }
     private void saveNote(Long profileId, Optional<String> note) {
         historyItemService.saveNoteForProfile(NoteItem.builder()

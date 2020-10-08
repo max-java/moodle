@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static by.jrr.common.MyHeaders.cameFrom;
 
 @Controller
 public class ProfileCardController {
@@ -114,14 +117,15 @@ public class ProfileCardController {
     }
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}")
-    public ModelAndView saveProfile(@PathVariable Long profileId,
+    public String saveProfile(@PathVariable Long profileId,
                                     @RequestParam Optional<MultipartFile> avatar, // TODO: 04/06/20 handle NPE
                                     @RequestParam Optional<String> saveProfile,
                                     @RequestParam Optional<String> updateProfile,
 //                                    Optional<Profile> profile, // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it.
                                     @RequestParam Optional<String> subscribe,
                                     @RequestParam Optional<Long> subscriberProfileId,
-                                    @RequestParam Optional<String> command
+                                    @RequestParam Optional<String> command,
+                                    HttpServletRequest request
     ) {
 
         if (saveProfile.isPresent() && pss.isCurrentUserOwner(profileId)) { // TODO: 30/07/20 admin should be able to upload avatar
@@ -144,7 +148,7 @@ public class ProfileCardController {
             }
         }
 
-        return new ModelAndView("redirect:" + Endpoint.PROFILE_CARD + "/" + profileId);
+        return "redirect:".concat(cameFrom(request));
     }
 
     private void approveSubscription(Long profileId, Optional<Long> subscriberProfileIdOp) {

@@ -22,6 +22,7 @@ public class HistoryItemService {
     NoteItemRepository noteItemRepository;
     @Autowired
     TaskRepository taskRepository;
+
     public String example(Long profileId) {
         if(uas.isCurrentUserIsAdmin()) {
             return "action";
@@ -36,7 +37,7 @@ public class HistoryItemService {
             List<History> historyList = new ArrayList<>();
             historyList.addAll(noteItemRepository.findByProfileId(profileId));
             historyList.addAll(taskRepository.findByProfileId(profileId));
-            historyList.sort(Comparator.comparing(History::getTimestamp).reversed());
+            historyList.sort(Comparator.comparing(History::getDate).reversed());
             return historyList;
         }
         return new ArrayList<>();
@@ -54,6 +55,7 @@ public class HistoryItemService {
             noteItemRepository.save(noteItem);
         }
     }
+
     public void deleteNoteForProfileByEntity(NoteItem noteItem) {
         if(uas.isCurrentUserIsAdmin()) {
             noteItemRepository.delete(noteItem);
@@ -67,27 +69,40 @@ public class HistoryItemService {
         }
         return new ArrayList<>();
     }
+
     public Task findTaskById(Long taskId) {
         if(uas.isCurrentUserIsAdmin()) {
             return taskRepository.findById(taskId).orElseGet(Task::new);
         }
         return null; // TODO: 01/08/20 throw Access denied exception everywhere, catch in controller and redirect to 403
     }
+
     public void saveTaskForProfile(Task task) {
         if(uas.isCurrentUserIsAdmin()) {
             taskRepository.save(task);
         }
     }
+
     public void deleteTaskForProfileByEntity(Task task) {
         if(uas.isCurrentUserIsAdmin()) {
             taskRepository.delete(task);
         }
     }
+
     public List<Task> findAllNotFinishedTasks() {
         if(uas.isCurrentUserIsAdmin()) {
             return taskRepository.findByIsFinishedFalse();
         }
-        return null;
+        return null; // TODO: 08/10/2020 make NPE safety
     }
+
+    public List<Task> findActiveTasksForProfile(Long id) {
+        if(uas.isCurrentUserIsAdmin()) {
+            return taskRepository.findByProfileIdAndIsFinishedFalse(id);
+        }
+        return new ArrayList<>();
+    }
+
+
 
 }

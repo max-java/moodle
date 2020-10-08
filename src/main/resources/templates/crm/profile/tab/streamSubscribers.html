@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="subscribers">
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="">
+                    <div class="row">
+                        <div class="col-12" th:each="subscriber : ${profile.getSubscribers()}">
+                            <div class="card" th:classappend="${subscriber.getCardColor()}">
+                                <div class="card-header">
+                                    <h3 class="card-title"></h3>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="user-block col-md-4">
+                                            <img alt="User Image"
+                                                 class="img-circle"
+                                                 th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(subscriber.getSubscriberProfile())}">
+                                            <span class="username"><a
+                                                    th:href="${'/crm/profile/'+subscriber.getSubscriberProfileId()}"
+                                                    th:text="${subscriber.getFullSubscriberName()}">Jonathan Burke Jr.</a></span>
+                                            <span class="description">&nbsp;</span>
+
+                                        </div>
+
+                                        <div class="user-block col-md-4">
+                                            <table class="table-striped">
+                                                <tr><td th:text="|phone: ${subscriber.getSubscriberPhone()}|"></td></tr>
+                                                <tr><td th:text="|git:   ${subscriber.getSubscriberGitHubUsername()}|"></td></tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="user-block col-md-4">
+                                            <table>
+                                                <table class="table-striped">
+                                                    <tr><td th:text="|login: ${subscriber.getSubscriberLogin()}|"></td></tr>
+                                                    <tr><td th:text="|email: ${subscriber.getSubscriberEmail()}|"></td></tr>
+                                                </table>
+                                            </table>
+                                        </div>
+                                        <!-- /.user-block -->
+                                    </div>
+
+                                    <p th:each="item : ${subscriber.getActiveTasks()}"
+                                       th:text="|${item.getDateFormatted(item.getDate())} ${item.getText()}|">
+                                    </p>
+                                    <p th:text="|Посетил ${subscriber.totalLecturesLogged()} лекций из ${totalLectures}|"></p>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer" >
+                                    <form></form>
+                                    <form method="post">
+                                        <input name="subscriberProfileId"
+                                               th:value="${subscriber.getSubscriberProfileId()}"
+                                               type="hidden">
+                                        <button class="btn btn-tool"
+                                                name="command"
+                                                style="background: rgb(43, 43, 43) !important;"
+                                                title="Принять"
+                                                type="submit"
+                                                value="approve"
+                                                th:unless="${subscriber.isApproved()}">
+                                            <i class="fa fa-check"></i> Принять
+                                        </button>
+                                        <button class="btn btn-tool"
+                                                name="command"
+                                                style="background: rgb(43, 43, 43) !important;"
+                                                title="Отклонить"
+                                                type="submit"
+                                                value="reject">
+                                            <i class="fa fa-window-close"> Отклонить</i>
+                                        </button>
+
+                                        <span class="text-primary" th:text="${subscriber.getStatus()}" th:if="${subscriber.isApproved()}"></span>
+                                        <span class="text-danger" th:text="${subscriber.getStatus()}" th:unless="${subscriber.isApproved()}"></span>
+
+                                    </form>
+                                </div>
+                                <!-- /.card-footer-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- /.row -->
+</th:block>
+</body>
+</html>
