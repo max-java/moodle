@@ -1,7 +1,7 @@
 package by.jrr.balance.service;
 
 import by.jrr.balance.bean.Currency;
-import by.jrr.balance.beanrepository.OperationRowRepository;
+import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.beantransient.CashFlowRow;
 import by.jrr.balance.beantransient.CashFlowWithCurrency;
 import org.springframework.beans.factory.annotation.Autowired;

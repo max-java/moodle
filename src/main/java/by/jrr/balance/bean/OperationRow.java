@@ -1,6 +1,7 @@
 package by.jrr.balance.bean;
 
 import by.jrr.balance.constant.OperationRowDirection;
+import by.jrr.profile.bean.Profile;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,10 @@ public class OperationRow {
     private String note;
 
     private Integer repeatableToken;
+
+    // TODO: 12/10/2020 consider to move this to dto
+    @Transient
+    Profile subscriber = new Profile();
+    @Transient
+    Contract contract = new Contract();
 }

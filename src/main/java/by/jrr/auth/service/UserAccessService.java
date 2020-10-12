@@ -44,7 +44,7 @@ public class UserAccessService {
 
     public boolean isCurrentUserIsAdmin() {
         boolean isCurrentUserIsAdmin = false;
-        if(isCurrentUserAuthenticated()) {
+        if (isCurrentUserAuthenticated()) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
             isCurrentUserIsAdmin = authorities.stream().anyMatch(ga -> ga.getAuthority().equals(UserRoles.ROLE_ADMIN.name()));
@@ -52,16 +52,16 @@ public class UserAccessService {
         return isCurrentUserIsAdmin;
     }
 
-    public static  boolean hasRole (UserRoles role)
-    { // TODO: 07/07/20 concider to make unified conception of access this functionality
+    public static boolean hasRole(UserRoles role) { // TODO: 07/07/20 concider to make unified conception of access this functionality
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
     }
-    public boolean isUserhasRole (UserRoles role)
-    {
+
+    public boolean isUserhasRole(UserRoles role) {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));
     }
+
     public static boolean isUserHasRole(User user, UserRoles role) {
         return user.getAllRoles().contains(role.name());
     }
@@ -93,11 +93,19 @@ public class UserAccessService {
     }
 
     public boolean isUserHasAccessToSubcription(Long streamTeamProfileId) {
-        Profile currentUserProfile = profileService.getCurrentUserProfile();
-        List<StreamAndTeamSubscriber> subscriptions = currentUserProfile.getSubscriptions();
-        return subscriptions.stream()
-                .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
-                .anyMatch(s -> s.getStreamTeamProfileId().equals(streamTeamProfileId));
+        boolean result = false;
+        try {
+            Profile currentUserProfile = profileService.getCurrentUserProfile();
+            List<StreamAndTeamSubscriber> subscriptions = currentUserProfile.getSubscriptions();
+            result = subscriptions.stream()
+                    .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
+                    .anyMatch(s -> s.getStreamTeamProfileId().equals(streamTeamProfileId));
+
+        } catch (Exception ex) {
+            // TODO: 08/10/2020 create TOA policy
+        }
+
+        return result;
     }
 }
 /*

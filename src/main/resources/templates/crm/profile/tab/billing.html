@@ -8,8 +8,6 @@
             <p th:text="${total}"></p>
         </div>
 
-
-
         <div class="row">
             <div class="col-md-3">
                 <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
@@ -47,8 +45,35 @@
 
         <div class="row">
 
-            <div th:each="operation : ${operationRows}">
-                <p th:text="${operation.toString()}"></p>
+            <div >
+
+
+                <table class="table table-bordered">
+                    <tr>
+                    <th>
+
+                    </th>
+                    </tr>
+                    <tr th:each="operation : ${operationRows}">
+                        <td th:text="${operation.id}"> </td>
+                        <td th:text="${operation.date}"> </td>
+                        <td th:text="${operation.sum}"> </td>
+                        <td th:text="${operation.currency}"> </td>
+                        <td th:text="${operation.operationRowDirection}"> </td>
+                        <td th:text="${operation.note}"> </td>
+                        <td th:text="${operation.subscriber.getFullName()}"> </td>
+                        <td>
+                            <th:block th:include="crm/balanceElements/operationRow :: operationRowForm"
+                                      th:with="categoryList=${incomeCategoryList},
+                                       direction=${operation.operationRowDirection},
+                                       row=${operation},
+                                       buttonText=''">
+                            </th:block>
+                        </td>
+                    </tr>
+                </table>
+
+
             </div>
 
         </div>

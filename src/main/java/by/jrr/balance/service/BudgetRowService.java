@@ -4,8 +4,8 @@ import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.OperationCategory;
 import by.jrr.balance.bean.OperationRow;
 
-import by.jrr.balance.beanrepository.OperationCategoryRepository;
-import by.jrr.balance.beanrepository.OperationRowRepository;
+import by.jrr.balance.repository.OperationCategoryRepository;
+import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.beantransient.BudgetRow;
 import by.jrr.balance.beantransient.BudgetTotal;
 import org.springframework.beans.factory.annotation.Autowired;

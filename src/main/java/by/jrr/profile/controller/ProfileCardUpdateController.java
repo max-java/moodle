@@ -53,6 +53,10 @@ public class ProfileCardUpdateController {
                                       @RequestParam Optional<String> feedbackName,
                                       @RequestParam Optional<String> updateProfile,
                                       @RequestParam Optional<Boolean> openForEnroll,
+
+                                      @RequestParam Optional<String> userName,
+                                      @RequestParam Optional<String> userMiddleName,
+                                      @RequestParam Optional<String> userLastName,
                                       HttpServletRequest request
     ) {
 
@@ -104,6 +108,16 @@ public class ProfileCardUpdateController {
                     if (feedbackName.isPresent()) {
                         profile.setFeedbackName(feedbackName.get());
                     }
+                    if (userName.isPresent()) {
+                        profile.setUserName(userName.get());
+                    }
+                    if (userMiddleName.isPresent()) {
+                        profile.setUserMiddleName(userMiddleName.get());
+                    }
+                    if (userLastName.isPresent()) {
+                        profile.setUserLastName(userLastName.get());
+                    }
+
                     if (openForEnroll.isPresent()) {
                         profile.setOpenForEnroll(true);
                     } else {

@@ -1,4 +1,4 @@
-package by.jrr.balance.beanrepository;
+package by.jrr.balance.repository;
 
 
 import by.jrr.balance.bean.OperationToProfile;
@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by ideapad on 27.9.17.
@@ -14,5 +15,8 @@ import java.util.List;
 public interface OperationToProfileRepository extends CrudRepository<OperationToProfile, Long> {
 
     List<OperationToProfile> findAllByStreamId(Long id);
+    List<OperationToProfile> findAllByContractId(Long id);
+    List<OperationToProfile> findAllByContractIdIsNull();
+    Optional<OperationToProfile> findByOperationRowId(Long id);
 
 }

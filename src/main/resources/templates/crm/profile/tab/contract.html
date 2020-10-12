@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="contract">
+
+    <div class="tab-pane" id="contract">
+        <div class="row">
+            <!--            <p th:text="${total}"></p>-->
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <th:block th:include="crm/contractElements/popUpContractFormWithButton :: include"
+                          th:with="buttonId='randomNumber',
+                          buttonText='Добавить договор'">
+                </th:block>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table table-striped">
+                <tr>
+                    <th> </th>
+                    <th>Дата</th>
+                    <th>Номер</th>
+                    <th>Сумма</th>
+                    <th>Валюта</th>
+                    <th>Тип договора</th>
+                    <th>ФИО</th>
+                    <th>Акт </th>
+                    <th>выполненных </th>
+                    <th>работ</th>
+                </tr>
+                <tr th:each="contract : ${contracts}">
+                    <td>
+                        <th:block
+                                th:include="crm/contractElements/popUpContractFormWithButton :: include"
+                                th:with="buttonId='id'+${contract.getId()},
+                                                         buttonText=''">
+                        </th:block>
+                    </td>
+                    <td th:text="${contract.getDate()}"></td>
+                    <td th:text="${contract.getNumber()}"></td>
+                    <td th:text="${contract.getSum()}"></td>
+                    <td th:text="${contract.getCurrency()}"></td>
+                    <td th:text="${contract.getContractType().getName()}"></td>
+
+                    <td>
+                        <a th:href="${'/crm/profile/'+contract.getUserProfile().getId()}"
+                           th:text="${contract.getUserProfile().getFullName()}"></a>
+                    </td>
+
+                    <td th:text="|№ ${contract.acceptanceAct.number}|"></td>
+                    <td th:text="|от ${contract.acceptanceAct.date} |"></td>
+                    <td th:text="|на сумму ${contract.acceptanceAct.sum}${contract.acceptanceAct.currency}|"></td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

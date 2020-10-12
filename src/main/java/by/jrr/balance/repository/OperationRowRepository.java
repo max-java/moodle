@@ -1,4 +1,4 @@
-package by.jrr.balance.beanrepository;
+package by.jrr.balance.repository;
 
 
 import by.jrr.balance.bean.OperationRow;
@@ -6,7 +6,6 @@ import by.jrr.balance.constant.OperationRowDirection;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**

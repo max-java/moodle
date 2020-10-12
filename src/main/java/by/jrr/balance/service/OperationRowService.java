@@ -1,13 +1,12 @@
 package by.jrr.balance.service;
 
 import by.jrr.balance.bean.*;
-import by.jrr.balance.beanrepository.OperationRowRepository;
+import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.constant.OperationRowDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.geom.RoundRectangle2D;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +85,35 @@ public class OperationRowService {
 
     public List<OperationRow> getOperationsForStream(Long streamId) {
         return operationRowRepository.findAllByIdIn(
-                operationToProfileService.getIdOperationsForStreamById(streamId)
-        );
+                operationToProfileService.getIdOperationsForStreamById(streamId)).stream()
+                .peek(this::setSubscriberToOperationRow)
+                .peek(this::setContractToOperationRow)
+                .collect(Collectors.toList());
     }
 
+    private void setContractToOperationRow(OperationRow operationRow) {
+        operationRow.setContract(
+                operationToProfileService.getContractForOperationByOperationId(operationRow.getId()));
+    }
+
+    private void setSubscriberToOperationRow(OperationRow operationRow) {
+        operationRow.setSubscriber(
+                operationToProfileService.getSubscriberProfileForOperationByOperationId(operationRow.getId()));
+    }
+
+    public List<OperationRow> getIncomesForContract(Long contractId) {
+        return operationRowRepository.findAllByIdIn(
+                operationToProfileService.getIdOperationsForContractId(contractId)).stream()
+                .filter(op -> op.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                .collect(Collectors.toList());
+    }
+
+    public List<OperationRow> getIncomesWithoutContract() {
+        return operationRowRepository.findAllByIdIn(
+                operationToProfileService.getIdOperationsWhereContractIsNull()).stream()
+                .filter(op -> op.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                .collect(Collectors.toList());
+    }
 
 
 
