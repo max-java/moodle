@@ -206,7 +206,7 @@ public class ProfileService {
         //user could update his own profile or profile stream/team he possess
         if (profile.getId().equals(this.getCurrentUserProfileId())
                 || pss.isCurrentUserOwner(profile.getId())
-                || userAccessService.isCurrentUserIsAdmin()) {
+                || userAccessService.isCurrentUserIsAdmin()) {  // TODO: 12/10/2020 consider to leave only fio could be updated by admin
             profile = profileRepository.save(profile);
         }
         return profile;
