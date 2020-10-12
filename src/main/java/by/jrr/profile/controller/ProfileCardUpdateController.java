@@ -1,5 +1,6 @@
 package by.jrr.profile.controller;
 
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -37,32 +38,35 @@ public class ProfileCardUpdateController {
     ProfileStatisticService profileStatisticService;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    UserAccessService userAccessService;
 
     @PostMapping(Endpoint.PROFILE_CARD + "/{profileId}/update")
     public String updateProfile(@PathVariable Long profileId,
-                                      @RequestParam Optional<String> dateStart,
-                                      @RequestParam Optional<String> dateEnd,
-                                      @RequestParam Optional<String> about,
-                                      @RequestParam Optional<String> telegramLink,
-                                      @RequestParam Optional<String> telegramLinkName,
-                                      @RequestParam Optional<String> zoomLink,
-                                      @RequestParam Optional<String> zoomLinkName,
-                                      @RequestParam Optional<String> gitLink,
-                                      @RequestParam Optional<String> gitUsername,
-                                      @RequestParam Optional<String> feedbackLink,
-                                      @RequestParam Optional<String> feedbackName,
-                                      @RequestParam Optional<String> updateProfile,
-                                      @RequestParam Optional<Boolean> openForEnroll,
+                                @RequestParam Optional<String> dateStart,
+                                @RequestParam Optional<String> dateEnd,
+                                @RequestParam Optional<String> about,
+                                @RequestParam Optional<String> telegramLink,
+                                @RequestParam Optional<String> telegramLinkName,
+                                @RequestParam Optional<String> zoomLink,
+                                @RequestParam Optional<String> zoomLinkName,
+                                @RequestParam Optional<String> gitLink,
+                                @RequestParam Optional<String> gitUsername,
+                                @RequestParam Optional<String> feedbackLink,
+                                @RequestParam Optional<String> feedbackName,
+                                @RequestParam Optional<String> updateProfile,
+                                @RequestParam Optional<Boolean> openForEnroll,
 
-                                      @RequestParam Optional<String> userName,
-                                      @RequestParam Optional<String> userMiddleName,
-                                      @RequestParam Optional<String> userLastName,
-                                      HttpServletRequest request
+                                @RequestParam Optional<String> userName,
+                                @RequestParam Optional<String> userMiddleName,
+                                @RequestParam Optional<String> userLastName,
+                                HttpServletRequest request
     ) {
 
         if (updateProfile.isPresent()) {
-            if(profileId.equals(profileService.getCurrentUserProfileId())
-                    || pss.isCurrentUserOwner(profileId)) {
+            if (profileId.equals(profileService.getCurrentUserProfileId())
+                    || pss.isCurrentUserOwner(profileId)
+                    || userAccessService.isCurrentUserIsAdmin()) {
 
                 Optional<Profile> profileOp = profileService.findProfileByProfileId(profileId);
                 if (profileOp.isPresent()) {
