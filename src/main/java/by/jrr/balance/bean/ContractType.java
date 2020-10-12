@@ -8,21 +8,23 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Lob;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class OperationToProfile {
-
+@NoArgsConstructor
+public class ContractType {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
-    Long operationRowId;
-    Long subscriberId;
-    Long streamId;
-    Long contractId;
+    private Long id;
+    private String name;
+    private LocalDate effectiveDate;
+
+    @Lob
+    private String text; // TODO: 11/10/2020 contract text could not be changed if at least one signed already
 
 }

@@ -3,7 +3,7 @@ package by.jrr.balance.service;
 import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.Goal;
 import by.jrr.balance.bean.OperationRow;
-import by.jrr.balance.beanrepository.OperationRowRepository;
+import by.jrr.balance.repository.OperationRowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;

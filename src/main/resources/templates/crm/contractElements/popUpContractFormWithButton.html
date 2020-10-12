@@ -1,0 +1,162 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="include">
+
+    <button class="btn btn-primary btn-block"
+            data-toggle="modal"
+            th:attr="data-target='#'+${buttonId}"
+            type="button">
+        <i class="fa fa-edit"></i><span th:text="${buttonText}"></span>
+    </button>
+    <br/>
+    <div class="modal fade" th:id="${buttonId}">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <form method="post" th:action="${Action.ADD_CONTRACT}">
+                    <div class="modal-header">
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Добавить договор</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th><label>Стрим Id</label></th>
+                                <td><input th:if="${profile}" th:name="${FieldName.PROFILE_ID}"
+                                           th:value="${profile.getId()}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>Id договора</label></th>
+                                <td><input th:name="${FieldName.ID_CONTRACT}" th:value="${contract.getId()}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th><label>data \ дата</label></th>
+                                <td><input required th:name="${FieldName.CONTRACT_DATE}"
+                                           th:value="${contract.date}" type="date"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>Номер договора</label></th>
+                                <td><input th:name="${FieldName.CONTRACT_NUMBER}" th:value="${contract.number}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>sum \ сумма</label></th>
+                                <td><input required step=".01" th:name="${FieldName.CONTRACT_SUM}"
+                                           th:value="${contract.sum}" type="number"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>currency</label></th>
+                                <td>
+                                    <select th:name="${FieldName.ID_CURRENCY}">
+                                        <option></option>
+                                        <option th:each="cur : ${T(by.jrr.balance.bean.Currency).values()}"
+                                                th:selected="${cur} == ${contract.getCurrency()}" th:text="${cur}"
+                                                th:value="${cur}">
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>Вид договора</label></th>
+                                <td>
+                                    <select th:name="${FieldName.CONTRACT_TYPE_ID}" required>
+                                        <option></option>
+                                        <div th:each="type : ${contractTypes}">
+                                            <option th:selected="${type.getId()} == ${contract.getContractTypeId()}"
+                                                    th:text="${type.getName()}"
+                                                    th:value="${type.getId()}">
+
+                                            </option>
+                                        </div>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr th:if="${profile}">
+                                <th><label>Участник курса</label></th>
+                                <td>
+                                    <select th:name="${FieldName.Subscriber}">
+                                        <option></option>
+                                        <div th:each="subscriber : ${profile.getSubscribers()}">
+                                            <option th:selected="${subscriber.getSubscriberProfileId()} == ${contract.userProfile.id}"
+                                                    th:text="${subscriber.getFullSubscriberName()}"
+                                                    th:value="${subscriber.getSubscriberProfileId()}">
+
+                                            </option>
+
+                                        </div>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th colspan="2"><label>Акт выполненных работ</label></th>
+                            </tr>
+                            <tr>
+                                <th><label>Id акта выполненных работ</label></th>
+                                <td><input th:name="${FieldName.ACCEPTANCE_ACT_ID}"
+                                           th:value="${contract.acceptanceAct.id}"
+                                           type="text"/></td>
+                            </tr>
+                            <tr>
+                                <th><label>Id договора в акте</label></th>
+                                <td><input th:name="${FieldName.ACCEPTANCE_ACT_CONTRACT_ID}"
+                                           th:value="${contract.acceptanceAct.contractId}"
+                                           type="text"/></td>
+                            </tr>
+                            <tr>
+                                <th><label>дата акта </label></th>
+                                <td><input th:name="${FieldName.ACCEPTANCE_ACT_DATE}"
+                                           th:value="${contract.acceptanceAct.date}"
+                                           type="date"/></td>
+                            </tr>
+                            <tr>
+                                <th><label>Номер акта</label></th>
+                                <td><input th:name="${FieldName.ACCEPTANCE_ACT_NUMBER}"
+                                           th:value="${contract.acceptanceAct.number}"
+                                           type="text"/></td>
+                            </tr>
+                            <tr>
+                                <th><label>сумма акта</label></th>
+                                <td><input step=".01" th:name="${FieldName.ACCEPTANCE_ACT_SUM}"
+                                           th:value="${contract.acceptanceAct.sum}"
+                                           type="number"/></td>
+                            </tr>
+                            <tr>
+                                <th><label>Валюта</label></th>
+                                <td>
+                                    <select th:name="${FieldName.ACCEPTANCE_ACT_CURRENCY}">
+                                        <option></option>
+                                        <option th:each="cur : ${T(by.jrr.balance.bean.Currency).values()}"
+                                                th:selected="${cur} == ${contract.acceptanceAct.currency}"
+                                                th:text="${cur}"
+                                                th:value="${cur}">
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default pull-left" data-dismiss="modal" type="button">Закрыть</button>
+                        <button class="btn btn-primary" name="command" type="submit" value="save">сохранить</button>
+                        <button class="btn btn-danger" name="command" type="submit" value="delete">удалить</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</th:block>  <!-- /include form -->
+</body>
+</html>

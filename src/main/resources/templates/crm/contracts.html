@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="layout-navbar-fixed sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+                        <th:block th:include="crm/contractElements/popUpFormButton :: button"
+                                  th:with="buttonId='noId',
+                                  buttonText='Новый тип договора'"/>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+
+            <div class="card card-solid">
+                <div class="card-header">
+                    <h2>Типы договоров</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table-striped">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Открыть для редактирования</th>
+                                <th>Название</th>
+                                <th>Дата вступления в силу</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="type : ${contractTypes}">
+                                <td th:text="${type.getId()}"></td>
+                                <td>
+                                    <!--                                    <a th:href="${'/crm/profile/'+profile.getId()}"-->
+                                    <!--                                       th:text="${profile.getUser().getFullUserName()}">-->
+                                    <!--                                    </a>-->
+                                </td>
+                                <td th:text="${type.getName()}"></td>
+                                <td th:text="${type.getEffectiveDate()}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+
+            <div class="card card-solid">
+                <div class="card-header">
+                    <h2>Договоры</h2>
+                </div>
+                <div class="card-body">
+                    <!--                    <div class="row">-->
+                    <div class="box">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Дата</th>
+                                <th>Сумма</th>
+                                <th>Валюта</th>
+                                <th>Тип договора</th>
+                                <th>ФИО</th>
+                                <th>Акт</th>
+                                <th>выполненных</th>
+                                <th>работ</th>
+                            </tr>
+                            <th:block th:each="contract : ${contracts}">
+                                <tr>
+                                    <th th:text="${contract.getNumber()}"></th>
+                                    <td th:text="${contract.getDate()}"></td>
+                                    <td th:text="${contract.getSum()}"></td>
+                                    <td th:text="${contract.getCurrency()}"></td>
+                                    <td th:text="${contract.getContractType().getName()}"></td>
+
+                                    <td>
+                                        <a th:href="${'/crm/profile/'+contract.getUserProfile().getId()}"
+                                           th:text="${contract.getUserProfile().getFullName()}"></a>
+                                    </td>
+
+                                    <td th:text="|№ ${contract.acceptanceAct.number}|"></td>
+                                    <td th:text="|от ${contract.acceptanceAct.date} |"></td>
+                                    <td th:text="|на сумму ${contract.acceptanceAct.sum}${contract.acceptanceAct.currency}|"></td>
+                                </tr>
+                                <tr th:each="income : ${contract.incomes}">
+                                    <td>. платеж</td>
+                                    <td th:text="${income.date}"></td>
+                                    <td th:text="${income.sum}"></td>
+                                    <td th:text="${income.currency}"></td>
+                                    <td colspan="5" th:text="${income.note}"></td>
+
+                            </th:block>
+                        </table>
+                    </div>
+                    <!--                    </div>-->
+                    <!-- /.row -->
+                </div>
+            </div>
+
+            <div class="card card-solid">
+                <div class="card-header">
+                    <h2>Платежи без договоров</h2>
+                </div>
+                <div class="card-body">
+                    <!--                    <div class="row">-->
+                    <div class="box">
+                        <table class="table table-striped">
+                            <tr>
+                                <th></th>
+                                <th>Дата</th>
+                                <th>Сумма</th>
+                                <th>Валюта</th>
+                                <th>Примечание</th>
+                                <th>ФИО</th>
+                            </tr>
+                            <tr th:each="income : ${orphanIncomes}">
+                                <td>. платеж</td>
+                                <td th:text="${income.date}"></td>
+                                <td th:text="${income.sum}"></td>
+                                <td th:text="${income.currency}"></td>
+                                <td th:text="${income.note}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!--                    </div>-->
+                    <!-- /.row -->
+                </div>
+            </div>
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

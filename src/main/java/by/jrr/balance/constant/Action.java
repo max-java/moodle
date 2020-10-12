@@ -13,6 +13,8 @@ public class Action {
 
     public static final String ADD_OPERATION_ROW = "/crm/balance/addRow";
     public static final String ADD_OPERATION_CATEGORY = "/crm/balance/addCategory";
+    public static final String ADD_CONTRACT = "/crm/balance/addContract";
+    public static final String ADD_CONTRACT_TYPE = "/crm/balance/addContractType";
 
     public static final String ADD_GOAL_ROW = "/crm/balance/addGoal";
 

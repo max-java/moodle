@@ -1,11 +1,10 @@
 package by.jrr.balance.service;
 
-import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.Goal;
 import by.jrr.balance.bean.OperationRow;
-import by.jrr.balance.beanrepository.GoalRepository;
-import by.jrr.balance.beanrepository.OperationCategoryRepository;
-import by.jrr.balance.beanrepository.OperationRowRepository;
+import by.jrr.balance.repository.GoalRepository;
+import by.jrr.balance.repository.OperationCategoryRepository;
+import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.beantransient.CashFlowRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

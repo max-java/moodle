@@ -4,9 +4,11 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
+import by.jrr.balance.bean.Contract;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.service.ContractService;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -60,6 +62,9 @@ public class StreamController {
     @Autowired
     TimeLineService timeLineService;
 
+    @Autowired
+    ContractService contractService;
+
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -75,7 +80,7 @@ public class StreamController {
 
             Map<LocalDate, List<TimeLine>> timeline = timeLineService.getTimelineForProfile(profile.get());
             mov.addObject("timeLines", timeline);
-            mov.addObject("totalLectures", timeline
+            mov.addObject("totalLectures", timeline //@max
                     .entrySet()
                     .stream()
                     .flatMap(a -> a.getValue().stream())
@@ -94,6 +99,9 @@ public class StreamController {
             mov.addObject("blankRow", new OperationRow());
             mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
             mov.addObject("total", operationRowService.sumForStream(profileId));
+            mov.addObject("contracts", contractService.findContractsForStream(profileId));
+            mov.addObject("contract", new Contract());
+            mov.addObject("contractTypes", contractService.getContractTypes());
 
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
 
