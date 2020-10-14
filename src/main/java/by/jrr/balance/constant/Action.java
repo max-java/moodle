@@ -18,5 +18,7 @@ public class Action {
 
     public static final String ADD_GOAL_ROW = "/crm/balance/addGoal";
 
+    public static final String SAVE_OPERATION_CATEGORY = "/crm/balance/addCategory";
+
 
 }

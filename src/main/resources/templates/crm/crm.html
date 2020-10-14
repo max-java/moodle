@@ -24,7 +24,9 @@
                     <div class="row">
                         <a href="/crm/contracts">Договоры</a>
                     </div>
-                    <!-- /.row -->
+                    <div class="row">
+                        <a th:href="${T(by.jrr.constant.Endpoint).CRM_OPERATION_CATEGORIES}">Категории операций</a>
+                    </div>
                 </div>
             </div>
 
@@ -68,42 +70,46 @@
                     <h2>Cash Flow</h2>
                 </div>
                 <div class="card-body">
-<!--                    <div class="row">-->
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="col-md-3">
-                                    <div th:include="crm/balanceElements/operationRow :: operationRowForm"
-                                         th:with="categoryList=${incomeCategoryList},
+                    <!--                    <div class="row">-->
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+
+                            </div>
+                            <div class="col-md-3">
+                                <div th:include="crm/balanceElements/operationRow :: operationRowForm"
+                                     th:with="categoryList=${incomeCategoryList},
                                    direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
                                    row=${blankRow},
                                    buttonText=${'Доход - общие'}">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div th:include="crm/balanceElements/operationRow :: operationRowForm"
-                                         th:with="categoryList=${incomeCategoryList},
-                                   direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
-                                   row=${blankRow},
-                                   buttonText=${'Расход - общие'}">
-                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <p th:text="${total}"></p>
+                            <div class="col-md-3">
+                                <div th:include="crm/balanceElements/operationRow :: operationRowForm"
+                                     th:with="categoryList=${incomeCategoryList},
+                                         direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
+                                         row=${blankRow},
+                                         buttonText=${'Расход - общие'}">
+                                </div>
                             </div>
                         </div>
-<!--                    </div>-->
-                    <!-- /.row -->
+                    </div>
+                    <div class="row">
+                        <p th:text="${total}"></p>
+                    </div>
                 </div>
+                <!--                    </div>-->
+                <!-- /.row -->
             </div>
-
-        </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <div th:include="starter :: asideRight"></div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Control Sidebar -->
+<div th:include="starter :: asideRight"></div>
 </div>
 <!-- /.control-sidebar -->
 
