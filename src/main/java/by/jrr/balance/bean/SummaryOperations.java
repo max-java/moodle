@@ -2,16 +2,18 @@ package by.jrr.balance.bean;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class SummaryOperations {
 
-    Double income;
-    Double outcome;
+    BigDecimal income;
+    BigDecimal outcome;
 
-    private Double profit;
+    private BigDecimal profit;
 
     public void calculateProfit() {
-        profit = income - outcome;
+        profit = income.subtract(outcome);
     }
 
     private void setProfit(Double profit) {}

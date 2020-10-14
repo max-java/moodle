@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -22,7 +23,7 @@ public class Goal {
     @GeneratedValue
     private Long id;
     private LocalDate date;
-    private double sum;
+    private BigDecimal sum;
     private long idOperationCategory;
     @Transient
     private OperationCategory operationCategory;
@@ -38,6 +39,15 @@ public class Goal {
     public Goal() {
 
     }
+
+    public void setSum(BigDecimal sum) {
+        this.sum = sum;
+    }
+
+    public void setSum(Double sum) {
+        setSum(BigDecimal.valueOf(sum));
+    }
+
     public String getCurrencyName() {
         try {
             return this.currency.getName();

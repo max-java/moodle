@@ -5,6 +5,7 @@ import by.jrr.profile.bean.Profile;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -22,7 +23,7 @@ public class OperationRow {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private LocalDate date;
-    private Double sum;
+    private BigDecimal sum;
     @Enumerated(value = EnumType.STRING)
     private Currency currency;
     @Enumerated(value = EnumType.STRING)
@@ -30,6 +31,14 @@ public class OperationRow {
     private String note;
 
     private Integer repeatableToken;
+
+    public void setSum(Double d) {
+        setSum(BigDecimal.valueOf(d));
+    }
+
+    public void setSum(BigDecimal d) {
+        sum = d;
+    }
 
     // TODO: 12/10/2020 consider to move this to dto
     @Transient
