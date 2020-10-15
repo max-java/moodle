@@ -9,6 +9,7 @@ import by.jrr.balance.beantransient.CashFlowRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,7 @@ public class GoalService {
         goal.setPriority(priority);
         saveGoal(goal);
     }
+
     public void moveGoalToPlanOutcomes(
             Long idGoal,
             double sum,
@@ -98,11 +100,12 @@ public class GoalService {
         this.deleteGoal(goal.getId());
 
     }
+
     public void moveNegativeGoalToGoals(Long idNegativeGoal) {
         //idNegativeGoal is a negative operationId
         //take outcomeRow by ID from database and save it as goal.
         Goal goal = new Goal();
-        long idOperationRow = idNegativeGoal*-1;
+        long idOperationRow = idNegativeGoal * -1;
         OperationRow operationRow = operationRowRepository.findById(idOperationRow).get();
         goal.setSum(operationRow.getSum());
 //        goal.setIdCurrency(operationRow.getIdCurrency());
@@ -112,6 +115,7 @@ public class GoalService {
         saveGoal(goal);
         operationRowRepository.deleteById(idOperationRow);
     }
+
     public void moveOperationRowToGoals(Long idOperationRow) {
         //take outcomeRow by ID from database and save it as goal.
         Goal goal = new Goal();
@@ -129,6 +133,7 @@ public class GoalService {
     public void deleteGoal(Goal goal) {
         goalRepository.deleteById(goal.getId());
     }
+
     public void deleteGoal(Long idGoal) {
         goalRepository.deleteById(idGoal);
     }
@@ -187,24 +192,23 @@ public class GoalService {
     }
 
     private boolean isSumOfAchievedGoalsLessThanTotal(CashFlowRow cashFlowRow, List<Goal> achievedGoals) {
-        double sumOfAchieved = achievedGoals.stream().mapToDouble(goal -> goal.getSum()).reduce(0, (g1, g2) -> g1 + g2);
-        if (sumOfAchieved <= cashFlowRow.getTotal()) {
-            return true;
-        } else {
-            return false;
-        }
+        BigDecimal sumOfAchieved = achievedGoals.stream()
+                .map(Goal::getSum)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return (sumOfAchieved.compareTo(BigDecimal.valueOf(cashFlowRow.getTotal())) <= 0);
+
     }
 
     private boolean isSumOfAchievedGoalAndNextOneLessThanTotal(List<Goal> achievedGoals, List<Goal> goalListForCurrency, CashFlowRow cashFlowRow) {
         //select goal for cashFlow currency
         goalListForCurrency.sort(Goal::compareByPriority);
         Goal nextGoal = goalListForCurrency.get(0);
-        double sumOfAchievedAndNextOne = nextGoal.getSum() + achievedGoals.stream().mapToDouble(goal -> goal.getSum()).reduce(0, (g1, g2) -> g1 + g2);
-        if (sumOfAchievedAndNextOne <= cashFlowRow.getTotal()) {
-            return true;
-        } else {
-            return false;
-        }
+        BigDecimal sumOfAchievedAndNextOne = nextGoal.getSum().add(
+                achievedGoals.stream()
+                        .map(Goal::getSum)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        return sumOfAchievedAndNextOne.compareTo(BigDecimal.valueOf(cashFlowRow.getTotal())) <= 0;
     }
 
     private void moveFromGoalsToAchievedAndSetDate(List<Goal> goalListForCurrency, List<Goal> achievedGoals, LocalDate dateAchieved) {

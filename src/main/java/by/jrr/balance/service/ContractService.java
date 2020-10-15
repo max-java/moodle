@@ -1,9 +1,7 @@
 package by.jrr.balance.service;
 
-import by.jrr.balance.bean.AcceptanceAct;
-import by.jrr.balance.bean.Contract;
-import by.jrr.balance.bean.ContractToProfile;
-import by.jrr.balance.bean.ContractType;
+import by.jrr.balance.bean.*;
+import by.jrr.balance.constant.OperationRowDirection;
 import by.jrr.balance.repository.*;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
@@ -25,6 +23,10 @@ public class ContractService {
     ContractTypeRepository contractTypeRepository;
     @Autowired
     ContractToProfileRepository contractToProfileRepository;
+    @Autowired
+    ContractToOperationRowRepository contractToOperationRowRepository;
+    @Autowired
+    OperationToProfileRepository operationToProfileRepository;
     @Autowired
     OperationRowService operationRowService;
 
@@ -55,6 +57,36 @@ public class ContractService {
         }
         acceptanceAct.setContractId(contract.getId());
         save(acceptanceAct);
+        saveOrUpdateOperationRowForContract(contract);
+    }
+
+    private void saveOrUpdateOperationRowForContract(Contract contract) {
+        ContractToOperationRow contractToOperationRow = contractToOperationRowRepository.findByContractId(contract.getId())
+                .orElseGet(ContractToOperationRow::new);
+
+        OperationRow operationRow = operationRowService.saveRow(
+                OperationRow.builder()
+                    .id(contractToOperationRow.getOperationRowId())
+                    .date(contract.getDate())
+                    .sum(contract.getSum())
+                    .currency(contract.getCurrency())
+                    .operationRowDirection(OperationRowDirection.CONTRACT)
+                    .note(String.format("сумма обязательства по договору от %s № %s", contract.getDate(), contract.getNumber()))
+                .build());
+
+        contractToOperationRow.setOperationRowId(operationRow.getId());
+        contractToOperationRow.setContractId(contract.getId());
+        contractToOperationRowRepository.save(contractToOperationRow);
+
+        OperationToProfile operationToProfile = operationToProfileRepository.findByOperationRowId(operationRow.getId())
+                .orElseGet(OperationToProfile::new);
+        ContractToProfile contractToProfile = contractToProfileRepository.findByContractId(contract.getId())
+                .orElseGet(ContractToProfile::new);
+        operationToProfile.setContractId(contract.getId());
+        operationToProfile.setOperationRowId(operationRow.getId());
+        operationToProfile.setStreamId(contractToProfile.getStreamId());
+        operationToProfile.setSubscriberId(contractToProfile.getSubscriberId());
+        operationToProfileRepository.save(operationToProfile);
     }
 
     public void save(ContractType contractType) {

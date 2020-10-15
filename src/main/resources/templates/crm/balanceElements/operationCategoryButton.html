@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="button">
+
+    <button class="btn btn-link"
+            data-toggle="modal"
+            th:attr="data-target='#id'+${buttonId}"
+            type="button">
+        <span th:text="${buttonText}"></span>
+    </button>
+    <!-- modal form -->
+    <div class="modal fade" th:id="|id${buttonId}|">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/" method="post" th:action="${Action.SAVE_OPERATION_CATEGORY}">
+                    <div class="modal-header">
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Тип операции</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th><label>id</label></th>
+                                <td>
+                                    <input th:name="${FieldName.ID_OPERATION_CATEGORY}" th:value="${category.id}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th><label>Название</label></th>
+                                <td>
+                                    <input th:name="${FieldName.OPERATION_CATEGORY_NAME}" th:value="${category.name}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>Категория операции </label></th>
+                                <td>
+                                    <select th:name="${FieldName.OPERATION_DIRECTION}">
+                                        <option></option>
+                                        <option th:each="direction : ${T(by.jrr.balance.constant.OperationRowDirection).values()}"
+                                                th:selected="${direction} == ${category.getOperationRowDirection()}"
+                                                th:text="${direction}"
+                                                th:value="${direction}"></option>
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button class="btn btn-primary"
+                                th:name="${FieldName.FORM_COMMAND}"
+                                th:text="${T(by.jrr.balance.constant.FormCommand).SAVE}"
+                                th:value="${T(by.jrr.balance.constant.FormCommand).SAVE}"
+                                type="submit">сохранить
+                        </button>
+                        <button class="btn btn-danger"
+                                th:name="${FieldName.FORM_COMMAND}"
+                                th:text="${T(by.jrr.balance.constant.FormCommand).DELETE}"
+                                th:value="${T(by.jrr.balance.constant.FormCommand).DELETE}"
+                                type="submit"> удалить
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</th:block>
+</body>
+</html>

@@ -17,13 +17,17 @@ import java.time.LocalDate;
 public class FieldName {
     public static final String DIRECTION = "direction";
     public static final String NAME = "name";
+    public static final String FORM_COMMAND    = "formCommand";
+    //operationCategory fields
+    public static final String OPERATION_CATEGORY_NAME    = "nameCategory";
+    public static final String ID_OPERATION_CATEGORY    = "idOperationCategory";
+    public static final String OPERATION_DIRECTION    = "operationDirection";
 
     //operation row fields
     public static final String OPERATION_DATE           = "dateOfOperation";
     public static final String ID_OPERATION             = "id";
     public static final String OPERATION_SUM            = "sumOfOperation";
     public static final String ID_CURRENCY              = "currency";
-    public static final String ID_OPERATION_CATEGORY    = "IdCashFlowDirection";
     public static final String OPERATION_NOTE           = "operationNotes";
     public static final String REPEAT_N_TIMES           = "operationRepeatNTimes";
     //radio buttons for repeatable operations
@@ -63,7 +67,6 @@ public class FieldName {
     public static final String ACCEPTANCE_ACT_SUM = "acSum";
     public static final String ACCEPTANCE_ACT_CONTRACT_ID = "acContractId";
     public static final String ACCEPTANCE_ACT_CURRENCY = "acCurrency";
-
 
 }
 

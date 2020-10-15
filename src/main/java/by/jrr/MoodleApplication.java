@@ -13,5 +13,3 @@ public class MoodleApplication {
         SpringApplication.run(MoodleApplication.class, args);
     }
 }
-
-

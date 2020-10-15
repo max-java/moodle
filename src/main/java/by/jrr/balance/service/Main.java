@@ -48,9 +48,9 @@ public class Main {
 //        }
     }
 
-    public List<OperationCategory> getOperationCategoryByCashFlowDirection(int idCashFlowDirection) {
-        return (List<OperationCategory>) operationCategoryRepository.findByIdCashFlowDirection(idCashFlowDirection);
-    }
+//    public List<OperationCategory> getOperationCategoryByCashFlowDirection(int idCashFlowDirection) {
+//        return (List<OperationCategory>) operationCategoryRepository.findByIdCashFlowDirection(idCashFlowDirection);
+//    }
 
     /** unlimited */
     public List<OperationRow> getAllOperationRowsByCashFlowDirectionOrderByDateDesc(OperationRowDirection direction) {

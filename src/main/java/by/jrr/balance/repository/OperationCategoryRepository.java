@@ -2,6 +2,7 @@ package by.jrr.balance.repository;
 
 
 import by.jrr.balance.bean.OperationCategory;
+import by.jrr.balance.constant.OperationRowDirection;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 
 public interface OperationCategoryRepository extends CrudRepository<OperationCategory, Long> {
-    List<OperationCategory> findByIdCashFlowDirection(int id);
+    List<OperationCategory> findByOperationRowDirection(OperationRowDirection operationRowDirection);
 
 
 }

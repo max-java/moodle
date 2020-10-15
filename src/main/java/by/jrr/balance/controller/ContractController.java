@@ -1,10 +1,7 @@
 package by.jrr.balance.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
-import by.jrr.balance.bean.AcceptanceAct;
-import by.jrr.balance.bean.Contract;
-import by.jrr.balance.bean.ContractType;
-import by.jrr.balance.bean.Currency;
+import by.jrr.balance.bean.*;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.service.ContractService;
