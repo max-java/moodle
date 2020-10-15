@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Data
 public class OperationCategoryService {
 
     @Autowired
-    OperationCategoryRepository operationCategoryRepository;
+    private OperationCategoryRepository operationCategoryRepository;
 
     public void save(OperationCategory operationCategory) {
         operationCategoryRepository.save(operationCategory);
@@ -21,5 +20,12 @@ public class OperationCategoryService {
 
     public List<OperationCategory> getAllOperationCategories() {
         return (List) operationCategoryRepository.findAll();
+    }
+
+    public OperationCategory findOperationCategoryById(Long id) {
+        if(id == null) {
+            return new OperationCategory();
+        }
+        return operationCategoryRepository.findById(id).orElseGet(OperationCategory::new);
     }
 }

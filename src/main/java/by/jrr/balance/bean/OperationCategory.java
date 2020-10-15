@@ -24,8 +24,7 @@ public class OperationCategory {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private String name;
-    private Integer idCashFlowDirection; // TODO: 14/10/2020 delete
+    private String name = "";
     @Enumerated(value = EnumType.STRING)
     private OperationRowDirection operationRowDirection;
 }

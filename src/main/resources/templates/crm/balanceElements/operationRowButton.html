@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="button">
+    <button class="btn btn-primary btn-block"
+            data-target="#modal-default"
+            data-toggle="modal"
+            style="margin-bottom: 6px;"
+            th:attr="data-target='#'+'modal-default'+${row.getId()}+${direction}"
+            type="button">
+        <i class="fa fa-edit"></i><span th:text="${buttonText}"></span>
+    </button>
+    <th:block th:include="crm/balanceElements/operationRowForm :: operationRowForm" />
+</th:block>
+
+</body>
+</html>

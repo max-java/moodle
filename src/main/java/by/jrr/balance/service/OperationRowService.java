@@ -26,6 +26,8 @@ public class OperationRowService {
     GoalService goalService;
     @Autowired
     OperationToProfileService operationToProfileService;
+    @Autowired
+    OperationCategoryService operationCategoryService;
 
     public void deleteRow(Long id) {
         operationRowRepository.deleteById(id);
@@ -36,9 +38,18 @@ public class OperationRowService {
     }
 
     // TODO: 05/10/2020 delete after debugging
-    public List<OperationRow> getAllAsIs() {
+    public List<OperationRow> getAllAsIsLazy() {
         return (List) operationRowRepository.findAll();
 
+    }
+
+    public List<OperationRow> getOperationsForPeriod() { // TODO: 15/10/2020 add Period
+        List<OperationRow> operations = (List) operationRowRepository.findAll();
+        return operations.stream()
+                .peek(this::setSubscriberToOperationRow)
+                .peek(this::setContractToOperationRow)
+                .peek(this::setOperationCategoryToOperationRow)
+                .collect(Collectors.toList());
     }
 
     public SummaryOperations sumForStream(Long streamId) {
@@ -50,13 +61,37 @@ public class OperationRowService {
         summaryOperations.setIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                        .map(OperationRow::getSum)
+                        .map(OperationRow::getSumInByn)
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.OUTCOME))
-                        .map(OperationRow::getSum)
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setContract(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setInvoice(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanIncome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_INCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanOutcome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_OUTCOME))
+                        .map(OperationRow::getSumInByn)
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
@@ -72,13 +107,37 @@ public class OperationRowService {
         summaryOperations.setIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                        .map(OperationRow::getSum)
+                        .map(OperationRow::getSumInByn)
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.OUTCOME))
-                        .map(OperationRow::getSum)
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setContract(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setInvoice(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanIncome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_INCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanOutcome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_OUTCOME))
+                        .map(OperationRow::getSumInByn)
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
@@ -91,6 +150,7 @@ public class OperationRowService {
                 operationToProfileService.getIdOperationsForStreamById(streamId)).stream()
                 .peek(this::setSubscriberToOperationRow)
                 .peek(this::setContractToOperationRow)
+                .peek(this::setOperationCategoryToOperationRow)
                 .collect(Collectors.toList());
     }
 
@@ -102,6 +162,10 @@ public class OperationRowService {
     private void setSubscriberToOperationRow(OperationRow operationRow) {
         operationRow.setSubscriber(
                 operationToProfileService.getSubscriberProfileForOperationByOperationId(operationRow.getId()));
+    }
+    private void setOperationCategoryToOperationRow(OperationRow operationRow) {
+        operationRow.setOperationCategory(
+                operationCategoryService.findOperationCategoryById(operationRow.getIdOperationCategory()));
     }
 
     public List<OperationRow> getIncomesForContract(Long contractId) {
@@ -150,6 +214,7 @@ public class OperationRowService {
                 row.setSum(sum);
                 row.setCurrency(currency);
                 row.setOperationRowDirection(operationRowDirection);
+                row.setIdOperationCategory(idOperationCategory);
                 row.setNote(note);
                 row.setRepeatableToken(repeatableToken);
                 operationRowList.add(row);
@@ -164,11 +229,12 @@ public class OperationRowService {
                 while (date.plusMonths(i).isBefore(endOfRepeatableOperationDate)) {
                     OperationRow row = new OperationRow();
                     row.setId(id);
-//                    row.setIdCashFlowDirection(idCashFlowDirection);
+                    row.setOperationRowDirection(operationRowDirection);
                     row.setDate(date.plusMonths(i)); // for first cycle i = 0, => month don't added
                     row.setSum(sum);
-//                    row.setIdCurrency(currencyId);
-//                    row.setIdOperationCategory(idOperationCategory);
+                    row.setCurrency(currency);
+                    row.setOperationRowDirection(operationRowDirection);
+                    row.setIdOperationCategory(idOperationCategory);
                     row.setNote(note);
                     row.setRepeatableToken(repeatableToken);
                     operationRowList.add(row);
@@ -178,11 +244,12 @@ public class OperationRowService {
                 while (date.plusDays(i).isBefore(endOfRepeatableOperationDate)) {
                     OperationRow row = new OperationRow();
                     row.setId(id);
-//                    row.setIdCashFlowDirection(idCashFlowDirection);
+                    row.setOperationRowDirection(operationRowDirection);
                     row.setDate(date.plusDays(i)); // for first cycle i = 0, => days don't added
                     row.setSum(sum);
-//                    row.setIdCurrency(currencyId);
-//                    row.setIdOperationCategory(idOperationCategory);
+                    row.setCurrency(currency);
+                    row.setOperationRowDirection(operationRowDirection);
+                    row.setIdOperationCategory(idOperationCategory);
                     row.setNote(note);
                     row.setRepeatableToken(repeatableToken);
                     operationRowList.add(row);

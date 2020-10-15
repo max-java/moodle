@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 @AllArgsConstructor
 public class OperationToProfile {
 
-
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;

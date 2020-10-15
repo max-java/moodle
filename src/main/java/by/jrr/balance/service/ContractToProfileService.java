@@ -1,9 +1,7 @@
 package by.jrr.balance.service;
 
 import by.jrr.balance.bean.ContractToProfile;
-import by.jrr.balance.bean.OperationToProfile;
 import by.jrr.balance.repository.ContractToProfileRepository;
-import by.jrr.balance.repository.OperationToProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

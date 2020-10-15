@@ -22,5 +22,8 @@ public enum OperationRowDirection {
 
     final String description;
 
+    public boolean isPlan() {
+        return this.name().startsWith("PLAN_");
+    }
 }
 

@@ -26,6 +26,8 @@ public class ContractService {
     @Autowired
     ContractToOperationRowRepository contractToOperationRowRepository;
     @Autowired
+    OperationToProfileRepository operationToProfileRepository;
+    @Autowired
     OperationRowService operationRowService;
 
 
@@ -76,6 +78,15 @@ public class ContractService {
         contractToOperationRow.setContractId(contract.getId());
         contractToOperationRowRepository.save(contractToOperationRow);
 
+        OperationToProfile operationToProfile = operationToProfileRepository.findByOperationRowId(operationRow.getId())
+                .orElseGet(OperationToProfile::new);
+        ContractToProfile contractToProfile = contractToProfileRepository.findByContractId(contract.getId())
+                .orElseGet(ContractToProfile::new);
+        operationToProfile.setContractId(contract.getId());
+        operationToProfile.setOperationRowId(operationRow.getId());
+        operationToProfile.setStreamId(contractToProfile.getStreamId());
+        operationToProfile.setSubscriberId(contractToProfile.getSubscriberId());
+        operationToProfileRepository.save(operationToProfile);
     }
 
     public void save(ContractType contractType) {

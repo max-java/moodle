@@ -9,6 +9,7 @@ import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.service.ContractService;
+import by.jrr.balance.service.OperationCategoryService;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -64,6 +65,8 @@ public class StreamController {
 
     @Autowired
     ContractService contractService;
+    @Autowired
+    OperationCategoryService operationCategoryService;
 
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
@@ -104,6 +107,8 @@ public class StreamController {
             mov.addObject("contractTypes", contractService.getContractTypes());
 
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
+            mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
+
 
         } else {
             mov.setViewName(View.PAGE_404);
