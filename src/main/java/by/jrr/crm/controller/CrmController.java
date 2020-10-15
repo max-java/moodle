@@ -1,9 +1,11 @@
 package by.jrr.crm.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.balance.bean.OperationCategory;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.service.OperationCategoryService;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -23,6 +25,8 @@ public class CrmController {
 
     @Autowired
     OperationRowService operationRowService;
+    @Autowired
+    OperationCategoryService operationCategoryService;
 
     @GetMapping(Endpoint.CRM)
     public ModelAndView saveNewItem() {
@@ -39,7 +43,10 @@ public class CrmController {
 
         //billing
         modelAndView.addObject("blankRow", new OperationRow());
+        modelAndView.addObject("operationRows", operationRowService.getOperationsForPeriod());
         modelAndView.addObject("total", operationRowService.sumForAll());
+
+        modelAndView.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
 
         return modelAndView;
     }

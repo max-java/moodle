@@ -14,14 +14,12 @@ import javax.persistence.GenerationType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperationToProfile {
+public class ContractToOperationRow {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
-    Long operationRowId;
-    Long subscriberId;
-    Long streamId;
     Long contractId;
+    Long operationRowId;
 
 }

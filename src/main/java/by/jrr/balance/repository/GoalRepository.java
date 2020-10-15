@@ -1,4 +1,4 @@
-package by.jrr.balance.beanrepository;
+package by.jrr.balance.repository;
 
 
 import by.jrr.balance.bean.Goal;

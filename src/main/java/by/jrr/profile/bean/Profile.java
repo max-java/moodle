@@ -50,6 +50,11 @@ public class Profile {
     private String feedbackLink;
     private String feedbackName;
 
+    private String userName;
+    private String userMiddleName;
+    private String userLastName;
+    public String getFullName() {return String.format("%s %s %s", userLastName, userName, userMiddleName);}
+
     @Lob
     private String about;
 

@@ -1,7 +1,7 @@
 package by.jrr.balance.service;
 
 import by.jrr.balance.bean.*;
-import by.jrr.balance.beanrepository.*;
+import by.jrr.balance.repository.*;
 import by.jrr.balance.beantransient.Balance;
 import by.jrr.balance.constant.OperationRowDirection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +48,9 @@ public class Main {
 //        }
     }
 
-    public List<OperationCategory> getOperationCategoryByCashFlowDirection(int idCashFlowDirection) {
-        return (List<OperationCategory>) operationCategoryRepository.findByIdCashFlowDirection(idCashFlowDirection);
-    }
+//    public List<OperationCategory> getOperationCategoryByCashFlowDirection(int idCashFlowDirection) {
+//        return (List<OperationCategory>) operationCategoryRepository.findByIdCashFlowDirection(idCashFlowDirection);
+//    }
 
     /** unlimited */
     public List<OperationRow> getAllOperationRowsByCashFlowDirectionOrderByDateDesc(OperationRowDirection direction) {
@@ -94,6 +94,7 @@ public class Main {
                                         Integer repeatNTimes,
                                         String repeatingFrequency,
                                         String endOfRepeatingDate,
+                                        Long contractId,
                                         String action) {
         if (action.equals("save")) {
             List<OperationRow> result = operationRowService.actionEditOperationRow(id,
@@ -107,13 +108,15 @@ public class Main {
                     repeatingFrequency,
                     endOfRepeatingDate);
 
-            if(result != null && result.size() > 0) {
-                if(subscriberId != null || profileId != null) {
+            if(result != null && result.size() > 0) { // TODO: 12/10/2020 simplify and split
+                if(subscriberId != null || profileId != null || contractId != null) {
                     Long rowId = result.get(0).getId();
                     OperationToProfile operationToProfile = OperationToProfile.builder()
+                            .id(operationToProfileService.getOperationToProfileIdByOperationRoleId(rowId))
                             .operationRowId(rowId)
                             .subscriberId(subscriberId)
                             .streamId(profileId)
+                            .contractId(contractId)
                             .build();
 
                     operationToProfileService.save(operationToProfile);

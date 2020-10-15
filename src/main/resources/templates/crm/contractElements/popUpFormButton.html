@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="button">
+
+    <button class="btn btn-link"
+            data-toggle="modal"
+            th:attr="data-target='#'+${buttonId}"
+            type="button">
+        <span th:text="${buttonText}"></span>
+    </button>
+    <!-- modal form -->
+    <div class="modal fade" th:id="${buttonId}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/" method="post" th:action="${Action.ADD_CONTRACT_TYPE}">
+                    <div class="modal-header">
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Тип контракта</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th><label>id</label></th>
+                                <td>
+                                    <input th:name="${FieldName.CONTRACT_TYPE_ID}" th:value="${type.getId()}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th><label>Название</label></th>
+                                <td>
+                                    <input th:name="${FieldName.CONTRACT_TYPE_NAME}" th:value="${type.getName()}"
+                                           type="text"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>Дата начала действия</label></th>
+                                <td><input required="required" th:name="${FieldName.CONTRACT_TYPE_EFFECTIVE_DATE}"
+                                           th:value="${type.getEffectiveDate()}"
+                                           type="date"/></td>
+                            </tr>
+
+
+                        </table>
+
+
+                    </div>
+                    <textarea id="mytextarea" th:name="${FieldName.TEXT}" th:text="${type.getText()}">Hello, World!</textarea>
+                    <div class="modal-footer">
+
+                        <button class="btn btn-primary" name="command" type="submit" value="save">сохранить</button>
+                        <button class="btn btn-danger" name="command" type="submit" value="delete"> удалить</button>
+
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</th:block>
+
+
+<script referrerpolicy="origin" src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#mytextarea',
+        min_height: 600,
+        plugins: 'print preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+        menubar: 'file edit view insert format tools table help',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+    });
+</script>
+
+</body>
+</html>

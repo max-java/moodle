@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="layout-navbar-fixed sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+                        <th:block th:include="crm/balanceElements/operationCategoryButton :: button"
+                                  th:with="category=${emptyOperationCategory},
+                                  buttonId='empty',
+                                  buttonText=${'Добавить тип платежных операций'}">
+                        </th:block>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+
+            <div class="card card-solid">
+                <div class="card-header">
+                    <h2>Виды платежных операций</h2>
+                </div>
+                <div class="card-body">
+                    <!--                    <div class="row">-->
+                    <div class="box">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Название</th>
+                                <th>Тип операций</th>
+                                <th>редактировать</th>
+
+                            </tr>
+                            <tr th:each="operationCategory : ${operationCategoryList}">
+                                <td th:text="${operationCategory.name}"></td>
+                                <td th:text="${operationCategory.operationRowDirection}"></td>
+                                <td >
+                                    <th:block th:include="crm/balanceElements/operationCategoryButton :: button"
+                                              th:with="category=${operationCategory},
+                                  buttonId=${operationCategory.id},
+                                  buttonText=${'edit'}">
+                                    </th:block>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!--                    </div>-->
+                    <!-- /.row -->
+                </div>
+            </div>
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

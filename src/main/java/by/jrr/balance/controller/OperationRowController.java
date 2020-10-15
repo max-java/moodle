@@ -38,6 +38,7 @@ public class OperationRowController {
                                          @RequestParam(value = FieldName.REPEAT_N_TIMES, defaultValue = "1") Integer repeatNTimes,
                                          @RequestParam(value = FieldName.REPEAT_RADIO, defaultValue = FieldName.REPEAT_NONE) String repeatingFrequency,
                                          @RequestParam(value = FieldName.END_OF_REPEATING_DATE, required = false) String endOfRepeatingDate,
+                                         @RequestParam(value = FieldName.ID_CONTRACT, required = false) Long contractId,
                                          @RequestParam(value = "submit", required = false) String submit,
                                          HttpServletRequest request
     ) {
@@ -55,6 +56,7 @@ public class OperationRowController {
                 repeatNTimes,
                 repeatingFrequency,
                 endOfRepeatingDate,
+                contractId,
                 submit
         );
 

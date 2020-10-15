@@ -1,13 +1,13 @@
 package by.jrr.balance.service;
 
 import by.jrr.balance.bean.*;
-import by.jrr.balance.beanrepository.OperationRowRepository;
+import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.constant.OperationRowDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.geom.RoundRectangle2D;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +26,32 @@ public class OperationRowService {
     GoalService goalService;
     @Autowired
     OperationToProfileService operationToProfileService;
+    @Autowired
+    OperationCategoryService operationCategoryService;
 
     public void deleteRow(Long id) {
         operationRowRepository.deleteById(id);
     }
 
-    public void saveRow(OperationRow row) {
-
+    public OperationRow saveRow(OperationRow row) {
+        return operationRowRepository.save(row);
     }
 
     // TODO: 05/10/2020 delete after debugging
-    public List<OperationRow> getAllAsIs() {
+    public List<OperationRow> getAllAsIsLazy() {
         return (List) operationRowRepository.findAll();
 
     }
+
+    public List<OperationRow> getOperationsForPeriod() { // TODO: 15/10/2020 add Period
+        List<OperationRow> operations = (List) operationRowRepository.findAll();
+        return operations.stream()
+                .peek(this::setSubscriberToOperationRow)
+                .peek(this::setContractToOperationRow)
+                .peek(this::setOperationCategoryToOperationRow)
+                .collect(Collectors.toList());
+    }
+
     public SummaryOperations sumForStream(Long streamId) {
         List<OperationRow> operations = operationRowRepository.findAllByIdIn(
                 operationToProfileService.getIdOperationsForStreamById(streamId));
@@ -48,20 +60,45 @@ public class OperationRowService {
 
         summaryOperations.setIncome(
                 operations.stream()
-                    .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                    .map(o-> o.getSum())
-                    .collect(Collectors.summingDouble(Double::doubleValue))
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.OUTCOME))
-                        .map(o-> o.getSum())
-                        .collect(Collectors.summingDouble(Double::doubleValue))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setContract(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setInvoice(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanIncome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_INCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanOutcome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_OUTCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
         summaryOperations.calculateProfit();
         return summaryOperations;
     }
+
     public SummaryOperations sumForAll() {
         List<OperationRow> operations = (List) operationRowRepository.findAll();
 
@@ -70,14 +107,38 @@ public class OperationRowService {
         summaryOperations.setIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                        .map(o-> o.getSum())
-                        .collect(Collectors.summingDouble(Double::doubleValue))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.OUTCOME))
-                        .map(o-> o.getSum())
-                        .collect(Collectors.summingDouble(Double::doubleValue))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setContract(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setInvoice(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanIncome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_INCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        summaryOperations.setPlanOutcome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_OUTCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
         summaryOperations.calculateProfit();
@@ -86,25 +147,54 @@ public class OperationRowService {
 
     public List<OperationRow> getOperationsForStream(Long streamId) {
         return operationRowRepository.findAllByIdIn(
-                operationToProfileService.getIdOperationsForStreamById(streamId)
-        );
+                operationToProfileService.getIdOperationsForStreamById(streamId)).stream()
+                .peek(this::setSubscriberToOperationRow)
+                .peek(this::setContractToOperationRow)
+                .peek(this::setOperationCategoryToOperationRow)
+                .collect(Collectors.toList());
     }
 
+    private void setContractToOperationRow(OperationRow operationRow) {
+        operationRow.setContract(
+                operationToProfileService.getContractForOperationByOperationId(operationRow.getId()));
+    }
 
+    private void setSubscriberToOperationRow(OperationRow operationRow) {
+        operationRow.setSubscriber(
+                operationToProfileService.getSubscriberProfileForOperationByOperationId(operationRow.getId()));
+    }
+    private void setOperationCategoryToOperationRow(OperationRow operationRow) {
+        operationRow.setOperationCategory(
+                operationCategoryService.findOperationCategoryById(operationRow.getIdOperationCategory()));
+    }
+
+    public List<OperationRow> getIncomesForContract(Long contractId) {
+        return operationRowRepository.findAllByIdIn(
+                operationToProfileService.getIdOperationsForContractId(contractId)).stream()
+                .filter(op -> op.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                .collect(Collectors.toList());
+    }
+
+    public List<OperationRow> getIncomesWithoutContract() {
+        return operationRowRepository.findAllByIdIn(
+                operationToProfileService.getIdOperationsWhereContractIsNull()).stream()
+                .filter(op -> op.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                .collect(Collectors.toList());
+    }
 
 
     // TODO: 23.4.18 if change repeat N times, than data changes. need to create new Instances, not change.
     // TODO: 6/7/19 split updating repeatable and nonRepeatable operations
     public List<OperationRow> actionEditOperationRow(Long id,
-                                                         OperationRowDirection operationRowDirection,
-                                                         LocalDate date,
-                                                         Double sum,
-                                                         Currency currency,
-                                                         Long idOperationCategory,
-                                                         String note,
-                                                         Integer repeatNTimes,
-                                                         String repeatingFrequency,
-                                                         String endOfRepeatingDate) {
+                                                     OperationRowDirection operationRowDirection,
+                                                     LocalDate date,
+                                                     Double sum,
+                                                     Currency currency,
+                                                     Long idOperationCategory,
+                                                     String note,
+                                                     Integer repeatNTimes,
+                                                     String repeatingFrequency,
+                                                     String endOfRepeatingDate) {
 
         List<OperationRow> operationRowList = new ArrayList<>();    // need array list for repeatable operation todo: proceed repeatable operation separately
         int repeatableToken = generateRandom();                     // generate uniq token for repeatable rows.
@@ -124,13 +214,14 @@ public class OperationRowService {
                 row.setSum(sum);
                 row.setCurrency(currency);
                 row.setOperationRowDirection(operationRowDirection);
+                row.setIdOperationCategory(idOperationCategory);
                 row.setNote(note);
                 row.setRepeatableToken(repeatableToken);
                 operationRowList.add(row);
             }
             return (List) operationRowRepository.saveAll(operationRowList);
 
-        // for repeatable depend on date period
+            // for repeatable depend on date period
         } else if (!endOfRepeatingDate.equals("")) { // TODO: 6/7/19 debug this clause
             int i = 0;
             LocalDate endOfRepeatableOperationDate = LocalDate.parse(endOfRepeatingDate).plusDays(1); //create last operation date add one day to achieve less or equal in the while cycle
@@ -138,11 +229,12 @@ public class OperationRowService {
                 while (date.plusMonths(i).isBefore(endOfRepeatableOperationDate)) {
                     OperationRow row = new OperationRow();
                     row.setId(id);
-//                    row.setIdCashFlowDirection(idCashFlowDirection);
+                    row.setOperationRowDirection(operationRowDirection);
                     row.setDate(date.plusMonths(i)); // for first cycle i = 0, => month don't added
                     row.setSum(sum);
-//                    row.setIdCurrency(currencyId);
-//                    row.setIdOperationCategory(idOperationCategory);
+                    row.setCurrency(currency);
+                    row.setOperationRowDirection(operationRowDirection);
+                    row.setIdOperationCategory(idOperationCategory);
                     row.setNote(note);
                     row.setRepeatableToken(repeatableToken);
                     operationRowList.add(row);
@@ -152,11 +244,12 @@ public class OperationRowService {
                 while (date.plusDays(i).isBefore(endOfRepeatableOperationDate)) {
                     OperationRow row = new OperationRow();
                     row.setId(id);
-//                    row.setIdCashFlowDirection(idCashFlowDirection);
+                    row.setOperationRowDirection(operationRowDirection);
                     row.setDate(date.plusDays(i)); // for first cycle i = 0, => days don't added
                     row.setSum(sum);
-//                    row.setIdCurrency(currencyId);
-//                    row.setIdOperationCategory(idOperationCategory);
+                    row.setCurrency(currency);
+                    row.setOperationRowDirection(operationRowDirection);
+                    row.setIdOperationCategory(idOperationCategory);
                     row.setNote(note);
                     row.setRepeatableToken(repeatableToken);
                     operationRowList.add(row);
@@ -167,7 +260,7 @@ public class OperationRowService {
                 OperationRow row = OperationRow.builder()
                         .id(id)
                         .date(date)
-                        .sum(sum)
+                        .sum(BigDecimal.valueOf(sum))
                         .currency(currency)
                         .operationRowDirection(operationRowDirection)
                         .note(note)
@@ -183,7 +276,9 @@ public class OperationRowService {
         return null;
     }
 
-    /** this moves operation row from plan to fact by replacing idCashFlowDirection and writing fact values for date, sum, currency and note (works only for single operation) */
+    /**
+     * this moves operation row from plan to fact by replacing idCashFlowDirection and writing fact values for date, sum, currency and note (works only for single operation)
+     */
     public void moveRowFromPlanToFact(Long id,
                                       LocalDate date,
                                       double sum,
@@ -226,7 +321,7 @@ public class OperationRowService {
     }
 
     public void moveRowFromPlanToGoals(Long idOperationRow) {
-         goalService.moveOperationRowToGoals(idOperationRow);
+        goalService.moveOperationRowToGoals(idOperationRow);
     }
 
     private OperationRow mapFieldsToRow(Long id,
@@ -242,7 +337,7 @@ public class OperationRowService {
         return OperationRow.builder()
                 .id(id)
                 .date(date)
-                .sum(sum)
+                .sum(BigDecimal.valueOf(sum))
                 .currency(currency)
                 .operationRowDirection(operationRowDirection)
                 .note(note)
