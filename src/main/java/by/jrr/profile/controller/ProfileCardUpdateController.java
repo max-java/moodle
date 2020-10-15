@@ -68,6 +68,7 @@ public class ProfileCardUpdateController {
                     || pss.isCurrentUserOwner(profileId)
                     || userAccessService.isCurrentUserIsAdmin()) { // TODO: 12/10/2020 consider to leave only fio could be updated by admin
 
+
                 Optional<Profile> profileOp = profileService.findProfileByProfileId(profileId);
                 if (profileOp.isPresent()) {
                     Profile profile = profileOp.get();
