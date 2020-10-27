@@ -34,6 +34,8 @@ public class CrmController {
         modelAndView.setViewName(View.CRM);
 
         modelAndView.addObject("streams", profileService.findAllStreamGroups());
+        modelAndView.addObject("openForEnrollStreams", profileService.findOpenForEnrollStreams());
+        modelAndView.addObject("ongoingStreams", profileService.findOngoingStreams());
 
         modelAndView.addObject("Action", new Action());
         modelAndView.addObject("FieldName", new FieldName());

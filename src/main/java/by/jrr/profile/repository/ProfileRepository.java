@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public interface ProfileRepository extends PagingAndSortingRepository<Profile, L
     List<Profile> findAllByCourseIdAndDateStartAfter(Long courseId, LocalDate date);
     List<Profile> findAllByCourseId(Long courseId);
     List<Profile> findAllByCourseIdNotNull();
+    List<Profile> findAllByCourseIdNotNullAndDateStartIsBeforeAndDateEndIsAfter(LocalDate now1, LocalDate now2);
     List<Profile> findAllByCourseIdAndOpenForEnroll(Long courseId, Boolean openForEnroll);
     List<Profile> findAllByOpenForEnroll(Boolean openForEnroll);
 }

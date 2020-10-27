@@ -32,7 +32,6 @@ public class RegisterAndSubscribeFormValidationController {
             restResponse.setError(ex.getMessage());
         }
         return restResponse;
-
     }
 
     @GetMapping(value = "/api/registerForm/validate/firstAndLastName/", produces = MediaType.APPLICATION_XML_VALUE)

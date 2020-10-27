@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sun.plugin.util.UserProfile;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ public class Contract {
     LocalDate date;
     String number;
     BigDecimal sum;
-    Currency currency;
+    Currency currency; // TODO: 15/10/2020 refactor to store as enum with name rather then order
 
 
     // TODO: 11/10/2020 ideally this should be moved to DtO
