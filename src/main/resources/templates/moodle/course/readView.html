@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h1 class="display-3">
+                    <h1>
                         <th:block th:text="${topic.getTitle()}"></th:block>
                     <small th:text="${topic.getSubtitle()}"></small></h1>
 
@@ -48,8 +48,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <article class="pb-2">
-                            <h1 class="display-3">
-                                <th:block th:text="${topic.getTitle()}"></th:block>
+                            <h1><th:block th:text="${topic.getTitle()}"></th:block>
                                 <small th:text="${topic.getSubtitle()}"></small></h1>
                             <hr/>
                             <h3 class="text-center" th:if="${streams.size() > 0}">Идет набор в группы:</h3>
