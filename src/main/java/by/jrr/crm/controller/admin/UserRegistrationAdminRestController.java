@@ -7,6 +7,8 @@ import by.jrr.files.service.FileService;
 import by.jrr.crm.controller.admin.bean.ErrorsLog;
 import by.jrr.crm.controller.admin.bean.UserDTO;
 import by.jrr.crm.controller.admin.repo.ErrorsLogRestRepository;
+import by.jrr.profile.bean.StreamAndTeamSubscriber;
+import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
@@ -76,7 +78,6 @@ public class UserRegistrationAdminRestController {
         }
         return user;
     }
-
 }
 
 

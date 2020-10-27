@@ -1,7 +1,6 @@
 package by.jrr.crm.repository;
 
 import by.jrr.crm.bean.NoteItem;
-import org.omg.CORBA.portable.Streamable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

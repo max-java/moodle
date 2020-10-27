@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="streamsTable">
+            <div class="card card-solid">
+                <div class="card-header">
+                    <h2 th:text="${tableName}"></h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table-striped">
+                            <thead>
+                            <tr>
+                                <th>Курс</th>
+                                <th>Стрим</th>
+                                <th>Реквестов</th>
+                                <th>Апрувов</th>
+                                <th>Старт</th>
+                                <th>Финиш</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="profile : ${streams}">
+                                <td th:text="${profile.getCourse().getTitle()}"></td>
+                                <td>
+                                    <a th:href="${'/crm/profile/'+profile.getId()}"
+                                       th:text="${profile.getUser().getFullUserName()}">
+                                    </a>
+                                </td>
+                                <td th:text="${profile.getSubscribersRequested().size()}"></td>
+                                <td th:text="${profile.getSubscribersApproved().size()}"></td>
+                                <td th:text="${profile.getDateStart()}"></td>
+                                <td th:text="${profile.getDateEnd()}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+</th:block>
+</body>
+</html>

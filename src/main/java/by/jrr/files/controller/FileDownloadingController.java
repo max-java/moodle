@@ -47,7 +47,8 @@ public class FileDownloadingController {
     @ResponseBody
     public byte[] getVideoBytesByFilename(@PathVariable String fileDir, @PathVariable String fileName) {
         if (uas.isUserHasAccessToVideoFile(fileDir, fileName)) {
-            return fileService.getFileBytesFromFileStorage(fileDir + "/" + fileName);
+//            return fileService.getFileBytesFromFileStorage(fileDir + "/" + fileName); // TODO: 15/10/2020 this makes OOM. Need urgent fix
+            return fileService.getFileBytesFromFileStorage("/common/403_access_denied.mp4");
         }
         return fileService.getFileBytesFromFileStorage("/common/403_access_denied.mp4");
     }
