@@ -7,8 +7,10 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h1 class="display-3" th:text="${topic.getTitle()}"></h1>
-                    <h2 class="display-4" th:text="${topic.getSubtitle()}"></h2>
+                    <h1>
+                        <th:block th:text="${topic.getTitle()}"></th:block>
+                    <small th:text="${topic.getSubtitle()}"></small></h1>
+
                 </div>
                 <div class="col-md-6">
                     <div th:include="profile/registerAndSubscribeForm :: quickRegisterForm"
@@ -46,11 +48,11 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <article class="pb-2">
-                            <h1 class="text-center" th:text="${topic.getTitle()}"></h1>
-                            <p class="lead" th:text="${topic.getSubtitle()}"></p>
+                            <h1><th:block th:text="${topic.getTitle()}"></th:block>
+                                <small th:text="${topic.getSubtitle()}"></small></h1>
                             <hr/>
-                            <h3 th:if="${streams.size() > 0}">Идет набор в группы:</h3>
-                            <h3 th:unless="${streams.size() > 0}">Набор приостановлен, но вы можете связаться с куратором по телефону (+375)29 3333 600 и
+                            <h3 class="text-center" th:if="${streams.size() > 0}">Идет набор в группы:</h3>
+                            <h3 class="text-center" th:unless="${streams.size() > 0}">Набор приостановлен, но вы можете связаться с куратором по телефону (+375)29 3333 600 и
                                 подобрать другой подходящий курс либо договориться об этом с нашим <a href="https://web.telegram.org/#/im?p=@JavaQuestionsBot">ботом</a></h3>
                             <div class="row mt-5 justify-content-center">
                                 <div class="col-md-6"

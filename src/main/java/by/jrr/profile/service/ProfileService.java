@@ -17,8 +17,6 @@ import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.StudentActionToLog;
 import by.jrr.registration.service.StudentActionToLogService;
-import org.hibernate.mapping.Collection;
-import org.jsoup.select.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -94,8 +91,20 @@ public class ProfileService {
         streamGroups.forEach(p -> setCourseDataToStreamProfile(p)); // TODO: 28/09/20 move all like this to ProfileDataAgregatorService
         streamGroups.forEach(p -> setUserDataToProfile(p));
         return streamGroups;
+    }
 
+    public List<Profile> findOpenForEnrollStreams() { // TODO: 26/10/2020 make filter on database level
+        return findAllStreamGroups().stream()
+                .filter(p -> p.getOpenForEnroll() != null)
+                .filter(p -> p.getOpenForEnroll().equals(true))
+                .collect(Collectors.toList());
+    }
 
+    public List<Profile> findOngoingStreams() { // TODO: 26/10/2020 make filter on database level
+        List<Profile> streamGroups = profileRepository.findAllByCourseIdNotNullAndDateStartIsBeforeAndDateEndIsAfter(LocalDate.now(), LocalDate.now());
+        streamGroups.forEach(p -> setCourseDataToStreamProfile(p)); // TODO: 28/09/20 move all like this to ProfileDataAgregatorService
+        streamGroups.forEach(p -> setUserDataToProfile(p));
+        return streamGroups;
     }
 
     private void setUserDataToProfile(Profile profile) {
@@ -256,9 +265,8 @@ public class ProfileService {
     }
 
     public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
-
-
-        streamAndTeamSubscriberService.updateSubscription(streamTeamProfileId,
+        streamAndTeamSubscriberService.updateSubscription(
+                streamTeamProfileId,
                 subscriberProfileId,
                 SubscriptionStatus.REQUESTED);
     }

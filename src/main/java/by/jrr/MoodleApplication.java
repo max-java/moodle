@@ -9,7 +9,7 @@ import org.telegram.telegrambots.ApiContextInitializer;
 public class MoodleApplication {
 
     public static void main(String[] args) {
-        ApiContextInitializer.init();
+//        ApiContextInitializer.init();
         SpringApplication.run(MoodleApplication.class, args);
     }
 }
