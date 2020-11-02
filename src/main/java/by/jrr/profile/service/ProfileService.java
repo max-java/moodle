@@ -149,6 +149,8 @@ public class ProfileService {
     public void createProfileForUsers() {
         // at first I create User, then profile for user.
         // TODO: 25/05/20 this should be removed and placed near User registration
+        // TODO: 02/11/2020 already moved partitially, should be as restore method on Exception if no profile for user  (of orElseGet)
+
         List<User> users = userService.findAllUsers();
         for (User user : users) {
             Optional<Profile> profile = profileRepository.findByUserId(user.getId());
@@ -419,6 +421,10 @@ public class ProfileService {
         List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
         profile.setSubscribers(subscribers);
         return profile;
+    }
+
+    public Profile findProfileByUserId(Long userId) { // TODO: 02/11/2020 possile be used only in the scope of this class, consider to make it private
+        return profileRepository.findByUserId(userId).orElseGet(() -> new Profile()); // TODO: 02/11/2020 backup message shoould be create Profile
     }
 
 

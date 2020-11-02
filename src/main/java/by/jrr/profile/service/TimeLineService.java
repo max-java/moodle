@@ -70,8 +70,9 @@ public class TimeLineService {
         Map<LocalDate, List<TimeLine>> result = timeLineList.stream()
                 .filter(timeLine -> timeLine.getDateTime() != null) // TODO: 07/08/20 add default value
                 .collect(Collectors.groupingBy(dt -> dt.getDateTime().toLocalDate(), Collectors.toList()));
-        Map<LocalDate, List<TimeLine>> sortedResult = new TreeMap<>(result);
-        return sortedResult;
+        Map<LocalDate, List<TimeLine>> sortedResultReversed = new TreeMap<>(Collections.reverseOrder());
+        sortedResultReversed.putAll(result);
+        return sortedResultReversed;
     }
     public Map<LocalDate, List<TimeLine>> getTimelineForProfile(Profile profile) {
         List<TimeLine> timeline = new ArrayList<>();
