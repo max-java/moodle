@@ -1,6 +1,6 @@
 package by.jrr.api.proxy;
 
-import by.jrr.api.model.ServiceMessage;
+import by.jrr.api.model.MessageDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface MessageProxy {
 
     @PostMapping("/messages")
-    ServiceMessage postNewMessage(ServiceMessage message);
+    MessageDto postNewMessage(MessageDto message);
 }

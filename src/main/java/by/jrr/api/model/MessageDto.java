@@ -12,11 +12,19 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceMessage {
+public class MessageDto {
     private UUID uuid;
     private LocalDateTime timeStamp;
-    private String messageText;
+    private LocalDateTime lastUpdate;
+
+    String chatToken;
+    Long userProfileId;
+
+
     private MessageStatus telegramStatus;
     private MessageStatus eMailStatus;
-}
 
+    private String messageText;
+    private MessageType type;
+
+}
