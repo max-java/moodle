@@ -1,5 +1,6 @@
 package by.jrr.profile.controller;
 
+import by.jrr.api.model.UserContactsDto;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.exceptios.UserNameConversionException;
 import by.jrr.auth.exceptios.UserServiceException;
@@ -8,6 +9,7 @@ import by.jrr.auth.service.UserService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.files.service.FileService;
+import by.jrr.message.service.MessageService;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.service.CourseService;
 import by.jrr.profile.bean.Profile;
@@ -59,6 +61,9 @@ public class RegisterAndSubscribeController {
     @Autowired
     HttpServletRequest request;
 
+    @Autowired
+    MessageService messageService;
+
 
     // TODO: 16/09/20 should be refactored
     @PostMapping(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM)
@@ -81,13 +86,14 @@ public class RegisterAndSubscribeController {
                     && phone.isPresent()
                     && email.isPresent()) {
                 User user = quickRegisterUser(firstAndLastName.get(), phone.get(), email.get());
-                Profile newUserProfile = createProfile(user);
+                Profile userProfile = profileService.findProfileByUserId(user.getId());
+
                 if (streamId.isPresent()) {
 //                    Optional<Profile> courseProfile = findStreamProfileByCourseId(courseId.get());
                     Optional<Profile> courseProfileOp = profileService.findProfileByProfileId(streamId.get());
                     if (courseProfileOp.isPresent()) {
                         courseProfile = courseProfileOp.get();
-                        enroll(courseProfile.getId(), newUserProfile.getId());
+                        enroll(courseProfile.getId(), userProfile.getId());
                         if (courseProfile.getTelegramLink() != null) {
                             satls.saveAction(StudentActionToLog.builder()
                                     .streamTeamProfileId(courseProfile.getId())
