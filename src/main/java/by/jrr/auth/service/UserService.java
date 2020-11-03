@@ -16,10 +16,6 @@ import by.jrr.message.service.MessageService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 
-//import by.jrr.telegram.bot.service.MessageService;
-import by.jrr.message.service.MessageService;
-import by.jrr.profile.bean.Profile;
-import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -140,6 +136,7 @@ public class UserService {
 
 
         new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
+
         return saveduser;
     }
 
