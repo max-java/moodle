@@ -11,6 +11,12 @@ import by.jrr.auth.repository.UserRepository;
 import by.jrr.email.service.EMailService;
 import by.jrr.crm.controller.admin.bean.UserDTO;
 //import by.jrr.telegram.bot.service.MessageService;
+
+import by.jrr.message.service.MessageService;
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfileService;
+
+//import by.jrr.telegram.bot.service.MessageService;
 import by.jrr.message.service.MessageService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
@@ -130,6 +136,8 @@ public class UserService {
 
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
         new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
+        new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
+
 
         new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
         return saveduser;
