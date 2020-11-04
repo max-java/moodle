@@ -194,7 +194,7 @@ public class ProfileService {
             profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
             return profile;
         }
-        return null;
+        return null; // TODO: 04/11/2020 handle NPE
 
     }
 

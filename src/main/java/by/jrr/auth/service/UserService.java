@@ -16,6 +16,8 @@ import by.jrr.message.service.MessageService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +46,9 @@ public class UserService {
     MessageService messageService;
     @Autowired
     ProfileService profileService;
+
+
+    Logger log = LoggerFactory.getLogger(UserService.class); // TODO: 04/11/2020 moveto bean
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -130,11 +135,12 @@ public class UserService {
         userContactsDto.setLastName(saveduser.getLastName());
         userContactsDto.setPhoneNumber(phone);
 
+        //@max: send notifications
+        log.info("starting sendQuickRegostrationConfirmation: {}, {}, {}", email, password, firstAndLastName);
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
+        log.info("starting amoCrmTrigger: {}, {}, {}", email, firstAndLastName, phone);
         new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
-        new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
-
-
+        log.info("starting sendMessageDtoWitContactData: {}, {}", userContactsDto, userProfile.getId());
         new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
 
         return saveduser;
