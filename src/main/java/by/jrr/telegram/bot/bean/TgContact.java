@@ -28,6 +28,4 @@ public class TgContact extends Contact {
     public String toString() {
         return "Contact{phoneNumber='" + this.phoneNumber + '\'' + ", firstName='" + this.firstName + '\'' + ", lastName='" + this.lastName + '\'' + ", userID=" + this.userID + ", vCard=" + this.vCard + '}';
     }
-
-
 }

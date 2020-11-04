@@ -1,6 +1,7 @@
 package by.jrr.profile.repository;
 
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
+import by.jrr.profile.bean.SubscriptionStatus;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,7 @@ public interface StreamAndTeamSubscriberRepository extends PagingAndSortingRepos
     List<StreamAndTeamSubscriber> findAllBySubscriberProfileId(Long id);
     Optional<StreamAndTeamSubscriber> findAllByStreamTeamProfileIdAndSubscriberProfileId(Long idL, Long idR);
 
+
+    List<StreamAndTeamSubscriber> findAllByStatus(SubscriptionStatus status);
 }
 

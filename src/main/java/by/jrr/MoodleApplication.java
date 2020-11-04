@@ -2,14 +2,16 @@ package by.jrr;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.telegram.telegrambots.ApiContextInitializer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
+@EnableDiscoveryClient
 @SpringBootApplication
+@EnableFeignClients
 public class MoodleApplication {
 
     public static void main(String[] args) {
-        ApiContextInitializer.init();
+//        ApiContextInitializer.init();
         SpringApplication.run(MoodleApplication.class, args);
     }
 }

@@ -20,6 +20,7 @@ public class IndexController {
         ModelAndView modelAndView = userDataToModelService.setData(new ModelAndView());
         modelAndView.setViewName("starter");
         modelAndView.addObject("streamList", profileService.findStreamsWhereEnrollIsOpen());
+
         return modelAndView;
     }
 }

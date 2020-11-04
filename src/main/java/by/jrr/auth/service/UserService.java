@@ -1,5 +1,6 @@
 package by.jrr.auth.service;
 
+import by.jrr.api.model.UserContactsDto;
 import by.jrr.auth.bean.Role;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
@@ -9,7 +10,14 @@ import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
 import by.jrr.email.service.EMailService;
 import by.jrr.crm.controller.admin.bean.UserDTO;
-import by.jrr.telegram.bot.service.MessageService;
+//import by.jrr.telegram.bot.service.MessageService;
+
+import by.jrr.message.service.MessageService;
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfileService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,10 +37,18 @@ public class UserService {
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private EMailService eMailService;
-    @Autowired
-    private MessageService tgMessageService;
+    //    @Autowired
+//    private MessageService tgMessageService;
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    MessageService messageService;
+    @Autowired
+    ProfileService profileService;
+
+
+    Logger log = LoggerFactory.getLogger(UserService.class); // TODO: 04/11/2020 moveto bean
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -110,10 +126,23 @@ public class UserService {
         user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
         final User saveduser = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
         autoLogin(login, password);
+        Profile userProfile = profileService.createAndSaveProfileForUser(user);
         System.out.println(" before executing in threads ");
+
+        UserContactsDto userContactsDto = new UserContactsDto(); // TODO: 02/11/2020 replace with mapStruct
+        userContactsDto.setEmail(email);
+        userContactsDto.setFirstName(saveduser.getName());
+        userContactsDto.setLastName(saveduser.getLastName());
+        userContactsDto.setPhoneNumber(phone);
+
+        //@max: send notifications
+        log.info("starting sendQuickRegostrationConfirmation: {}, {}, {}", email, password, firstAndLastName);
         new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
+        log.info("starting amoCrmTrigger: {}, {}, {}", email, firstAndLastName, phone);
         new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
-        new Thread(() -> tgMessageService.sendContactDataToAdministrator(email, saveduser.getName(), saveduser.getLastName(), phone)).start(); // TODO: 29/07/20 consider to handle this as an event
+        log.info("starting sendMessageDtoWitContactData: {}, {}", userContactsDto, userProfile.getId());
+        new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
+
         return saveduser;
     }
 

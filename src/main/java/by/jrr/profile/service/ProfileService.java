@@ -17,8 +17,6 @@ import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.StudentActionToLog;
 import by.jrr.registration.service.StudentActionToLogService;
-import org.hibernate.mapping.Collection;
-import org.jsoup.select.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -94,8 +91,20 @@ public class ProfileService {
         streamGroups.forEach(p -> setCourseDataToStreamProfile(p)); // TODO: 28/09/20 move all like this to ProfileDataAgregatorService
         streamGroups.forEach(p -> setUserDataToProfile(p));
         return streamGroups;
+    }
 
+    public List<Profile> findOpenForEnrollStreams() { // TODO: 26/10/2020 make filter on database level
+        return findAllStreamGroups().stream()
+                .filter(p -> p.getOpenForEnroll() != null)
+                .filter(p -> p.getOpenForEnroll().equals(true))
+                .collect(Collectors.toList());
+    }
 
+    public List<Profile> findOngoingStreams() { // TODO: 26/10/2020 make filter on database level
+        List<Profile> streamGroups = profileRepository.findAllByCourseIdNotNullAndDateStartIsBeforeAndDateEndIsAfter(LocalDate.now(), LocalDate.now());
+        streamGroups.forEach(p -> setCourseDataToStreamProfile(p)); // TODO: 28/09/20 move all like this to ProfileDataAgregatorService
+        streamGroups.forEach(p -> setUserDataToProfile(p));
+        return streamGroups;
     }
 
     private void setUserDataToProfile(Profile profile) {
@@ -140,6 +149,8 @@ public class ProfileService {
     public void createProfileForUsers() {
         // at first I create User, then profile for user.
         // TODO: 25/05/20 this should be removed and placed near User registration
+        // TODO: 02/11/2020 already moved partitially, should be as restore method on Exception if no profile for user  (of orElseGet)
+
         List<User> users = userService.findAllUsers();
         for (User user : users) {
             Optional<Profile> profile = profileRepository.findByUserId(user.getId());
@@ -183,7 +194,7 @@ public class ProfileService {
             profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));
             return profile;
         }
-        return null;
+        return null; // TODO: 04/11/2020 handle NPE
 
     }
 
@@ -256,9 +267,8 @@ public class ProfileService {
     }
 
     public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
-
-
-        streamAndTeamSubscriberService.updateSubscription(streamTeamProfileId,
+        streamAndTeamSubscriberService.updateSubscription(
+                streamTeamProfileId,
                 subscriberProfileId,
                 SubscriptionStatus.REQUESTED);
     }
@@ -411,6 +421,10 @@ public class ProfileService {
         List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
         profile.setSubscribers(subscribers);
         return profile;
+    }
+
+    public Profile findProfileByUserId(Long userId) { // TODO: 02/11/2020 possile be used only in the scope of this class, consider to make it private
+        return profileRepository.findByUserId(userId).orElseGet(() -> new Profile()); // TODO: 02/11/2020 backup message shoould be create Profile
     }
 
 
