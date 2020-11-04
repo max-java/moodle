@@ -57,6 +57,7 @@
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
+
         </profile>
         <profile>
             <id>prod</id>

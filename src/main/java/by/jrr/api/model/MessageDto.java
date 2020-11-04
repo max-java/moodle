@@ -25,6 +25,6 @@ public class MessageDto {
     private MessageStatus eMailStatus;
 
     private String messageText;
-    private MessageType type;
+    private MessageType messageType;
 
 }
