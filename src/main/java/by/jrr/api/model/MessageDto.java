@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDto {
-    private UUID uuid;
+    private String uuid;
     private LocalDateTime timeStamp;
     private LocalDateTime lastUpdate;
 
