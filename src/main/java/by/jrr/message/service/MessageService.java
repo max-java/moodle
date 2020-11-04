@@ -30,7 +30,7 @@ public class MessageService {
                     .build();
 
             mess.setTelegramStatus(MessageStatus.NEW);
-            mess.setType(MessageType.CONTACT_DATA);
+            mess.setMessageType(MessageType.CONTACT_DATA);
             mess.setUserProfileId(profileId);
             messageProxy.postNewMessage(mess);
             log.info("MessageDtoWitContactData has been sent: {}", mess.toString());
