@@ -152,6 +152,13 @@
             <version>1.12.1</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.4.1.Final</version>
+        </dependency>
+
         <!-- MAIL-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
