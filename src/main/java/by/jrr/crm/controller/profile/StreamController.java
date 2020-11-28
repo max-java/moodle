@@ -101,13 +101,19 @@ public class StreamController {
             //blank instances for forms can work to add
             mov.addObject("blankRow", new OperationRow());
             mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
-            mov.addObject("total", operationRowService.sumForStream(profileId));
+            mov.addObject("total", operationRowService.summariesForStream(profileId));
             mov.addObject("contracts", contractService.findContractsForStream(profileId));
             mov.addObject("contract", new Contract());
             mov.addObject("contractTypes", contractService.getContractTypes());
 
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
             mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
+
+            //user billing -> should be moved to userProfileController for admins
+            //todo create Dto for this ? Rest endpoint?
+            List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
+            mov.addObject("userOperationRows", userOperations);
+            mov.addObject("userTotal", operationRowService.summariesForUserOperations(userOperations));
 
 
         } else {

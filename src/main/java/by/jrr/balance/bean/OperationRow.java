@@ -41,7 +41,7 @@ public class OperationRow {
         sum = d;
     }
 
-    public BigDecimal getSumInByn() {
+    public BigDecimal getSumInByn() { //todo set USD sum based on date exchange currency!
         switch (currency) {
             case USD: return sum.multiply(BigDecimal.valueOf(2.6));
             default: return sum;

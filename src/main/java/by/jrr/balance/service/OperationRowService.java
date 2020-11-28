@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -29,6 +30,8 @@ public class OperationRowService {
     @Autowired
     OperationCategoryService operationCategoryService;
 
+    private Comparator<OperationRow> sortOperationRowsByDateReversed = Comparator.comparing(OperationRow::getDate).reversed();
+
     public void deleteRow(Long id) {
         operationRowRepository.deleteById(id);
     }
@@ -43,16 +46,59 @@ public class OperationRowService {
 
     }
 
-    public List<OperationRow> getOperationsForPeriod() { // TODO: 15/10/2020 add Period
+    public List<OperationRow> getAllOperationsForPeriod() { // TODO: 15/10/2020 add Period
         List<OperationRow> operations = (List) operationRowRepository.findAll();
         return operations.stream()
                 .peek(this::setSubscriberToOperationRow)
                 .peek(this::setContractToOperationRow)
                 .peek(this::setOperationCategoryToOperationRow)
+                .sorted(sortOperationRowsByDateReversed)
                 .collect(Collectors.toList());
     }
 
-    public SummaryOperations sumForStream(Long streamId) {
+    public List<OperationRow> getAllOperationsForUser(Long userProfileId) {
+        List<Long> operationIds = operationToProfileService.getIdOperationsForUserByUserProfileId(userProfileId);
+        List<OperationRow> operations = (List) operationRowRepository.findAllByIdIn(operationIds);
+        return operations.stream()
+                .peek(this::setSubscriberToOperationRow)
+                .peek(this::setContractToOperationRow)
+                .peek(this::setOperationCategoryToOperationRow)
+                .sorted(sortOperationRowsByDateReversed)
+                .collect(Collectors.toList());
+
+    }
+
+    public SummaryOperations summariesForUserOperations(List<OperationRow> operations) {
+        SummaryOperations summaryOperations = new SummaryOperations();
+
+        summaryOperations.setIncome(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+
+        summaryOperations.setContract(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+
+        summaryOperations.setInvoice(
+                operations.stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
+                        .map(OperationRow::getSumInByn)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+
+        summaryOperations.setUserBalance();
+
+        return summaryOperations;
+    }
+
+
+    public SummaryOperations summariesForStream(Long streamId) {
         List<OperationRow> operations = operationRowRepository.findAllByIdIn(
                 operationToProfileService.getIdOperationsForStreamById(streamId));
 
@@ -99,7 +145,7 @@ public class OperationRowService {
         return summaryOperations;
     }
 
-    public SummaryOperations sumForAll() {
+    public SummaryOperations summariesForAll() {
         List<OperationRow> operations = (List) operationRowRepository.findAll();
 
         SummaryOperations summaryOperations = new SummaryOperations();
@@ -151,6 +197,7 @@ public class OperationRowService {
                 .peek(this::setSubscriberToOperationRow)
                 .peek(this::setContractToOperationRow)
                 .peek(this::setOperationCategoryToOperationRow)
+                .sorted(sortOperationRowsByDateReversed)
                 .collect(Collectors.toList());
     }
 

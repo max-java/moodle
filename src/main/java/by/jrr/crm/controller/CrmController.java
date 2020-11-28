@@ -1,7 +1,6 @@
 package by.jrr.crm.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
-import by.jrr.balance.bean.OperationCategory;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
@@ -45,8 +44,8 @@ public class CrmController {
 
         //billing
         modelAndView.addObject("blankRow", new OperationRow());
-        modelAndView.addObject("operationRows", operationRowService.getOperationsForPeriod());
-        modelAndView.addObject("total", operationRowService.sumForAll());
+        modelAndView.addObject("operationRows", operationRowService.getAllOperationsForPeriod());
+        modelAndView.addObject("total", operationRowService.summariesForAll());
 
         modelAndView.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
 
