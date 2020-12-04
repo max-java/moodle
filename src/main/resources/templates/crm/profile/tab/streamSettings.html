@@ -35,7 +35,7 @@
         <form></form>
         <form class="form-horizontal" method="post"
               th:action="'/profile/'+${profile.getId()}+'/update'">
-            <input class="form-control" name="id" th:value="${profile.getId()}"
+            <input class="form-control" id="profileId" name="id" th:value="${profile.getId()}"
                    type="hidden">
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="inputName">Открыто для
@@ -124,6 +124,16 @@
                            type="text">
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="telegramChatToken">Телеграм чат токен</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="telegramChatToken" name="telegramChatToken"
+                           placeholder="" th:value="${profile.getTelegramChatToken()}"
+                           type="text">
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="telegramLinkName">Название
                     группы в telegram</label>

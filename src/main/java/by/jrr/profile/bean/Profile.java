@@ -40,6 +40,7 @@ public class Profile {
 
     private String telegramLink;
     private String telegramLinkText;
+    private String telegramChatToken;
 
     private String zoomLink;
     private String zoomLinkText;
