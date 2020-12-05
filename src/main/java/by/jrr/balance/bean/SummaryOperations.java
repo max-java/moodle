@@ -12,6 +12,8 @@ import static java.math.BigDecimal.*;
  * It doesn't calculate future or debts based on dates - such operations are in OperationRow service, where
  * operation rows selects on current (or other ?) date
  **/
+
+//todo move to DTO or model?
 @Data
 public class SummaryOperations {
 
@@ -30,7 +32,7 @@ public class SummaryOperations {
     private BigDecimal invoiceDebt = ZERO;
     private BigDecimal contractDebt = ZERO;
 
-
+    private Currency currency;
 
 
 
@@ -57,6 +59,8 @@ public class SummaryOperations {
 
         invoiceDebt = income.subtract(invoice);
         contractDebt = income.subtract(contract);
+
+        setScaleRound2Decimals();
 
     }
 

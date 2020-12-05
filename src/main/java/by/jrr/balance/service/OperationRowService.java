@@ -1,25 +1,32 @@
 package by.jrr.balance.service;
 
 import by.jrr.balance.bean.*;
+import by.jrr.balance.bean.Currency;
+import by.jrr.balance.currency.service.CurrencyService;
+import by.jrr.balance.dto.UserBalanceSummaryDto;
 import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.constant.OperationRowDirection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static by.jrr.balance.bean.Currency.*;
 
 /**
  * Created by Shelkovich Maksim on 23.4.18.
  */
 @Service
 public class OperationRowService {
+
+    private final Logger logger = LoggerFactory.getLogger(OperationRowService.class);
 
     @Autowired
     OperationRowRepository operationRowRepository;
@@ -29,6 +36,8 @@ public class OperationRowService {
     OperationToProfileService operationToProfileService;
     @Autowired
     OperationCategoryService operationCategoryService;
+    @Autowired
+    CurrencyService currencyService;
 
     private Comparator<OperationRow> sortOperationRowsByDateReversed = Comparator.comparing(OperationRow::getDate).reversed();
 
@@ -68,36 +77,144 @@ public class OperationRowService {
 
     }
 
-    public SummaryOperations summariesForUserOperations(List<OperationRow> operations) {
-        SummaryOperations summaryOperations = new SummaryOperations();
+    /**
+     * Is different than usual summary for streams, because it should calculate all payments in contract currency,
+     * if paid in other - than it should be converted to contract currency,
+     * than calculate summary for currency,
+     * than convert total balance into common currency on current date.
+     * Student balance is a sum of contract balances;
+     *
+     * @param contracts
+     * @return SummaryOperations
+     */
+    public UserBalanceSummaryDto summariesForUserOperations(List<Contract> contracts, Currency inCurrency) {
+        Map<Currency, List<Contract>> contractMap = groupContractsByCurrency(contracts);
+        setOperationsForContractMap(contractMap);
 
-        summaryOperations.setIncome(
-                operations.stream()
-                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                        .map(OperationRow::getSumInByn)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
+        UserBalanceSummaryDto userBalanceSummaryDto = new UserBalanceSummaryDto();
+        userBalanceSummaryDto.setCurrency(inCurrency);
+        userBalanceSummaryDto.setSummaryOperations(createSummariesInContractsCurrency(contractMap));
 
-        summaryOperations.setContract(
-                operations.stream()
-                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
-                        .map(OperationRow::getSumInByn)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
+        Map<Currency, List<SummaryOperations>> summaryListsGroupedByCurrency
+                = groupSummaryOperationsByCurrency(userBalanceSummaryDto.getSummaryOperations());
 
-        summaryOperations.setInvoice(
-                operations.stream()
-                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
-                        .map(OperationRow::getSumInByn)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
+        Map<Currency, SummaryOperations> summariesGroupedAndReduced = new HashMap<>();
+        summariesGroupedAndReduced.put(BYN, reduceListSummaryOperations(summaryListsGroupedByCurrency.get(BYN), BYN));
+        summariesGroupedAndReduced.put(USD, reduceListSummaryOperations(summaryListsGroupedByCurrency.get(USD), USD));
+        userBalanceSummaryDto.setSummaryGroupedByCurrencies(summariesGroupedAndReduced);
 
-        summaryOperations.setUserBalance();
+        userBalanceSummaryDto.setSummaryInCurrentCurrency(convertInCommonCurrencyAndCalculateDebt(
+                userBalanceSummaryDto.getSummaryGroupedByCurrencies(),
+                userBalanceSummaryDto.getCurrency()));
 
+        return userBalanceSummaryDto;
+    }
+
+    private Map<Currency, List<Contract>> groupContractsByCurrency(List<Contract> contracts) {
+        return contracts.stream()
+                .collect(Collectors.groupingBy(
+                        Contract::getCurrency,
+                        Collectors.mapping(Function.identity(), Collectors.toList())
+                ));
+    }
+
+    private List<SummaryOperations> createSummariesInContractsCurrency(Map<Currency, List<Contract>> contractMap) {
+        final List<SummaryOperations> summaryOperations = new ArrayList<>();
+        contractMap.forEach((currency, contractsList) -> contractsList.forEach(contract ->
+                summaryOperations.add(createSummaryForContractInContractCurrency(contract))
+        ));
         return summaryOperations;
     }
 
 
+    private void setOperationsForContractMap(Map<Currency, List<Contract>> contractMap) {
+        contractMap.forEach((curr, contractList) -> contractList
+                .forEach(contract -> contract.setOperations(
+                        operationRowRepository.findAllByIdIn(
+                                operationToProfileService.getIdOperationsForContractId(contract.getId())))));
+    }
+
+    private SummaryOperations createSummaryForContractInContractCurrency(final Contract contract) {
+        SummaryOperations summaryOperations = new SummaryOperations();
+        summaryOperations.setCurrency(contract.getCurrency());
+
+        summaryOperations.setContract(contract.getSum());
+
+        summaryOperations.setIncome(
+                contract.getOperations().stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
+                        .map(o -> currencyService.convertAndGetOperationRowSum(o, contract.getCurrency()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+
+        summaryOperations.setInvoice(
+                contract.getOperations().stream()
+                        .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
+                        .map(o -> currencyService.convertAndGetOperationRowSum(o, contract.getCurrency()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+        return summaryOperations;
+    }
+
+    private Map<Currency, List<SummaryOperations>> groupSummaryOperationsByCurrency(List<SummaryOperations> summaryOperations) {
+        return
+                summaryOperations.stream()
+                        .collect(Collectors.groupingBy(
+                                SummaryOperations::getCurrency,
+                                Collectors.mapping(Function.identity(), Collectors.toList())
+                        ));
+    }
+
+    private SummaryOperations reduceListSummaryOperations(List<SummaryOperations> summaryOperations, Currency currency) {
+        if(summaryOperations == null) {
+            logger.debug("summaries null");
+            summaryOperations = new ArrayList<>();
+        }
+
+        SummaryOperations summaryOperationsCombined = new SummaryOperations();
+
+        summaryOperationsCombined.setCurrency(currency);
+
+        summaryOperationsCombined.setContract(summaryOperations.stream()
+                .map(summ -> summ.getContract())
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        summaryOperationsCombined.setIncome(summaryOperations.stream()
+                .map(summ -> summ.getIncome())
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        summaryOperationsCombined.setInvoice(summaryOperations.stream()
+                .map(summ -> summ.getInvoice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        summaryOperationsCombined.setUserBalance();
+
+        return summaryOperationsCombined;
+    }
+
+    private SummaryOperations convertInCommonCurrencyAndCalculateDebt(final Map<Currency, SummaryOperations> summaryOperationsMap, final Currency currency) {
+        SummaryOperations summaryOperationsCombined = new SummaryOperations();
+
+        summaryOperationsCombined.setContractDebt(summaryOperationsMap.values().stream()
+                .map(summ -> currencyService.convertOnToday(summ.getContractDebt(), summ.getCurrency(), currency))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        summaryOperationsCombined.setInvoiceDebt(summaryOperationsMap.values().stream()
+                .map(summ -> currencyService.convertOnToday(summ.getInvoiceDebt(), summ.getCurrency(), currency))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        return summaryOperationsCombined;
+    }
+
+    /**
+     * Foreign currency transactions are counted with the rate of the National Bank
+     * on the date of contract/act/payment.
+     * <p>
+     * The difference in exchange rates is considered as non-release income / expenses
+     *
+     * @param streamId
+     * @return
+     */
     public SummaryOperations summariesForStream(Long streamId) {
         List<OperationRow> operations = operationRowRepository.findAllByIdIn(
                 operationToProfileService.getIdOperationsForStreamById(streamId));
@@ -107,37 +224,37 @@ public class OperationRowService {
         summaryOperations.setIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.OUTCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setContract(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setInvoice(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setPlanIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_INCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setPlanOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_OUTCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
@@ -153,37 +270,37 @@ public class OperationRowService {
         summaryOperations.setIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.OUTCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setContract(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.CONTRACT))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setInvoice(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.INVOICE))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setPlanIncome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_INCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         summaryOperations.setPlanOutcome(
                 operations.stream()
                         .filter(o -> o.getOperationRowDirection().equals(OperationRowDirection.PLAN_OUTCOME))
-                        .map(OperationRow::getSumInByn)
+                        .map(o -> currencyService.getOperationRowSumInByn(o))
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
@@ -210,6 +327,7 @@ public class OperationRowService {
         operationRow.setSubscriber(
                 operationToProfileService.getSubscriberProfileForOperationByOperationId(operationRow.getId()));
     }
+
     private void setOperationCategoryToOperationRow(OperationRow operationRow) {
         operationRow.setOperationCategory(
                 operationCategoryService.findOperationCategoryById(operationRow.getIdOperationCategory()));

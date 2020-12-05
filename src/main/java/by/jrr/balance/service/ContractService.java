@@ -29,8 +29,6 @@ public class ContractService {
     OperationToProfileRepository operationToProfileRepository;
     @Autowired
     OperationRowService operationRowService;
-
-
     @Autowired
     ProfileService profileService;
 
@@ -141,6 +139,14 @@ public class ContractService {
         return contractsList;
     }
 
+    public List<Contract> findAllContractsForProfileIdLazy(Long subscriberId) {
+        List<Long> contractIds = contractToProfileRepository.findAllBySubscriberId(subscriberId).stream()
+                .map(c -> c.getContractId())
+                .collect(Collectors.toList());
+        List<Contract> contractsList = contractRepository.findAllByIdIn(contractIds);
+        return contractsList;
+    }
+
     private void setContractTypeToContract(Contract contract) {
         contract.setContractType(contractTypeRepository
                 .findById(contract.getContractTypeId())
@@ -162,7 +168,6 @@ public class ContractService {
                 .findByContractId(contract.getId())
                 .orElseGet(ContractToProfile::new)
                 .getSubscriberId();
-
 
         contract.setUserProfile(
                 profileService.findProfileByProfileIdLazy(userProfileId).orElseGet(Profile::new));

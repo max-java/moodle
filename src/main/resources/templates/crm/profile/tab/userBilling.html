@@ -28,11 +28,11 @@
             <table class="table table-bordered table-striped">
                 <tbody>
                 <tr>
-                    <td th:text="${userTotal.invoiceDebt}"></td>
+                    <td th:text="${userTotal.summaryInCurrentCurrency.invoiceDebt}"></td>
                     <td colspan="4"> задолженность по выставленным счетам</td>
                 </tr>
                 <tr>
-                    <td th:text="${userTotal.contractDebt}"></td>
+                    <td th:text="${userTotal.summaryInCurrentCurrency.contractDebt}"></td>
                     <td colspan="4"> сумма неполаченных платежей по договору</td>
                 </tr>
                 </tbody>
@@ -46,13 +46,6 @@
                     <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT}"/>
                     <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE}"/>
                     <th colspan="2">Примечание</th>
-                </tr>
-                <tr>
-                    <th>totals</th>
-                    <th th:text="${userTotal.income}"/>
-                    <th th:text="${userTotal.contract}"/>
-                    <th th:text="${userTotal.invoice}"/>
-                    <th colspan="2"></th>
                 </tr>
                 </thead>
                 <tbody>

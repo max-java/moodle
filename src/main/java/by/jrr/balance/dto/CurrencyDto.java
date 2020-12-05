@@ -7,6 +7,8 @@ import java.util.Optional;
 
 @Data
 public class CurrencyDto {
+// I dont bielieve it is in use... I Use that one that in currensy package
+//        todo consider to delete this class
 
         public int Cur_ID;
         public Optional<Integer> Cur_ParentID;

@@ -5,6 +5,7 @@ import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.balance.bean.Contract;
+import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
@@ -110,10 +111,11 @@ public class StreamController {
             mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
 
             //user billing -> should be moved to userProfileController for admins
-            //todo create Dto for this ? Rest endpoint?
+            //todo create Dto for this ? Rest endpoint? Separate controller for user?
             List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
+            List<Contract> userContracts = contractService.findAllContractsForProfileIdLazy(profileId);
             mov.addObject("userOperationRows", userOperations);
-            mov.addObject("userTotal", operationRowService.summariesForUserOperations(userOperations));
+            mov.addObject("userTotal", operationRowService.summariesForUserOperations(userContracts, Currency.BYN));
 
 
         } else {
