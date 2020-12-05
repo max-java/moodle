@@ -42,6 +42,10 @@
                       th:with="tableName='Все группы',
                                        streams=${streams}"/>
 
+            <th:block th:include="crm/crm-streams :: debtorsTable"
+                      th:with="tableName='Должники',
+                                       debtors=${debtors}"/>
+
             <div class="card card-solid">
                 <div class="card-header">
                     <h2>Cash Flow</h2>

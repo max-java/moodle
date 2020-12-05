@@ -7,9 +7,12 @@ import by.jrr.balance.dto.UserBalanceSummaryDto;
 import by.jrr.balance.repository.OperationRowRepository;
 import by.jrr.balance.constant.FieldName;
 import by.jrr.balance.constant.OperationRowDirection;
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -38,6 +41,8 @@ public class OperationRowService {
     OperationCategoryService operationCategoryService;
     @Autowired
     CurrencyService currencyService;
+    @Autowired
+    ContractService contractService;
 
     private Comparator<OperationRow> sortOperationRowsByDateReversed = Comparator.comparing(OperationRow::getDate).reversed();
 
@@ -77,6 +82,16 @@ public class OperationRowService {
 
     }
 
+    public List<Profile> getAllDebtors() {
+        List<Profile> profiles = contractService.findAllContracts()
+                .stream()
+                .map(Contract::getUserProfile)
+                .filter(p -> p.getUserBalanceSummaryDto().getSummaryInCurrentCurrency().getContractDebt().signum() == -1)
+                .collect(Collectors.toList());
+        profiles.forEach(profile -> profile.setUserBalanceSummaryDto(getSummariesForProfileOperations(profile.getId(), BYN)));
+        return profiles;
+    }
+
     /**
      * Is different than usual summary for streams, because it should calculate all payments in contract currency,
      * if paid in other - than it should be converted to contract currency,
@@ -84,9 +99,15 @@ public class OperationRowService {
      * than convert total balance into common currency on current date.
      * Student balance is a sum of contract balances;
      *
-     * @param contracts
-     * @return SummaryOperations
+     * @return UserBalanceSummaryDto
      */
+
+//    todo move all process in separate class
+    public UserBalanceSummaryDto getSummariesForProfileOperations(Long profileId, Currency currency) {
+        List<Contract> userContracts = contractService.findAllContractsForProfileIdLazy(profileId);
+        return this.summariesForUserOperations(userContracts, currency);
+    }
+
     public UserBalanceSummaryDto summariesForUserOperations(List<Contract> contracts, Currency inCurrency) {
         Map<Currency, List<Contract>> contractMap = groupContractsByCurrency(contracts);
         setOperationsForContractMap(contractMap);
@@ -131,7 +152,11 @@ public class OperationRowService {
         contractMap.forEach((curr, contractList) -> contractList
                 .forEach(contract -> contract.setOperations(
                         operationRowRepository.findAllByIdIn(
-                                operationToProfileService.getIdOperationsForContractId(contract.getId())))));
+                                operationToProfileService.getIdOperationsForContractId(contract.getId()))
+                                .stream()
+                                .filter(operationRow -> operationRow.getDate().isBefore(LocalDate.now()))
+                                .collect(Collectors.toList()))
+                ));
     }
 
     private SummaryOperations createSummaryForContractInContractCurrency(final Contract contract) {
@@ -166,7 +191,7 @@ public class OperationRowService {
     }
 
     private SummaryOperations reduceListSummaryOperations(List<SummaryOperations> summaryOperations, Currency currency) {
-        if(summaryOperations == null) {
+        if (summaryOperations == null) {
             logger.debug("summaries null");
             summaryOperations = new ArrayList<>();
         }

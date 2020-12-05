@@ -111,12 +111,10 @@ public class StreamController {
             mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
 
             //user billing -> should be moved to userProfileController for admins
-            //todo create Dto for this ? Rest endpoint? Separate controller for user?
+            //todo create Dto for this ? Rest endpoint? Separate controller for user? Move to separate controller for user.
             List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
-            List<Contract> userContracts = contractService.findAllContractsForProfileIdLazy(profileId);
             mov.addObject("userOperationRows", userOperations);
-            mov.addObject("userTotal", operationRowService.summariesForUserOperations(userContracts, Currency.BYN));
-
+            mov.addObject("userTotal", operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN));
 
         } else {
             mov.setViewName(View.PAGE_404);

@@ -5,6 +5,8 @@ import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
+import by.jrr.balance.bean.Currency;
+import by.jrr.balance.service.OperationRowService;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.Course;
@@ -58,6 +60,8 @@ public class ProfileService {
     UserAccessService userAccessService;
     @Autowired
     HistoryItemService historyItemService;
+    @Autowired
+    OperationRowService operationRowService;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -128,7 +132,9 @@ public class ProfileService {
             for (StreamAndTeamSubscriber subscriber : subscribers) {
                 Optional<Profile> optionalProfile = this.findProfileByProfileId(subscriber.getSubscriberProfileId());
                 if (optionalProfile.isPresent()) {
-                    subscriber.setSubscriberProfile(optionalProfile.get()); // TODO: 07/06/20 consider refactoring to Java8 style
+                    Profile userProfile = optionalProfile.get();
+                    userProfile.setUserBalanceSummaryDto(operationRowService.getSummariesForProfileOperations(userProfile.getId(), Currency.BYN));
+                    subscriber.setSubscriberProfile(userProfile); // TODO: 07/06/20 consider refactoring to Java8 style
                 }
             }
             profile.setSubscribers(subscribers);

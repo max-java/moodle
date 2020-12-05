@@ -46,8 +46,11 @@ public class CrmController {
         modelAndView.addObject("blankRow", new OperationRow());
         modelAndView.addObject("operationRows", operationRowService.getAllOperationsForPeriod());
         modelAndView.addObject("total", operationRowService.summariesForAll());
+        modelAndView.addObject("debtors", operationRowService.getAllDebtors());
 
         modelAndView.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
+
+
 
         return modelAndView;
     }
