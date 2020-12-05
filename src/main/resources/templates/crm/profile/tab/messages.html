@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="messages">
+
+    <div class="tab-pane" id="messages" th:classappend="${active}">
+        <!-- conversation  -->
+        <div id="messageList">
+
+        </div>
+
+        <div>
+            <div class="form-group">
+                <textarea class="form-control" id="sendMessage" name="sendMessage" rows="3"> </textarea>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button class="btn btn-danger" name="command" onclick="sendMessage()" type="submit">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+    </div>
+
+    <script>
+        getMessages();
+        function getMessages() {
+            var chatToken = document.getElementById("telegramChatToken").value;
+            console.log(chatToken);
+            if (chatToken) {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var myObj = JSON.parse(this.responseText);
+                        var myMessages = document.getElementById("messageList");
+                        while (myMessages.firstChild) {
+                            myMessages.removeChild(myMessages.lastChild);
+                        }
+                        for (var i = 0; i < myObj.length; i++) {
+                            var message = myObj[i];
+                            var p = document.createElement("p");
+                            var messageText = message.messageText;
+                            try {
+                                messageText = JSON.parse(messageText);
+                                p.innerHTML = messageText.message.text;
+                            } catch (e) {
+                                p.innerHTML = messageText;
+                                //todo there is a difference between how in comes from tg and how it passed from moodle
+                                //todo in message text: tg message text is a json entity and message marks with {\",
+                                //todo whereas moodle message is a plain text. So it should be divided by type and handled
+                                //todo here separately and conditionally;
+                            }
+                            myMessages.appendChild(p)
+                        }
+                    }
+                };
+                var url = "/crm/messages/" + chatToken;
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
+            }
+        }
+
+        function sendMessage() {
+
+            var chatToken = document.getElementById("telegramChatToken").value;
+            var message = document.getElementById("sendMessage").value;
+            var profileId = document.getElementById("profileId").value;
+
+            var xhr = new XMLHttpRequest();
+            var url = '/crm/messages/';
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    console.log("something happens");
+                }
+            };
+            var myData = JSON.stringify({"messageText": message, "chatToken": chatToken, "userProfileId": profileId});
+            xhr.send(myData);
+
+            getMessages();
+            document.getElementById("sendMessage").value = '';
+        }
+
+        setInterval(function () {
+            getMessages();
+        }, 5000);
+    </script>
+</th:block>
+</body>
+</html>

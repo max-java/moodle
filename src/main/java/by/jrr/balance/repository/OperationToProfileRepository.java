@@ -17,6 +17,7 @@ public interface OperationToProfileRepository extends CrudRepository<OperationTo
     List<OperationToProfile> findAllByStreamId(Long id);
     List<OperationToProfile> findAllByContractId(Long id);
     List<OperationToProfile> findAllByContractIdIsNull();
+    List<OperationToProfile> findAllBySubscriberId(Long id);
     Optional<OperationToProfile> findByOperationRowId(Long id);
 
 }

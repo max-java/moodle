@@ -64,4 +64,7 @@ public class Endpoint {
     public static final String CRM_CONTRACTS = "/crm/contracts";
     public static final String CRM_OPERATION_CATEGORIES = "/crm/operationCategories";
 
+    public static final String CRM_MESSAGES = "/crm/messages";
+
+
 }
