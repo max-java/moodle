@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="billing">
+
+    <div class="tab-pane" id="billing">
+
+        <div class="row">
+            <div class="col-md-2">
+                <th:block th:include="crm/balanceElements/operationRowButton :: button"
+                          th:with="categoryList=${incomeCategoryList},
+                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
+                                       row=${blankRow},
+                                       buttonText=${'Оплата'}">
+                </th:block>
+            </div>
+            <div class="col-md-2">
+                <th:block th:include="crm/balanceElements/operationRowButton :: button"
+                          th:with="categoryList=${incomeCategoryList},
+                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).INVOICE},
+                                       row=${blankRow},
+                                       buttonText=${'Счет'}">
+                </th:block>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table table-bordered table-striped">
+                <tbody>
+                <tr>
+                    <td th:text="${userTotal.summaryInCurrentCurrency.invoiceDebt}"></td>
+                    <td colspan="4"> задолженность по выставленным счетам</td>
+                </tr>
+                <tr>
+                    <td th:text="${userTotal.summaryInCurrentCurrency.contractDebt}"></td>
+                    <td colspan="4"> сумма неполаченных платежей по договору</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-sm table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INCOME}"/>
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT}"/>
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE}"/>
+                    <th colspan="2">Примечание</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="operation : ${userOperationRows}" th:unless="${operation.operationRowDirection.isPlan()}">
+                    <td nowrap th:text="${operation.date}"></td>
+                    <td>
+                        <th:block
+                                th:if="${T(by.jrr.balance.constant.OperationRowDirection).INCOME == operation.operationRowDirection}"
+                                th:text="|${operation.sum}${operation.currency}|"/>
+                    </td>
+                    <td>
+                        <th:block
+                                th:if="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT == operation.operationRowDirection}"
+                                th:text="|${operation.sum}${operation.currency}|"/>
+                    </td>
+                    <td>
+                        <th:block
+                                th:if="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE == operation.operationRowDirection}"
+                                th:text="|${operation.sum}${operation.currency}|"/>
+                    </td>
+
+                    <td colspan="2" nowrap>
+                        <th:block th:include="crm/balanceElements/operationRowButtonSmall :: button_sm"
+                                  th:with="categoryList=${incomeCategoryList},
+                                       direction=${operation.operationRowDirection},
+                                       row=${operation},
+                                       buttonText=''">
+                        </th:block>
+
+                        <a th:unless="${operation.subscriber.id == null}"
+                           th:href="${'/crm/profile/'+operation.subscriber.getId()}"
+                           th:text="${operation.subscriber.getFullName()}"></a>
+                        <span class="small" th:text="|${operation.operationCategory.name} ${operation.note}|"></span>
+
+
+                    </td>
+
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

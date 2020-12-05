@@ -29,18 +29,26 @@
                                         </div>
 
                                         <div class="user-block col-md-4">
-                                            <table class="table-striped">
+                                            <table class="table">
                                                 <tr><td th:text="|phone: ${subscriber.getSubscriberPhone()}|"></td></tr>
                                                 <tr><td th:text="|git:   ${subscriber.getSubscriberGitHubUsername()}|"></td></tr>
+                                                <tr><td th:text="|login: ${subscriber.getSubscriberLogin()}|"></td></tr>
+                                                <tr><td th:text="|email: ${subscriber.getSubscriberEmail()}|"></td></tr>
                                             </table>
                                         </div>
 
                                         <div class="user-block col-md-4">
-                                            <table>
-                                                <table class="table-striped">
-                                                    <tr><td th:text="|login: ${subscriber.getSubscriberLogin()}|"></td></tr>
-                                                    <tr><td th:text="|email: ${subscriber.getSubscriberEmail()}|"></td></tr>
-                                                </table>
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td th:text="${subscriber.subscriberProfile.userBalanceSummaryDto.summaryInCurrentCurrency.invoiceDebt}"></td>
+                                                    <td colspan="4"> просрочено</td>
+                                                </tr>
+                                                <tr>
+                                                    <td th:text="${subscriber.subscriberProfile.userBalanceSummaryDto.summaryInCurrentCurrency.contractDebt}"></td>
+                                                    <td colspan="4"> весь долг</td>
+                                                </tr>
+                                                </tbody>
                                             </table>
                                         </div>
                                         <!-- /.user-block -->

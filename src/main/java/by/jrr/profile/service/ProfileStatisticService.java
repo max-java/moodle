@@ -29,6 +29,10 @@ import java.util.stream.Collectors;
 
 // TODO: 05/06/20 revise all logic
 
+/***
+ * this class counts user study progress and contributions
+ * */
+
 @Service
 public class ProfileStatisticService {
 

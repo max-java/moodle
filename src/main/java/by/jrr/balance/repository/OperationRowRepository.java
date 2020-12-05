@@ -17,6 +17,7 @@ public interface OperationRowRepository extends CrudRepository<OperationRow, Lon
 
     OperationRow findFirstByOrderByDateAsc();
     List<OperationRow> findAllByIdIn(List<Long> ids);
+    //todo add findInBetween dates and before date and after date?
 
 //    List<OperationRow> findAllByIdCurrencyOrderByDateAsc(Long idCurrency);
 

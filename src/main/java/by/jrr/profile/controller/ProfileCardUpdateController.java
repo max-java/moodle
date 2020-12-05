@@ -48,6 +48,7 @@ public class ProfileCardUpdateController {
                                 @RequestParam Optional<String> about,
                                 @RequestParam Optional<String> telegramLink,
                                 @RequestParam Optional<String> telegramLinkName,
+                                @RequestParam Optional<String> telegramChatToken,
                                 @RequestParam Optional<String> zoomLink,
                                 @RequestParam Optional<String> zoomLinkName,
                                 @RequestParam Optional<String> gitLink,
@@ -95,6 +96,9 @@ public class ProfileCardUpdateController {
                     }
                     if (telegramLinkName.isPresent()) {
                         profile.setTelegramLinkText(telegramLinkName.get());
+                    }
+                    if (telegramChatToken.isPresent()) {
+                        profile.setTelegramChatToken(telegramChatToken.get());
                     }
                     if (zoomLink.isPresent()) {
                         profile.setZoomLink(zoomLink.get());
