@@ -32,6 +32,7 @@ public class TimeLineService {
         return timeline;
     }
 
+    //protect access for unsubscribed users
     private void closeLinksInTimeline(List<TimeLine> timeline) {
         for (TimeLine item : timeline ) {
             switch (item.getEventType()) {

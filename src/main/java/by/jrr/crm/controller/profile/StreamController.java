@@ -5,6 +5,7 @@ import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.balance.bean.Contract;
+import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
@@ -101,7 +102,7 @@ public class StreamController {
             //blank instances for forms can work to add
             mov.addObject("blankRow", new OperationRow());
             mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
-            mov.addObject("total", operationRowService.sumForStream(profileId));
+            mov.addObject("total", operationRowService.summariesForStream(profileId));
             mov.addObject("contracts", contractService.findContractsForStream(profileId));
             mov.addObject("contract", new Contract());
             mov.addObject("contractTypes", contractService.getContractTypes());
@@ -109,6 +110,11 @@ public class StreamController {
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
             mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
 
+            //user billing -> should be moved to userProfileController for admins
+            //todo create Dto for this ? Rest endpoint? Separate controller for user? Move to separate controller for user.
+            List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
+            mov.addObject("userOperationRows", userOperations);
+            mov.addObject("userTotal", operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN));
 
         } else {
             mov.setViewName(View.PAGE_404);

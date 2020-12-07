@@ -1,6 +1,7 @@
 package by.jrr.profile.bean;
 
 import by.jrr.auth.bean.User;
+import by.jrr.balance.dto.UserBalanceSummaryDto;
 import by.jrr.constant.Endpoint;
 import by.jrr.moodle.bean.Course;
 import by.jrr.telegram.model.TgUser;
@@ -40,6 +41,7 @@ public class Profile {
 
     private String telegramLink;
     private String telegramLinkText;
+    private String telegramChatToken;
 
     private String zoomLink;
     private String zoomLinkText;
@@ -54,6 +56,9 @@ public class Profile {
     private String userMiddleName;
     private String userLastName;
     public String getFullName() {return String.format("%s %s %s", userLastName, userName, userMiddleName);}
+
+    @Transient
+    public UserBalanceSummaryDto userBalanceSummaryDto;
 
     @Lob
     private String about;

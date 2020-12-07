@@ -17,5 +17,6 @@ public interface ContractToProfileRepository extends CrudRepository<ContractToPr
 
     List<ContractToProfile> findAllByStreamId(Long id);
     Optional<ContractToProfile> findByContractId(Long id);
+    List<ContractToProfile> findAllBySubscriberId(Long id);
 
 }

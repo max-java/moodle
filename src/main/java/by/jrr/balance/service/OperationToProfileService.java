@@ -29,24 +29,29 @@ public class OperationToProfileService {
     }
 
     public List<Long> getIdOperationsForStreamById(Long id) {
-        List<Long> result = operationToProfileRepository.findAllByStreamId(id).stream()
-                .map(o -> o.getOperationRowId())
+        return operationToProfileRepository.findAllByStreamId(id).stream()
+                .map(OperationToProfile::getOperationRowId)
                 .collect(Collectors.toList());
-        return result;
+
+    }
+
+    public List<Long> getIdOperationsForUserByUserProfileId(Long id) {
+        return operationToProfileRepository.findAllBySubscriberId(id).stream()
+                .map(OperationToProfile::getOperationRowId)
+                .collect(Collectors.toList());
+
     }
 
     public List<Long> getIdOperationsForContractId(Long id) {
-        List<Long> result = operationToProfileRepository.findAllByContractId(id).stream()
-                .map(o -> o.getOperationRowId())
+        return operationToProfileRepository.findAllByContractId(id).stream()
+                .map(OperationToProfile::getOperationRowId)
                 .collect(Collectors.toList());
-        return result;
     }
 
     public List<Long> getIdOperationsWhereContractIsNull() {
-        List<Long> result = operationToProfileRepository.findAllByContractIdIsNull().stream()
-                .map(o -> o.getOperationRowId())
+        return operationToProfileRepository.findAllByContractIdIsNull().stream()
+                .map(OperationToProfile::getOperationRowId)
                 .collect(Collectors.toList());
-        return result;
     }
 
     public Profile getSubscriberProfileForOperationByOperationId(Long id) {
@@ -62,8 +67,7 @@ public class OperationToProfileService {
 
     public Contract getContractForOperationByOperationId(Long id) {
         OperationToProfile operationToProfile = operationToProfileRepository.findByOperationRowId(id).orElseGet(OperationToProfile::new); // TODO: 12/10/2020 should not be empty.
-        Contract contract = contractService.findContractByIdLazy(operationToProfile.getContractId()); // TODO: 12/10/2020 move optional to the root service, consider to handle somehow )
-        return contract;
+        return contractService.findContractByIdLazy(operationToProfile.getContractId()); // TODO: 12/10/2020 move optional to the root service, consider to handle somehow )
     }
 
     public Long getOperationToProfileIdByOperationRoleId(Long operationRowId) {

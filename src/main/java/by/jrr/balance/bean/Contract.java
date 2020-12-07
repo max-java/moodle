@@ -34,10 +34,14 @@ public class Contract {
     ContractType contractType;
     @Transient
     Profile userProfile = new Profile();
+
+    //todo move transient fields to DTO or implement hibernate mapping
     @Transient
     AcceptanceAct acceptanceAct = new AcceptanceAct(); // TODO: 12/10/2020 consider to remove this costyl. Need to create popUpFormContractWithButton
     @Transient
-    List<OperationRow> incomes = new ArrayList<>();
+    List<OperationRow> incomes = new ArrayList<>(); //todo consider to safely delete. Incomes could be set based on all operation rows.
+    @Transient
+    List<OperationRow> operations = new ArrayList<>();
 
     public String getName() {
         return String.format("от %s № %s на%s%s %s %s ", date, number, sum, currency, contractType.getName(), userProfile.getFullName()); // TODO: 12/10/2020 consider make it good format
