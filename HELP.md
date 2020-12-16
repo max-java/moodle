@@ -1,5 +1,8 @@
 # Getting Started
 
+# Roles and passwords:
+lecturer - lecturer - ROLE_LECTURER
+
 ### Reference Documentation
 For further reference, please consider the following sections:
 
