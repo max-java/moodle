@@ -35,16 +35,12 @@
                     <artifactId>h2</artifactId>
                     <scope>runtime</scope>
                 </dependency>
-<!--                <dependency>-->
-<!--                    <groupId>mysql</groupId>-->
-<!--                    <artifactId>mysql-connector-java</artifactId>-->
-<!--                    <scope>runtime</scope>-->
-<!--                </dependency>-->
             </dependencies>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+
         <profile>
             <id>ci</id>
             <properties>
@@ -57,8 +53,8 @@
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
-
         </profile>
+
         <profile>
             <id>prod</id>
             <properties>
@@ -72,6 +68,7 @@
                 </dependency>
             </dependencies>
         </profile>
+
     </profiles>
 
     <dependencies>

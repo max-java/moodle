@@ -38,7 +38,7 @@ CREATE TABLE user_role
     role_id INT NOT NULL
 );
 
-INSERT INTO roles VALUES (1, 'ROLE_ADMIN'), (2, 'ROLE_GUEST'), (3, 'ROLE_FREE_STUDENT'), (4, 'ROLE_STUDENT'), (5, 'ROLE_SCRUM_MASTER'), (6, 'ROLE_ALUMNUS'), (80, 'ROLE_STREAM');
+INSERT INTO roles VALUES (1, 'ROLE_ADMIN'), (2, 'ROLE_GUEST'), (3, 'ROLE_FREE_STUDENT'), (4, 'ROLE_STUDENT'), (5, 'ROLE_SCRUM_MASTER'), (6, 'ROLE_ALUMNUS'), (7, 'ROLE_LECTURER'), (80, 'ROLE_STREAM');
 
 INSERT INTO users VALUES
 (1, TRUE, 'user@dev', 'Adic', 'Administrator', '$2a$10$XizdxtpAW8xUbxSW.3q4k.bwhqMOcac8OTm8/vKo0VwzKux/8Smnu', 'userdev', 'User Developer', '123123123'),
@@ -47,6 +47,7 @@ INSERT INTO users VALUES
 (4, TRUE, 'student@dev', 'Tema', 'Student', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'student', 'User Student', '123123123'),
 (5, TRUE, 'master@dev', 'Stepa', 'Master', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'master', 'User ScrumMaster', '123123123'),
 (6, TRUE, 'alumnus@dev', 'Alex', 'Alumnus', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'alumnus', 'User Alumnus', '123123123'),
+(7, TRUE, 'lecturer@dev', 'LecturerLast', 'Lecturer', '$2a$10$q0lsQInjeAjygy8ekwxZP.00nacRUMlmkZLd.NP.HD2RJNZm29YPe', 'lecturer', 'User Lecturer', '123123123'),
 (90, TRUE, 'user@dev', 'streamCourse_1', 'TeamCourse1', '$2a$10$IZgkJaRT8VtWSq9z.9ZjK.6xn1gMn3LiJGscXZDVehkUYoxVW.cva', 'course1User', NULL, '123123123'),
 (91, TRUE, 'user@dev', 'streamCourse_2', 'TeamCourse2', '$2a$10$HNyQR8JlouePUG7VX9XHgep25SNu1K3djrJ3Nq6GBCI6TgnWzmHrG', 'course2User', NULL, '123123123'),
 (92, TRUE, 'user@dev', 'streamCourse_3', 'TeamCourse3', '$2a$10$j0pPnEbToIFgbSJPnyUlzeyPHeOxvlVoZQpx8m/Vd/68xg5/QAUYG', 'course3User', NULL, '123123123'),
@@ -59,6 +60,7 @@ INSERT INTO user_role VALUES
 (4, 4),
 (5, 5),
 (6, 6),
+(7, 7),
 (90, 80),
 (91, 80),
 (92, 80),
