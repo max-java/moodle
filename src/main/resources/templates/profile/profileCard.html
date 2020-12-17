@@ -35,8 +35,6 @@
                         <div th:if="${TEAM}" th:include="profile/student::card"></div>
                         <div th:if="${STUDENT}" th:include="profile/student::card"></div>
 
-                        <div th:if="${STUDENT}" th:include="profile/student::card"></div>
-
                     </div>
                     <!-- /.col -->
                     <div class="col-md-9">
@@ -64,6 +62,10 @@
                                            data-toggle="tab"
                                            href="#lectures">Лекции курса</a>
                                     </li>
+                                    <li class="nav-item" th:if="${isUserOpensHisPersonalProfile}">
+                                        <a class="nav-link"
+                                           data-toggle="tab"
+                                           href="#billing">Billing</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -585,6 +587,8 @@
                                     <div class="tab-pane" id="lectures">
                                         <div th:insert="moodle/lectureList :: lectureList"></div>
                                     </div>
+
+                                    <th:block th:include="crm/profile/tab/userBillingForUserView :: billing" th:if="${isUserOpensHisPersonalProfile}"/>
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->

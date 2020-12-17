@@ -2,12 +2,19 @@ package by.jrr.auth.service;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserData;
+import by.jrr.balance.bean.Currency;
+import by.jrr.balance.bean.OperationRow;
+import by.jrr.balance.dto.UserBalanceSummaryDto;
+import by.jrr.balance.service.OperationRowService;
+import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Service
 public class UserDataToModelService {
@@ -18,12 +25,16 @@ public class UserDataToModelService {
     UserAccessService userAccessService;
     @Autowired
     ProfileService profileService; // TODO: 01/06/20 this doesn't belong here. set current user profile otherwise
+    @Autowired
+    OperationRowService operationRowService;
+
 
     public ModelAndView setData(ModelAndView mov) { // TODO: 28/05/20 replace by different methods simmilar to getInstance with zero parameters and cache it
         setIsAuthenticated(mov);
         setCurrentUserProfile(mov);
         setListOfUsers(mov);
         setUserDTOToRegisterAndEnrollModalForm(mov);
+        setUserBalance(mov);
         return mov;
     }
 
@@ -37,7 +48,9 @@ public class UserDataToModelService {
         return modelAndView.addObject(UserData.IS_AUTHENTICATED.name(), userAccessService.isCurrentUserAuthenticated());
     }
 
-    /** set authenticated user data */
+    /**
+     * set authenticated user data
+     */
     private ModelAndView setCurrentUserProfile(ModelAndView modelAndView) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
@@ -50,5 +63,17 @@ public class UserDataToModelService {
 
     private ModelAndView setListOfUsers(ModelAndView mov) {
         return mov.addObject(UserData.USER_LIST.name(), userService.findAllUsers());
+    }
+
+    private ModelAndView setUserBalance(ModelAndView mov) {
+        mov.addObject("userBalanceTotal", new UserBalanceSummaryDto());
+        Profile profile = profileService.getCurrentUserProfile();
+        if (profile != null) {
+            List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profile.getId());
+            UserBalanceSummaryDto userTotal = operationRowService.getSummariesForProfileOperations(profile.getId(), Currency.BYN);
+            operationRowService.calculateAndSetTotalUserSalary(userOperations, userTotal);
+            mov.addObject("userBalanceTotal", userTotal);
+        }
+        return mov;
     }
 }
