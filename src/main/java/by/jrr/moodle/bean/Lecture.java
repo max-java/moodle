@@ -36,4 +36,8 @@ public class Lecture implements Trackable {
     public String getName() {
         return title;
     }
+
+    public String getFullName() {
+        return String.format("%s - %s", title, subtitle);
+    }
 }
