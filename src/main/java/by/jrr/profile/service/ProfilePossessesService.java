@@ -131,4 +131,9 @@ public class ProfilePossessesService {
                 || UserAccessService.hasRole(UserRoles.ROLE_LECTURER))
                 && isUserSubscriptionApproved(profile);
     }
+
+    public boolean isUserGetSalary(Profile profile) {
+        return (profile.getUser().hasRole(UserRoles.ROLE_ADMIN)
+                || profile.getUser().hasRole(UserRoles.ROLE_LECTURER));
+    }
 }
