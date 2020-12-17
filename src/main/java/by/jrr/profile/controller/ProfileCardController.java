@@ -4,6 +4,7 @@ import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.balance.constant.FieldName;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
@@ -62,10 +63,16 @@ public class ProfileCardController {
     public ModelAndView openProfileById(@PathVariable Long profileId) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
+
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
+
             mov.setViewName(View.PROFILE_CARD);
+
             mov.addObject("profile", profile.get());
             mov.addObject("timeLines", timeLineService.getTimelineForProfile(profile.get()));
+            mov.addObject("emptyTimeline", new TimeLine());
+
+            mov.addObject("FieldName", new FieldName());
 
             mov.addObject("statistic", profileStatisticService.calculateStatisticsForProfile(profileId));
             mov.addObject("isSubscribeAble", isSubscribeAble(profileId)); // TODO: 05/08/20 consider to make it more clearly (var name and behaviour)
@@ -81,14 +88,19 @@ public class ProfileCardController {
                             ));
             mov.addObject("couldUpdate", profileId.equals(profileService.getCurrentUserProfileId())
                     || pss.isCurrentUserOwner(profileId));
+
             if (profile.get().getCourseId() != null) {
                 mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
-            } else {
+            }
+            else {
                 mov.addObject("topicList", new ArrayList<>());
             }
-            mov.addObject("bestStudentList", calculateBestStudent(profile.get().getSubscribers()));
 
-        } else {
+            mov.addObject("bestStudentList", calculateBestStudent(profile.get().getSubscribers()));
+            mov.addObject("isUserCanUpdateTimeline", pss.isUserCanUpdateTimelineOn(profile.get()));
+
+        }
+        else {
             mov.setViewName(View.PAGE_404);
         }
         return mov;
