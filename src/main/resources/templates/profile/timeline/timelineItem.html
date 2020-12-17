@@ -190,6 +190,27 @@
         </div>
     </th:block>
 
+
+    <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).NONE)}">
+        <div class="timeline-item">
+            <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
+            <h3 style="padding: 10px;"><i class="far fa-clock"></i>
+
+            </h3>
+
+            <h3 class="timeline-header">
+
+            </h3>
+
+            <div class="timeline-body" th:text="${timeline.getNotes()}">
+
+            </div>
+            <div class="timeline-footer">
+
+            </div>
+        </div>
+    </th:block>
+
 </th:block>
 
 </body>
