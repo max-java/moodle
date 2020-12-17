@@ -11,7 +11,8 @@ public enum UserRoles {
     ROLE_SCRUM_MASTER("Participate in course and playing scrum master role: could create a team"),
     ROLE_ALUMNUS("Graduated from any paid courses"),
     ROLE_STREAM("Group of a students led by trainer"),
-    ROLE_TEAM("Group of a students led by trainer led by scrum master");
+    ROLE_TEAM("Group of a students led by trainer led by scrum master"),
+    ROLE_LECTURER("Lecturer - contractor");
 
     private String info;
 
