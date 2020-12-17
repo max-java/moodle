@@ -4,27 +4,13 @@
 <th:block th:fragment="billing">
 
     <div class="tab-pane" id="billing">
-
         <div class="row">
-            <div class="col-md-2">
-                <th:block th:include="crm/balanceElements/operationRowButton :: button"
-                          th:with="categoryList=${incomeCategoryList},
-                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
-                                       row=${blankRow},
-                                       buttonText=${'Оплата'}">
-                </th:block>
-            </div>
-            <div class="col-md-2">
-                <th:block th:include="crm/balanceElements/operationRowButton :: button"
-                          th:with="categoryList=${incomeCategoryList},
-                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).INVOICE},
-                                       row=${blankRow},
-                                       buttonText=${'Счет'}">
-                </th:block>
-            </div>
-        </div>
-
-        <div class="row">
+            <br/>
+            <br/>
+            <h3> Общая сумма задолженности </h3>
+            <p> в белорусских рубляx в пересчете по курсу НБ РБ на текущую дату </p>
+            <h3 th:if="${isUserGetSalary}"> и сумма зарплаты </h3>
+            <p> за все время в белорусских рубля в пересчете по курсу НБ РБ на день оплаты</p>
             <table class="table table-bordered table-striped">
                 <tbody>
                 <tr>
@@ -37,19 +23,27 @@
                 </tr>
                 <tr>
                     <td th:text="${userTotal.summaryInCurrentCurrency.salary}"></td>
-                    <td colspan="4"> сумма выплаченной заработной платы (OUTCOME)</td>
+                    <td colspan="4"> сумма выплаченной заработной платы</td>
                 </tr>
                 </tbody>
             </table>
 
+            <hr />
+            <br/>
+            <br/>
+
+            <h3> Список платежей</h3>
+            <p>сумм заключенных договоров и выставленных счетов в валюте контракта</p>
+            <h3 th:if="${isUserGetSalary}"> и заработной платы</h3>
+            <p> указанной в валюте начисления</p>
             <table class="table table-sm table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>Дата</th>
-                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INCOME}" />
-                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT}" />
-                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE}" />
-                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME}" th:if="${isUserGetSalary}"/>
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INCOME.getUserFriendlyName()}" />
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT.getUserFriendlyName()}" />
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE.getUserFriendlyName()}" />
+                    <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME.getUserFriendlyName()}" th:if="${isUserGetSalary}"/>
                     <th colspan="2">Примечание</th>
                 </tr>
                 </thead>
@@ -79,18 +73,10 @@
                     </td>
 
                     <td colspan="2" nowrap>
-                        <th:block th:include="crm/balanceElements/operationRowButtonSmall :: button_sm"
-                                  th:with="categoryList=${incomeCategoryList},
-                                       direction=${operation.operationRowDirection},
-                                       row=${operation},
-                                       buttonText=''">
-                        </th:block>
-
                         <a th:unless="${operation.subscriber.id == null}"
                            th:href="${'/crm/profile/'+operation.subscriber.getId()}"
                            th:text="${operation.subscriber.getFullName()}"></a>
                         <span class="small" th:text="|${operation.operationCategory.name} ${operation.note}|"></span>
-
 
                     </td>
 
@@ -99,21 +85,15 @@
 
             </table>
 
+            <h3 th:if="${isUserGetSalary}"> Суммы будущих начислений</h3>
             <table class="table table-sm table-bordered table-striped"
                    th:if="${isUserGetSalary}">
                 <thead>
                     <tr>
                         <th>Дата</th>
-                        <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_INCOME}"/>
-                        <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_OUTCOME}"/>
+                        <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_INCOME.getUserFriendlyName()}"/>
+                        <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_OUTCOME.getUserFriendlyName()}"/>
                         <th>Примечание</th>
-                    </tr>
-
-                    <tr>
-                        <th>totals</th>
-                        <th th:text="${total.planIncome}"/>
-                        <th th:text="${total.planOutcome}"/>
-                        <th> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,13 +110,6 @@
                                     th:text="|${operation.sum}${operation.currency}|"/>
                         </td>
                         <td nowrap>
-                            <th:block th:include="crm/balanceElements/operationRowButtonSmall :: button_sm"
-                                      th:with="categoryList=${incomeCategoryList},
-                                           direction=${operation.operationRowDirection},
-                                           row=${operation},
-                                           buttonText=''">
-                            </th:block>
-
                             <a th:unless="${operation.subscriber.id == null}"
                                th:href="${'/crm/profile/'+operation.subscriber.getId()}"
                                th:text="${operation.subscriber.getFullName()}"></a>

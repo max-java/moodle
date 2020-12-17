@@ -133,6 +133,7 @@
                     Login
                 </a>
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" th:if="${IS_AUTHENTICATED}">
+                    <span th:text="|${userBalanceTotal.summaryInCurrentCurrency.contractDebt} BYN|"></span>
                     <img th:src="${T(by.jrr.constant.LinkGenerator).getLinkToUserpic(CURRENT_PROFILE)}"
                          class="user-image img-circle elevation-2"
                          alt="User Image">
@@ -154,8 +155,10 @@
 <!--                            <div class="col-4 text-center">-->
 <!--                                <a href="#">Followers</a>-->
 <!--                            </div>-->
-                            <div class="col-4 text-center">
-                                <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(CURRENT_PROFILE)}"><strong>MyProfile</strong></a>
+                            <div class="col-12 text-center">
+                                <a th:href="${T(by.jrr.constant.LinkGenerator).getLinkTo(CURRENT_PROFILE)}">
+                                    <strong th:text="|MyProfile ${userBalanceTotal.summaryInCurrentCurrency.contractDebt} BYN|"></strong>
+                                </a>
                             </div>
 <!--                            <div class="col-4 text-center">-->
 <!--                                <a href="#">Friends</a>-->
