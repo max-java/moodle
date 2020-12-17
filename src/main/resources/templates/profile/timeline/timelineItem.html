@@ -77,7 +77,7 @@
                 <a href="#" th:text="${timeline.getEventType()}">
                     Support Team
                 </a>
-                <span th:text="${timeline.getEventName()}"></span>
+                <span th:text="|${timeline.getEventName()} ${topicIdMapToFullName.get(timeline.getLectureId())}|"></span>
             </h3>
 
             <div class="timeline-body" th:text="${timeline.getNotes()}">
@@ -171,7 +171,7 @@
                 <a href="#" th:text="${timeline.getEventType()}">
                     Support Team
                 </a>
-                <span th:text="${timeline.getEventName()}"></span>
+                <span th:text="|${timeline.getEventName()} ${topicIdMapToFullName.get(timeline.getLectureId())}|"></span>
             </h3>
 
             <div class="timeline-body" th:text="${timeline.getNotes()}">

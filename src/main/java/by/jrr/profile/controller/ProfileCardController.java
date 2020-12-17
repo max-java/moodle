@@ -10,6 +10,7 @@ import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
+import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.*;
 import by.jrr.profile.service.*;
@@ -25,10 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static by.jrr.common.MyHeaders.cameFrom;
@@ -89,12 +88,23 @@ public class ProfileCardController {
             mov.addObject("couldUpdate", profileId.equals(profileService.getCurrentUserProfileId())
                     || pss.isCurrentUserOwner(profileId));
 
+            // lectures names used both in selects and in timeline options.
+            List<Lecture> topicList = courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null);
+            Map<Long, String> topicIdMapToFullName = topicList.stream().collect(Collectors.toMap(Lecture::getId, Lecture::getFullName));
             if (profile.get().getCourseId() != null) {
-                mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
+                mov.addObject("topicList", topicList);
             }
             else {
                 mov.addObject("topicList", new ArrayList<>());
             }
+
+            if (profile.get().getCourseId() != null) {
+                mov.addObject("topicIdMapToFullName", topicIdMapToFullName);
+            }
+            else {
+                mov.addObject("topicIdMapToFullName", new HashMap<>());
+            }
+            // end of lectures;
 
             mov.addObject("bestStudentList", calculateBestStudent(profile.get().getSubscribers()));
             mov.addObject("isUserCanUpdateTimeline", pss.isUserCanUpdateTimelineOn(profile.get()));
