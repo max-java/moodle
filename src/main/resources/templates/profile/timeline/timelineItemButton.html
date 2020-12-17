@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="button">
+    <button class="btn btn-primary btn-block"
+            data-toggle="modal"
+            style="margin-bottom: 6px;"
+            th:attr="data-target='#'+'timelineItem'+${itemId}"
+            type="button">
+        <i class="fa fa-edit"></i><span th:text="${buttonText}"></span>
+    </button>
+    <th:block th:include="profile/timeline/timelineItemForm :: timelineItemForm" />
+</th:block>
+
+</body>
+</html>

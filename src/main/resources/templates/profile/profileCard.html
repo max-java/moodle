@@ -231,43 +231,52 @@
                                             </table>
                                         </div>
                                         <!-- /.post -->
-<!--                                        <h1>Best student</h1>-->
-<!--                                        &lt;!&ndash; Post &ndash;&gt;-->
-<!--                                        <div class="post clearfix">-->
-<!--                                            <table class="table table-hover text-nowrap"-->
-<!--                                                   th:if="${bestStudentList.size()>0}">-->
-<!--                                                <thead>-->
-<!--                                                <tr>-->
-<!--                                                    <th>Имя</th>-->
-<!--                                                    <th></th>-->
-<!--                                                    <th>Лекции</th>-->
-<!--                                                    <th></th>-->
-<!--                                                    <th>Фидбеки</th>-->
-<!--                                                    <th></th>-->
-<!--                                                    <th>Стендапы</th>-->
-<!--                                                </tr>-->
-<!--                                                </thead>-->
-<!--                                                <tbody>-->
-<!--                                                <tr th:each="statistic : ${bestStudentList}">-->
-<!--                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>-->
-<!--                                                    <td th:text="${statistic.getLectures().size()}"></td>-->
-<!--                                                    <td th:text="${statistic.printLectures()}"></td>-->
-<!--                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>-->
-<!--                                                    <td th:text="${statistic.printFeedbacks()}"></td>-->
-<!--                                                    <td th:text="${statistic.getStandups().size()}"></td>-->
-<!--                                                    <td th:text="${statistic.printStandups()}"></td>-->
-<!--                                                </tr>-->
+                                        <!--                                        <h1>Best student</h1>-->
+                                        <!--                                        &lt;!&ndash; Post &ndash;&gt;-->
+                                        <!--                                        <div class="post clearfix">-->
+                                        <!--                                            <table class="table table-hover text-nowrap"-->
+                                        <!--                                                   th:if="${bestStudentList.size()>0}">-->
+                                        <!--                                                <thead>-->
+                                        <!--                                                <tr>-->
+                                        <!--                                                    <th>Имя</th>-->
+                                        <!--                                                    <th></th>-->
+                                        <!--                                                    <th>Лекции</th>-->
+                                        <!--                                                    <th></th>-->
+                                        <!--                                                    <th>Фидбеки</th>-->
+                                        <!--                                                    <th></th>-->
+                                        <!--                                                    <th>Стендапы</th>-->
+                                        <!--                                                </tr>-->
+                                        <!--                                                </thead>-->
+                                        <!--                                                <tbody>-->
+                                        <!--                                                <tr th:each="statistic : ${bestStudentList}">-->
+                                        <!--                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>-->
+                                        <!--                                                    <td th:text="${statistic.getLectures().size()}"></td>-->
+                                        <!--                                                    <td th:text="${statistic.printLectures()}"></td>-->
+                                        <!--                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>-->
+                                        <!--                                                    <td th:text="${statistic.printFeedbacks()}"></td>-->
+                                        <!--                                                    <td th:text="${statistic.getStandups().size()}"></td>-->
+                                        <!--                                                    <td th:text="${statistic.printStandups()}"></td>-->
+                                        <!--                                                </tr>-->
 
-<!--                                                </tbody>-->
-<!--                                            </table>-->
-<!--                                        </div>-->
-<!--                                        &lt;!&ndash; /.post &ndash;&gt;-->
+                                        <!--                                                </tbody>-->
+                                        <!--                                            </table>-->
+                                        <!--                                        </div>-->
+                                        <!--                                        &lt;!&ndash; /.post &ndash;&gt;-->
 
 
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="timeline">
                                         Расписание занятий
+
+                                        <th:block th:if="${isUserCanUpdateTimeline}">
+                                            <th:block th:include="profile/timeline/timelineItemButton :: button"
+                                                      th:with="itemId='empty',
+                                                      item=${emptyTimeline},
+                                                      buttonText='add'">
+                                            </th:block>
+                                        </th:block>
+
                                         <div class="timeline timeline-inverse">
                                             <th:block th:each="dateline : ${timeLines}">
                                                 <!-- timeline time label -->
@@ -283,7 +292,10 @@
                                                     <div th:each="timeline : ${timelinesForDate}">
                                                         <i class="fas fa-envelope bg-primary"></i>
 
-                                                        <th:block th:insert="profile/timeline/timelineItem :: item"></th:block>
+                                                        <th:block
+                                                                th:insert="profile/timeline/timelineItem :: item">
+
+                                                        </th:block>
                                                     </div>
                                                 </th:block>
                                                 <!-- END timeline item -->
@@ -364,7 +376,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label" for="gitLink">Отчество</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" id="userMiddleName" name="userMiddleName"
+                                                    <input class="form-control" id="userMiddleName"
+                                                           name="userMiddleName"
                                                            placeholder="" th:value="${profile.userMiddleName}"
                                                            type="text">
                                                 </div>

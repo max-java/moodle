@@ -24,6 +24,14 @@ public class TimeLineService {
         timeLineRepository.save(timeLine);
     }
 
+    public void delete(TimeLine timeLine) {
+        timeLineRepository.delete(timeLine);
+    }
+
+    public void delete(Long id) {
+        timeLineRepository.deleteById(id);
+    }
+
     public List<TimeLine> getTimelineByStreamId(Long streamTeamProfileId) {
         List<TimeLine> timeline = timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
         if(!userAccessService.isUserHasAccessToSubcription(streamTeamProfileId)) {
