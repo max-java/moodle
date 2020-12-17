@@ -3,8 +3,10 @@
 <body>
 <!-- Default box -->
 <th:block th:fragment="item">
+
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).LECTURE)}">
         <div class="timeline-item">
+            <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
             <h3 style="padding: 10px;"><i class="far fa-clock"></i>
                 <th:block
                         th:text="${timeline.getTime()}">12:05
@@ -16,8 +18,7 @@
                     Support Team
                 </a>
                 <span th:text="${timeline.getEventName()}">
-                                                                        sent you an email
-                                                                    </span>
+                </span>
             </h3>
 
             <div class="timeline-body" th:text="${timeline.getNotes()}">
@@ -46,7 +47,7 @@
                             th:value="${timeline.getEventType()}"
                             type="submit">
                         <div class="info-box">
-                                                                                <span class="info-box-icon bg-gradient-blue">
+                            <span class="info-box-icon bg-gradient-blue">
                                                                                     <i class="fa fa-video"></i>
                                                                                 </span>
                             <div class="info-box-content text-left">
@@ -64,6 +65,7 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).TEAM_STAND_UP)}">
         <div class="timeline-item">
+            <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
             <h3 style="padding: 10px;"><i class="far fa-clock"></i>
                 <th:block
                         th:text="${timeline.getTime()}">12:05
@@ -121,6 +123,7 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).YOUTUBE)}">
         <div class="timeline-item">
+            <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
             <h3 style="padding: 10px;"><i class="far fa-clock"></i>
                 <th:block
                         th:text="${timeline.getTime()}">12:05
@@ -157,12 +160,12 @@
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).VIDEO)}">
         <div class="timeline-item">
+            <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
             <h3 style="padding: 10px;"><i class="far fa-clock"></i>
                 <th:block
                         th:text="${timeline.getTime()}">12:05
                 </th:block>
             </h3>
-
 
             <h3 class="timeline-header">
                 <a href="#" th:text="${timeline.getEventType()}">
@@ -188,5 +191,7 @@
     </th:block>
 
 </th:block>
+
 </body>
 </html>
+

@@ -44,7 +44,7 @@ INSERT INTO users VALUES
 (1, TRUE, 'user@dev', 'Adic', 'Administrator', '$2a$10$XizdxtpAW8xUbxSW.3q4k.bwhqMOcac8OTm8/vKo0VwzKux/8Smnu', 'userdev', 'User Developer', '123123123'),
 (2, TRUE, 'guest@dev', 'Gosha', 'Guest', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'guest', 'User Guest', '123123123'),
 (3, TRUE, 'free@dev', 'fedor', 'Free', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'free', 'User FreeStudent', '123123123'),
-(4, TRUE, 'student@dev', 'Tema', 'Student', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'student', 'User Student', '123123123'),
+(4, TRUE, 'student@dev', 'Tema', 'Student', '$2a$10$7EmxgswE0zIj6EI/f2zX7eNKP2YBaHGETfZH3vqTUpDMrvg6cQg7y', 'student', 'User Student', '123123123'),
 (5, TRUE, 'master@dev', 'Stepa', 'Master', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'master', 'User ScrumMaster', '123123123'),
 (6, TRUE, 'alumnus@dev', 'Alex', 'Alumnus', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'alumnus', 'User Alumnus', '123123123'),
 (7, TRUE, 'lecturer@dev', 'LecturerLast', 'Lecturer', '$2a$10$q0lsQInjeAjygy8ekwxZP.00nacRUMlmkZLd.NP.HD2RJNZm29YPe', 'lecturer', 'User Lecturer', '123123123'),

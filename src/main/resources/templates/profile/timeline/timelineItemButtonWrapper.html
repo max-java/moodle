@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="itemButton">
+    <div class="row pull-right">
+        <div class="col-md-12">
+            <th:block th:if="${isUserCanUpdateTimeline}">
+                <th:block th:include="profile/timeline/timelineItemButton :: button"
+                          th:with="itemId=${timeline.getId()},
+                              item=${timeline},
+                              buttonText='edit'">
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>
+

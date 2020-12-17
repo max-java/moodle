@@ -1,5 +1,7 @@
 package by.jrr.profile.controller;
 
+import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.constant.FormCommand;
 import by.jrr.constant.Endpoint;
 import by.jrr.profile.bean.TimeLine;
 import by.jrr.profile.service.TimeLineService;
@@ -26,11 +28,13 @@ public class TimeLineController {
                                @RequestParam(value = "lectureId", required = false) Long lectureId,
                                @RequestParam(value = "eventName", required = false) String eventName,
                                @RequestParam(value = "notes", required = false) String notes,
-                               @RequestParam(value = "command", required = false) String command
+                               @RequestParam(value = FieldName.FORM_COMMAND, required = false) FormCommand command,
+                               @RequestParam(value = "timelineId", required = false) Long timelineId
     ) {
         switch (command) {
-            case "saveTimeline":
+            case SAVE:
                 timeLineService.save(TimeLine.builder()
+                        .Id(timelineId)
                         .streamTeamProfileId(streamTeamProfileId)
                         .dateTime(dateTime)
                         .courseId(courseId)
@@ -40,6 +44,10 @@ public class TimeLineController {
                         .eventName(eventName)
                         .notes(notes)
                         .build());
+                EventType.LECTURE.equals(eventType);
+                break;
+            case DELETE: // todo: replace with form command
+                timeLineService.delete(timelineId);
                 break;
         }
 

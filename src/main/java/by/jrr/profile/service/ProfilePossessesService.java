@@ -3,7 +3,6 @@ package by.jrr.profile.service;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.feedback.bean.EntityType;
-import by.jrr.moodle.bean.CourseToLecture;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.CourseToLectureService;
@@ -13,8 +12,6 @@ import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.repository.ProfilePossessesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,8 +35,9 @@ public class ProfilePossessesService {
         Optional<ProfilePossesses> possess = profilePossessesRepository.findByProfileIdAndEntityId(profleId, entityId);
         return possess.isPresent();
     }
+
     public boolean isCurrentUserOwner(Long entityId) {
-        if(userAccessService.isCurrentUserAuthenticated()) {
+        if (userAccessService.isCurrentUserAuthenticated()) {
             Optional<ProfilePossesses> possess =
                     profilePossessesRepository.findByProfileIdAndEntityId(profileService.getCurrentUserProfile().getId(), entityId);
             return possess.isPresent();
@@ -50,11 +48,11 @@ public class ProfilePossessesService {
 
     public void savePossessForCurrentUser(Long entityId, EntityType type) {
 
-            ProfilePossesses possess = ProfilePossesses.builder()
-                    .profileId(profileService.getCurrentUserProfile().getId())
-                    .entityId(entityId)
-                    .entityType(type)
-                    .build();
+        ProfilePossesses possess = ProfilePossesses.builder()
+                .profileId(profileService.getCurrentUserProfile().getId())
+                .entityId(entityId)
+                .entityType(type)
+                .build();
         try {
             profilePossessesRepository.save(possess);
         } catch (Exception ex) {
@@ -63,14 +61,14 @@ public class ProfilePossessesService {
     }
 
     public boolean isUserHasAccessToReadProfile(Profile profile) { // TODO: 16/06/20 replace predicates with check methods
-        if(!profile.getUser().hasRole(UserRoles.ROLE_TEAM)
+        if (!profile.getUser().hasRole(UserRoles.ROLE_TEAM)
                 || !profile.getUser().hasRole(UserRoles.ROLE_STREAM)) {
             return true;
         }
-        if(profileService.getCurrentUserProfile().getId().equals(profile.getOwnerProfileId())) {
+        if (profileService.getCurrentUserProfile().getId().equals(profile.getOwnerProfileId())) {
             return true;
         }
-        if(profile.getSubscribers()
+        if (profile.getSubscribers()
                 .stream().anyMatch(sub -> sub.getSubscriberProfileId().equals(profileService.getCurrentUserProfile().getId()))) {
             return true;
         }
@@ -94,6 +92,7 @@ public class ProfilePossessesService {
 
 
     }
+
     public boolean isUserHasAccessToPractice(PracticeQuestion practiceQuestion) { // TODO: 24/06/20 this should be cached as List of lectures that user has access to and moved into userAccessService
 
         //user could have access only to subscribed and approved course lectures and practice in course
@@ -118,6 +117,18 @@ public class ProfilePossessesService {
 
         return idsOfpracticeQuestionsUserHasAccessTo.contains(practiceQuestion.getId());
 
+    }
 
+    public boolean isUserSubscriptionApproved(Profile profile) {
+        return profile.getSubscribers().stream()
+                .filter(sub -> sub.getStatus().equals(SubscriptionStatus.APPROVED))
+                .filter(sub -> sub.getSubscriberProfileId().equals(profileService.getCurrentUserProfileId()))
+                .collect(Collectors.toList()).size() > 0;
+    }
+
+    public boolean isUserCanUpdateTimelineOn(Profile profile) {
+        return (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)
+                || UserAccessService.hasRole(UserRoles.ROLE_LECTURER))
+                && isUserSubscriptionApproved(profile);
     }
 }
