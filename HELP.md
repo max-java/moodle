@@ -2,6 +2,8 @@
 
 # Roles and passwords:
 lecturer - lecturer - ROLE_LECTURER
+student - student - ROLE_STUDENT
+userdev - sercret - ROLE_ADMIN
 
 ### Reference Documentation
 For further reference, please consider the following sections:
