@@ -9,6 +9,7 @@ import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
 import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.dto.UserBalanceSummaryDto;
 import by.jrr.balance.service.ContractService;
 import by.jrr.balance.service.OperationCategoryService;
 import by.jrr.balance.service.OperationRowService;
@@ -101,10 +102,11 @@ public class StreamController {
             mov.addObject("FieldName", new FieldName());
             //blank instances for forms can work to add
             mov.addObject("blankRow", new OperationRow());
+            mov.addObject("contract", new Contract());
+
             mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
             mov.addObject("total", operationRowService.summariesForStream(profileId));
             mov.addObject("contracts", contractService.findContractsForStream(profileId));
-            mov.addObject("contract", new Contract());
             mov.addObject("contractTypes", contractService.getContractTypes());
 
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
@@ -113,8 +115,11 @@ public class StreamController {
             //user billing -> should be moved to userProfileController for admins
             //todo create Dto for this ? Rest endpoint? Separate controller for user? Move to separate controller for user.
             List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
+            UserBalanceSummaryDto userTotal = operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN);
+            operationRowService.calculateAndSetTotalUserSalary(userOperations, userTotal);
             mov.addObject("userOperationRows", userOperations);
-            mov.addObject("userTotal", operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN));
+            mov.addObject("userTotal", userTotal);
+            mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
 
         } else {
             mov.setViewName(View.PAGE_404);

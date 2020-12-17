@@ -31,6 +31,7 @@ public class SummaryOperations {
 
     private BigDecimal invoiceDebt = ZERO;
     private BigDecimal contractDebt = ZERO;
+    private BigDecimal salary = ZERO;
 
     private Currency currency;
 
@@ -79,6 +80,7 @@ public class SummaryOperations {
 
         this.invoiceDebt = this.invoiceDebt.setScale(2, RoundingMode.CEILING);
         this.contractDebt = this.contractDebt.setScale(2, RoundingMode.CEILING);
+        this.salary = this.salary.setScale(2, RoundingMode.CEILING);
     }
 
 }
