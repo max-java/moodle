@@ -23,7 +23,7 @@ public class ReviewService {
     ProfilePossessesService pss;
 
     public Review save(Review review) {
-        if (review.getId()== null) {
+        if (review.getId() == null) {
             review.setCreatedDate(LocalDateTime.now()); //set created timestamp
         }
         return reviewRepository.save(review);

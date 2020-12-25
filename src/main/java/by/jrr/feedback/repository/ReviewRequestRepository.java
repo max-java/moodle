@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ReviewRequestRepository extends PagingAndSortingRepository<ReviewRequest, Long> {
-        List<ReviewRequest> findAllByRequesterProfileId(Long id);
+    List<ReviewRequest> findAllByRequesterProfileId(Long id);
 }
