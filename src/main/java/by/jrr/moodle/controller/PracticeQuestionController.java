@@ -131,9 +131,11 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
     }
 
 
+
     private ModelAndView redirectToCodeReview(Long issueId, PracticeQuestion issue, HttpServletRequest request) {
         issue = practiceQuestionService.findById(issueId).get();
         ReviewRequest reviewRequest = feedbackService.createNewReviewRequest(issue);
         return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_FORM+"/"+reviewRequest.getId());
+        //@max-bookmark
     }
 }

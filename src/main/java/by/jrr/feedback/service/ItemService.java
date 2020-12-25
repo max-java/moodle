@@ -4,6 +4,7 @@ import by.jrr.feedback.bean.EmptyReviewable;
 import by.jrr.feedback.bean.Item;
 import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.bean.Reviewable;
+import by.jrr.feedback.mappers.ReviewableMapper;
 import by.jrr.feedback.repository.ItemRepository;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.PracticeQuestionService;
@@ -44,6 +45,11 @@ public class ItemService {
                 .orElseGet(() -> createAndSaveItem(reviewedEntity));
     }
 
+    public Item getOrCreateItem(Reviewable reviewable) {
+        return itemRepository.findByReviewedEntityIdAndReviewedItemType(reviewable.getId(), reviewable.getType())
+                .orElseGet(() -> createAndSaveItem(reviewable));
+    }
+
     public Item getItemByReviewRequest(ReviewRequest reviewRequest) {
         Optional<Item> item = itemRepository.findById(reviewRequest.getItemId());
         try {
@@ -57,9 +63,7 @@ public class ItemService {
     }
 
     private Item createAndSaveItem(Reviewable reviewedEntity) {
-        Item item = new Item();
-        item.setReviewedEntityId(reviewedEntity.getId());
-        item.setReviewedItemType(reviewedEntity.getType());
+        Item item = ReviewableMapper.OF.reviewableToItem(reviewedEntity);
         return itemRepository.save(item);
     }
 

@@ -42,9 +42,17 @@ public class ReviewRequestService {
         return reviewRequestRepository.save(reviewRequest);
     }
 
-    public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) { // TODO: 24/06/20 consider if it should be deleted: RR could not be updated! (or could it?)
+    public ReviewRequest createRequestForReview(Reviewable reviewable) {
+        // create reviewable Item
+        return null;
+
+    }
+
+    public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {
+        // TODO: 24/06/20 consider if it should be deleted: RR could not be updated! (or could it?)
         // only reviewer notes and link to request could be updated,
-        // because other fields from save form data endpoint comes empty (todo is it true and whY? Is it fixable and should it be? Otherwise could be secure? could user modify fields in POST and save new IDs?
+        // because other fields from save form data endpoint comes empty (
+        // todo is it true and whY? Is it fixable and should it be? Otherwise could be secure? could user modify fields in POST and save new IDs?
         Optional<ReviewRequest> savedReviewRequest = reviewRequestRepository.findById(reviewRequest.getId());
         if (savedReviewRequest.isPresent()) {
             if(userAccessService.isCurrentUserIsAdmin()
