@@ -16,7 +16,8 @@
                     </div>
                     <div class="btn-group col-md-4">
                         <th:block th:include="feedback/elements/requestForReviewEditButton :: button"
-                                  th:with="buttonText=${'Code Review Request'}">
+                                  th:with="buttonText=${'Code Review Request'},
+                                  saveButtonCommand=${'save'}">
                         </th:block>
                     </div>
                 </div>

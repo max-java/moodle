@@ -39,11 +39,25 @@ public class ReviewRequestController {
     ProfilePossessesService pss;
 
     @AtLeatStudent
-    @PostMapping(Endpoint.REQUEST_FOR_REVIEW) //todo replace by map with mapper or DtoEntity
-    public ModelAndView createRequestForReview(@RequestParam Map<String,String> requestForReviewDtoMap) {
+    @PostMapping(Endpoint.REQUEST_FOR_REVIEW)
+    public ModelAndView updateRequestForReview(
+            @RequestParam Map<String, String> requestForReviewDtoMap,
+            @RequestParam(value = "command", required = false) String command) {
         RequestForReviewDto requestForReviewDto = RequestForReviewDtoMapper.OF.paramMapToRequestForReviewDto(requestForReviewDtoMap);
-        ReviewRequest requestForReview = feedbackService.createNewRequestForReview(requestForReviewDto);
-        return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + requestForReview.getId());
+        switch (command) {
+            case "save":
+                ReviewRequest requestForReview = feedbackService.createNewRequestForReview(requestForReviewDto);
+                return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + requestForReview.getId());
+            case "update":
+                feedbackService.updateRequestForReview(requestForReviewDto);
+                return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + requestForReviewDto.getId());
+            case "delete":
+                feedbackService.deleteRequestForReview(requestForReviewDto.getId());
+                return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_LIST);
+            default:
+                return new ModelAndView("redirect:/400");
+        }
+
     }
 
 
@@ -80,7 +94,7 @@ public class ReviewRequestController {
         if (addReview.isPresent()) {
             ModelAndView mov = setModelAndViewDataForReviewRequest(View.CODE_REVIEW_FORM, id);
             Review newReview = new Review();
-            if(mov.getModel().get("reviewRequest") != null) {
+            if (mov.getModel().get("reviewRequest") != null) {
                 ReviewRequest revReq = (ReviewRequest) mov.getModel().get("reviewRequest");
                 newReview.setReviewRequestId(revReq.getId());
                 newReview.setReviewedEntityId(revReq.getReviewedEntityId());
@@ -107,8 +121,7 @@ public class ReviewRequestController {
             ModelAndView mov = userDataToModelService.setData(new ModelAndView());
             mov.setViewName(View.PAGE_404);
             return mov;
-        }
-        else {
+        } else {
             ModelAndView mov = userDataToModelService.setData(new ModelAndView());
             mov.setViewName(View.PAGE_404);
             return mov;
@@ -134,14 +147,17 @@ public class ReviewRequestController {
             ReviewRequest revReq = reviewRequest.get();
             Profile requesterProfile = profileService.findProfileByProfileId(revReq.getRequesterProfileId()).orElseGet(Profile::new);
             Item item = feedbackService.getItemByReviewRequest(revReq);
+            revReq.setItem(item);
             String reviewedEntityLink = LinkGenerator.getLinkTo(item.getReviewedEntity());
             String requesterProfileLink = LinkGenerator.getLinkTo(requesterProfile);
 
             mov.addObject("reviewRequest", revReq);
+            mov.addObject("requestForReviewDto", RequestForReviewDtoMapper.OF.reviewRequestToRequestForReviewDto(revReq));
             mov.addObject("item", item);
             mov.addObject("reviewedLink", reviewedEntityLink);
             mov.addObject("requesterProfile", requesterProfile);
             mov.addObject("requesterProfileLink", requesterProfileLink);
+            mov.addObject("Endpoint", new Endpoint());
         }
         return mov;
 

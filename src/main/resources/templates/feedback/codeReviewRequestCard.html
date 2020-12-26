@@ -22,17 +22,28 @@
             <div class="card card-solid">
                 <div class="card-body">
 
-                    <form method="post">
-                        <input type="hidden" name="reviewRequestId" th:value="${reviewRequest.getId()}" />
-                        <button type="submit" name="addReview" value="addReview">addReview</button>
-                    </form>
-
                     <div class="card" th:fragment="issueCard">
                         <div class="card-body">
-                            <a th:href="${reviewedLink}">
-                                <h1 class="card-title" th:text="${item.getReviewedEntity().getName()}"></h1>
-                            </a>
-                            <h3>&nbsp;</h3>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h2>Issue:  </h2>
+                                    <a th:href="${reviewedLink}">
+                                        <h1 class="card-title" th:text="${item.getReviewedEntity().getName()}"></h1>
+                                    </a>
+                                </div>
+                                <div class="btn-group col-md-4">
+                                    <th:block th:include="feedback/elements/requestForReviewEditButton :: button"
+                                              th:with="buttonText=${'Edit'},
+                                              saveButtonCommand=${'update'}">
+                                    </th:block>
+                                    <form method="post">
+                                        <input type="hidden" name="reviewRequestId" th:value="${reviewRequest.getId()}" />
+                                        <button type="submit" name="addReview" value="addReview">addReview</button>
+                                    </form>
+                                </div>
+                            </div>
+
                             <hr />
                             <div>&nbsp;</div>
                             <div class="row">

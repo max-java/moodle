@@ -39,7 +39,6 @@ public class FeedbackService {
     ReviewService reviewService;
     ProfilePossessesService pss;
 
-    @Wip
     public ReviewRequest createNewRequestForReview(final RequestForReviewDto requestForReviewDto) {
         final Reviewable reviewable = RequestForReviewDtoMapper.OF.requestForReviewDtoToReviewable(requestForReviewDto);
         final Item item = itemService.getOrCreateItem(reviewable);
@@ -49,6 +48,14 @@ public class FeedbackService {
         return reviewRequestService.createRequestForReview(rr);
     }
 
+    public ReviewRequest updateRequestForReview(final RequestForReviewDto requestForReviewDto) {
+        return reviewRequestService.updateMessageAndLinkOnReviewRequest(
+                requestForReviewDto.getId(),
+                requestForReviewDto.getRequesterNotes(),
+                requestForReviewDto.getLink());
+    }
+
+    @Deprecated//(since = "2020-12-26: use createNewRequestForReview", forRemoval = true)
     public ReviewRequest createNewReviewRequest(Reviewable reviewable) {
         Item item = itemService.getItemByReviewable(reviewable);
         return reviewRequestService.createNewReviewRequest(item, reviewable);
@@ -68,8 +75,12 @@ public class FeedbackService {
         return itemService.getItemByReviewRequest(reviewRequest);
     }
 
+    @Deprecated//(since = "2020-12-26: use updateRequestForReview", forRemoval = true)
     public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {
-        return reviewRequestService.updateMessageAndLinkOnReviewRequest(reviewRequest);
+        return reviewRequestService.updateMessageAndLinkOnReviewRequest(
+                reviewRequest.getId(),
+                reviewRequest.getRequesterNotes(),
+                reviewRequest.getLink());
     }
 
     public ReviewRequest closeReviewRequest(ReviewRequest reviewRequest) {
@@ -89,5 +100,9 @@ public class FeedbackService {
 
 
         return reviewRequestService.findReviewRequestForUser(profileId);
+    }
+
+    public void deleteRequestForReview(Long id) {
+        reviewRequestService.deleteRequestForReviewById(id);
     }
 }

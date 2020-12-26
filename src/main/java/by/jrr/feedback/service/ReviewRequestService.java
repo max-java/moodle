@@ -58,27 +58,50 @@ public class ReviewRequestService {
         rr.setReviewResultOnClosing(ReviewResult.NONE);
     }
 
-    public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {
-        // TODO: 24/06/20 consider if it should be deleted: RR could not be updated! (or could it?)
-        // only reviewer notes and link to request could be updated,
-        // because other fields from save form data endpoint comes empty (
-        // todo is it true and whY? Is it fixable and should it be? Otherwise could be secure? could user modify fields in POST and save new IDs?
-        Optional<ReviewRequest> savedReviewRequest = reviewRequestRepository.findById(reviewRequest.getId());
+    /***
+     * Most of ReviewRequest values are not changed during life cycle. Only three fields considering changeable:
+     * - requester message
+     * - link to reviewed item
+     * - review result
+     * That's way it's redundant to change ReviewRequest all at once, but repository methods should be changed to
+     * update only 2 fields. Here:
+     *     private String requesterNotes;
+     *     private String link;
+     * @param reviewId
+     * @param requesterNotes
+     * @param link
+     * @return ReviewRequest
+     *
+     */
+    public ReviewRequest updateMessageAndLinkOnReviewRequest(Long reviewId, String requesterNotes, String link) {
+
+        Optional<ReviewRequest> savedReviewRequest = reviewRequestRepository.findById(reviewId);
         if (savedReviewRequest.isPresent()) {
             if(userAccessService.isCurrentUserIsAdmin()
-                    || pss.isUserOwner(profileService.getCurrentUserProfileId(), reviewRequest.getId())) {
+                    || pss.isUserOwner(profileService.getCurrentUserProfileId(), reviewId)) { //todo: move this clause to isUserCanUpdateRequestForReview
                 ReviewRequest updatedRequest = savedReviewRequest.get();
-                updatedRequest.setRequesterNotes(reviewRequest.getRequesterNotes());
-                updatedRequest.setLink(reviewRequest.getLink());
+                updatedRequest.setRequesterNotes(requesterNotes);
+                updatedRequest.setLink(link);
                 return reviewRequestRepository.save(updatedRequest);
             }
         }
-        return null; // TODO: 28/05/20 return Optional and handle it with logger in controller
+        return null; // TODO: 26/12/20 should throw EntityNotFoundException if not present?
     }
 
+
+    /***
+     * Most of ReviewRequest values are not changed during life cycle. Only three fields considering changeable:
+     * - requester message
+     * - link to reviewed item
+     * - review result
+     * That's way it's redundant to change ReviewRequest all at once, but repository methods should be changed to
+     * update only 2 fields. Here:
+     *     private LocalDateTime closedDate;
+     *     private ReviewResult reviewResultOnClosing;
+     * @param reviewRequest
+     * @return
+     */
     public ReviewRequest closeReviewRequest(ReviewRequest reviewRequest) {
-        // only status on close and closed date could be updated
-        // because other fields from save form data endpoint comes empty
         Optional<ReviewRequest> savedReviewRequest = reviewRequestRepository.findById(reviewRequest.getId());
         if (savedReviewRequest.isPresent() && userAccessService.isCurrentUserIsAdmin()) {
             ReviewRequest updatedRequest = savedReviewRequest.get();
@@ -87,7 +110,7 @@ public class ReviewRequestService {
             return reviewRequestRepository.save(updatedRequest);
 
         }
-        return null; // TODO: 28/05/20 return Optional and handle it with logger in controller
+        return null; // TODO: 26/12/20 should throw EntityNotFoundException if not present?
     }
 
     public List<ReviewRequest> findReviewRequestForUser(Long profileId) {
@@ -117,5 +140,16 @@ public class ReviewRequestService {
         rr.getItem()
             .setReviewedEntity(itemService.getReviewableByReviewableId(rr.getReviewedEntityId()));
         return rr;
+    }
+
+    public void deleteRequestForReviewById(Long id){
+        if(reviewRequestRepository.existsById(id)) {
+            ReviewRequest rr = reviewRequestRepository.findById(id).get();
+            setReviewsToReviewRequest(rr);
+            reviewService.deleteReviews(rr.getReviews());
+            reviewRequestRepository.deleteById(id);
+            //todo: delete pss.
+        }
+
     }
 }

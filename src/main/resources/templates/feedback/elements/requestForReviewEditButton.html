@@ -10,7 +10,9 @@
             type="button">
         <i class="fa fa-comment"></i><span th:text="${buttonText}"></span>
     </button>
-    <th:block th:include="feedback/elements/requestForReviewForm :: form" />
+    <th:block th:include="feedback/elements/requestForReviewForm :: form"
+              th:with="saveOrUpdateCommand=${saveButtonCommand}"
+    />
 </th:block>
 
 </body>

@@ -60,10 +60,10 @@
                         <button class="btn btn-default pull-left" data-dismiss="modal" type="button">
                             Discard
                         </button>
-                        <button class="btn btn-primary" name="submit" type="submit" value="save">
+                        <button class="btn btn-primary" name="command" type="submit" th:value="${saveOrUpdateCommand}">
                             Save
                         </button>
-                        <button class="btn btn-primary" name="submit" type="submit" value="delete">
+                        <button class="btn btn-danger" name="command" type="submit" value="delete">
                             Delete
                         </button>
                     </div>
