@@ -26,13 +26,16 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Code review Requests</h3>
+                                    <h3 class="card-title">Code review Requests
+                                        <span class="right badge badge-danger"
+                                              th:text="${reviewRequestPage.getTotalElements()}"></span>
+                                    </h3>
 
                                     <div class="card-tools">
                                         <form>
-                                            <div class="input-group input-group-sm" style="width: 150px;">
+                                            <div class="input-group input-group-lg">
 
-                                                <input class="form-control float-right" name="searchTerm"
+                                                <input class="form-control float-right form-control-lg" name="searchTerm"
                                                        placeholder="Search"
                                                        type="text">
 
@@ -60,12 +63,14 @@
                                         <tbody>
                                         <tr th:each="rr : ${reviewRequestPage}">
                                             <td th:text="${rr.getRequesterProfile().getUser().getFullUserName()}"></td>
-                                            <td><a th:href="${'/profile/'+rr.getRequesterProfileId()}">open Profile</a></td>
+                                            <td><a th:href="${'/profile/'+rr.getRequesterProfileId()}">open Profile</a>
+                                            </td>
                                             <td th:text="${rr.getItem().getReviewedEntity().getName()}"></td>
                                             <td th:text="${rr.getCreatedDate()}"></td>
                                             <td th:text="${rr.getReviewResultOnClosing()}"></td>
                                             <td th:text="${rr.getItem().getReviewedItemType()}"></td>
-                                            <td><a th:href="${'/reviewRequest/'+rr.getId()}">open Review Request</a></td>
+                                            <td><a th:href="${'/reviewRequest/'+rr.getId()}">open Review Request</a>
+                                            </td>
                                         </tr>
 
                                         </tbody>
@@ -86,28 +91,32 @@
                                 th:if="${reviewRequestPage.hasPrevious()}">
                                 <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
                                 +searchTerm+
-                                '&page='+(reviewRequestPage.getNumber())}" th:text="${(reviewRequestPage.getNumber())}"></a>
+                                '&page='+(reviewRequestPage.getNumber())}"
+                                   th:text="${(reviewRequestPage.getNumber())}"></a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link text-danger" th:href="${'/reviewRequests/?searchTerm='
                                 +searchTerm+
-                                '&page='+(reviewRequestPage.getNumber()+1)}" th:text="${(reviewRequestPage.getNumber()+1)}"></a>
+                                '&page='+(reviewRequestPage.getNumber()+1)}"
+                                   th:text="${(reviewRequestPage.getNumber()+1)}"></a>
                             </li>
                             <li class="page-item"
                                 th:if="${reviewRequestPage.hasNext()}">
                                 <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
                                 +searchTerm+
-                                '&page='+(reviewRequestPage.getNumber()+2)}" th:text="${(reviewRequestPage.getNumber()+2)}"></a>
+                                '&page='+(reviewRequestPage.getNumber()+2)}"
+                                   th:text="${(reviewRequestPage.getNumber()+2)}"></a>
                             </li>
                             <li class="page-item"
-                                th:if="${reviewRequestPage.hasNext()}"}>
+                                th:if="${reviewRequestPage.hasNext()}" }>
                                 <a class="page-link" href="#">...</a></li>
 
                             <li class="page-item"
                                 th:if="${reviewRequestPage.hasNext()}">
                                 <a class="page-link" th:href="${'/reviewRequests/?searchTerm='
                                 +searchTerm+
-                                '&page='+(reviewRequestPage.getTotalPages())}" th:text="${(reviewRequestPage.getTotalPages())}">&laquo;</a>
+                                '&page='+(reviewRequestPage.getTotalPages())}"
+                                   th:text="${(reviewRequestPage.getTotalPages())}">&laquo;</a>
                             </li>
                             <li class="page-item"
                                 th:if="${reviewRequestPage.hasNext()}">
