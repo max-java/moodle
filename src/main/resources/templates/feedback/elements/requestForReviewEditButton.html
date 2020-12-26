@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="button">
+    <button class="btn btn-outline-primary btn-block btn-flat"
+            data-target="#modal-default"
+            data-toggle="modal"
+            style="margin-bottom: 6px;"
+            th:attr="data-target='#'+'rr'+${requestForReviewDto.id}"
+            type="button">
+        <i class="fa fa-comment"></i><span th:text="${buttonText}"></span>
+    </button>
+    <th:block th:include="feedback/elements/requestForReviewForm :: form" />
+</th:block>
+
+</body>
+</html>
+

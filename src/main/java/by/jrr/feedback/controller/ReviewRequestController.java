@@ -44,8 +44,8 @@ public class ReviewRequestController {
         RequestForReviewDto requestForReviewDto = RequestForReviewDtoMapper.OF.paramMapToRequestForReviewDto(requestForReviewDtoMap);
         ReviewRequest requestForReview = feedbackService.createNewRequestForReview(requestForReviewDto);
         return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + requestForReview.getId());
-
     }
+
 
     @AtLeatStudent
     @GetMapping(Endpoint.REVIEW_REQUEST_FORM + "/{id}")
@@ -63,7 +63,6 @@ public class ReviewRequestController {
     @AtLeatStudent
     @GetMapping(Endpoint.REVIEW_REQUEST_CARD + "/{id}")
     public ModelAndView openReviewRequestCard(@PathVariable Long id) {
-
         return setModelAndViewDataForReviewRequest(View.CODE_REVIEW_REQUEST_CARD, id);
     }
 

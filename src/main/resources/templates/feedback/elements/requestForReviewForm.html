@@ -2,40 +2,77 @@
 <body>
 
 <th:block th:fragment="form">
+    <div class="modal fade" th:id="|rr${requestForReviewDto.id}|">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
 
-    <form method="post" role="form" th:action="${Endpoint.REQUEST_FOR_REVIEW}">
-        <div class="card-body">
-            <input class="form-control" th:name="${requestForReviewDto.ID}" th:value="${requestForReviewDto.id}" type="text">
-            <input class="form-control" th:name="${requestForReviewDto.ITEM_ID}" th:value="${requestForReviewDto.itemId}" type="text">
-            <input class="form-control" th:name="${requestForReviewDto.REVIEWED_ENTITY_ID}" th:value="${requestForReviewDto.reviewedEntityId}" type="text">
-            <input class="form-control" th:name="${requestForReviewDto.REVIEWED_ENTITY_TYPE}" th:value="${requestForReviewDto.reviewedEntityType}" type="text">
+                <div class="modal-header">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"></h4>
+                </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Message</label>
-                        <textarea class="form-control" rows="3" th:name="${requestForReviewDto.REQUESTER_NOTES}" th:value="${requestForReviewDto.requesterNotes}"> </textarea>
+                <form method="post" role="form" th:action="${Endpoint.REQUEST_FOR_REVIEW}">
+                    <div class="card-body">
+                        <input class="form-control"
+                               th:name="${requestForReviewDto.ID}"
+                               th:value="${requestForReviewDto.id}"
+                               type="hidden">
+                        <input class="form-control"
+                               th:name="${requestForReviewDto.ITEM_ID}"
+                               th:value="${requestForReviewDto.itemId}"
+                               type="hidden">
+                        <input class="form-control"
+                               th:name="${requestForReviewDto.REVIEWED_ENTITY_ID}"
+                               th:value="${requestForReviewDto.reviewedEntityId}"
+                               type="hidden">
+                        <input class="form-control"
+                               th:name="${requestForReviewDto.REVIEWED_ENTITY_TYPE}"
+                               th:value="${requestForReviewDto.reviewedEntityType}"
+                               type="hidden">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea class="form-control" rows="5"
+                                              th:name="${requestForReviewDto.REQUESTER_NOTES}"
+                                              th:value="${requestForReviewDto.requesterNotes}">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Code review request link</label>
+                                    <input class="form-control"
+                                           placeholder="Put link to gitHub here"
+                                           required th:name="${requestForReviewDto.LINK}"
+                                           th:value="${requestForReviewDto.link}"
+                                           type="text" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="form-group">
-                        <label>Code review request link</label>
-                        <input type="text"
-                               class="form-control"
-                               th:name="${requestForReviewDto.LINK}" th:value="${requestForReviewDto.link}"
-                               placeholder="Put link to gitHub here"
-                               required>
+                    <!-- /.card-body -->
+                    <div class="modal-footer">
+                        <button class="btn btn-default pull-left" data-dismiss="modal" type="button">
+                            Discard
+                        </button>
+                        <button class="btn btn-primary" name="submit" type="submit" value="save">
+                            Save
+                        </button>
+                        <button class="btn btn-primary" name="submit" type="submit" value="delete">
+                            Delete
+                        </button>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <button class="btn btn-primary" name="submit" type="submit" value="save">request</button>
-                </div>
+                </form>
             </div>
-
+            <!-- /.modal-content -->
         </div>
-        <!-- /.card-body -->
-
-    </form>
-
+        <!-- /.modal-dialog -->
+    </div>
 </th:block>
-
 </body>
 </html>
