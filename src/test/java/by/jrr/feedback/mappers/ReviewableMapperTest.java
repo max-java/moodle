@@ -13,9 +13,9 @@ class ReviewableMapperTest {
     void reviewableToItem() {
         Reviewable reviewable = makeReviewable();
         Item expectedItem = makeItem();
-        Item actualIatem = ReviewableMapper.OF.reviewableToItem(reviewable);
+        Item actualItem = ReviewableMapper.OF.reviewableToItem(reviewable);
 
-        assertEquals(expectedItem, actualIatem);
+        assertEquals(expectedItem, actualItem);
     }
 
     private Reviewable makeReviewable() {

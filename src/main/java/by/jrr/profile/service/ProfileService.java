@@ -201,7 +201,6 @@ public class ProfileService {
             return profile;
         }
         return null; // TODO: 04/11/2020 handle NPE
-
     }
 
     public Long getCurrentUserProfileId() {

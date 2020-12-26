@@ -35,6 +35,14 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteReviewById(Long id) {
+        reviewRepository.deleteById(id);
+    }
+
+    public void deleteReviews(List<Review> reviews) {
+        reviewRepository.deleteAll(reviews);
+    }
+
     private Review setReviewerProfileToReviewByProfileId(Review review) {
         if (review.getReviewerProfileId() != null) {
             review.setReviewerProfile(profileService.findProfileByProfileId(review.getReviewerProfileId()).orElseGet(Profile::new));
