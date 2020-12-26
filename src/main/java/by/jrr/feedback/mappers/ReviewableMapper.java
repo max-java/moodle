@@ -12,7 +12,7 @@ public interface ReviewableMapper {
 //    @Mapping(source = "", target = "Id")
 //    @Mapping(source = "", target = "reviewedEntityId")
 //    @Mapping(source = "", target = "reviewedItemType")
-//    Item requestFroReviewDtoToReviewable(Reviewable reviewable);
+//    Item requestForReviewDtoToReviewable(Reviewable reviewable);
 
     default Item reviewableToItem(Reviewable reviewable) {
         Item item = new Item();

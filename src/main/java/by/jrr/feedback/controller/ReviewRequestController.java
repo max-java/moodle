@@ -8,6 +8,7 @@ import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
 import by.jrr.feedback.bean.*;
 import by.jrr.feedback.elements.RequestForReviewDto;
+import by.jrr.feedback.mappers.RequestForReviewDtoMapper;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfilePossessesService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -36,25 +38,11 @@ public class ReviewRequestController {
     @Autowired
     ProfilePossessesService pss;
 
-
     @AtLeatStudent
     @PostMapping(Endpoint.REQUEST_FOR_REVIEW) //todo replace by map with mapper or DtoEntity
-    public ModelAndView createRequestForReview(
-            @RequestParam(value = RequestForReviewDto.ID, required = false) Long id,
-            @RequestParam(value = RequestForReviewDto.ITEM_ID, required = false) Long itemId,
-            @RequestParam(value = RequestForReviewDto.REVIEWED_ENTITY_ID, required = false) Long reviewedEntityId,
-            @RequestParam(value = RequestForReviewDto.REVIEWED_ENTITY_TYPE, required = false) EntityType reviewedEntityType,
-            @RequestParam(value = RequestForReviewDto.REQUESTER_NOTES, required = false) String requesterNotes,
-            @RequestParam(value = RequestForReviewDto.LINK, required = false) String link
-    ) {
-        ReviewRequest requestForReview = feedbackService.createNewRequestForReview(RequestForReviewDto.builder()
-                .Id(id)
-                .itemId(itemId)
-                .reviewedEntityId(reviewedEntityId)
-                .reviewedEntityType(reviewedEntityType)
-                .requesterNotes(requesterNotes)
-                .link(link)
-                .build());
+    public ModelAndView createRequestForReview(@RequestParam Map<String,String> requestForReviewDtoMap) {
+        RequestForReviewDto requestForReviewDto = RequestForReviewDtoMapper.OF.paramMapToRequestForReviewDto(requestForReviewDtoMap);
+        ReviewRequest requestForReview = feedbackService.createNewRequestForReview(requestForReviewDto);
         return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + requestForReview.getId());
 
     }

@@ -41,7 +41,7 @@ public class FeedbackService {
 
     @Wip
     public ReviewRequest createNewRequestForReview(final RequestForReviewDto requestForReviewDto) {
-        final Reviewable reviewable = RequestForReviewDtoMapper.OF.requestFroReviewDtoToReviewable(requestForReviewDto);
+        final Reviewable reviewable = RequestForReviewDtoMapper.OF.requestForReviewDtoToReviewable(requestForReviewDto);
         final Item item = itemService.getOrCreateItem(reviewable);
         requestForReviewDto.setItemId(item.getId());
 
