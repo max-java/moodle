@@ -1,5 +1,7 @@
 package by.jrr.constant;
 
+import by.jrr.common.annotations.ToDeprecated;
+
 public class Endpoint {
     public static final String HOME = "/";
 
@@ -31,9 +33,12 @@ public class Endpoint {
     public static final String PROFILE_TIMELINE = "/timeline";
 
 
+    @ToDeprecated("use request for review forms")
     public static final String REVIEW_REQUEST_FORM = "/reviewRequest/newRequest"; // TODO: 27/05/20 change mapping names, maybe add ?newRequest=true for this?
     public static final String REVIEW_REQUEST_CARD = "/reviewRequest"; // TODO: 27/05/20 change mapping names
     public static final String REVIEW_REQUEST_LIST = "/reviewRequests"; // TODO: 27/05/20 change mapping names
+    public static final String REQUEST_FOR_REVIEW = "/requestForReview"; // TODO: 27/05/20 change mapping names
+
 
     public static final String REVIEW_FORM = "/review/new"; // TODO: 28/05/20 tbd optimize mapping and views
     public static final String REVIEW_CARD = "/review";
