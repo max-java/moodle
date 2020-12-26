@@ -41,6 +41,7 @@ public class ReviewRequestPageableSearchService {
         if(searchTerm.isPresent()) {
             List<ReviewRequest> reviewRequestList = searchReviewRequestByAllReviewRequestFields(searchTerm.get());
             if (reviewRequestList.size()!= 0) {
+                reviewRequestList.sort(Comparator.comparing(ReviewRequest::getCreatedDate));
 
                 // TODO: 26/05/20 this pagination should be moved in a static method
                 Pageable pageable = PageRequest.of(page, elem);
