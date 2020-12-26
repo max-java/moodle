@@ -1,26 +1,22 @@
 package by.jrr.feedback.service;
 
-import by.jrr.auth.bean.User;
+import by.jrr.common.annotations.Wip;
 import by.jrr.feedback.bean.Item;
 import by.jrr.feedback.bean.Review;
 import by.jrr.feedback.bean.ReviewRequest;
 import by.jrr.feedback.bean.Reviewable;
+import by.jrr.feedback.elements.RequestForReviewDto;
 import by.jrr.feedback.repository.ReviewRequestRepository;
-import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Transient;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import by.jrr.feedback.mappers.RequestForReviewDtoMapper;
 
 /**
  * Facade for all services
@@ -42,6 +38,16 @@ public class FeedbackService {
     @Autowired
     ReviewService reviewService;
     ProfilePossessesService pss;
+
+    @Wip
+    public ReviewRequest createNewRequestForReview(final RequestForReviewDto requestForReviewDto) {
+        final Reviewable reviewable = RequestForReviewDtoMapper.OF.requestFroReviewDtoToReviewable(requestForReviewDto);
+        final Item item = itemService.getOrCreateItem(reviewable);
+        requestForReviewDto.setItemId(item.getId());
+
+        final ReviewRequest rr = RequestForReviewDtoMapper.OF.requestForReviewDtoToReviewRequest(requestForReviewDto);
+        return reviewRequestService.createRequestForReview(rr);
+    }
 
     public ReviewRequest createNewReviewRequest(Reviewable reviewable) {
         Item item = itemService.getItemByReviewable(reviewable);
@@ -65,6 +71,7 @@ public class FeedbackService {
     public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {
         return reviewRequestService.updateMessageAndLinkOnReviewRequest(reviewRequest);
     }
+
     public ReviewRequest closeReviewRequest(ReviewRequest reviewRequest) {
         return reviewRequestService.closeReviewRequest(reviewRequest);
     }
@@ -76,6 +83,7 @@ public class FeedbackService {
     public Page<ReviewRequest> findAllReviewRequestPageable(Optional<Integer> page, Optional<Integer> elem, Optional<String> searchTerm) {
         return reviewRequestPageableSearchService.findAllReviewRequestPageable(page, elem, searchTerm);
     }
+
     public List<ReviewRequest> fingAllReviewRequestForUser(Long profileId) {
         List<ReviewRequest> reviewRequestList = reviewRequestService.findReviewRequestForUser(profileId);
 

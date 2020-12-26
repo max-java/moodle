@@ -1,11 +1,13 @@
 package by.jrr.feedback.service;
 
 import by.jrr.auth.service.UserAccessService;
+import by.jrr.common.annotations.ToDeprecated;
 import by.jrr.feedback.bean.*;
 import by.jrr.feedback.repository.ReviewRequestRepository;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +32,12 @@ public class ReviewRequestService {
     @Autowired
     UserAccessService userAccessService;
 
+    @ToDeprecated("use createRequestForReview()")
     public ReviewRequest createNewReviewRequest(Item item, Reviewable reviewable) {
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setItemId(item.getId());
         reviewRequest.setReviewedEntityId(reviewable.getId());
-        reviewRequest.setRequesterProfileId(profileService.getCurrentUserProfile().getId());
+        reviewRequest.setRequesterProfileId(profileService.getCurrentUserProfileId());
         reviewRequest.setCreatedDate(LocalDateTime.now());
         reviewRequest.setReviewResultOnClosing(ReviewResult.NONE);
         ReviewRequest rr = reviewRequestRepository.save(reviewRequest);
@@ -42,10 +45,17 @@ public class ReviewRequestService {
         return reviewRequestRepository.save(reviewRequest);
     }
 
-    public ReviewRequest createRequestForReview(Reviewable reviewable) {
-        // create reviewable Item
-        return null;
+    public ReviewRequest createRequestForReview(ReviewRequest rr) {
+        setInitialValues(rr);
+        rr = reviewRequestRepository.save(rr);
+        pss.savePossessForCurrentUser(rr.getId(), EntityType.REVIEW_REQUEST);
+        return rr;
+    }
 
+    private void setInitialValues(ReviewRequest rr) {
+        rr.setRequesterProfileId(profileService.getCurrentUserProfileId());
+        rr.setCreatedDate(LocalDateTime.now());
+        rr.setReviewResultOnClosing(ReviewResult.NONE);
     }
 
     public ReviewRequest updateMessageAndLinkOnReviewRequest(ReviewRequest reviewRequest) {

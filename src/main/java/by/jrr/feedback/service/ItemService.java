@@ -18,6 +18,8 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
 
+import static by.jrr.feedback.mappers.ReviewableMapper.*;
+
 
 /**
  * get Reviewed methods should be added here for every reviewable to avoid NPE on
@@ -63,8 +65,7 @@ public class ItemService {
     }
 
     private Item createAndSaveItem(Reviewable reviewedEntity) {
-        Item item = ReviewableMapper.OF.reviewableToItem(reviewedEntity);
-        return itemRepository.save(item);
+        return itemRepository.save(OF.reviewableToItem(reviewedEntity));
     }
 
     // TODO: 30/05/20 MAKE THIS PLACE MORE OBVIOUS TO TRACK!!!! LOG OR DESCRIBE IT OR PUT IN ANOTHER CLASS!!!

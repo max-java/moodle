@@ -34,12 +34,13 @@
                             <input th:field="*{summary}" type="hidden"/>
                             <input th:field="*{reproSteps}" type="hidden"/>
                             <button name="edit" type="submit" value="true">edit</button>
-                            <button name="requestForReview" type="submit" value="requestForReview">Code review request
+                            <button name="requestForReview" type="submit" value="requestForReview">Code review request @ToDeprecated
                             </button>
                         </form>
                         <div class="card" th:insert="moodle/practiceCard :: issueCard">
                         </div>
                     </div>
+                    <div class="card" th:insert="feedback/elements/requestForReviewForm :: form"></div>
                 </div>
                 <!-- /.row -->
             </div><!-- /.container-fluid -->

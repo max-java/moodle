@@ -13,3 +13,6 @@ Reviewable interface makes unified access to Id, Type and String representations
 
 
 user adds Review to ReviewRequest. 
+When RequestForReview creates, int the same time user Pocess creates with reviewRequestId as 
+
+To form works use requestForReviewDto on requestedForReview Entity controller (page). 
