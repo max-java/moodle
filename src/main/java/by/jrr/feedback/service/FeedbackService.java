@@ -97,9 +97,11 @@ public class FeedbackService {
 
     public List<ReviewRequest> fingAllReviewRequestForUser(Long profileId) {
         List<ReviewRequest> reviewRequestList = reviewRequestService.findReviewRequestForUser(profileId);
-
-
         return reviewRequestService.findReviewRequestForUser(profileId);
+    }
+
+    public List<ReviewRequest> findAllRequestsForReviewByItemId(Long id) {
+        return reviewRequestService.findAllRequestsForReviewByItemId(id);
     }
 
     public void deleteRequestForReview(Long id) {

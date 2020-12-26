@@ -38,8 +38,7 @@
                                     <label>Message</label>
                                     <textarea class="form-control" rows="5"
                                               th:name="${requestForReviewDto.REQUESTER_NOTES}"
-                                              th:value="${requestForReviewDto.requesterNotes}">
-                                    </textarea>
+                                              th:text="${requestForReviewDto.requesterNotes}" />
                                 </div>
                             </div>
                             <div class="col-md-12">

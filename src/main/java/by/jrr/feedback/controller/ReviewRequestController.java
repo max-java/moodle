@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ReviewRequestController {
@@ -99,15 +102,17 @@ public class ReviewRequestController {
                 newReview.setReviewRequestId(revReq.getId());
                 newReview.setReviewedEntityId(revReq.getReviewedEntityId());
                 newReview.setItemId(revReq.getItemId());
+
             }
             mov.addObject("review", newReview);
             return mov;
         } else if (saveReview.isPresent()) {
+            review.get().setCreatedDate(LocalDateTime.now());
             Review newReview = review.get();
             newReview.setReviewerProfileId(profileService.getCurrentUserProfile().getId());
             feedbackService.saveReview(review.get());
             ModelAndView mov = setModelAndViewDataForReviewRequest(View.CODE_REVIEW_REQUEST_CARD, id);
-            return mov;
+            return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + id);
         } else if (closeRequest.isPresent()) {
             // TODO: 28/05/20 в этом месте не должно быть Optional<Review> review, но он приходит пустой с айдишником
             // TODO: 28/05/20 и еще в этом месте не байндятся поля ReviewRequest из формы: поля из формы приходит null, поэтому использую одно поле с неймом для статуса ревью.
@@ -120,11 +125,11 @@ public class ReviewRequestController {
             }
             ModelAndView mov = userDataToModelService.setData(new ModelAndView());
             mov.setViewName(View.PAGE_404);
-            return mov;
+            return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + id);
         } else {
             ModelAndView mov = userDataToModelService.setData(new ModelAndView());
             mov.setViewName(View.PAGE_404);
-            return mov;
+            return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_CARD + "/" + id);
         }
     }
 
@@ -158,6 +163,14 @@ public class ReviewRequestController {
             mov.addObject("requesterProfile", requesterProfile);
             mov.addObject("requesterProfileLink", requesterProfileLink);
             mov.addObject("Endpoint", new Endpoint());
+            mov.addObject(
+                    "requestsForSameIssue",
+                    feedbackService.findAllRequestsForReviewByItemId(item.getId())
+                            .stream()
+                            .filter(rr -> !rr.getId().equals(revReq.getId()))
+                            .sorted(Comparator.comparing(ReviewRequest::getCreatedDate).reversed())
+                            .limit(20)//todo: add pagination
+                            .collect(Collectors.toList()));
         }
         return mov;
 

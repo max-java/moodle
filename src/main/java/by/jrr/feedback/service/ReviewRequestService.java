@@ -124,6 +124,17 @@ public class ReviewRequestService {
         return reviewRequestList;
     }
 
+    public List<ReviewRequest> findAllRequestsForReviewByItemId(Long itemId) {
+        List<ReviewRequest> reviewRequestList = reviewRequestRepository.findAllByItemId(itemId);
+        reviewRequestList.stream()
+                .map(this::setRequesterProfileToReviewRequest)
+                .map(this::setReviewsToReviewRequest)
+                .map(this::setItemsToReviewRequest)
+                .map(this::setReviewedEntityToItemInReviewRequest)
+                .collect(Collectors.toList());
+        return reviewRequestList;
+    }
+
     private ReviewRequest setReviewsToReviewRequest(ReviewRequest rr) {
         rr.setReviews(reviewService.findAllByReviewRequestId(rr.getId()));
         return rr;
@@ -150,6 +161,5 @@ public class ReviewRequestService {
             reviewRequestRepository.deleteById(id);
             //todo: delete pss.
         }
-
     }
 }
