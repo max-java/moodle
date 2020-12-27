@@ -91,8 +91,13 @@ public class FeedbackService {
         reviewService.save(review);
     }
 
-    public Page<ReviewRequest> findAllReviewRequestPageable(Optional<Integer> page, Optional<Integer> elem, Optional<String> searchTerm) {
-        return reviewRequestPageableSearchService.findAllReviewRequestPageable(page, elem, searchTerm);
+    public Page<ReviewRequest> findAllReviewRequestPageable(
+            Optional<Integer> page,
+            Optional<Integer> elem,
+            Optional<String> searchTerm,
+            boolean gt3,
+            boolean lt3) {
+        return reviewRequestPageableSearchService.findAllReviewRequestPageable(page, elem, searchTerm, gt3, lt3);
     }
 
     public List<ReviewRequest> fingAllReviewRequestForUser(Long profileId) {

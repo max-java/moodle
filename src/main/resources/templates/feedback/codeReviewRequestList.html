@@ -34,8 +34,21 @@
                                     <div class="card-tools">
                                         <form>
                                             <div class="input-group input-group-lg">
-
-                                                <input class="form-control float-right form-control-lg" name="searchTerm"
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> approves </span>
+                                                </div>
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" name="gt3" value="true"/> &gt;3
+                                                    </span>
+                                                </div>
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" name="lt3" value="true"/> &lt;3
+                                                    </span>
+                                                </div>
+                                                <input class="form-control float-right form-control-lg"
+                                                       name="searchTerm"
                                                        placeholder="Search"
                                                        type="text">
 
@@ -147,5 +160,6 @@
 
 <!-- REQUIRED SCRIPTS -->
 <div th:include="starter :: scripts"></div>
+
 </body>
 </html>
