@@ -46,5 +46,4 @@ public class ReviewRequestListController {
         mov.setViewName(View.CODE_REVIEW_REQUEST_LIST);
         return mov;
     }
-
 }

@@ -4,16 +4,22 @@ import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.balance.bean.Currency;
+import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.FieldName;
+import by.jrr.balance.dto.UserBalanceSummaryDto;
+import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
+import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.*;
 import by.jrr.profile.service.*;
 import by.jrr.registration.service.StudentActionToLogService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +31,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static by.jrr.common.MyHeaders.cameFrom;
@@ -58,6 +62,8 @@ public class ProfileCardController {
     UserAccessService userAccessService;
     @Autowired
     TimeLineService timeLineService;
+    @Autowired
+    OperationRowService operationRowService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -89,15 +95,40 @@ public class ProfileCardController {
             mov.addObject("couldUpdate", profileId.equals(profileService.getCurrentUserProfileId())
                     || pss.isCurrentUserOwner(profileId));
 
+            // lectures names used both in selects and in timeline options.
+            List<Lecture> topicList = courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null);
+            Map<Long, String> topicIdMapToFullName = topicList.stream().collect(Collectors.toMap(Lecture::getId, Lecture::getFullName));
             if (profile.get().getCourseId() != null) {
-                mov.addObject("topicList", courseToLectureService.findLecturesForCourse(profile.get().getCourseId(), null));
+                mov.addObject("topicList", topicList);
             }
             else {
                 mov.addObject("topicList", new ArrayList<>());
             }
 
+            if (profile.get().getCourseId() != null) {
+                mov.addObject("topicIdMapToFullName", topicIdMapToFullName);
+            }
+            else {
+                mov.addObject("topicIdMapToFullName", new HashMap<>());
+            }
+            // end of lectures;
+
             mov.addObject("bestStudentList", calculateBestStudent(profile.get().getSubscribers()));
             mov.addObject("isUserCanUpdateTimeline", pss.isUserCanUpdateTimelineOn(profile.get()));
+
+            boolean isUserOpensHisPersonalProfile = pss.isUserOpensHisPersonalProfile(profileId);
+            if(isUserOpensHisPersonalProfile) {
+                // todo: this is the same as in crm controller. should be united
+                //user billing -> should be moved to userProfileController for admins
+                //todo create Dto for this ? Rest endpoint? Separate controller for user? Move to separate controller for user.
+                List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
+                UserBalanceSummaryDto userTotal = operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN);
+                operationRowService.calculateAndSetTotalUserSalary(userOperations, userTotal);
+                mov.addObject("userOperationRows", userOperations);
+                mov.addObject("userTotal", userTotal);
+                mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
+            }
+            mov.addObject("isUserOpensHisPersonalProfile", isUserOpensHisPersonalProfile);
 
         }
         else {

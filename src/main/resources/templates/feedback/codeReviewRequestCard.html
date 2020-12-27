@@ -22,18 +22,25 @@
             <div class="card card-solid">
                 <div class="card-body">
 
-                    <form method="post">
-                        <input type="hidden" name="reviewRequestId" th:value="${reviewRequest.getId()}" />
-                        <button type="submit" name="addReview" value="addReview">addReview</button>
-                    </form>
-
                     <div class="card" th:fragment="issueCard">
                         <div class="card-body">
-                            <a th:href="${reviewedLink}">
-                                <h1 class="card-title" th:text="${item.getReviewedEntity().getName()}"></h1>
-                            </a>
-                            <h3>&nbsp;</h3>
-                            <hr />
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h2>Issue: </h2>
+                                    <a th:href="${reviewedLink}">
+                                        <h1 class="card-title" th:text="${item.getReviewedEntity().getName()}"></h1>
+                                    </a>
+                                </div>
+                                <div class="btn-group col-md-4">
+                                    <th:block th:include="feedback/elements/requestForReviewEditButton :: button"
+                                              th:with="buttonText=${'Edit'},
+                                              saveButtonCommand=${'update'}">
+                                    </th:block>
+                                </div>
+                            </div>
+
+                            <hr/>
                             <div>&nbsp;</div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -44,7 +51,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p>Requested by </p>
-                                    <h3><a th:href="${requesterProfileLink}" th:text="${requesterProfile.getUser().getFullUserName()}"></a></h3>
+                                    <h3><a th:href="${requesterProfileLink}"
+                                           th:text="${requesterProfile.getUser().getFullUserName()}"></a></h3>
                                     <p>Date created </p>
                                     <h3 th:text="${reviewRequest.createdDate}"></h3>
                                     <form method="post" role="form" th:object="${reviewRequest}">
@@ -52,12 +60,14 @@
                                             <label>Review Result</label>
                                             <select class="form-control" name="reviewResultOnClosing">
                                                 <option th:each="type : ${T(by.jrr.feedback.bean.ReviewResult).values()}"
-                                                        th:value="${type}" th:text="${type}"
-                                                        th:selected="${type} == *{reviewResultOnClosing}"></option>
+                                                        th:selected="${type} == *{reviewResultOnClosing}" th:text="${type}"
+                                                        th:value="${type}"></option>
                                             </select>
                                         </div>
                                         <div>
-                                            <button type="submit" name="closeRequest" value="closeRequest" class="btn btn-primary">Close request</button>
+                                            <button class="btn btn-primary" name="closeRequest" type="submit"
+                                                    value="closeRequest">Close request
+                                            </button>
                                         </div>
                                     </form>
                                     <p>Date closed </p>
@@ -67,22 +77,85 @@
                         </div>
                     </div>
 
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Review Result</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="review : ${reviewRequest.getReviews()}">
-                            <td th:text="${review.getReviewerProfile().getUser().getFullUserName()}"></td>
-                            <td th:text="${review.getReviewResult()}"></td>
-                            <td th:text="${review.getReviewerNotes()}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+
+
+                    <hr/>
+                    <div class="card card-solid">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h2>Reviews</h2>
+                                </div>
+                                <div class="col-md-2 btn-group">
+                                    <form method="post">
+                                        <input name="reviewRequestId" th:value="${reviewRequest.getId()}" type="hidden"/>
+                                        <div class="btn-group right">
+                                            <button class="btn btn-outline-primary btn-block btn-flat pull-right" name="addReview" style="margin-bottom: 6px;"
+                                                    type="submit"
+                                                    value="addReview">addReview
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                            <table class="table table-hover text-nowrap">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Review Result</th>
+                                    <th>Comment</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="review : ${reviewRequest.getReviews()}">
+                                    <td th:text="${review.createdDate}"></td>
+                                    <td>
+                                        <a th:href="${'/profile/'+review.reviewerProfileId}"
+                                           th:text="${review.getReviewerProfile().getUser().getFullUserName()}"/>
+                                    </td>
+                                    <td th:text="${review.getReviewResult()}"></td>
+                                    <td th:text="${review.getReviewerNotes()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="card card-solid">
+                        <div class="card-body">
+                            <h2>Requests for review for the same issue</h2>
+                            <table class="table table-hover text-nowrap">
+                                <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Профиль</th>
+                                    <th>Что ревьювать</th>
+                                    <th>Дата создания</th>
+                                    <th>Статус</th>
+                                    <th>Тип</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="rr : ${requestsForSameIssue}">
+                                    <td th:text="${rr.getRequesterProfile().getUser().getFullUserName()}"></td>
+                                    <td><a th:href="${'/profile/'+rr.getRequesterProfileId()}">open Profile</a></td>
+                                    <td th:text="${rr.getItem().getReviewedEntity().getName()}"></td>
+                                    <td th:text="${rr.getCreatedDate()}"></td>
+                                    <td th:text="${rr.getReviewResultOnClosing()}"></td>
+                                    <td th:text="${rr.getItem().getReviewedItemType()}"></td>
+                                    <td><a th:href="${'/reviewRequest/'+rr.getId()}">open Review Request</a></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
             </div>

@@ -6,9 +6,13 @@ import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
+import by.jrr.common.annotations.ToDeprecated;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
+import by.jrr.feedback.bean.EntityType;
 import by.jrr.feedback.bean.ReviewRequest;
+import by.jrr.feedback.bean.Reviewable;
+import by.jrr.feedback.elements.RequestForReviewDto;
 import by.jrr.feedback.service.FeedbackService;
 import by.jrr.moodle.bean.PracticeQuestion;
 import by.jrr.moodle.service.PracticeQuestionService;
@@ -62,6 +66,8 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
             if (userAccessService.isCurrentUserIsAdmin() || pss.isUserHasAccessToPractice(issue.get())) {
                 mov.addObject("issue", issue.get());
                 mov.setViewName(View.PRACTICE);
+                mov.addObject("requestForReviewDto", mapToRequestForReviewDto(issue.get()));
+                mov.addObject("Endpoint", new Endpoint());
             } else {
                 mov.setViewName(View.PAGE_403);
             }
@@ -70,6 +76,7 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
             mov.setStatus(HttpStatus.NOT_FOUND);
             mov.setViewName(View.PAGE_404);
         }
+
         return mov;
     }
 
@@ -131,9 +138,18 @@ public class PracticeQuestionController { // TODO: 30/05/20 revise and make clea
     }
 
 
+    @ToDeprecated("use request for review process, it creates item and requestForReview in one step")
     private ModelAndView redirectToCodeReview(Long issueId, PracticeQuestion issue, HttpServletRequest request) {
         issue = practiceQuestionService.findById(issueId).get();
         ReviewRequest reviewRequest = feedbackService.createNewReviewRequest(issue);
         return new ModelAndView("redirect:" + Endpoint.REVIEW_REQUEST_FORM+"/"+reviewRequest.getId());
+        //@max-bookmark
+    }
+
+    private RequestForReviewDto mapToRequestForReviewDto(Reviewable reviewable) { //todo: move to mapper mapstruct
+        RequestForReviewDto requestForReviewDto = new RequestForReviewDto();
+        requestForReviewDto.setReviewedEntityId(reviewable.getId());
+        requestForReviewDto.setReviewedEntityType(reviewable.getType());
+        return requestForReviewDto;
     }
 }

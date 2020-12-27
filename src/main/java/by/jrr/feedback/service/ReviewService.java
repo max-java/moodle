@@ -23,7 +23,7 @@ public class ReviewService {
     ProfilePossessesService pss;
 
     public Review save(Review review) {
-        if (review.getId()== null) {
+        if (review.getId() == null) {
             review.setCreatedDate(LocalDateTime.now()); //set created timestamp
         }
         return reviewRepository.save(review);
@@ -33,6 +33,14 @@ public class ReviewService {
         return reviewRepository.findByReviewRequestId(id).stream()
                 .map(review -> setReviewerProfileToReviewByProfileId(review))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteReviewById(Long id) {
+        reviewRepository.deleteById(id);
+    }
+
+    public void deleteReviews(List<Review> reviews) {
+        reviewRepository.deleteAll(reviews);
     }
 
     private Review setReviewerProfileToReviewByProfileId(Review review) {

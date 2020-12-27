@@ -21,10 +21,18 @@ public class ErrorPagesController {
         mov.setViewName("403");
         return mov;
     }
+
     @RequestMapping("/404")
     public ModelAndView pageNotFound() {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         mov.setViewName("404");
+        return mov;
+    }
+
+    @RequestMapping("/400")
+    public ModelAndView badRequest() {
+        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+        mov.setViewName("400");
         return mov;
     }
 }

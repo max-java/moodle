@@ -94,19 +94,6 @@ public class RegisterAndSubscribeController {
                     if (courseProfileOp.isPresent()) {
                         courseProfile = courseProfileOp.get();
                         enroll(courseProfile.getId(), userProfile.getId());
-                        if (courseProfile.getTelegramLink() != null) {
-                            satls.saveAction(StudentActionToLog.builder()
-                                    .streamTeamProfileId(courseProfile.getId())
-                                    .urlToRedirect(courseProfile.getTelegramLink())
-                                    .eventName(courseProfile.getTelegramLinkText())
-                                    .eventType(EventType.TELEGRAM_CHAT)
-                                    .courseId(courseProfile.getCourseId())
-                                    .lectureId(null)
-                                    .build());
-
-                            redirectView.setUrl(courseProfile.getTelegramLink());
-                            return redirectView;
-                        }
 
                         redirectView.setUrl(Endpoint.PROFILE_CARD + "/" + courseProfile.getId());
                         return redirectView;

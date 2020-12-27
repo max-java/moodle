@@ -44,7 +44,7 @@ public class CurrencyService {
         return bynUsdRate.getSum();
     }
 
-    public BigDecimal getOperationRowSumInByn(OperationRow operationRow) {
+    public BigDecimal getOperationRowSumInBynOnOperationDate(OperationRow operationRow) {
         //todo add more currencies
         switch (operationRow.getCurrency()) {
             case USD:
@@ -55,7 +55,7 @@ public class CurrencyService {
         }
     }
 
-    public BigDecimal convertAndGetOperationRowSum(OperationRow operationRow, Currency convertTo) {
+    public BigDecimal convertAndGetOperationRowSumOnOperationDate(OperationRow operationRow, Currency convertTo) {
         switch (operationRow.getCurrency()) {
             case USD:
                 switch (convertTo) {
