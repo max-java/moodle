@@ -1,7 +1,9 @@
 package by.jrr.feedback.service;
 
 import by.jrr.feedback.bean.Item;
+import by.jrr.feedback.bean.Review;
 import by.jrr.feedback.bean.ReviewRequest;
+import by.jrr.feedback.bean.ReviewResult;
 import by.jrr.feedback.repository.ReviewRequestRepository;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
@@ -14,6 +16,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,9 @@ public class ReviewRequestPageableSearchService {
     ItemService itemService;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ReviewRequestService reviewRequestService;
+
 
     private final Supplier<Integer> DEFAULT_PAGE_NUMBER = () -> 1;
     private final Supplier<Integer> DEFAULT_ELEMENTS_PER_PAGE = () -> 15;
@@ -33,21 +39,28 @@ public class ReviewRequestPageableSearchService {
 
     public Page<ReviewRequest> findAllReviewRequestPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                             Optional<Integer> numberOfElementsPerPage,
-                                                            Optional<String> searchTerm) {
+                                                            Optional<String> searchTerm,
+                                                            boolean gt3,
+                                                            boolean lt3) {
+
 
         // pages are begins from 0, but userFriendly is to begin from 1
         int page = userFriendlyNumberOfPage.orElseGet(DEFAULT_PAGE_NUMBER) - 1;
         int elem = numberOfElementsPerPage.orElseGet(DEFAULT_ELEMENTS_PER_PAGE);
-        if(searchTerm.isPresent()) {
+        if (searchTerm.isPresent()) {
             List<ReviewRequest> reviewRequestList = searchReviewRequestByAllReviewRequestFields(searchTerm.get());
-            if (reviewRequestList.size()!= 0) {
+            if (reviewRequestList.size() != 0) {
                 reviewRequestList.sort(Comparator.comparing(ReviewRequest::getCreatedDate));
+                reviewRequestList = reviewRequestList.stream()
+                        .peek(rr -> reviewRequestService.setReviewsToReviewRequest(rr))
+                        .filter(rr -> getFilter(gt3, lt3).test(rr))
+                        .collect(Collectors.toList());
 
                 // TODO: 26/05/20 this pagination should be moved in a static method
                 Pageable pageable = PageRequest.of(page, elem);
                 int pageOffset = (int) pageable.getOffset(); // TODO: 26/05/20 dangerous cast!
                 int toIndex = (pageOffset + elem) > reviewRequestList.size() ? reviewRequestList.size() : pageOffset + elem;
-                Page<ReviewRequest> rrPageImpl  = new PageImpl<>(reviewRequestList.subList(pageOffset, toIndex), pageable, reviewRequestList.size());
+                Page<ReviewRequest> rrPageImpl = new PageImpl<>(reviewRequestList.subList(pageOffset, toIndex), pageable, reviewRequestList.size());
                 return rrPageImpl;
             }
             return Page.empty();
@@ -99,7 +112,7 @@ public class ReviewRequestPageableSearchService {
         List<ReviewRequest> selectedReviewRequests = new ArrayList<>();
         while (reviewRequestIterator2.hasNext()) { // TODO: 28/05/20 replace with java8 style
             ReviewRequest reviewRequest = reviewRequestIterator2.next();
-            for(Long id : selectedIds) {
+            for (Long id : selectedIds) {
                 if (id.equals(reviewRequest.getId())) {
                     selectedReviewRequests.add(reviewRequest);
                     break;
@@ -113,11 +126,61 @@ public class ReviewRequestPageableSearchService {
     private void setItemToReviewRequest(ReviewRequest reviewRequest) {
         reviewRequest.setItem(itemService.itemRepository.findById(reviewRequest.getItemId()).orElseGet(Item::new));
     }
+
     private void setRequesterProfileToReviewRequest(ReviewRequest reviewRequest) {
         reviewRequest.setRequesterProfile(profileService.findProfileByProfileId(reviewRequest.getRequesterProfileId()).orElseGet(Profile::new));
     }
+
     private void setReviewedEntity(ReviewRequest reviewRequest) {
         reviewRequest.getItem().setReviewedEntity(itemService.getReviewableByReviewableId(reviewRequest.getItem().getReviewedEntityId()));
     }
 
+    public Predicate<ReviewRequest> getFilter(boolean gt3, boolean lt3) {
+        if (gt3 && lt3) {
+            return reviewRequest -> noFilter();
+        } else if (!lt3 && gt3) {
+            return reviewRequest -> has3Approves(reviewRequest.getReviews());
+        } else if (!gt3 && lt3) {
+            return reviewRequest -> has1ButLess3Approves(reviewRequest.getReviews());
+        } else {
+            return reviewRequest -> noApproves(reviewRequest.getReviews());
+        }
+    }
+
+    private boolean noFilter() {
+        return true;
+    }
+
+    private boolean has3Approves(List<Review> reviews) {
+        return reviews.stream()
+                .filter(review -> review.getReviewResult().equals(ReviewResult.APPROVE))
+                .collect(Collectors.toList())
+                .size() >= 3;
+    }
+
+    private boolean has1ButLess3Approves(List<Review> reviews) {
+        return has1Approve(reviews) && less3Approve(reviews);
+    }
+
+    private boolean noApproves(List<Review> reviews) {
+        return reviews.stream()
+                .filter(review -> review.getReviewResult().equals(ReviewResult.APPROVE))
+                .collect(Collectors.toList())
+                .isEmpty();
+    }
+
+
+    private boolean has1Approve(List<Review> reviews) {
+        return !reviews.stream()
+                .filter(review -> review.getReviewResult().equals(ReviewResult.APPROVE))
+                .collect(Collectors.toList())
+                .isEmpty();
+    }
+
+    private boolean less3Approve(List<Review> reviews) {
+        return reviews.stream()
+                .filter(review -> review.getReviewResult().equals(ReviewResult.APPROVE))
+                .collect(Collectors.toList())
+                .size() < 3;
+    }
 }

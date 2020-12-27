@@ -135,7 +135,7 @@ public class ReviewRequestService {
         return reviewRequestList;
     }
 
-    private ReviewRequest setReviewsToReviewRequest(ReviewRequest rr) {
+    public ReviewRequest setReviewsToReviewRequest(ReviewRequest rr) {
         rr.setReviews(reviewService.findAllByReviewRequestId(rr.getId()));
         return rr;
     }

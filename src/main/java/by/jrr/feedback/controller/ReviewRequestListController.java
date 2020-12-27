@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -38,10 +39,12 @@ public class ReviewRequestListController {
     @GetMapping(Endpoint.REVIEW_REQUEST_LIST)
     public ModelAndView openProfileTable(@RequestParam Optional<Integer> page,
                                          @RequestParam Optional<Integer> elem,
-                                         @RequestParam Optional<String> searchTerm) {
+                                         @RequestParam Optional<String> searchTerm,
+                                         @RequestParam(value = "gt3", required = false) boolean gt3,
+                                         @RequestParam(value = "lt3", required = false) boolean lt3) {
 
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
-        mov.addObject("reviewRequestPage", feedbackService.findAllReviewRequestPageable(page, elem, searchTerm));
+        mov.addObject("reviewRequestPage", feedbackService.findAllReviewRequestPageable(page, elem, searchTerm, gt3, lt3));
         mov.addObject("searchTerm", searchTerm.orElse(""));
         mov.setViewName(View.CODE_REVIEW_REQUEST_LIST);
         return mov;

@@ -11,6 +11,7 @@ import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,7 @@ public class ReviewRequest implements Cloneable{
     private ReviewResult reviewResultOnClosing;
 
     @Transient
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
     @Transient
     private Item item;
     @Transient
