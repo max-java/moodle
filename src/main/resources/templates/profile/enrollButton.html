@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="buttonWithModalPopup">
+    <script th:src="@{/my/js/validateUserData.js}"></script>
     <form class="mb-2"
           method="post"
           th:action="${'/profile/' + streamId}"
@@ -43,8 +44,7 @@
                                 <input class="form-control"
                                        id="firstAndLastName"
                                        name="firstAndLastName"
-                                       th:onblur="'javascript:validateName(this.value,'+ ${streamId}+')'"
-                                       th:onkeyup="'javascript:validateName(this.value,'+ ${streamId}+')'"
+                                       onkeyup="validateForm()"
                                        placeholder="Ваше имя и фамилия"
                                        required
                                        th:value="${user.firstAndLastName}"
@@ -59,8 +59,7 @@
                                 <input class="form-control"
                                        id="email"
                                        name="email"
-                                       th:onblur="'javascript:validateEmail(this.value,'+ ${streamId}+')'"
-                                       th:onkeyup="'javascript:validateEmail(this.value,'+ ${streamId}+')'"
+                                       onkeyup="validateForm()"
                                        placeholder="Ваш Email"
                                        required
                                        th:value="${user.email}"
@@ -75,8 +74,7 @@
                                 <input class="form-control"
                                        id="phone"
                                        name="phone"
-                                       th:onblur="'javascript:validatePhone(this.value,'+ ${streamId}+')'"
-                                       th:onkeyup="'javascript:validatePhone(this.value,'+ ${streamId}+')'"
+                                       onkeyup="validateForm()"
                                        placeholder="Номер телефона"
                                        required
                                        th:value="${user.phone}"
@@ -101,59 +99,12 @@
                                 <!-- /.col -->
                             </div>
                         </form>
-                        <script th:inline="javascript">
-                            function validateEmail(userEmail, streamId) {
-                                var xmlhttp = new XMLHttpRequest();
-                                xmlhttp.onreadystatechange = function () {
-                                    if (this.readyState == 4 && this.status == 200) {
-                                        getResponse(this, streamId);
-                                    }
-                                };
-                                xmlhttp.open("GET", "/api/registerForm/validate/email/?email=" + userEmail, true);
-                                xmlhttp.send();
-                            }
-
-                            function validateName(userName, streamId) {
-                                var xmlhttp = new XMLHttpRequest();
-                                xmlhttp.onreadystatechange = function () {
-                                    if (this.readyState == 4 && this.status == 200) {
-                                        getResponse(this, streamId);
-                                    }
-                                };
-                                xmlhttp.open("GET", "/api/registerForm/validate/firstAndLastName/?firstAndLastName=" + userName, true);
-                                xmlhttp.send();
-                            }
-
-                            function validatePhone(userPhone, streamId) {
-                                var xmlhttp = new XMLHttpRequest();
-                                xmlhttp.onreadystatechange = function () {
-                                    if (this.readyState == 4 && this.status == 200) {
-                                        getResponse(this, streamId);
-                                    }
-                                };
-                                xmlhttp.open("GET", "/api/registerForm/validate/phone/?phone=" + userPhone, true);
-                                xmlhttp.send();
-                            }
-
-                            function getResponse(xml, streamId) {
-                                var tagName = 'errors'+streamId;
-                                var xmlDoc = xml.responseXML;
-                                var restResponse = xmlDoc.getElementsByTagName("restResponse");
-                                var validationPassed = restResponse[0].getElementsByTagName("validationPassed")[0].childNodes[0].nodeValue;
-                                console.log("validation passed? : " + validationPassed);
-                                if (validationPassed === "false") {
-                                    var error = restResponse[0].getElementsByTagName("error");
-                                    document.getElementById(tagName).innerHTML = error[0].childNodes[0].nodeValue;
-                                } else {
-                                    document.getElementById(tagName).innerHTML = "";
-                                }
-                            }
-                        </script>
-
-
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <p class="text-danger" id="errors" th:id="'errors'+${streamId}" th:text="${error}"></p>
+<!--                        <p class="text-danger" id="errors" th:id="'errors'+${streamId}" th:text="${error}"></p>-->
+                        <p class="text-danger" id="FIRST_AND_LAST_NAME_ERROR"></p>
+                        <p class="text-danger" id="EMAIL_ERROR"></p>
+                        <p class="text-danger" id="PHONE_ERROR"></p>
                     </div>
                 </div>
                 <!-- /.modal-content -->

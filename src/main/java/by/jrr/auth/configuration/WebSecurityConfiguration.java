@@ -67,6 +67,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(Endpoint.TOPIC+"/*").permitAll()
                     .antMatchers(Endpoint.TOPIC_LIST).permitAll()
                     .antMatchers("/api/registerForm/validate/email/*").permitAll() // TODO: 23/06/20 make it psfs
+                    .antMatchers("/auth/validate/user").permitAll() // TODO: 23/06/20 make it psfs
                     .antMatchers("/api/registerForm/validate/firstAndLastName/*").permitAll() // TODO: 23/06/20 make it psfs
                     .antMatchers("/api/registerForm/validate/phone/*").permitAll() // TODO: 23/06/20 make it psfs
                     .antMatchers(Endpoint.PROFILE_CARD+"/*").permitAll()
@@ -103,7 +104,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/dist/**", "/plugins/**");
+                .antMatchers(
+                        "/resources/**",
+                        "/static/**",
+                        "/css/**",
+                        "/js/**",
+                        "/img/**",
+                        "/dist/**",
+                        "/plugins/**",
+                        "/my/**"
+                );
     }
 
 }

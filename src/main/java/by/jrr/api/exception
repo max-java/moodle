@@ -1,0 +1,7 @@
+{
+"timestamp": "2021-01-07T01:12:02.059+0000",
+"status": 500,
+"error": "Internal Server Error",
+"message": "Cannot invoke \"java.util.Map.size()\" because the return value of \"by.jrr.auth.model.UserValidation$Response.getErrors()\" is null",
+"path": "/auth/validate/user"
+}
