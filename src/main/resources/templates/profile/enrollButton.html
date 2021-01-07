@@ -42,9 +42,9 @@
                                    type="hidden">
                             <div class="input-group mb-3">
                                 <input class="form-control"
-                                       id="firstAndLastName"
+                                       th:id="|firstAndLastName${streamId}|"
                                        name="firstAndLastName"
-                                       onkeyup="validateForm()"
+                                       th:onkeyup="'javascript:validateForm('+ ${streamId}+')'"
                                        placeholder="Ваше имя и фамилия"
                                        required
                                        th:value="${user.firstAndLastName}"
@@ -57,9 +57,9 @@
                             </div>
                             <div class="input-group mb-3">
                                 <input class="form-control"
-                                       id="email"
+                                       th:id="|email${streamId}|"
                                        name="email"
-                                       onkeyup="validateForm()"
+                                       th:onkeyup="'javascript:validateForm('+ ${streamId}+')'"
                                        placeholder="Ваш Email"
                                        required
                                        th:value="${user.email}"
@@ -72,9 +72,9 @@
                             </div>
                             <div class="input-group mb-3">
                                 <input class="form-control"
-                                       id="phone"
+                                       th:id="|phone${streamId}|"
                                        name="phone"
-                                       onkeyup="validateForm()"
+                                       th:onkeyup="'javascript:validateForm('+ ${streamId}+')'"
                                        placeholder="Номер телефона"
                                        required
                                        th:value="${user.phone}"
@@ -102,9 +102,9 @@
                     </div>
                     <div class="modal-footer justify-content-between">
 <!--                        <p class="text-danger" id="errors" th:id="'errors'+${streamId}" th:text="${error}"></p>-->
-                        <p class="text-danger" id="FIRST_AND_LAST_NAME_ERROR"></p>
-                        <p class="text-danger" id="EMAIL_ERROR"></p>
-                        <p class="text-danger" id="PHONE_ERROR"></p>
+                        <p class="text-danger" th:id="|FIRST_AND_LAST_NAME_ERROR${streamId}|"></p>
+                        <p class="text-danger" th:id="|EMAIL_ERROR${streamId}|"></p>
+                        <p class="text-danger" th:id="|PHONE_ERROR${streamId}|"></p>
                     </div>
                 </div>
                 <!-- /.modal-content -->
