@@ -6,6 +6,7 @@ import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.exceptios.UserNameConversionException;
 import by.jrr.auth.exceptios.UserServiceException;
+import by.jrr.auth.model.DropUserPassword;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
 import by.jrr.email.service.EMailService;
@@ -27,11 +28,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    public static final String USER_NOT_FOUND_EXCEPTION = "user with id %s not found";
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -90,8 +94,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    private User updateUserPassword(User user) {
+    @Deprecated //use method with two parameters
+    private User encryptAndUpdateUserPassword(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    private User encryptAndUpdateUserPassword(User user, String password) {
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         return userRepository.save(user);
     }
 
@@ -99,7 +109,7 @@ public class UserService {
         if (ifWordExistAsLoginOrEmail(userDTO.getEmail())) {
             throw new UserServiceException(userDTO.getEmail() + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
         }
-        String password = getRandomPassword();
+        String password = generateRandomPassword();
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .userName(userDTO.getEmail())
@@ -119,7 +129,7 @@ public class UserService {
         if (ifWordExistAsLoginOrEmail(email)) {
             throw new UserServiceException(email + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
         }
-        String password = getRandomPassword();
+        String password = generateRandomPassword();
 
         String login = email;
         User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
@@ -168,25 +178,51 @@ public class UserService {
 
     }
 
-    private String getRandomPassword() {
+    private String generateRandomPassword() {
         return new Random().ints(6, 33, 122)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
 
+    @Deprecated //use restore password
     public String generateNewPasswordForUser(Long id) {
         Optional<User> userOp = userRepository.findById(id);
+        //todo: should throw exception when moved to serviceApi
         if (userOp.isPresent()) {
             User user = userOp.get();
-            String newPass = getRandomPassword();
+            String newPass = generateRandomPassword();
             user.setPassword(newPass);
-            this.updateUserPassword(user);
+            this.encryptAndUpdateUserPassword(user);
             // TODO: 30/06/20 send email with hew password
             return newPass;
         } else {
             return "error on updating user Password";
         }
     }
+
+    public DropUserPassword.Response dropUserPassword(Long userId) {
+        DropUserPassword.Response response = new DropUserPassword.Response();
+        try {
+            generateAndSetPassword(response, userId);
+        } catch (Exception ex) {
+            response.setError(ex.getMessage());
+        }
+        return response;
+    }
+
+    private void generateAndSetPassword(DropUserPassword.Response response, Long userId) throws EntityNotFoundException {
+        User user = this.getUserById(userId);
+        String password = generateRandomPassword();
+        response.setPassword(password);
+        encryptAndUpdateUserPassword(user, password);
+    }
+
+    //rename to findUserById(Long id) after clashes method will be deleted
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND_EXCEPTION, id)));
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: 06/06/20 replace with template method                                              //
@@ -224,6 +260,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Deprecated //use getUserById and delete this.
     public Optional<User> findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
