@@ -175,11 +175,13 @@ public class StreamController {
     @NoArgsConstructor
     @Data
     @XmlRootElement
+    @Deprecated
     public static class UserRolesDTO {
         String userRoles;
     }
 
-    @AdminOnly // TODO: 23/06/20 move to appropriate place
+    @Deprecated
+    @AdminOnly
     @GetMapping(value = Endpoint.PROFILE_CARD_ADMIN_VIEW + "/api/generateNewPassword/{profileId}", produces = MediaType.APPLICATION_XML_VALUE)
     public @ResponseBody
     UserPasswordDTO generateNewPassword(@PathVariable Long profileId) {
@@ -197,6 +199,7 @@ public class StreamController {
     @NoArgsConstructor
     @Data
     @XmlRootElement
+    @Deprecated
     public static class UserPasswordDTO {
         String password;
     }
