@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="streamSettings">
-
+    <script th:src="@{/my/js/dropUserPassword.js}"></script>
     <div class="tab-pane" id="settings">
 
         <div class="margin">
@@ -24,11 +24,10 @@
             <div class="btn-group">
                 <button
                         class="btn btn-sm btn-outline-light bg-gradient-red"
-                        onclick="generateNewPassword(this.value)"
-                        th:value="${profile.getId()}"
+                        th:onclick="dropUserPassword([[${profile.userId}]])"
                         type="button">
-                    "Сгенерирвать новый пароль"
-                </button> &nbsp;
+                    "Сбросить пароль"
+                </button>
             </div>
         </div>
 
@@ -328,22 +327,6 @@
 
                 document.getElementById("userRoles").innerHTML = userRoles;
 
-            }
-
-            function generateNewPassword(id) {
-                var xmlhttp = new XMLHttpRequest();
-                var userProfileId = document.getElementById("id").value;
-                xmlhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var xmlDoc = this.responseXML;
-                        var response = xmlDoc.getElementsByTagName("userPasswordDTO");
-                        var password = response[0].getElementsByTagName("password")[0].childNodes[0].nodeValue;
-
-                        document.getElementById("alert").innerHTML = "Сгенерирован новый пароль " + password;
-                    }
-                };
-                xmlhttp.open("GET", "/crm/profile/api/generateNewPassword/" + userProfileId, true);
-                xmlhttp.send();
             }
         </script>
     </div>
