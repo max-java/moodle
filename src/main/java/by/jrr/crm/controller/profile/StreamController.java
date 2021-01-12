@@ -2,6 +2,7 @@ package by.jrr.crm.controller.profile;
 
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
 import by.jrr.balance.bean.Contract;
@@ -14,6 +15,7 @@ import by.jrr.balance.service.ContractService;
 import by.jrr.balance.service.OperationCategoryService;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
+import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
@@ -72,7 +74,8 @@ public class StreamController {
     OperationCategoryService operationCategoryService;
     @Autowired
     RedirectionLinkService redirectionLinkService;
-
+    @Autowired
+    UserAccessService userAccessService;
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId) {
@@ -125,6 +128,12 @@ public class StreamController {
             mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
 
             mov.addObject("redirectionLinks", redirectionLinkService.findRedirectionLinksForProfile(profileId));
+
+            mov.addObject("isUserIsAdmin", userAccessService.isCurrentUserIsAdmin()); // TODO: 31/07/20 set here null, or "", or  and see result
+            mov.addObject("STUDENT", !(
+                    UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM)
+                            || UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM)
+            ));
 
         } else {
             mov.setViewName(View.PAGE_404);
