@@ -7,17 +7,32 @@
         <div class="timeline-item">
             <h3 style="padding: 10px;"><i class="far fa-clock"></i>
                 <th:block
-                        th:text="${timeline.getTime()}">12:05
+                        th:text="${timeline.getTime()}">
+                </th:block>
+                <th:block th:if="${STUDENT}">
+                    <th:block th:if="${isUserIsAdmin}">
+                        <span class="pull-right-container">
+
+                            <small class="label pull-right bg-green"
+                                   th:onclick="createRedirectionLink(
+                                                    [[${profile.getId()}]],
+                                                    [[${timeline.streamTeamProfileId}]],
+                                                    [[${timeline.courseId}]],
+                                                    null,
+                                                    [[${timeline.urlToRedirect}]],
+                                                    [[${timeline.eventName}]],
+                                                    [[${timeline.eventType}]],
+                                                    60);">
+                                generate user individual link
+                            </small>
+                        </span>
+                    </th:block>
                 </th:block>
             </h3>
 
             <h3 class="timeline-header">
-                <a href="#" th:text="${timeline.getEventType()}">
-                    Support Team
-                </a>
-                <span th:text="${timeline.getEventName()}">
-                                                                        sent you an email
-                                                                    </span>
+                <a href="#" th:text="${timeline.getEventType()}"/>
+                <span th:text="${timeline.getEventName()}"/>
             </h3>
 
             <div class="timeline-body" th:text="${timeline.getNotes()}">
@@ -46,9 +61,9 @@
                             th:value="${timeline.getEventType()}"
                             type="submit">
                         <div class="info-box">
-                                                                                <span class="info-box-icon bg-gradient-blue">
-                                                                                    <i class="fa fa-video"></i>
-                                                                                </span>
+                            <span class="info-box-icon bg-gradient-blue">
+                                <i class="fa fa-video"></i>
+                            </span>
                             <div class="info-box-content text-left">
                                 <span class="info-box-text">Zoom</span>
                             </div>
@@ -57,6 +72,7 @@
                         <!-- /.info-box -->
                     </button>
                 </form>
+
             </div>
         </div>
     </th:block>
@@ -177,7 +193,7 @@
             <div class="timeline-footer">
                 <div class="row">
                     <div class="col-md-8">
-                        <video  height="315" width="560" controls>
+                        <video controls height="315" width="560">
                             <source th:src="|/video${timeline.getUrlToRedirect().trim()}|" type="video/mp4">
                         </video>
                     </div>
