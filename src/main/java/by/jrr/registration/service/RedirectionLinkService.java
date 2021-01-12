@@ -1,12 +1,13 @@
 package by.jrr.registration.service;
 
 import by.jrr.common.annotations.VisibleForTesting;
+import by.jrr.profile.bean.Profile;
+import by.jrr.profile.service.ProfileService;
 import by.jrr.registration.bean.RedirectionLink;
 import by.jrr.registration.bean.RedirectionLinkStatus;
 import by.jrr.registration.mapper.RedirectionLinkMapper;
-import by.jrr.registration.model.CreateRedirectionLink;
+import by.jrr.registration.model.RedirectionLinkDto;
 import by.jrr.registration.repository.RedirectionLinkRepository;
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,9 @@ import java.util.UUID;
 
 @Service
 public class RedirectionLinkService {
+
+    @Autowired
+    ProfileService profileService;
 
     @Autowired
     RedirectionLinkRepository redirectionLinkRepository;
@@ -40,7 +44,7 @@ public class RedirectionLinkService {
     private static final int DEFAULT_EXPIRATION = 15;
 
 
-    public CreateRedirectionLink.Response createRedirectionLink(CreateRedirectionLink.Request request) {
+    public RedirectionLinkDto.Response createRedirectionLink(RedirectionLinkDto.Request request) {
         String uuid = UUID.randomUUID().toString();
         String redirectionPage = REDIRECTION_PAGE_BASE_URL.concat(uuid);
 
@@ -52,7 +56,7 @@ public class RedirectionLinkService {
         redirectionLink.setStatus(RedirectionLinkStatus.NEW);
         redirectionLinkRepository.save(redirectionLink);
 
-        return new CreateRedirectionLink.Response(redirectionPage);
+        return new RedirectionLinkDto.Response(redirectionPage);
     }
 
     @Transactional
@@ -71,9 +75,19 @@ public class RedirectionLinkService {
         return redirectionLink;
     }
 
+    public List<RedirectionLink> findRedirectionLinksForProfile(Long profileId) {
+        Profile profile = profileService.findProfileByProfileIdLazy(profileId).orElseGet(Profile::new);
+        if(profile.getCourseId() != null) {
+            return findRedirectionLinksForStreamByStreamId(profileId);
+        } else {
+            return findRedirectionLinksForUserByProfileId(profileId);
+        }
+    }
+
     public List<RedirectionLink> findRedirectionLinksForUserByProfileId(Long profileId) {
         return (List) redirectionLinkRepository.findAllByStudentProfileIdOrderByTimestamp(profileId);
     }
+
     public List<RedirectionLink> findRedirectionLinksForStreamByStreamId(Long streamId) {
         return (List) redirectionLinkRepository.findAllByStreamTeamProfileIdOrderByTimestamp(streamId);
     }

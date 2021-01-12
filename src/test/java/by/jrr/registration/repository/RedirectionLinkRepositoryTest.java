@@ -4,10 +4,12 @@ import by.jrr.config.IntegrationTest;
 import by.jrr.registration.bean.RedirectionLink;
 import by.jrr.registration.bean.RedirectionLinkStatus;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.swing.text.html.HTMLDocument;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

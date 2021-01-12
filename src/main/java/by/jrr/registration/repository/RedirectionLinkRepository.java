@@ -2,6 +2,7 @@ package by.jrr.registration.repository;
 
 import by.jrr.registration.bean.RedirectionLink;
 import by.jrr.registration.bean.RedirectionLinkStatus;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 
-public interface RedirectionLinkRepository extends CrudRepository<RedirectionLink, String> {
+public interface RedirectionLinkRepository extends
+        CrudRepository<RedirectionLink, String>,
+        JpaSpecificationExecutor<RedirectionLink> {
 
     //    @Query("update RedirectionLink set status = :status where uuid = :uuid")
     @Modifying

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="streamAbout">
-    <script th:src="@{/my/js/tracking/createRedirectionLink.js}"></script>
+    <script th:src="@{/my/js/tracking/redirectionLink.js}"></script>
 
 
     <div class="tab-pane" id="activity" th:classappend="${active}">
@@ -29,7 +29,7 @@
                                         [[${chatButton.urlToRedirect}]],
                                         [[${chatButton.eventName}]],
                                         [[${chatButton.eventType}]],
-                                        15);">
+                                        60);">
                                 generate user link
                             </button>
                         </td>
@@ -43,6 +43,35 @@
                 </th:block>
             </table>
         </div>
+
+        <div class="row">
+            <h3>User Links (refresh browser to update)</h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>status</th>
+                    <th>redirectionPage</th>
+                    <th>urlToRedirect</th>
+                    <th>event Name</th>
+                    <th>event Type</th>
+                    <th>expiration Minutes</th>
+                    <th>timestamp</th>
+                </tr>
+                <th:block th:each="redirectionLink : ${redirectionLinks}">
+                    <tr>
+
+                        <td th:text="${redirectionLink.status}" />
+                        <td th:text="${redirectionLink.redirectionPage}" />
+                        <td th:text="${redirectionLink.urlToRedirect}" />
+                        <td th:text="${redirectionLink.eventName}" />
+                        <td th:text="${redirectionLink.eventType}" />
+                        <td th:text="${redirectionLink.expirationMinutes}" />
+                        <td th:text="${redirectionLink.timestamp}" />
+
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+
         <!-- /.row -->
 
         <!-- Post -->

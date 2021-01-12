@@ -3,7 +3,7 @@ package by.jrr.registration.mapper;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.RedirectionLink;
 import by.jrr.registration.bean.StudentActionToLog;
-import by.jrr.registration.model.CreateRedirectionLink;
+import by.jrr.registration.model.RedirectionLinkDto;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -25,8 +25,8 @@ class RedirectionLinkMapperTest {
         assertEquals(makeStudentActionToLog(), studentActionToLog);
     }
 
-    private CreateRedirectionLink.Request makeRequest() {
-        CreateRedirectionLink.Request request = new CreateRedirectionLink.Request();
+    private RedirectionLinkDto.Request makeRequest() {
+        RedirectionLinkDto.Request request = new RedirectionLinkDto.Request();
         request.setCourseId(1L);
         request.setLectureId(2L);
         request.setStreamTeamProfileId(3L);

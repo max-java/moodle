@@ -3,13 +3,10 @@ package by.jrr.registration.controller;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
-import by.jrr.profile.bean.Profile;
-import by.jrr.profile.service.ProfileService;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.RedirectionLink;
 import by.jrr.registration.bean.RedirectionLinkStatus;
 import by.jrr.registration.bean.StudentActionToLog;
-//import by.jrr.registration.service.RedirectionLinkService;
 import by.jrr.registration.mapper.RedirectionLinkMapper;
 import by.jrr.registration.service.RedirectionLinkService;
 import by.jrr.registration.service.StudentActionToLogService;
@@ -24,12 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.awt.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+//import by.jrr.registration.service.RedirectionLinkService;
 
 @Controller
 public class LogActionAndRedirectController {
@@ -43,18 +40,19 @@ public class LogActionAndRedirectController {
     @Autowired
     RedirectionLinkService redirectionLinkService;
 
-    @GetMapping(Endpoint.REDIRECT+"{redirectionId}")
+    @GetMapping(Endpoint.REDIRECT+"/{redirectionId}")
     public ModelAndView openRedirect(@PathVariable String redirectionId) {
         RedirectionLink redirectionLink = redirectionLinkService.useRedirectionLink(redirectionId);
         //todo: perform autologin and set user specific data
         //ModelAndView mov = userDataToModelService.setData(new ModelAndView());
 
         ModelAndView mov = new ModelAndView();
-        mov.setViewName(View.PAGE_302);
+        mov.setViewName(View.PAGE_304);
         mov.addObject("link", redirectionLink);
         if(redirectionLink.getStatus().equals(RedirectionLinkStatus.NEW)) {
             satls.saveAction(RedirectionLinkMapper.OF.getStudentActionToLogFromRedirectionLink(redirectionLink));
         }
+
         return mov;
     }
 

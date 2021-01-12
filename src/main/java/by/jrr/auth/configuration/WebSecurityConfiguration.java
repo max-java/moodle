@@ -52,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(Endpoint.HOME).permitAll()
                     .antMatchers(Endpoint.COURSE+"/*").permitAll()
 
-                    .antMatchers(Endpoint.REDIRECT).permitAll()
+                    .antMatchers(Endpoint.REDIRECT+"/*").permitAll()
 
                     .antMatchers(Endpoint.COURSE_LIST).permitAll()
                     .antMatchers(Endpoint.TOPIC_LIST).permitAll()

@@ -76,5 +76,6 @@ public class Endpoint {
     //RestApi Endpoints
     public static final String CRM_MESSAGES = "/crm/messages";
     public static final String API_CREATE_REDIRECTION_LINK = "/api/createRedirectionLink";
+    public static final String API_REDIRECTION_LINKS = "/api/redirectionLinksForProfile/";
 
 }

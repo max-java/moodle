@@ -3,7 +3,7 @@ package by.jrr.registration.service;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.RedirectionLink;
 import by.jrr.registration.bean.RedirectionLinkStatus;
-import by.jrr.registration.model.CreateRedirectionLink;
+import by.jrr.registration.model.RedirectionLinkDto;
 import by.jrr.registration.repository.RedirectionLinkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class RedirectionLinkServiceIntTest {
 
     @Test
     void createRedirectionLink() {
-        CreateRedirectionLink.Response result = redirectionLinkService.createRedirectionLink(makeRequest());
+        RedirectionLinkDto.Response result = redirectionLinkService.createRedirectionLink(makeRequest());
         assertThat(result.getLink()).startsWith("https://moodle.jrr.by/redirect/");
         assertThat(result.getLink()).hasSize(67);
 
@@ -99,8 +99,8 @@ class RedirectionLinkServiceIntTest {
     }
 
 
-    private CreateRedirectionLink.Request makeRequest() {
-        CreateRedirectionLink.Request request = new CreateRedirectionLink.Request();
+    private RedirectionLinkDto.Request makeRequest() {
+        RedirectionLinkDto.Request request = new RedirectionLinkDto.Request();
         request.setCourseId(1L);
         request.setLectureId(2L);
         request.setStreamTeamProfileId(3L);

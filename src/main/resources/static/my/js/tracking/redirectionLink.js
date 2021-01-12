@@ -37,6 +37,18 @@ function createRedirectionLink(studentProfileId, streamTeamProfileId, courseId, 
         eventName,
         eventType,
         expirationMinutes);
-    alert(request);
     xhr.send(JSON.stringify(request));
 }
+
+function findRedirectionLinksByProfileId(profileId) {
+    var url = "/api/redirectionLinksForProfile/"+profileId;
+    var xhr = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            return xmlHttp.responseText;
+    };
+    xhr.open("GET", url, true);
+    xhr.send(null);
+
+}
+

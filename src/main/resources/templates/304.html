@@ -19,19 +19,18 @@
         <!-- Main content -->
         <div class="content">
             <div class="error-page">
-                <h2 class="headline text-success">302</h2>
+                <h2 class="headline text-success">304</h2>
 
                 <div class="error-content">
                     <h3><i class="fas fa-external-link-alt text-success"></i> Redirection </h3>
-                    <p>
-                        If you are not redirected automatically, follow this link
-                    </p>
+                    <h2 th:text="${link.eventType}" />
+                    <h3 th:text="${link.eventName}" />
+                    <p th:text="${link.status.message}" />
 
                     <p>
-                        <a th:href="${link}"
-                           th:text="${link}" />
+                        <a th:href="${link.urlToRedirect}"
+                           th:text="${link.urlToRedirect}" />
                     </p>
-
                 </div>
             </div>
             <!-- /.error-page -->
