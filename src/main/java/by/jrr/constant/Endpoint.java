@@ -5,6 +5,8 @@ import by.jrr.common.annotations.ToDeprecated;
 public class Endpoint {
     public static final String HOME = "/";
 
+    public static final String REDIRECT = "/redirect";
+
     public static final String TOPIC = "/topic";
     public static final String TOPIC_LIST = "/topics";
     public static final String LECTURE = "/lecture";
@@ -69,7 +71,11 @@ public class Endpoint {
     public static final String CRM_CONTRACTS = "/crm/contracts";
     public static final String CRM_OPERATION_CATEGORIES = "/crm/operationCategories";
 
-    public static final String CRM_MESSAGES = "/crm/messages";
 
+
+    //RestApi Endpoints
+    public static final String CRM_MESSAGES = "/crm/messages";
+    public static final String API_CREATE_REDIRECTION_LINK = "/api/createRedirectionLink";
+    public static final String API_REDIRECTION_LINKS = "/api/redirectionLinksForProfile/";
 
 }

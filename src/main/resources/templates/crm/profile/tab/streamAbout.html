@@ -2,8 +2,78 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="streamAbout">
+    <script th:src="@{/my/js/tracking/redirectionLink.js}"></script>
+
 
     <div class="tab-pane" id="activity" th:classappend="${active}">
+        <div class="row" th:if="${profile.getUserChatButtons().size() > 0}">
+
+            <table class="table table-striped">
+                <tr>
+                    <th></th>
+                    <th>eventName</th>
+                    <th>eventType</th>
+                    <th>urlToRedirect</th>
+                    <th>student Profile Id</th>
+                    <th>stream Team Profile Id</th>
+                    <th>course Id</th>
+                </tr>
+                <th:block th:each="chatButton : ${profile.getUserChatButtons()}">
+                    <tr>
+                        <td>
+                            <button th:onclick="createRedirectionLink(
+                                        [[${chatButton.studentProfileId}]],
+                                        [[${chatButton.streamTeamProfileId}]],
+                                        [[${chatButton.courseId}]],
+                                        null,
+                                        [[${chatButton.urlToRedirect}]],
+                                        [[${chatButton.eventName}]],
+                                        [[${chatButton.eventType}]],
+                                        60);">
+                                generate user link
+                            </button>
+                        </td>
+                        <td th:id="|${chatButton.eventName}eventName|" th:text="${chatButton.eventName}"/>
+                        <td th:id="|${chatButton.eventName}eventType|" th:text="${chatButton.eventType}"/>
+                        <td th:id="|${chatButton.eventName}urlToRedirect|" th:text="${chatButton.urlToRedirect}"/>
+                        <td th:id="|${chatButton.eventName}studentProfileId|" th:text="${chatButton.studentProfileId}"/>
+                        <td th:id="|${chatButton.eventName}streamTeamProfileId|" th:text="${chatButton.streamTeamProfileId}"/>
+                        <td th:id="|${chatButton.eventName}courseId|" th:text="${chatButton.courseId}"/>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+
+        <div class="row">
+            <h3>User Links (refresh browser to update)</h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>status</th>
+                    <th>redirectionPage</th>
+                    <th>urlToRedirect</th>
+                    <th>event Name</th>
+                    <th>event Type</th>
+                    <th>expiration Minutes</th>
+                    <th>timestamp</th>
+                </tr>
+                <th:block th:each="redirectionLink : ${redirectionLinks}">
+                    <tr>
+
+                        <td th:text="${redirectionLink.status}" />
+                        <td th:text="${redirectionLink.redirectionPage}" />
+                        <td th:text="${redirectionLink.urlToRedirect}" />
+                        <td th:text="${redirectionLink.eventName}" />
+                        <td th:text="${redirectionLink.eventType}" />
+                        <td th:text="${redirectionLink.expirationMinutes}" />
+                        <td th:text="${redirectionLink.timestamp}" />
+
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+
+        <!-- /.row -->
+
         <!-- Post -->
         <div class="post">
             <div th:utext="${profile.getAbout()}"/>
