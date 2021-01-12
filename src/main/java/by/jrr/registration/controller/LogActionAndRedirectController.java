@@ -1,6 +1,7 @@
 package by.jrr.registration.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.balance.constant.Http;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.registration.bean.EventType;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,19 +43,27 @@ public class LogActionAndRedirectController {
     RedirectionLinkService redirectionLinkService;
 
     @GetMapping(Endpoint.REDIRECT+"/{redirectionId}")
-    public ModelAndView openRedirect(@PathVariable String redirectionId) {
-        RedirectionLink redirectionLink = redirectionLinkService.useRedirectionLink(redirectionId);
-        //todo: perform autologin and set user specific data
-        //ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+    public ModelAndView openRedirect(@PathVariable String redirectionId, HttpServletRequest httpServletRequest) {
 
         ModelAndView mov = new ModelAndView();
         mov.setViewName(View.PAGE_304);
-        mov.addObject("link", redirectionLink);
-        if(redirectionLink.getStatus().equals(RedirectionLinkStatus.NEW)) {
-            satls.saveAction(RedirectionLinkMapper.OF.getStudentActionToLogFromRedirectionLink(redirectionLink));
-        }
 
+        //filter Viber requests
+        if (!isRobotRequest(httpServletRequest)) {
+
+            RedirectionLink redirectionLink = redirectionLinkService.useRedirectionLink(redirectionId);
+            if(redirectionLink.getStatus().equals(RedirectionLinkStatus.NEW)) {
+                satls.saveAction(RedirectionLinkMapper.OF.getStudentActionToLogFromRedirectionLink(redirectionLink));
+            }
+            mov.addObject("link", redirectionLink);
+        }
+//        https://stackoverflow.com/questions/5411538/redirect-from-an-html-page
         return mov;
+    }
+
+    private boolean isRobotRequest(HttpServletRequest request) {
+        return request.getHeader("User-Agent").contains("Viber")
+                || request.getHeader("User-Agent").contains("TelegramBot (like TwitterBot)");
     }
 
     @PostMapping("/l/") // TODO: 24/06/20 add to endpoint mapping

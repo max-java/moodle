@@ -27,7 +27,6 @@ function createRedirectionLink(studentProfileId, streamTeamProfileId, courseId, 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-  
     var request = new CreateRedirectionLinkRequest(
         studentProfileId,
         streamTeamProfileId,
@@ -37,6 +36,7 @@ function createRedirectionLink(studentProfileId, streamTeamProfileId, courseId, 
         eventName,
         eventType,
         expirationMinutes);
+
     xhr.send(JSON.stringify(request));
     alert("Link generated! Refresh browser")
 }
