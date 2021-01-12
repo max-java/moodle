@@ -1,6 +1,7 @@
 package by.jrr.registration.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
+import by.jrr.balance.constant.Http;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.registration.bean.EventType;
@@ -48,8 +49,7 @@ public class LogActionAndRedirectController {
         mov.setViewName(View.PAGE_304);
 
         //filter Viber requests
-        if (! httpServletRequest.getHeader("User-Agent").contains("Viber")
-            || !httpServletRequest.getHeader("User-Agent").contains("TelegramBot (like TwitterBot)")) {
+        if (!isRobotRequest(httpServletRequest)) {
 
             RedirectionLink redirectionLink = redirectionLinkService.useRedirectionLink(redirectionId);
             if(redirectionLink.getStatus().equals(RedirectionLinkStatus.NEW)) {
@@ -59,6 +59,11 @@ public class LogActionAndRedirectController {
         }
 //        https://stackoverflow.com/questions/5411538/redirect-from-an-html-page
         return mov;
+    }
+
+    private boolean isRobotRequest(HttpServletRequest request) {
+        return request.getHeader("User-Agent").contains("Viber")
+                || request.getHeader("User-Agent").contains("TelegramBot (like TwitterBot)");
     }
 
     @PostMapping("/l/") // TODO: 24/06/20 add to endpoint mapping
