@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,18 +42,22 @@ public class LogActionAndRedirectController {
     RedirectionLinkService redirectionLinkService;
 
     @GetMapping(Endpoint.REDIRECT+"/{redirectionId}")
-    public ModelAndView openRedirect(@PathVariable String redirectionId) {
-        RedirectionLink redirectionLink = redirectionLinkService.useRedirectionLink(redirectionId);
-        //todo: perform autologin and set user specific data
-        //ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+    public ModelAndView openRedirect(@PathVariable String redirectionId, HttpServletRequest httpServletRequest) {
 
         ModelAndView mov = new ModelAndView();
         mov.setViewName(View.PAGE_304);
-        mov.addObject("link", redirectionLink);
-        if(redirectionLink.getStatus().equals(RedirectionLinkStatus.NEW)) {
-            satls.saveAction(RedirectionLinkMapper.OF.getStudentActionToLogFromRedirectionLink(redirectionLink));
-        }
 
+        //filter Viber requests
+        if (! httpServletRequest.getHeader("User-Agent").contains("Viber")
+            || !httpServletRequest.getHeader("User-Agent").contains("TelegramBot (like TwitterBot)")) {
+
+            RedirectionLink redirectionLink = redirectionLinkService.useRedirectionLink(redirectionId);
+            if(redirectionLink.getStatus().equals(RedirectionLinkStatus.NEW)) {
+                satls.saveAction(RedirectionLinkMapper.OF.getStudentActionToLogFromRedirectionLink(redirectionLink));
+            }
+            mov.addObject("link", redirectionLink);
+        }
+//        https://stackoverflow.com/questions/5411538/redirect-from-an-html-page
         return mov;
     }
 
