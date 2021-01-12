@@ -84,6 +84,11 @@ public class Profile {
     @Transient
     private List<StreamAndTeamSubscriber> subscriptions = new ArrayList<>();
 
+    @Transient
+    private ChatButtonDto streamChatButtonDto;
+    @Transient
+    private List<ChatButtonDto> userChatButtons = new ArrayList<>();
+
     // that is only for streams
     private LocalDate dateStart;
     private LocalDate dateEnd;
