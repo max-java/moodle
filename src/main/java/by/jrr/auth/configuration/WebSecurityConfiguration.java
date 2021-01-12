@@ -51,6 +51,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(loginPage).permitAll()
                     .antMatchers(Endpoint.HOME).permitAll()
                     .antMatchers(Endpoint.COURSE+"/*").permitAll()
+
+                    .antMatchers(Endpoint.REDIRECT).permitAll()
+
                     .antMatchers(Endpoint.COURSE_LIST).permitAll()
                     .antMatchers(Endpoint.TOPIC_LIST).permitAll()
                     .antMatchers(Endpoint.LECTURE_LIST).permitAll()
@@ -64,6 +67,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM).permitAll()
                     .antMatchers(Endpoint.REGISTER_USER).permitAll()
                     .antMatchers(Endpoint.PROFILE_LIST).permitAll()
+//
                     .antMatchers(Endpoint.TOPIC+"/*").permitAll()
                     .antMatchers(Endpoint.TOPIC_LIST).permitAll()
                     .antMatchers("/api/registerForm/validate/email/*").permitAll() // TODO: 23/06/20 make it psfs
