@@ -50,6 +50,4 @@ class BynUsdRateRepositoryTest extends IntegrationTest {
     public static BynUsdRate createNewBynUsdRate() {
         return new BynUsdRate(null, LocalDate.parse("2020-12-04"), "USD",BigDecimal.valueOf(2.58));
     }
-
-
 }

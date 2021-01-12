@@ -11,10 +11,7 @@ import by.jrr.crm.service.HistoryItemService;
 import by.jrr.feedback.bean.EntityType;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.service.CourseService;
-import by.jrr.profile.bean.Profile;
-import by.jrr.profile.bean.StreamAndTeamSubscriber;
-import by.jrr.profile.bean.SubscriptionStatus;
-import by.jrr.profile.bean.UserProfileStatisticDTO;
+import by.jrr.profile.bean.*;
 import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.StudentActionToLog;
@@ -149,6 +146,7 @@ public class ProfileService {
                 }
             }
             profile.setSubscriptions(subscriptions);
+            setStudentProfileChats(profile);
         }
     }
 
@@ -432,5 +430,27 @@ public class ProfileService {
         return profileRepository.findByUserId(userId).orElseGet(() -> new Profile()); // TODO: 02/11/2020 backup message shoould be create Profile
     }
 
+    public void setStudentProfileChats(Profile profile) {
+        List<StreamAndTeamSubscriber> subscriptions = profile.getSubscriptions();
 
+        List<ChatButtonDto> chatButtons = subscriptions.stream()
+                .map(subscription -> this.findProfileByProfileIdLazy(subscription.getStreamTeamProfileId()))
+                .map(optionalProf -> optionalProf.orElseGet(Profile::new))
+                .map(profl -> makeChatButtonDto(profl))
+                .collect(Collectors.toList());
+
+        chatButtons.forEach(chatButton -> chatButton.setStudentProfileId(profile.getId()));
+
+        profile.setUserChatButtons(chatButtons);
+    }
+
+    private ChatButtonDto makeChatButtonDto(Profile profile) {
+        ChatButtonDto chatButtonDto = new ChatButtonDto();
+        chatButtonDto.setCourseId(profile.getCourseId());
+        chatButtonDto.setEventName(profile.getTelegramLinkText());
+        chatButtonDto.setEventType(EventType.TELEGRAM_CHAT);
+        chatButtonDto.setStreamTeamProfileId(profile.getId());
+        chatButtonDto.setUrlToRedirect(profile.getTelegramLink());
+        return chatButtonDto;
+    }
 }

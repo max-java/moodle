@@ -1,6 +1,8 @@
 package by.jrr.constant;
 
 public class View {
+    public static final String PAGE_302 = "302";
+    public static final String PAGE_304 = "304";
     public static final String PAGE_400 = "400";
     public static final String PAGE_404 = "404";
     public static final String PAGE_403 = "403";

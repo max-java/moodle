@@ -22,6 +22,7 @@ import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.bean.TimeLine;
 import by.jrr.profile.service.*;
 import by.jrr.registration.bean.EventType;
+import by.jrr.registration.service.RedirectionLinkService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -69,6 +70,8 @@ public class StreamController {
     ContractService contractService;
     @Autowired
     OperationCategoryService operationCategoryService;
+    @Autowired
+    RedirectionLinkService redirectionLinkService;
 
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
@@ -120,6 +123,8 @@ public class StreamController {
             mov.addObject("userOperationRows", userOperations);
             mov.addObject("userTotal", userTotal);
             mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
+
+            mov.addObject("redirectionLinks", redirectionLinkService.findRedirectionLinksForProfile(profileId));
 
         } else {
             mov.setViewName(View.PAGE_404);
