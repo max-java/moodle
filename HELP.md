@@ -25,3 +25,5 @@ The following guides illustrate how to use some features concretely:
 
 AdminLTE used for presentation layer
 https://github.com/ColorlibHQ/AdminLTE/releases
+
+VM Options -Djasypt.encryptor.password= to run with encoded properties

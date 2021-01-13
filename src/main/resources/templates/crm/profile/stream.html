@@ -113,6 +113,9 @@
                                                             href="#contract">
                                         Contracts</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                            href="#messages">
+                                        Messages</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                             href="#lead-detail">
                                                             CRM</a>
                                     </li>
@@ -128,6 +131,7 @@
                                     <th:block th:include="crm/profile/tab/streamActivity :: streamActivity" />
                                     <th:block th:include="crm/profile/tab/userActions :: userActions" />
                                     <th:block th:include="crm/profile/tab/timeline :: timeline" />
+                                    <th:block th:include="crm/profile/tab/messages :: messages" />
                                     <th:block th:include="crm/profile/tab/leadDetailHistory :: history" th:with="active=''" />
 
                                 </div>
