@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TimeLineRepository extends PagingAndSortingRepository<TimeLine, Long> {
     List<TimeLine> findAllByStreamTeamProfileId(Long id);
+    TimeLine findByTimelineUUID(String uuid);
 }

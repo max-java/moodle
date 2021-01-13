@@ -22,6 +22,7 @@ public class StudentActionToLog {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
+    private String timelineUUID;
 
     private Long studentProfileId;
     @Transient

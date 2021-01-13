@@ -10,6 +10,7 @@ public class RedirectionLinkDto {
     @Data
     @NoArgsConstructor
     public static class Request {
+        private String timelineUUID;  //todo: because timeline events has uuid, consider simplifying process based on that.
         private Long studentProfileId;
         private Long streamTeamProfileId;
         private Long courseId;

@@ -39,9 +39,12 @@ public class StudentActionToLogService {
                         .build()
         );
     }
+
     public void saveAction(StudentActionToLog studentActionToLog) {
         studentActionToLog.setTimestamp(LocalDateTime.now());
-        studentActionToLog.setStudentProfileId(profileService.getCurrentUserProfileId());
+        if(studentActionToLog.getStudentProfileId() == null) {
+            studentActionToLog.setStudentProfileId(profileService.getCurrentUserProfileId());
+        }
         satlR.save(studentActionToLog);
     }
 
@@ -78,6 +81,7 @@ public class StudentActionToLogService {
         userActivityDTO.setNotActive(notActiveOfSubscribers);
         return userActivityDTO;
     }
+
     private LogActionAndRedirectController.UserActivityElementDTO setDTO(Profile profile) {
         LogActionAndRedirectController.UserActivityElementDTO elementDTO = new LogActionAndRedirectController.UserActivityElementDTO();
         if(profile != null && profile.getUser() != null) {
@@ -123,9 +127,11 @@ public class StudentActionToLogService {
     public List<StudentActionToLog> findAllActionsForProfileId(Long profileId) {
         return satlR.findAllBystudentProfileId(profileId);
     }
+
     public List<StudentActionToLog> findAllActionsForProfileIdBetwenDates(Long profileId, LocalDateTime start, LocalDateTime finish) {
         return satlR.findAllBystudentProfileIdAndTimestampBetween(profileId, start, finish);
     }
+
     public List<LogActionAndRedirectController.UserActivityElementDTO> convertUserActivityListToDTO(List<StudentActionToLog> studentActionToLogList) {
         List<LogActionAndRedirectController.UserActivityElementDTO> dtoList = new ArrayList<>();
 
@@ -147,7 +153,6 @@ public class StudentActionToLogService {
             }
             dtoList.add(dto);
         }
-
         return dtoList;
     }
 

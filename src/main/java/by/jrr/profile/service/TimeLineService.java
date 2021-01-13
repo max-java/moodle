@@ -20,8 +20,18 @@ public class TimeLineService {
     @Autowired
     UserAccessService userAccessService;
 
+    public void globalUpdateForUuid() {
+        List<TimeLine> timeLines = findAll();
+        timeLines.forEach(this::save);
+    }
+
     public void save(TimeLine timeLine) {
+        setUuidIfItNull(timeLine);
         timeLineRepository.save(timeLine);
+    }
+
+    public List<TimeLine> findAll() {
+        return (List) timeLineRepository.findAll();
     }
 
     public void delete(TimeLine timeLine) {
@@ -89,6 +99,12 @@ public class TimeLineService {
         timeline.addAll(getTimelineForProfileSubscriptions(profile.getSubscriptions()));
         distinctTimelineItems(timeline);
         return groupTimelineByDates(timeline);
+    }
+
+    private void setUuidIfItNull(TimeLine timeLine) {
+        if (timeLine.getTimelineUUID() == null) {
+            timeLine.setTimelineUUID(UUID.randomUUID().toString());
+        }
     }
 
 

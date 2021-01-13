@@ -27,6 +27,9 @@
             <div class="timeline-footer">
                 <form></form>
                 <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
                     <input name="link"
                            th:value="${timeline.getUrlToRedirect().trim()}"
                            type="hidden"/>
@@ -86,6 +89,9 @@
             <div class="timeline-footer">
                 <form></form>
                 <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
                     <input name="link"
                            th:value="${timeline.getUrlToRedirect().trim()}"
                            type="hidden"/>
