@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,11 +22,6 @@ public class TimeLineService {
     @Autowired
     UserAccessService userAccessService;
 
-    public void globalUpdateForUuid() {
-        List<TimeLine> timeLines = findAll();
-        timeLines.forEach(this::save);
-    }
-
     public void save(TimeLine timeLine) {
         setUuidIfItNull(timeLine);
         timeLineRepository.save(timeLine);
@@ -32,6 +29,20 @@ public class TimeLineService {
 
     public List<TimeLine> findAll() {
         return (List) timeLineRepository.findAll();
+    }
+
+    public List<TimeLine> findAllByEventDay(LocalDate localDate) {
+        return (List) timeLineRepository.findAllByDateTimeBetween(
+                localDate.atStartOfDay(),
+                LocalDateTime.of(localDate, LocalTime.MAX));
+    }
+
+    public List<TimeLine> findAllByEventTimeNearTo(LocalDateTime time, long periodInMinutes) {
+        return (List) timeLineRepository.findAllByDateTimeBetween(time, time.plusMinutes(periodInMinutes));
+    }
+
+    public TimeLine findTimeLineByTimeLineUUID(String uuid) {
+        return timeLineRepository.findByTimelineUUID(uuid);
     }
 
     public void delete(TimeLine timeLine) {

@@ -25,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -189,6 +190,12 @@ public class ProfileService {
         return profile;
     }
 
+    public Profile findProfileByProfileIdLazyWithUserData(Long id) {
+        Profile profile = profileRepository.findById(id).orElse(new Profile());
+        profile.setUser(userService.getUserById(profile.getUserId()));
+        return profile;
+    }
+
     public Profile getCurrentUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (userAccessService.isCurrentUserAuthenticated()){
@@ -316,6 +323,24 @@ public class ProfileService {
         setTeamStandups(userActionsLog, userProfileStatisticDTO);
         userProfileStatisticDTO.setUserFirstAndLastName(subscriber.getFullSubscriberName());
         return userProfileStatisticDTO;
+    }
+
+    public List<Profile> findStudentsForStreamWithSubscriptionStatusAny(Long streamProfileId) throws EntityNotFoundException {
+        Profile profile = findProfileByProfileIdLazy(streamProfileId).orElseThrow(EntityNotFoundException::new);
+        setSubscribersToStreamProfile(profile);
+        return profile.getSubscribers().stream()
+                .map(s -> s.getSubscriberProfileId())
+                .map(id -> this.findProfileByProfileId(id))
+                .filter(optional -> optional.isPresent())
+                .map(optional -> optional.get())
+                .collect(Collectors.toList());
+    }
+
+    public List<Long> findStudentsProfilesIdForStreamWithSubscriptionStatusAny(Long streamProfileId) throws EntityNotFoundException {
+        return streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(streamProfileId)
+                .stream()
+                .map(subscriber -> subscriber.getSubscriberProfileId())
+                .collect(Collectors.toList());
     }
 
     private void setFirstLecture(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
