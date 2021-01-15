@@ -24,7 +24,7 @@ class TimeLineNotificationServiceTest {
 
     @Test
     void findTimeLineItemsByEventDay() {
-        List actualTimeLines = timeLineNotificationService.findTimeLineItemsByEventDay(LocalDate.parse("2020-08-08"));
+        List actualTimeLines = timeLineNotificationService.findTimeLineItemsByEventDay(EventType.LECTURE, LocalDate.parse("2020-08-08"));
         Assertions.assertThat(makeTimeLine()).containsSequence(actualTimeLines);
     }
 
