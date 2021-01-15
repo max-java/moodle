@@ -20,6 +20,8 @@ public class TimeLine {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
+    //todo consider and test nullable false updatable false.
+    private String timelineUUID;
     private LocalDateTime dateTime;
     private Long streamTeamProfileId;
     private Long courseId;

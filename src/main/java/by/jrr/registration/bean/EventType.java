@@ -6,7 +6,7 @@ public enum EventType {
     TEAM_STAND_UP,
     TELEGRAM_CHAT,
     GIT_LINK,
-    FEEDBACK,
+    FEEDBACK, // external feedback form.
     YOUTUBE,
     VIDEO
 }

@@ -5,10 +5,13 @@ import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.TimeLine;
 import by.jrr.profile.repository.TimeLineRepository;
+import by.jrr.registration.bean.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,7 +24,52 @@ public class TimeLineService {
     UserAccessService userAccessService;
 
     public void save(TimeLine timeLine) {
+        setUuidIfItNull(timeLine);
         timeLineRepository.save(timeLine);
+    }
+
+    public List<TimeLine> findAll() {
+        return (List) timeLineRepository.findAll();
+    }
+
+    public List<TimeLine> findByEventDay(EventType type, LocalDate localDate) {
+        return (List) timeLineRepository.findAllByEventTypeAndDateTimeBetween(
+                type,
+                localDate.atStartOfDay(),
+                LocalDateTime.of(localDate, LocalTime.MAX));
+    }
+
+    public List<TimeLine> findByEventTimeNearTo(EventType type, LocalDateTime time, long periodInMinutes) {
+        return (List) timeLineRepository.findAllByEventTypeAndDateTimeBetween(
+                type,
+                time,
+                time.plusMinutes(periodInMinutes));
+    }
+
+    /*** day selected as from not included */
+    public List<TimeLine> findEventsForLastPastDaysFromDate(EventType type, LocalDate from, long daysPast) {
+        return (List) timeLineRepository.findAllByEventTypeAndDateTimeBetween(
+                type,
+                from.minusDays(daysPast).atStartOfDay(),
+                from.atStartOfDay());
+    }
+
+    /*** day selected as from not included */
+    public List<TimeLine> findEventsForFutureDaysFromDate(EventType type, LocalDate from, long daysInFuture) {
+        return (List) timeLineRepository.findAllByEventTypeAndDateTimeBetween(
+                type,
+                from.atStartOfDay(),
+                from.plusDays(daysInFuture).atStartOfDay());
+    }
+
+    public TimeLine findTimeLineByTimeLineUUID(String uuid) {
+        try {
+            return timeLineRepository.findByTimelineUUID(uuid);
+        } catch (Exception ex) {
+            //todo: log it
+            System.out.println("Not unique value timeline item for "+uuid);
+            return timeLineRepository.findAllByTimelineUUID(uuid).get(0);
+        }
     }
 
     public void delete(TimeLine timeLine) {
@@ -91,5 +139,12 @@ public class TimeLineService {
         return groupTimelineByDates(timeline);
     }
 
-
+    private void setUuidIfItNull(TimeLine timeLine) {
+        try {
+            UUID.fromString(timeLine.getTimelineUUID());
+        } catch (Exception ex) {
+            System.out.println("not valid uuid, generating new");
+            timeLine.setTimelineUUID(UUID.randomUUID().toString());
+        }
+    }
 }
