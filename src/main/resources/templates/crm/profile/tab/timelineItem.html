@@ -16,9 +16,10 @@
                             <small class="label pull-right bg-green"
                                    th:onclick="createRedirectionLink(
                                                     [[${profile.getId()}]],
+                                                    [[${timeline.getTimelineUUID()}]],
                                                     [[${timeline.streamTeamProfileId}]],
                                                     [[${timeline.courseId}]],
-                                                    null,
+                                                    [[${timeline.lectureId}]],
                                                     [[${timeline.urlToRedirect}]],
                                                     [[${timeline.eventName}]],
                                                     [[${timeline.eventType}]],
@@ -41,6 +42,9 @@
             <div class="timeline-footer">
                 <form></form>
                 <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
                     <input name="link"
                            th:value="${timeline.getUrlToRedirect().trim()}"
                            type="hidden"/>
@@ -100,6 +104,9 @@
             <div class="timeline-footer">
                 <form></form>
                 <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
                     <input name="link"
                            th:value="${timeline.getUrlToRedirect().trim()}"
                            type="hidden"/>

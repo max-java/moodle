@@ -7,7 +7,8 @@
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).LECTURE)}">
         <div class="timeline-item">
             <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
-            <h3 style="padding: 10px;"><i class="far fa-clock"></i>
+            <h3 style="padding: 10px;">
+                <i class="far fa-clock"></i>
                 <th:block
                         th:text="${timeline.getTime()}">12:05
                 </th:block>
@@ -27,6 +28,9 @@
             <div class="timeline-footer">
                 <form></form>
                 <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
                     <input name="link"
                            th:value="${timeline.getUrlToRedirect().trim()}"
                            type="hidden"/>
@@ -62,6 +66,69 @@
         </div>
     </th:block>
 
+    <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).FEEDBACK)}">
+        <div class="timeline-item">
+            <th:block th:insert="profile/timeline/timelineItemButtonWrapper :: itemButton" />
+            <h3 class="bg-gradient-purple"
+                style="padding: 10px;">
+                <i class="far fa-clock"></i>
+                <th:block
+                        th:text="${timeline.getTime()}">12:05
+                </th:block>
+            </h3>
+
+            <h3 class="timeline-header">
+                <a href="#" th:text="${timeline.getEventType()}">
+                    Support Team
+                </a>
+                <span th:text="${timeline.getEventName()}">
+                </span>
+            </h3>
+
+            <div class="timeline-body" th:text="${timeline.getNotes()}">
+
+            </div>
+            <div class="timeline-footer">
+                <form></form>
+                <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
+                    <input name="link"
+                           th:value="${timeline.getUrlToRedirect().trim()}"
+                           type="hidden"/>
+                    <input name="linkName"
+                           th:value="${timeline.getEventName()}"
+                           type="hidden"/>
+                    <input name="streamTeamId"
+                           th:value="${timeline.getStreamTeamProfileId()}"
+                           type="hidden"/>
+                    <input name="courseId"
+                           th:value="${timeline.getCourseId()}"
+                           type="hidden"/>
+                    <input name="lectureId"
+                           th:value="${timeline.getLectureId()}"
+                           type="hidden"/>
+                    <button class="btn btn-block col-md-3"
+                            name="eventType"
+                            th:value="${timeline.getEventType()}"
+                            type="submit">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-gradient-purple">
+                                <i class="fa fa-comment"></i>
+                            </span>
+                            <div class="info-box-content text-left">
+                                <span class="info-box-text">Form</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </button>
+                </form>
+            </div>
+        </div>
+    </th:block>
+
 
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).TEAM_STAND_UP)}">
         <div class="timeline-item">
@@ -86,6 +153,9 @@
             <div class="timeline-footer">
                 <form></form>
                 <form action="/l/" method="post">
+                    <input name="timelineUUID"
+                           th:value="${timeline.getTimelineUUID()}"
+                           type="hidden"/>
                     <input name="link"
                            th:value="${timeline.getUrlToRedirect().trim()}"
                            type="hidden"/>

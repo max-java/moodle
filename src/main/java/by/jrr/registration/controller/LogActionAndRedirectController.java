@@ -1,7 +1,6 @@
 package by.jrr.registration.controller;
 
 import by.jrr.auth.service.UserDataToModelService;
-import by.jrr.balance.constant.Http;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
 import by.jrr.registration.bean.EventType;
@@ -63,7 +62,7 @@ public class LogActionAndRedirectController {
 
     private boolean isRobotRequest(HttpServletRequest request) {
         return request.getHeader("User-Agent").contains("Viber")
-                || request.getHeader("User-Agent").contains("TelegramBot (like TwitterBot)");
+                || request.getHeader("User-Agent").contains("TelegramBotможе");
     }
 
     @PostMapping("/l/") // TODO: 24/06/20 add to endpoint mapping
@@ -72,7 +71,8 @@ public class LogActionAndRedirectController {
                                                @RequestParam String linkName,
                                                @RequestParam EventType eventType,
                                                @RequestParam(value = "courseId", required = false) Long courseId,
-                                               @RequestParam(value = "lectureId", required = false) Long lectureId
+                                               @RequestParam(value = "lectureId", required = false) Long lectureId,
+                                               @RequestParam(value = "timelineUUID", required = false) String timelineUUID
     ) {
         satls.saveAction(StudentActionToLog.builder()
                 .streamTeamProfileId(streamTeamId)
@@ -81,12 +81,14 @@ public class LogActionAndRedirectController {
                 .eventType(eventType)
                 .courseId(courseId)
                 .lectureId(lectureId)
+                .timelineUUID(timelineUUID)
                 .build());
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(link);
         return redirectView;
     }
 
+    @Deprecated
     @GetMapping("/l/{link}/{streamTeamId}/{eventType}")
     public RedirectView logAndRedirectByGet(@PathVariable Long streamTeamId,
                                             @PathVariable String link,
@@ -98,6 +100,7 @@ public class LogActionAndRedirectController {
         return redirectView;
     }
 
+    @Deprecated
     @GetMapping(value = "/admin/action", produces = MediaType.APPLICATION_XML_VALUE)
     public @ResponseBody
     UserActivityDTO findStudentWhoTakeNoAction(@RequestParam Optional<Long> streamId,
@@ -119,6 +122,7 @@ public class LogActionAndRedirectController {
         return userActivityDTO;
     }
 
+    @Deprecated
     @GetMapping(value = "/admin/userActivity", produces = MediaType.APPLICATION_XML_VALUE)
     public @ResponseBody
     UserActivityDTO findUserActivity(@RequestParam Optional<Long> userProfileId,
@@ -150,6 +154,7 @@ public class LogActionAndRedirectController {
     @NoArgsConstructor
     @Data
     @XmlRootElement
+    @Deprecated
     public static class UserActivityDTO {
         List<UserActivityElementDTO> active = new ArrayList<>();
         List<UserActivityElementDTO> notActive = new ArrayList<>();
@@ -160,6 +165,7 @@ public class LogActionAndRedirectController {
     @NoArgsConstructor
     @Data
     @XmlRootElement
+    @Deprecated
     public static class UserActivityElementDTO {
         String firstName;
         String lastName;

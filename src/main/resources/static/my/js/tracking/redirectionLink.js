@@ -2,16 +2,18 @@
 
 class CreateRedirectionLinkRequest {
     studentProfileId;
+    timelineUUID;
     streamTeamProfileId;
     courseId;
-    lectureId
-    urlToRedirect
-    eventName
-    eventType
-    expirationMinutes
+    lectureId;
+    urlToRedirect;
+    eventName;
+    eventType;
+    expirationMinutes;
 
-    constructor(studentProfileId, streamTeamProfileId, courseId, lectureId, urlToRedirect, eventName, eventType, expirationMinutes) {
+    constructor(studentProfileId, timelineUUID, streamTeamProfileId, courseId, lectureId, urlToRedirect, eventName, eventType, expirationMinutes) {
         this.studentProfileId = studentProfileId;
+        this.timelineUUID = timelineUUID;
         this.streamTeamProfileId = streamTeamProfileId;
         this.courseId = courseId;
         this.lectureId = lectureId;
@@ -22,13 +24,14 @@ class CreateRedirectionLinkRequest {
     }
 }
 
-function createRedirectionLink(studentProfileId, streamTeamProfileId, courseId, lectureId, urlToRedirect, eventName, eventType, expirationMinutes) {
+function createRedirectionLink(studentProfileId, timelineUUID, streamTeamProfileId, courseId, lectureId, urlToRedirect, eventName, eventType, expirationMinutes) {
     var url = "/api/createRedirectionLink";
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     var request = new CreateRedirectionLinkRequest(
         studentProfileId,
+        timelineUUID,
         streamTeamProfileId,
         courseId,
         lectureId,

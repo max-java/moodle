@@ -40,7 +40,7 @@ public class RedirectionLinkService {
         this.clock = Clock.systemDefaultZone();
     }
 
-    private static final String REDIRECTION_PAGE_BASE_URL = "https://moodle.jrr.by/redirect/";
+    private static final String REDIRECTION_PAGE_BASE_URL = "https://moodle.jrr.by/redirect/"; //todo: make it url based
     private static final int DEFAULT_EXPIRATION = 15;
 
 

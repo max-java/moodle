@@ -26,6 +26,7 @@ public class RedirectionLink {
 
     @javax.persistence.Id
     private String uuid;
+    private String timelineUUID;
 
     private Long studentProfileId;
     private Long streamTeamProfileId;

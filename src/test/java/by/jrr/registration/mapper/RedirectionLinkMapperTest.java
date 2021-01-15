@@ -27,6 +27,7 @@ class RedirectionLinkMapperTest {
 
     private RedirectionLinkDto.Request makeRequest() {
         RedirectionLinkDto.Request request = new RedirectionLinkDto.Request();
+        request.setTimelineUUID("aaaa-bbbb-cccc-dddd");
         request.setCourseId(1L);
         request.setLectureId(2L);
         request.setStreamTeamProfileId(3L);
@@ -40,6 +41,7 @@ class RedirectionLinkMapperTest {
 
     private RedirectionLink makeRedirectionLink() {
         RedirectionLink redirectionLink = new RedirectionLink();
+        redirectionLink.setTimelineUUID("aaaa-bbbb-cccc-dddd");
         redirectionLink.setCourseId(1L);
         redirectionLink.setLectureId(2L);
         redirectionLink.setStreamTeamProfileId(3L);
@@ -53,6 +55,7 @@ class RedirectionLinkMapperTest {
 
     private StudentActionToLog makeStudentActionToLog() {
         StudentActionToLog studentActionToLog = new StudentActionToLog();
+        studentActionToLog.setTimelineUUID("aaaa-bbbb-cccc-dddd");
         studentActionToLog.setCourseId(1L);
         studentActionToLog.setLectureId(2L);
         studentActionToLog.setStreamTeamProfileId(3L);

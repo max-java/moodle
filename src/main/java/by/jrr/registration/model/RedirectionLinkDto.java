@@ -2,6 +2,7 @@ package by.jrr.registration.model;
 
 import by.jrr.registration.bean.EventType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,10 @@ public class RedirectionLinkDto {
 
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class Request {
+        private String timelineUUID;  //todo: because timeline events has uuid, consider simplifying process based on that.
         private Long studentProfileId;
         private Long streamTeamProfileId;
         private Long courseId;

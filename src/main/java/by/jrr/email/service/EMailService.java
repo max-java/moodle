@@ -24,6 +24,14 @@ public class EMailService {
         emailSender.send(message);
     }
 
+    public void sendEmail(String to, String subject, String messageText) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(messageText);
+        emailSender.send(message);
+    }
+
     public void sendQuickRegostrationConfirmation(String to, String password, String firstAndLastName) {
         sendQuickRegostrationInfoAndLogin(to, firstAndLastName);
         sendQuickRegostrationPassword(to, password, firstAndLastName);
