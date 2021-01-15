@@ -15,10 +15,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static by.jrr.profile.bean.Notification.Status.*;
 
@@ -107,7 +110,7 @@ public class TimeLineNotificationService {
                 messageText = makeMessageForFeedback(event, student, timeLineNotification.getNotificationType());
                 break;
             case VIDEO_EVENT:
-                if(event.getDateTime().isAfter(LocalDateTime.now())) {
+                if (event.getDateTime().isAfter(LocalDateTime.now())) {
                     messageText = makeMessageForFutureVideoLecture(event, student, timeLineNotification.getNotificationType());
                     subject = "{JG} Скоро занятие!";
                 } else {
@@ -176,8 +179,19 @@ public class TimeLineNotificationService {
                 events.addAll(findTimeLineItemsByEventDayPastDays(eventType, LocalDate.now(), 7));
         }
 
-
+        //prevent NPE
         for (TimeLine timeLine : events) {
+            if(timeLine.getTimeStamp() == null) {
+                timeLine.setTimeStamp(Instant.MIN);
+            }
+        }
+
+        //filter just created events:
+        List<TimeLine> filteredEvents = events.stream()
+                .filter(timeLine -> timeLine.getTimeStamp().isBefore(Instant.now().minusSeconds(3600))) //todo: test it
+                .collect(Collectors.toList());
+
+        for (TimeLine timeLine : filteredEvents) {
             List<Long> studentsIds = findStreamStudentsProfileIds(timeLine.getStreamTeamProfileId());
             for (Long studentId : studentsIds) {
                 createAndSaveTimeLineNotifications(timeLine.getTimelineUUID(), studentId, notificationType);
@@ -295,7 +309,7 @@ public class TimeLineNotificationService {
         messageText.append("Привет, " + student.getUser().getName() + "!");
         messageText.append("\n");
         messageText.append("\n" + notificationType.getSubjectText());
-        if(notificationType.equals(Notification.Type.REDIRECTION_LINK)) {
+        if (notificationType.equals(Notification.Type.REDIRECTION_LINK)) {
             makeRedirectionLinkTextWithExpiration(event, student, 120, messageText);
         }
         messageText.append("\n");
@@ -321,7 +335,7 @@ public class TimeLineNotificationService {
                 .expirationMinutes(expirationInMinutes)
                 .build();
         RedirectionLinkDto.Response link = redirectionLinkService.createRedirectionLink(request);
-        messageText.append("\n"+link.getLink());
+        messageText.append("\n" + link.getLink());
         messageText.append("\nВНИМАНИЕ! Ссылку можно использовать только один раз.");
         messageText.append("\nЕсли ленивая ссылка недействительна, нужно залогиниться на платформе и использовать ссылку из расписания группы.");
     }

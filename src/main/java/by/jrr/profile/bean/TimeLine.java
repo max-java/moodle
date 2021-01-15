@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.glassfish.grizzly.http.util.TimeStamp;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -32,6 +35,12 @@ public class TimeLine {
     private String eventName;
     @Column(columnDefinition = "TEXT")
     private String notes;
+    private Instant timeStamp;
+
+    @PrePersist
+    protected void onCreate() {
+        this.timeStamp = Instant.now();
+    }
 
     public String getTime() {
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
