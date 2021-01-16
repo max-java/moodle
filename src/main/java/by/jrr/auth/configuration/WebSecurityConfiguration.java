@@ -76,7 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/registerForm/validate/phone/*").permitAll() // TODO: 23/06/20 make it psfs
                     .antMatchers(Endpoint.PROFILE_CARD+"/*").permitAll()
                     .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-//                    .antMatchers("/crm /**").hasAuthority("ROLE_ADMIN")
+                    .antMatchers("/crm /**").hasAuthority("ROLE_ADMIN")
                     .antMatchers("/"+Endpoint.REGISTER_USER_ADMIN_REST_ERRORS+"/**").hasAuthority("ROLE_ADMIN")
                     .anyRequest()
                     .authenticated()
