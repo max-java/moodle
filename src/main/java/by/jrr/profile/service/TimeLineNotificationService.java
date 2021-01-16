@@ -342,7 +342,7 @@ public class TimeLineNotificationService {
 
     private void appendMessageFooter(StringBuffer messageText, TimeLine event) {
         messageText.append("\n");
-        messageText.append("\nРасписание, ссылки на занятия и записи уроково в профиле группы: https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId());
+        messageText.append("\nРасписание, ссылки на занятия и записи уроков в профиле группы: https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId());
         messageText.append("\nТам же в профиле группы ссылка на наш чат, где куратор отвечает на организационные вопросы");
         messageText.append("\nТвой куратор: Илья +375(29) 3333-600.");
         messageText.append("\n");
