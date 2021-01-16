@@ -3,6 +3,7 @@ package by.jrr.balance.bean;
 import by.jrr.balance.constant.OperationRowDirection;
 import by.jrr.profile.bean.Profile;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -17,6 +18,8 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OperationRow {
 
     @javax.persistence.Id

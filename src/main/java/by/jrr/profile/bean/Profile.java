@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -23,6 +24,8 @@ import static by.jrr.constant.LinkGenerator.DEFAULT_USERPIC;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Profile {
 
     // TODO: 10/06/20 Несмотря на то, что профиль пользователя, команда и стрим используют одну и туже вьюху,
