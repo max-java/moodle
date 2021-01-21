@@ -13,6 +13,7 @@ public interface StreamAndTeamSubscriberRepository extends PagingAndSortingRepos
     List<StreamAndTeamSubscriber> findAllByStreamTeamProfileId(Long id);
     List<StreamAndTeamSubscriber> findAllBySubscriberProfileId(Long id);
     Optional<StreamAndTeamSubscriber> findAllByStreamTeamProfileIdAndSubscriberProfileId(Long idL, Long idR);
+    Optional<StreamAndTeamSubscriber> findBySubscriberProfileIdAndStreamTeamProfileId(Long userProfileId, Long streamProfileId);
 
 
     List<StreamAndTeamSubscriber> findAllByStatus(SubscriptionStatus status);

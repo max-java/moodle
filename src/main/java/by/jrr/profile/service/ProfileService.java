@@ -478,4 +478,15 @@ public class ProfileService {
         chatButtonDto.setUrlToRedirect(profile.getTelegramLink());
         return chatButtonDto;
     }
+
+    public String findStreamNameByStreamProfileId(long id) {
+        try {
+            Profile profile = this.findProfileByProfileId(id).get();
+            return String.format("%s : %s",
+                    profile.getUser().getName(),
+                    profile.getUser().getLastName());
+        } catch (Exception ex) {
+            return String.valueOf(id);
+        }
+    }
 }

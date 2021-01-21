@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class StreamAndTeamSubscriberService {
@@ -34,15 +36,24 @@ public class StreamAndTeamSubscriberService {
     @Autowired
     EMailService eMailService;
 
+    public StreamAndTeamSubscriber findSubscribtion(Long userProfileId, Long streamProfileId) throws Exception{
+        return streamAndTeamSubscriberRepository.findBySubscriberProfileIdAndStreamTeamProfileId(userProfileId, streamProfileId)
+                .orElseThrow(EntityNotFoundException::new);
+    }
 
+    @Deprecated //to be moved to SubscriptionService
     public List<StreamAndTeamSubscriber> getAllSubscribersForProfileByProfileId(Long id) {
         return streamAndTeamSubscriberRepository.findAllByStreamTeamProfileId(id);
     }
+
+    @Deprecated //to be moved to SubscriptionService
     public List<StreamAndTeamSubscriber> getAllSubscriptionsForProfileByProfileId(Long id) {
         List<StreamAndTeamSubscriber> streamAndTeamSubscriberList = streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
         streamAndTeamSubscriberList.forEach(s -> s.setSubscriptionProfile(profileService.findProfileByProfileIdLazy(s.getStreamTeamProfileId()).get())); // TODO: 24/06/20  get rid of strange .get(), maybe use orElseGet, but what else to get?
         return streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
     }
+
+    @Deprecated //to be moved to SubscriptionService
     public boolean isUserSubscribedForProfile(Long streamAndTeamProfileId,
                                               Long subscriberProfileId) {
         Optional<StreamAndTeamSubscriber> subscriberOptional = streamAndTeamSubscriberRepository
@@ -50,6 +61,7 @@ public class StreamAndTeamSubscriberService {
         return subscriberOptional.isPresent();
     }
 
+    @Deprecated //use SubscriptionServiceMethods
     public StreamAndTeamSubscriber updateSubscription(Long streamAndTeamProfileId,
                                                       Long subscriberProfileId,
                                                       SubscriptionStatus status) {
@@ -61,6 +73,19 @@ public class StreamAndTeamSubscriberService {
             return createSubscriptionAndSetStatus(streamAndTeamProfileId, subscriberProfileId, status);
         }
     }
+
+    public StreamAndTeamSubscriber saveProfileSubscriptionTo(StreamAndTeamSubscriber streamAndTeamSubscriber) {
+        return streamAndTeamSubscriberRepository.save(streamAndTeamSubscriber);
+    }
+
+    public StreamAndTeamSubscriber updateProfileSubscriptionTo(StreamAndTeamSubscriber streamAndTeamSubscriber) throws Exception {
+        this.findSubscribtion(
+                streamAndTeamSubscriber.getSubscriberProfileId(),
+                streamAndTeamSubscriber.getStreamTeamProfileId());
+        return streamAndTeamSubscriberRepository.save(streamAndTeamSubscriber);
+    }
+
+    @Deprecated //use SubscriptionsService Methods
     public void deleteSubscription(Long streamAndTeamProfileId,
                                    Long subscriberProfileId) {
         Optional<StreamAndTeamSubscriber> subscriberOptional = streamAndTeamSubscriberRepository
@@ -68,6 +93,13 @@ public class StreamAndTeamSubscriberService {
         if (subscriberOptional.isPresent()) {
             streamAndTeamSubscriberRepository.delete(subscriberOptional.get());
         }
+    }
+
+    public void deleteSubscription(StreamAndTeamSubscriber streamAndTeamSubscriber) throws Exception {
+        StreamAndTeamSubscriber subscriber = this.findSubscribtion(
+                streamAndTeamSubscriber.getSubscriberProfileId(),
+                streamAndTeamSubscriber.getStreamTeamProfileId());
+        streamAndTeamSubscriberRepository.delete(subscriber);
     }
 
     public Optional<Profile> findStreamForCourse(Long courseId) {
@@ -95,7 +127,7 @@ public class StreamAndTeamSubscriberService {
         try {
             Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fields populated in this place
             if(!userAccessService.isUserhasRole(UserRoles.ROLE_FREE_STUDENT)){
-                userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId()); // TODO: 25/06/20 should role be changed here like this?
+                userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId()); // TODO: 25/06/20 role should be changed, but in SubscriptionService depend on course type.
             }
         } catch (Exception ex) {
             System.out.println(" [ error on attempt to extract userId from subscriber]");
