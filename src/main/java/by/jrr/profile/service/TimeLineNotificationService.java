@@ -87,6 +87,11 @@ public class TimeLineNotificationService {
                 timeLineNotification.setLastErrorMessage(ex.getMessage());
                 timeLineNotificationRepository.save(timeLineNotification);
                 ex.printStackTrace();
+                //Caused by: javax.mail.AuthenticationFailedException: 454 4.7.0 Too many login attempts, please try again later. q63sm4949542wma.43 - gsmtp
+                //org.springframework.mail.MailAuthenticationException: Authentication failed; nested exception is javax.mail.AuthenticationFailedException: 454 4.7.0 Too many login attempts, please try again later. b7sm27538063wru.33 - gsmtp
+                //Caused by: javax.mail.AuthenticationFailedException: 454 4.7.0 Too many login attempts, please try again later. b7sm27538063wru.33 - gsmtp
+                //org.springframework.mail.MailAuthenticationException: Authentication failed; nested exception is javax.mail.AuthenticationFailedException: 454 4.7.0 Too many login attempts, please try again later. m5sm28783143wrz.18 - gsmtp
+                //Caused by: javax.mail.AuthenticationFailedException: 454 4.7.0 Too many login attempts, please try again later. m5sm28783143wrz.18 - gsmtp
             }
         }
     }

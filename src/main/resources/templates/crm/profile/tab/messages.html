@@ -2,11 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="messages">
+    <script th:src="@{/my/js/messageParser.js}"></script>
 
     <div class="tab-pane" id="messages" th:classappend="${active}">
-        <!-- conversation  -->
-        <div id="messageList">
+        <div class="card direct-chat direct-chat-warning">
+            <div class="card-header">
+                <h3 class="card-title">Direct Chat</h3>
 
+                <div class="card-tools">
+                    <span class="badge badge-warning" data-toggle="tooltip" title="3 New Messages">3</span>
+                    <button class="btn btn-tool" data-card-widget="collapse" type="button"><i class="fas fa-minus"></i>
+                    </button>
+                    <button class="btn btn-tool" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts"
+                            type="button">
+                        <i class="fas fa-comments"></i></button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!-- Conversations are loaded here -->
+                <div id="messageList" class="direct-chat-messages">
+
+                </div>
+            </div>
         </div>
 
         <div>
@@ -26,6 +44,8 @@
     </div>
 
     <script>
+        let chat = document.getElementById("messageList");
+        chat.scrollTop = chat.scrollHeight;
         getMessages();
         function getMessages() {
             var chatToken = document.getElementById("telegramChatToken").value;
@@ -41,19 +61,7 @@
                         }
                         for (var i = 0; i < myObj.length; i++) {
                             var message = myObj[i];
-                            var p = document.createElement("p");
-                            var messageText = message.messageText;
-                            try {
-                                messageText = JSON.parse(messageText);
-                                p.innerHTML = messageText.message.text;
-                            } catch (e) {
-                                p.innerHTML = messageText;
-                                //todo there is a difference between how in comes from tg and how it passed from moodle
-                                //todo in message text: tg message text is a json entity and message marks with {\",
-                                //todo whereas moodle message is a plain text. So it should be divided by type and handled
-                                //todo here separately and conditionally;
-                            }
-                            myMessages.appendChild(p)
+                            parse(message, "messageList");
                         }
                     }
                 };
