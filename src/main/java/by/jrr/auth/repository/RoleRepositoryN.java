@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@Deprecated //use RoleRepositoryN
-public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findByRole(UserRoles role);
-
+public interface RoleRepositoryN extends JpaRepository<Role, Long> {
+    Optional<Role> findByRole(UserRoles role);
 }

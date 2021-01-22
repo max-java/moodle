@@ -50,6 +50,24 @@
 
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"
+                       for="inputName">
+                    Бесплатно
+                </label>
+                <div class="col-sm-1">
+                    <input class="form-control" id="free"
+                           name="free" placeholder="free"
+                           th:checked="${profile.getfree()}"
+                           type="checkbox"
+                           value="true"/>
+                </div>
+                <div class="9">
+
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="inputName">Дата
                     начала</label>

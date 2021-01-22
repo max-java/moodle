@@ -13,6 +13,7 @@ import by.jrr.registration.service.RedirectionLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -346,17 +347,9 @@ public class TimeLineNotificationService {
     }
 
     private void appendMessageFooter(StringBuffer messageText, TimeLine event) {
-        messageText.append("\n");
-        messageText.append("\nРасписание, ссылки на занятия и записи уроков в профиле группы: https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId());
-        messageText.append("\nТам же в профиле группы ссылка на наш чат, где куратор отвечает на организационные вопросы");
-        messageText.append("\nТвой куратор: Илья +375(29) 3333-600.");
-        messageText.append("\n");
-
-        messageText.append("\nДо встречи на занятиях!");
-        messageText.append("\nС уважением,");
-        messageText.append("\nУправляющий JavaGuru в Беларуси");
-        messageText.append("\nМаксим Шелкович");
-        messageText.append("\n+375(44) 750 6666");
+//        ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
+        String streamLing =  "https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId();
+        eMailService.appendMessageFooter(messageText, "https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId());
     }
 
     private void appendMessageEventData(StringBuffer messageText, TimeLine event) {

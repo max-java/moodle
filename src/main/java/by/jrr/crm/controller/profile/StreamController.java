@@ -34,6 +34,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.util.List;
@@ -78,8 +79,12 @@ public class StreamController {
     UserAccessService userAccessService;
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
-    public ModelAndView openProfileById(@PathVariable Long profileId) {
+    public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+
+        mov.addObject("profile", request.getSession().getAttribute("notification"));
+        request.getSession().removeAttribute("notification");
+
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
 

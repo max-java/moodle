@@ -96,6 +96,7 @@ public class Profile {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private Boolean openForEnroll;
+    private Boolean free;
     private Long courseId;
     @Transient
     private Course course;

@@ -3,6 +3,7 @@ package by.jrr.profile.service;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
+import by.jrr.auth.service.UserRoleManager;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.balance.bean.Currency;
@@ -60,6 +61,7 @@ public class ProfileService {
     HistoryItemService historyItemService;
     @Autowired
     OperationRowService operationRowService;
+    UserRoleManager userRoleManager;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -488,5 +490,14 @@ public class ProfileService {
         } catch (Exception ex) {
             return String.valueOf(id);
         }
+    }
+
+    public boolean isStreamFree(long id) {
+        return this.findProfileByProfileIdLazy(id).get().getFree();
+    }
+
+    public void addRoleIfAbsent(long profileId, UserRoles userRole) {
+        long userId = findProfileByProfileIdLazy(profileId).get().getUserId();
+        userRoleManager.addRoleIfAbsent(userId, userRole);
     }
 }
