@@ -97,6 +97,7 @@ CREATE TABLE `PROFILE`
     "DATE_END"            DATE,
     "DATE_START"          DATE,
     "OPEN_FOR_ENROLL"     BOOLEAN,
+    "FREE"                BOOLEAN,
     "OWNER_PROFILE_ID"    BIGINT,
     "TELEGRAM_LINK"       VARCHAR(255),
     "TELEGRAM_LINK_TEXT"  VARCHAR(255),
@@ -113,22 +114,26 @@ CREATE TABLE `PROFILE`
     "USER_ID"             BIGINT NOT NULL
 );
 INSERT INTO `PROFILE`
-VALUES (10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '185929241', NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, 1),
+VALUES (10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '185929241', NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, 1),
        (11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 2),
+        NULL, NULL, 2),
        (12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 4),
+        NULL, NULL, 4),
        (13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 3),
+        NULL, NULL, 3),
        (14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 5),
+        NULL, NULL, 5),
        (15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 6),
-       (16, '', NULL, 30, NULL, NOW() + INTERVAL 5 DAY, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '', 90),
-       (17, '', NULL, 31, NULL, NOW() + INTERVAL 5 DAY, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '', 91),
-       (18, '', NULL, 32, NULL, NOW() + INTERVAL 5 DAY, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '', 92),
-       (19, '', NULL, 33, NULL, NOW() + INTERVAL 5 DAY, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '', 93);
+        NULL, NULL, 6),
+       (16, '', NULL, 30, NULL, NOW() + INTERVAL 5 DAY, NULL, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '',
+        90),
+       (17, '', NULL, 31, NULL, NOW() + INTERVAL 5 DAY, NULL, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '',
+        91),
+       (18, '', NULL, 32, NULL, NOW() + INTERVAL 5 DAY, NULL, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '',
+        92),
+       (19, '', NULL, 33, NULL, NOW() + INTERVAL 5 DAY, NULL, NULL, 10, '', '', '', '', '', '', '', '', '', '', '', '',
+        93);
 
 
 DROP TABLE IF EXISTS `PROFILE_POSSESSES`;

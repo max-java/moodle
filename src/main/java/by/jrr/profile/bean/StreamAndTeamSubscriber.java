@@ -58,6 +58,25 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
+
+    public String getUserName() {
+        try {
+            return this.getSubscriberProfile().getUser().getUserName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
+    public String getUserLastName() {
+        try {
+            return this.getSubscriberProfile().getUser().getLastName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
     public String getFullSubscriptionName() {
         try {
             return this.getSubscriptionProfile().getUser().getFullUserName();
@@ -66,6 +85,25 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
+
+    public String getSubscriptionName() {
+        try {
+            return this.getSubscriptionProfile().getUser().getUserName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
+    public String getSubscriptionLastName() {
+        try {
+            return this.getSubscriptionProfile().getUser().getLastName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
     public String getSubscriberLogin() {
         try {
             return this.getSubscriberProfile().getUser().getUserName();
