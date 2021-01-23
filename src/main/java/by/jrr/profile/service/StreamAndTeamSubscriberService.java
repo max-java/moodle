@@ -75,6 +75,12 @@ public class StreamAndTeamSubscriberService {
     }
 
     public StreamAndTeamSubscriber saveProfileSubscriptionTo(StreamAndTeamSubscriber streamAndTeamSubscriber) {
+        Optional<StreamAndTeamSubscriber> subscription = streamAndTeamSubscriberRepository.findAllByStreamTeamProfileIdAndSubscriberProfileId(
+                streamAndTeamSubscriber.getStreamTeamProfileId(),
+                streamAndTeamSubscriber.getSubscriberProfileId());
+        if(subscription.isPresent()) {
+            streamAndTeamSubscriber.setId(subscription.get().getId());
+        }
         return streamAndTeamSubscriberRepository.save(streamAndTeamSubscriber);
     }
 

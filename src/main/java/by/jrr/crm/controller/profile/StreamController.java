@@ -22,6 +22,7 @@ import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.bean.TimeLine;
+import by.jrr.profile.model.SubscriptionDto;
 import by.jrr.profile.service.*;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.service.RedirectionLinkService;
@@ -139,6 +140,8 @@ public class StreamController {
                     UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM)
                             || UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM)
             ));
+
+            mov.addObject("SubscriptionDto", new SubscriptionDto());
 
         } else {
             mov.setViewName(View.PAGE_404);

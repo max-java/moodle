@@ -61,6 +61,7 @@ public class ProfileService {
     HistoryItemService historyItemService;
     @Autowired
     OperationRowService operationRowService;
+    @Autowired
     UserRoleManager userRoleManager;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
@@ -493,7 +494,11 @@ public class ProfileService {
     }
 
     public boolean isStreamFree(long id) {
-        return this.findProfileByProfileIdLazy(id).get().getFree();
+        Boolean isFree = this.findProfileByProfileIdLazy(id).get().getFree();
+        if (isFree == null) {
+            return false;
+        }
+        return isFree;
     }
 
     public void addRoleIfAbsent(long profileId, UserRoles userRole) {

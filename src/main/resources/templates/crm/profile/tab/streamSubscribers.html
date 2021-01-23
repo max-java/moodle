@@ -61,6 +61,25 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer" >
+
+                                    <th:block th:include="profile/elements/manageSubscriptionButton :: button"
+                                              th:with="streamTeamProfileId=${profile.getId()},
+                                                                     userProfileId=${subscriber.getSubscriberProfileId()},
+                                                                     endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_APPROVE},
+                                                                     newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).APPROVED.name()},
+                                                                     SubscriptionDto=${SubscriptionDto},
+                                                                     buttonText=${'Approve'}">
+                                    </th:block>
+
+                                    <th:block th:include="profile/elements/manageSubscriptionButton :: button"
+                                                         th:with="streamTeamProfileId=${profile.getId()},
+                                                                     userProfileId=${subscriber.getSubscriberProfileId()},
+                                                                     endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_REJECT},
+                                                                     newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).REJECTED.name()},
+                                                                     SubscriptionDto=${SubscriptionDto},
+                                                                     buttonText=${'Reject'}">
+                                    </th:block>
+
                                     <form></form>
                                     <form method="post">
                                         <input name="subscriberProfileId"
