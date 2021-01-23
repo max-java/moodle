@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+import static by.jrr.common.MyHeaders.cameFrom;
+
 @Controller
 public class SubscriptionController {
 
@@ -21,39 +23,31 @@ public class SubscriptionController {
     SubscriptionService subscriptionService;
 
     @PostMapping(Endpoint.SUBSCRIPTIONS_REQUEST)
-    public ModelAndView requestSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
+    public String requestSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
         SubscriptionDto.Request subscReq = SubscriptionMapper.OF.getSubscriptionRequestFromMap(paramMap);
         request.getSession().setAttribute("notification", subscriptionService.requestSubscription(subscReq).getNotes());
-        return redirectToProfileCard(subscReq, request);
+        return "redirect:".concat(cameFrom(request));
     }
 
     @PostMapping(Endpoint.SUBSCRIPTIONS_APPROVE)
-    public ModelAndView approveSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
+    public String approveSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
         SubscriptionDto.Request subscReq = SubscriptionMapper.OF.getSubscriptionRequestFromMap(paramMap);
-        request.getSession().setAttribute("notification", subscriptionService.requestSubscription(subscReq).getNotes());
-        return redirectToProfileCard(subscReq, request);
+        request.getSession().setAttribute("notification", subscriptionService.approveSubscription(subscReq).getNotes());
+        return "redirect:".concat(cameFrom(request));
 
     }
 
     @PostMapping(Endpoint.SUBSCRIPTIONS_REJECT)
-    public ModelAndView  rejectSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
+    public String rejectSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
         SubscriptionDto.Request subscReq = SubscriptionMapper.OF.getSubscriptionRequestFromMap(paramMap);
-        request.getSession().setAttribute("notification", subscriptionService.requestSubscription(subscReq).getNotes());
-        return redirectToProfileCard(subscReq, request);
+        request.getSession().setAttribute("notification", subscriptionService.rejectSubscription(subscReq).getNotes());
+        return "redirect:".concat(cameFrom(request));
     }
 
     @PostMapping(Endpoint.SUBSCRIPTIONS_UNSUBSCRIBE)
-    public ModelAndView  unsubscribe(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
+    public String unsubscribe(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
         SubscriptionDto.Request subscReq = SubscriptionMapper.OF.getSubscriptionRequestFromMap(paramMap);
-        request.getSession().setAttribute("notification", subscriptionService.requestSubscription(subscReq).getNotes());
-        return redirectToProfileCard(subscReq, request);
+        request.getSession().setAttribute("notification", subscriptionService.unsubscribe(subscReq).getNotes());
+        return "redirect:".concat(cameFrom(request));
     }
-
-    public ModelAndView redirectToProfileCard(SubscriptionDto.Request subscReq, HttpServletRequest request) {
-        if(MyHeaders.cameFrom(request).contains(Endpoint.CRM)) {
-            return new ModelAndView(String.format("redirect:%s/%s", Endpoint.PROFILE_CARD_ADMIN_VIEW, subscReq.getStreamTeamProfileId()));
-        }
-        return new ModelAndView(String.format("redirect:%s/%s", Endpoint.PROFILE_CARD, subscReq.getStreamTeamProfileId()));
-    }
-
 }

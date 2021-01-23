@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+
 @Service
 public class SubscriptionService {
 
@@ -32,6 +35,7 @@ public class SubscriptionService {
     EMailService eMailService;
     @Autowired
     UserAccessService userAccessService;
+    Clock clock = Clock.systemDefaultZone();
 
     public SubscriptionDto.Response requestSubscription(SubscriptionDto.Request subscReq) {
         SubscriptionDto.Response response = new SubscriptionDto.Response();
@@ -110,15 +114,14 @@ public class SubscriptionService {
      * returns String note for popUp user notification
      */
     private String saveNoteItemForProfile(String message, SubscriptionDto.Request subscReq) {
-        if (userAccessService.isCurrentUserIsAdmin()) {
 
-        }
         String streamName = profileService.findStreamNameByStreamProfileId(subscReq.getStreamTeamProfileId());
         String noteText = String.format(message, streamName);
 
         NoteItem noteItem = new NoteItem();
         noteItem.setProfileId(subscReq.getSubscriberProfileId());
-        noteItem.setText(noteText);
+        noteItem.setText(String.format("%s:\n%s", noteText, subscReq.getNotes()));
+        noteItem.setTimestamp(LocalDateTime.now(clock));
         setNoteType(subscReq, noteItem);
         historyItemService.saveNoteForProfile(noteItem);
         return noteText;
@@ -156,6 +159,8 @@ public class SubscriptionService {
         if (userAccessService.isCurrentUserIsAdmin()) {
             if (profileService.getCurrentUserProfileId() != subscReq.getSubscriberProfileId()) {
                 noteItem.setType(HistoryType.NOTE);
+            } else {
+                noteItem.setType(HistoryType.USER_ACTION);
             }
         } else {
             noteItem.setType(HistoryType.USER_ACTION);

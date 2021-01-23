@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="button">
+
+    <button class="btn btn-link float-right"
+            data-toggle="modal"
+            th:attr="data-target='#id'+${streamTeamProfileId}+''+${userProfileId}"
+            type="button">
+        <span th:text="${buttonText}"></span>
+    </button>
+
+    <div class="modal fade" th:id="|id${streamTeamProfileId}${userProfileId}|" style="display: none;" aria-hidden="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Управление подпиской</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form th:action="${endpointUrl}" method="post">
+                    <div class="modal-body">
+                        <p th:text="|изменить на  ${newStatus}|"></p>
+                        <div class="form-group">
+
+                            <input type="hidden" th:name="${SubscriptionDto.FIELD_STREAM_PROFILE_ID}" th:value="${streamTeamProfileId}"/>
+                            <input type="hidden" th:name="${SubscriptionDto.FIELD_USER_PROFILE_ID}" th:value="${userProfileId}"/>
+                            <textarea
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Пожалуйста, укажите причину"
+                                    th:name="${SubscriptionDto.FIELD_NOTES}"
+                                    required></textarea>
+                        </div>
+                        <p> Внимание! Выход из группы сделает недоступными материалы группы </p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+</th:block>
+</body>
+</html>

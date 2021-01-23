@@ -223,411 +223,381 @@
                                                                 <h3 class="widget-user-username text-right"
                                                                     th:text="${subscription.getSubscriptionName()}"></h3>
                                                                 <h5 class="widget-user-desc text-right"
-                                                                    th:text="${subscription.getSubscriptionLastName()}">></h5>
+                                                                    th:text="${subscription.getSubscriptionLastName()}"></h5>
                                                             </div>
 
-<!--                                                            <div class="card-body">-->
-<!--                                                                <h3></h3>-->
-<!--                                                            </div>-->
+                                                            <!--                                                            <div class="card-body">-->
+                                                            <!--                                                                <h3></h3>-->
+                                                            <!--                                                            </div>-->
 
-                                                            <div class="card-footer p-1">
+                                                            <div class="card-footer p-1" th:if="${couldUpdate}">
                                                                 <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">
                                                                     <button class="btn btn-primary">
                                                                         to Group
                                                                     </button>
                                                                 </a>
-                                                                <button class="btn btn-danger float-right"
-                                                                        href="#">
-                                                                    Leave Group
-                                                                </button>
+
+                                                                <th:block th:include="profile/elements/manageSubscriptionButton :: button"
+                                                                     th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
+                                                                     userProfileId=${profile.getId()},
+                                                                     endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_UNSUBSCRIBE},
+                                                                     newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).CANCELED.name()},
+                                                                     SubscriptionDto=${SubscriptionDto},
+                                                                     buttonText=${'Leave Group'}">
+                                                                </th:block>
 
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </th:block>
                                             </div>
-
-                                            </div>
-                                            <!-- /.post -->
-                                            <!--                                        <h1>Best student</h1>-->
-                                            <!--                                        &lt;!&ndash; Post &ndash;&gt;-->
-                                            <!--                                        <div class="post clearfix">-->
-                                            <!--                                            <table class="table table-hover text-nowrap"-->
-                                            <!--                                                   th:if="${bestStudentList.size()>0}">-->
-                                            <!--                                                <thead>-->
-                                            <!--                                                <tr>-->
-                                            <!--                                                    <th>Имя</th>-->
-                                            <!--                                                    <th></th>-->
-                                            <!--                                                    <th>Лекции</th>-->
-                                            <!--                                                    <th></th>-->
-                                            <!--                                                    <th>Фидбеки</th>-->
-                                            <!--                                                    <th></th>-->
-                                            <!--                                                    <th>Стендапы</th>-->
-                                            <!--                                                </tr>-->
-                                            <!--                                                </thead>-->
-                                            <!--                                                <tbody>-->
-                                            <!--                                                <tr th:each="statistic : ${bestStudentList}">-->
-                                            <!--                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>-->
-                                            <!--                                                    <td th:text="${statistic.getLectures().size()}"></td>-->
-                                            <!--                                                    <td th:text="${statistic.printLectures()}"></td>-->
-                                            <!--                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>-->
-                                            <!--                                                    <td th:text="${statistic.printFeedbacks()}"></td>-->
-                                            <!--                                                    <td th:text="${statistic.getStandups().size()}"></td>-->
-                                            <!--                                                    <td th:text="${statistic.printStandups()}"></td>-->
-                                            <!--                                                </tr>-->
-
-                                            <!--                                                </tbody>-->
-                                            <!--                                            </table>-->
-                                            <!--                                        </div>-->
-                                            <!--                                        &lt;!&ndash; /.post &ndash;&gt;-->
-
-
                                         </div>
-                                        <!-- /.tab-pane -->
-                                        <div class="tab-pane" id="timeline">
-                                            Расписание занятий
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="timeline">
+                                        Расписание занятий
 
-                                            <th:block th:if="${isUserCanUpdateTimeline}">
-                                                <th:block th:include="profile/timeline/timelineItemButton :: button"
-                                                          th:with="itemId='empty',
+                                        <th:block th:if="${isUserCanUpdateTimeline}">
+                                            <th:block th:include="profile/timeline/timelineItemButton :: button"
+                                                      th:with="itemId='empty',
                                                       item=${emptyTimeline},
                                                       buttonText='add'">
-                                                </th:block>
                                             </th:block>
+                                        </th:block>
 
-                                            <div class="timeline timeline-inverse">
-                                                <th:block th:each="dateline : ${timeLines}">
-                                                    <!-- timeline time label -->
-                                                    <div class="time-label">
+                                        <div class="timeline timeline-inverse">
+                                            <th:block th:each="dateline : ${timeLines}">
+                                                <!-- timeline time label -->
+                                                <div class="time-label">
                                                                         <span class="bg-danger"
                                                                               th:text="${dateline.getKey()}">
                                                                           10 Feb. 2014
                                                                         </span>
-                                                    </div>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <th:block th:each="timelinesForDate : ${dateline.getValue()}">
-                                                        <div th:each="timeline : ${timelinesForDate}">
-                                                            <i class="fas fa-envelope bg-primary"></i>
-
-                                                            <th:block
-                                                                    th:insert="profile/timeline/timelineItem :: item">
-
-                                                            </th:block>
-                                                        </div>
-                                                    </th:block>
-                                                    <!-- END timeline item -->
-                                                </th:block>
-
-                                                <div>
-                                                    <i class="far fa-clock bg-gray"></i>
                                                 </div>
+                                                <!-- /.timeline-label -->
+                                                <!-- timeline item -->
+                                                <th:block th:each="timelinesForDate : ${dateline.getValue()}">
+                                                    <div th:each="timeline : ${timelinesForDate}">
+                                                        <i class="fas fa-envelope bg-primary"></i>
+
+                                                        <th:block
+                                                                th:insert="profile/timeline/timelineItem :: item">
+
+                                                        </th:block>
+                                                    </div>
+                                                </th:block>
+                                                <!-- END timeline item -->
+                                            </th:block>
+
+                                            <div>
+                                                <i class="far fa-clock bg-gray"></i>
                                             </div>
                                         </div>
-
-                                        <!-- /.tab-pane -->
-                                        <div class="tab-pane" id="settings">
-                                            <form></form>
-                                            <form class="form-horizontal" method="post"
-                                                  th:action="'/profile/'+${profile.getId()}+'/update'">
-                                                <input class="form-control" name="id" th:value="${profile.getId()}"
-                                                       type="hidden">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="inputName">Открыто для
-                                                        записи</label>
-                                                    <div class="col-sm-1">
-                                                        <input class="form-control" id="openForEnroll"
-                                                               name="openForEnroll" placeholder="openForEnroll"
-                                                               th:checked="${profile.getOpenForEnroll()}"
-                                                               type="checkbox"
-                                                               value="true"/>
-                                                    </div>
-                                                    <div class="9">
-
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="inputName">Дата
-                                                        начала</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="inputName"
-                                                               name="dateStart" placeholder="Name"
-                                                               th:value="${profile.getDateStart()}"
-                                                               type="date"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="dateEnd">Планируемая
-                                                        дата
-                                                        окончания</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="dateEnd" name="dateEnd"
-                                                               placeholder="Email" th:value="${profile.getDateEnd()}"
-                                                               type="date">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="gitLink">GitHub
-                                                        link</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="gitLink" name="gitLink"
-                                                               placeholder="" th:value="${profile.getGitLink()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="gitLink">Имя</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="userName" name="userName"
-                                                               placeholder="" th:value="${profile.userName}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="gitLink">Фамилия</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="userLastName"
-                                                               name="userLastName"
-                                                               placeholder="" th:value="${profile.userLastName}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label"
-                                                           for="gitLink">Отчество</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="userMiddleName"
-                                                               name="userMiddleName"
-                                                               placeholder="" th:value="${profile.userMiddleName}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="gitUsername">GitHub
-                                                        username</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="gitUsername"
-                                                               name="gitUsername"
-                                                               placeholder="" th:value="${profile.getGitUsername()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на
-                                                        телеграм чат</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="telegramLink"
-                                                               name="telegramLink"
-                                                               placeholder="" th:value="${profile.getTelegramLink()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="telegramLinkName">Название
-                                                        группы в telegram</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="telegramLinkName"
-                                                               name="telegramLinkName"
-                                                               placeholder=""
-                                                               th:value="${profile.getTelegramLinkText()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="zoomLink">Zoom Stand-Up
-                                                        link</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="zoomLink" name="zoomLink"
-                                                               placeholder="" th:value="${profile.getZoomLink()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="zoomLinkName">Название
-                                                        Zoom link</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="zoomLinkName"
-                                                               name="zoomLinkName"
-                                                               placeholder="" th:value="${profile.getZoomLinkText()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback
-                                                        form
-                                                        link</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="feedbackLink"
-                                                               name="feedbackLink"
-                                                               placeholder="" th:value="${profile.getFeedbackLink()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label" for="feedbackName">Название
-                                                        feedback Формы</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control" id="feedbackName"
-                                                               name="feedbackName"
-                                                               placeholder="" th:value="${profile.getFeedbackName()}"
-                                                               type="text">
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>About</label>
-                                                    <textarea class="form-control" id="about" name="about" rows="3"
-                                                              th:text="${profile.getAbout()}"> </textarea>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <div class="offset-sm-2 col-sm-10">
-                                                        <button class="btn btn-danger" name="updateProfile"
-                                                                type="submit">
-                                                            Update
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                            <form class="form-horizontal" enctype="multipart/form-data" method="post">
-                                                <h1> Set User Picture </h1>
-                                                <div class="form-group row">
-                                                    <div class="custom-file">
-                                                        <input class="form-control custom-file-input" id="customFile"
-                                                               name="avatar" placeholder="Upload avatar file"
-                                                               type="file">
-                                                        <label class="custom-file-label" for="customFile">Choose
-                                                            file</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <div class="offset-sm-2 col-sm-10">
-                                                        <button class="btn btn-danger" name="saveProfile" type="submit">
-                                                            Submit
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                            <!-- add timeline form -->
-                                            <form class="form-horizontal"
-                                                  method="post"
-                                                  th:action="${T(by.jrr.constant.Endpoint).PROFILE_TIMELINE}"
-                                                  th:if="${isUserIsAdmin}">
-                                                <h1> Add Timeline </h1>
-
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">dateTime</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control"
-                                                               name="dateTime"
-                                                               required
-                                                               type="datetime-local"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">streamTeamProfileId</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control"
-                                                               name="streamTeamProfileId"
-                                                               th:value="${profile.getId()}"
-                                                               type="text"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">courseId</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control"
-                                                               name="courseId"
-                                                               th:value="${profile.getCourseId()}"
-                                                               type="text"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">lectureId</label>
-                                                    <div class="col-sm-10">
-                                                        <select class="form-control" name="lectureId">
-                                                            <option></option>
-                                                            <option th:each="lecture : ${topicList}"
-                                                                    th:text="${lecture.getTitle() + ' ' + lecture.getSubtitle()}"
-                                                                    th:value="${lecture.getId()}">
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">urlToRedirect</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control"
-                                                               name="urlToRedirect"
-                                                               type="text"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">eventType</label>
-                                                    <div class="col-sm-10">
-                                                        <select class="form-control" name="eventType">
-                                                            <option th:each="type : ${T(by.jrr.registration.bean.EventType).values()}"
-                                                                    th:text="${type}" th:value="${type}"></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">eventName (goes to
-                                                        log)</label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control"
-                                                               name="eventName"
-                                                               type="text"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label">notes (info for
-                                                        user) </label>
-                                                    <div class="col-sm-10">
-                                                        <input class="form-control"
-                                                               name="notes"
-                                                               type="text"/>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <div class="offset-sm-2 col-sm-10">
-                                                        <button class="btn btn-danger" name="command" type="submit"
-                                                                value="saveTimeline">
-                                                            Submit
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                        </div>
-                                        <!-- /.tab-pane -->
-
-                                        <!-- /.tab-pane -->
-                                        <div class="tab-pane" id="lectures">
-                                            <div th:insert="moodle/lectureList :: lectureList"></div>
-                                        </div>
-
-                                        <th:block th:if="${isUserOpensHisPersonalProfile}"
-                                                  th:include="crm/profile/tab/userBillingForUserView :: billing"/>
                                     </div>
-                                    <!-- /.tab-content -->
-                                </div><!-- /.card-body -->
-                            </div>
-                            <!-- /.nav-tabs-custom -->
+
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="settings">
+                                        <form></form>
+                                        <form class="form-horizontal" method="post"
+                                              th:action="'/profile/'+${profile.getId()}+'/update'">
+                                            <input class="form-control" name="id" th:value="${profile.getId()}"
+                                                   type="hidden">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="inputName">Открыто для
+                                                    записи</label>
+                                                <div class="col-sm-1">
+                                                    <input class="form-control" id="openForEnroll"
+                                                           name="openForEnroll" placeholder="openForEnroll"
+                                                           th:checked="${profile.getOpenForEnroll()}"
+                                                           type="checkbox"
+                                                           value="true"/>
+                                                </div>
+                                                <div class="9">
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="inputName">Дата
+                                                    начала</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="inputName"
+                                                           name="dateStart" placeholder="Name"
+                                                           th:value="${profile.getDateStart()}"
+                                                           type="date"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="dateEnd">Планируемая
+                                                    дата
+                                                    окончания</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="dateEnd" name="dateEnd"
+                                                           placeholder="Email" th:value="${profile.getDateEnd()}"
+                                                           type="date">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="gitLink">GitHub
+                                                    link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="gitLink" name="gitLink"
+                                                           placeholder="" th:value="${profile.getGitLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="gitLink">Имя</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="userName" name="userName"
+                                                           placeholder="" th:value="${profile.userName}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="gitLink">Фамилия</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="userLastName"
+                                                           name="userLastName"
+                                                           placeholder="" th:value="${profile.userLastName}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label"
+                                                       for="gitLink">Отчество</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="userMiddleName"
+                                                           name="userMiddleName"
+                                                           placeholder="" th:value="${profile.userMiddleName}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="gitUsername">GitHub
+                                                    username</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="gitUsername"
+                                                           name="gitUsername"
+                                                           placeholder="" th:value="${profile.getGitUsername()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на
+                                                    телеграм чат</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="telegramLink"
+                                                           name="telegramLink"
+                                                           placeholder="" th:value="${profile.getTelegramLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="telegramLinkName">Название
+                                                    группы в telegram</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="telegramLinkName"
+                                                           name="telegramLinkName"
+                                                           placeholder=""
+                                                           th:value="${profile.getTelegramLinkText()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="zoomLink">Zoom Stand-Up
+                                                    link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="zoomLink" name="zoomLink"
+                                                           placeholder="" th:value="${profile.getZoomLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="zoomLinkName">Название
+                                                    Zoom link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="zoomLinkName"
+                                                           name="zoomLinkName"
+                                                           placeholder="" th:value="${profile.getZoomLinkText()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback
+                                                    form
+                                                    link</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="feedbackLink"
+                                                           name="feedbackLink"
+                                                           placeholder="" th:value="${profile.getFeedbackLink()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="feedbackName">Название
+                                                    feedback Формы</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" id="feedbackName"
+                                                           name="feedbackName"
+                                                           placeholder="" th:value="${profile.getFeedbackName()}"
+                                                           type="text">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>About</label>
+                                                <textarea class="form-control" id="about" name="about" rows="3"
+                                                          th:text="${profile.getAbout()}"> </textarea>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button class="btn btn-danger" name="updateProfile"
+                                                            type="submit">
+                                                        Update
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <form class="form-horizontal" enctype="multipart/form-data" method="post">
+                                            <h1> Set User Picture </h1>
+                                            <div class="form-group row">
+                                                <div class="custom-file">
+                                                    <input class="form-control custom-file-input" id="customFile"
+                                                           name="avatar" placeholder="Upload avatar file"
+                                                           type="file">
+                                                    <label class="custom-file-label" for="customFile">Choose
+                                                        file</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button class="btn btn-danger" name="saveProfile" type="submit">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <!-- add timeline form -->
+                                        <form class="form-horizontal"
+                                              method="post"
+                                              th:action="${T(by.jrr.constant.Endpoint).PROFILE_TIMELINE}"
+                                              th:if="${isUserIsAdmin}">
+                                            <h1> Add Timeline </h1>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">dateTime</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="dateTime"
+                                                           required
+                                                           type="datetime-local"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">streamTeamProfileId</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="streamTeamProfileId"
+                                                           th:value="${profile.getId()}"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">courseId</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="courseId"
+                                                           th:value="${profile.getCourseId()}"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">lectureId</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" name="lectureId">
+                                                        <option></option>
+                                                        <option th:each="lecture : ${topicList}"
+                                                                th:text="${lecture.getTitle() + ' ' + lecture.getSubtitle()}"
+                                                                th:value="${lecture.getId()}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">urlToRedirect</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="urlToRedirect"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">eventType</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" name="eventType">
+                                                        <option th:each="type : ${T(by.jrr.registration.bean.EventType).values()}"
+                                                                th:text="${type}" th:value="${type}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">eventName (goes to
+                                                    log)</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="eventName"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">notes (info for
+                                                    user) </label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control"
+                                                           name="notes"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button class="btn btn-danger" name="command" type="submit"
+                                                            value="saveTimeline">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="lectures">
+                                        <div th:insert="moodle/lectureList :: lectureList"></div>
+                                    </div>
+
+                                    <th:block th:if="${isUserOpensHisPersonalProfile}"
+                                              th:include="crm/profile/tab/userBillingForUserView :: billing"/>
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
                         </div>
-                        <!-- /.col -->
+                        <!-- /.nav-tabs-custom -->
                     </div>
-                    <!-- /.row -->
-                </div><!-- /.container-fluid -->
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
         </section>
         <!-- /.content -->
     </div>

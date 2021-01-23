@@ -17,6 +17,7 @@ import by.jrr.files.service.FileService;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.*;
+import by.jrr.profile.model.SubscriptionDto;
 import by.jrr.profile.service.*;
 import by.jrr.registration.service.StudentActionToLogService;
 import org.checkerframework.checker.units.qual.A;
@@ -132,6 +133,7 @@ public class ProfileCardController {
                 mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
             }
             mov.addObject("isUserOpensHisPersonalProfile", isUserOpensHisPersonalProfile);
+            mov.addObject("SubscriptionDto", new SubscriptionDto());
 
         }
         else {
