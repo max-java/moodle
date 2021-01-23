@@ -26,7 +26,7 @@ class SubscriptionControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Test
+//    @Test
     void requestSubscription() throws Exception {
         RequestBuilder request = post(Endpoint.SUBSCRIPTIONS_REQUEST)
                 .contentType("application/x-www-form-urlencoded")
