@@ -49,7 +49,7 @@ public class SubscriptionService {
     }
 
     public SubscriptionDto.Response approveSubscription(SubscriptionDto.Request subscReq) {
-        //considering status has been set.
+        //considering status has not been set on UI.
         SubscriptionDto.Response response = new SubscriptionDto.Response();
 
         StreamAndTeamSubscriber subscriber = SubscriptionMapper.OF.getStreamTeamSubscriberFrom(subscReq);
@@ -87,7 +87,7 @@ public class SubscriptionService {
         StreamAndTeamSubscriber subscriber = SubscriptionMapper.OF.getStreamTeamSubscriberFrom(subscReq);
         try {
             streamAndTeamSubscriberService.deleteSubscription(subscriber);
-            String responseNotes = this.saveNoteItemForProfile("User canceled subscription for %s ", subscReq);
+            String responseNotes = this.saveNoteItemForProfile("Subscription canceled by user for %s ", subscReq);
             response.setNotes(responseNotes);
             //todo: send notification
         } catch (Exception ex) {
