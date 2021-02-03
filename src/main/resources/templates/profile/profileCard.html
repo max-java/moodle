@@ -204,8 +204,14 @@
                                         <!-- /.post -->
 
                                         <!-- Post -->
-                                        <div th:if="${profile.getSubscribers().size()>0}">
-                                            <div th:include="profile/list :: subscribers"></div>
+                                        <div th:if="${profile.getSubscribersRequested().size()>0}">
+                                            <div th:include="profile/list :: subscribers"
+                                                 th:with="subscribers = ${profile.getSubscribersRequested()}"></div>
+                                        </div>
+
+                                        <div th:if="${profile.getSubscribersApproved().size()>0}">
+                                            <div th:include="profile/list :: subscribers"
+                                                 th:with="subscribers = ${profile.getSubscribersApproved()}"></div>
                                         </div>
                                         <!-- /.post -->
 
@@ -231,15 +237,17 @@
                                                             <!--                                                            </div>-->
 
                                                             <div class="card-footer p-1" th:if="${couldUpdate}">
-                                                                <th:block th:if="${subscription.getStatus().toString().equals('REQUESTED') or subscription.getStatus().toString().equals('APPROVED')}">
+                                                                <th:block
+                                                                        th:if="${subscription.getStatus().toString().equals('REQUESTED') or subscription.getStatus().toString().equals('APPROVED')}">
                                                                     <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">
                                                                         <button class="btn btn-primary">
                                                                             to Group
                                                                         </button>
                                                                     </a>
 
-                                                                    <th:block th:include="profile/elements/manageSubscriptionButton :: button"
-                                                                         th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
+                                                                    <th:block
+                                                                            th:include="profile/elements/manageSubscriptionButton :: button"
+                                                                            th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
                                                                          userProfileId=${profile.getId()},
                                                                          endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_UNSUBSCRIBE},
                                                                          newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).CANCELED.name()},
@@ -631,6 +639,6 @@
 <script src="https://use.fontawesome.com/eec5925178.js"></script>
 <th:block th:if="${notification}"
           th:include="toast :: toast"
-          th:with="notification=${notification}" />
+          th:with="notification=${notification}"/>
 </body>
 </html>

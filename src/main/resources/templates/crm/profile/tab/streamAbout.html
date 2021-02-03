@@ -130,19 +130,20 @@
 
         <!-- /.row -->
 
-        <!-- Post -->
         <div class="post">
             <div th:utext="${profile.getAbout()}"/>
         </div>
-        <!-- /.post -->
 
-        <!-- Post -->
-        <div class="post clearfix">
-            <div th:if="${profile.getSubscribers().size()>0}">
-                <div th:include="crm/profile/tab/streamSubscribers :: subscribers"></div>
-            </div>
+        <div th:if="${profile.getSubscribersRequested().size()>0}">
+            <div th:include="crm/profile/tab/streamSubscribers :: subscribers"
+                 th:with="subscribers = ${profile.getSubscribersRequested()}"></div>
         </div>
-        <!-- /.post -->
+
+        <div th:if="${profile.getSubscribersApproved().size()>0}">
+            <div th:include="crm/profile/tab/streamSubscribers :: subscribers"
+                 th:with="subscribers = ${profile.getSubscribersApproved()}"></div>
+        </div>
+
 
 
     </div>

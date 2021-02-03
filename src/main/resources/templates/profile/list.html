@@ -6,7 +6,7 @@
         <div class="col-12">
             <div class="">
                 <div class="row">
-                    <div class="col-12" th:each="subscriber : ${profile.getSubscribers()}">
+                    <div class="col-12" th:each="subscriber : ${subscribers}">
                         <div class="card">
                             <div class="card-header" th:if="${isUserIsOwner}">
                                 <h3 class="card-title"></h3>

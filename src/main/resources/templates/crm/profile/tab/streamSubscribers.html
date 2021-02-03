@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="">
                     <div class="row">
-                        <div class="col-12" th:each="subscriber : ${profile.getSubscribers()}">
+                        <div class="col-12" th:each="subscriber : ${subscribers}">
                             <div class="card" th:classappend="${subscriber.getCardColor()}">
                                 <div class="card-header">
                                     <h3 class="card-title"></h3>

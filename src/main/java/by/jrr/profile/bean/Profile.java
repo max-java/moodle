@@ -68,19 +68,28 @@ public class Profile {
 
     @Transient
     private List<StreamAndTeamSubscriber> subscribers = new ArrayList<>();
+
     public List<StreamAndTeamSubscriber> getSubscribersApproved() {
         return this.subscribers.stream()
                 .filter(s -> s.getStatus().equals(SubscriptionStatus.APPROVED))
                 .collect(Collectors.toList());
     }
+
     public List<StreamAndTeamSubscriber> getSubscribersRequested() {
         return this.subscribers.stream()
                 .filter(s -> s.getStatus().equals(SubscriptionStatus.REQUESTED))
                 .collect(Collectors.toList());
     }
+
     public List<StreamAndTeamSubscriber> getSubscribersRejected() {
         return this.subscribers.stream()
                 .filter(s -> s.getStatus().equals(SubscriptionStatus.REJECTED))
+                .collect(Collectors.toList());
+    }
+
+    public List<StreamAndTeamSubscriber> getSubscribersCanceled() {
+        return this.subscribers.stream()
+                .filter(s -> s.getStatus().equals(SubscriptionStatus.CANCELED))
                 .collect(Collectors.toList());
     }
 
