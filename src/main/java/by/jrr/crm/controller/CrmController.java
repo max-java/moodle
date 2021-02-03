@@ -28,7 +28,7 @@ public class CrmController {
     OperationCategoryService operationCategoryService;
 
     @GetMapping(Endpoint.CRM)
-    public ModelAndView saveNewItem() {
+    public ModelAndView openCrm() {
         ModelAndView modelAndView = userDataToModelService.setData(new ModelAndView());
         modelAndView.setViewName(View.CRM);
 

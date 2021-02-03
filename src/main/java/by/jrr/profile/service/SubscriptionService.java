@@ -39,7 +39,7 @@ public class SubscriptionService {
 
     public SubscriptionDto.Response requestSubscription(SubscriptionDto.Request subscReq) {
         SubscriptionDto.Response response = new SubscriptionDto.Response();
-        if (!isProfileIdSubscribedTo(subscReq.getSubscriberProfileId(), subscReq.getStreamTeamProfileId())) {
+        if (!isSubscriptionExistsInAnyStatus(subscReq.getSubscriberProfileId(), subscReq.getStreamTeamProfileId())) {
             StreamAndTeamSubscriber subscriber = SubscriptionMapper.OF.getStreamTeamSubscriberFrom(subscReq);
             subscriber.setStatus(SubscriptionStatus.REQUESTED);
             streamAndTeamSubscriberService.saveProfileSubscriptionTo(subscriber);
@@ -47,8 +47,9 @@ public class SubscriptionService {
             String responseNotes = this.saveNoteItemForProfile("Subscription request for %s", subscReq);
             response.setNotes(responseNotes);
             //todo: send notification
+        } else {
+            response.setNotes("Subscription exists");
         }
-        response.setNotes("Subscription exists");
         return response;
     }
 
@@ -76,7 +77,11 @@ public class SubscriptionService {
         SubscriptionDto.Response response = new SubscriptionDto.Response();
         StreamAndTeamSubscriber subscriber = SubscriptionMapper.OF.getStreamTeamSubscriberFrom(subscReq);
         try {
-            streamAndTeamSubscriberService.deleteSubscription(subscriber);
+            //not actually deletes, but just marks it.
+//            streamAndTeamSubscriberService.deleteSubscription(subscriber);
+            subscriber.setStatus(SubscriptionStatus.REJECTED);
+            streamAndTeamSubscriberService.saveProfileSubscriptionTo(subscriber);
+
             String responseNotes = this.saveNoteItemForProfile("Subscription deleted by admin for %s ", subscReq);
             response.setNotes(responseNotes);
             //todo: send notification
@@ -90,7 +95,11 @@ public class SubscriptionService {
         SubscriptionDto.Response response = new SubscriptionDto.Response();
         StreamAndTeamSubscriber subscriber = SubscriptionMapper.OF.getStreamTeamSubscriberFrom(subscReq);
         try {
-            streamAndTeamSubscriberService.deleteSubscription(subscriber);
+            //not actually deletes, but just marks it.
+//            streamAndTeamSubscriberService.deleteSubscription(subscriber);
+            subscriber.setStatus(SubscriptionStatus.CANCELED);
+            streamAndTeamSubscriberService.saveProfileSubscriptionTo(subscriber);
+
             String responseNotes = this.saveNoteItemForProfile("Subscription canceled by user for %s ", subscReq);
             response.setNotes(responseNotes);
             //todo: send notification
@@ -101,7 +110,7 @@ public class SubscriptionService {
 
     }
 
-    private boolean isProfileIdSubscribedTo(Long userProfileId, Long streamProfileId) {
+    private boolean isSubscriptionExistsInAnyStatus(Long userProfileId, Long streamProfileId) {
         try {
             streamAndTeamSubscriberService.findSubscribtion(userProfileId, streamProfileId);
             return true;
@@ -109,6 +118,7 @@ public class SubscriptionService {
             return false;
         }
     }
+
 
     /**
      * returns String note for popUp user notification

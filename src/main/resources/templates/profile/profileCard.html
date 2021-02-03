@@ -222,6 +222,8 @@
                                                                     th:text="${subscription.getSubscriptionName()}"></h3>
                                                                 <h5 class="widget-user-desc text-right"
                                                                     th:text="${subscription.getSubscriptionLastName()}"></h5>
+                                                                <h5 class="widget-user-desc text-right"
+                                                                    th:text="${subscription.getStatus()}"></h5>
                                                             </div>
 
                                                             <!--                                                            <div class="card-body">-->
@@ -229,23 +231,25 @@
                                                             <!--                                                            </div>-->
 
                                                             <div class="card-footer p-1" th:if="${couldUpdate}">
-                                                                <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">
-                                                                    <button class="btn btn-primary">
-                                                                        to Group
-                                                                    </button>
-                                                                </a>
+                                                                <th:block th:if="${subscription.getStatus().toString().equals('REQUESTED') or subscription.getStatus().toString().equals('APPROVED')}">
+                                                                    <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">
+                                                                        <button class="btn btn-primary">
+                                                                            to Group
+                                                                        </button>
+                                                                    </a>
 
-                                                                <th:block th:include="profile/elements/manageSubscriptionButton :: button"
-                                                                     th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
-                                                                     userProfileId=${profile.getId()},
-                                                                     endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_UNSUBSCRIBE},
-                                                                     newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).CANCELED.name()},
-                                                                     SubscriptionDto=${SubscriptionDto},
-                                                                     buttonText=${'Leave Group'}">
+                                                                    <th:block th:include="profile/elements/manageSubscriptionButton :: button"
+                                                                         th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
+                                                                         userProfileId=${profile.getId()},
+                                                                         endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_UNSUBSCRIBE},
+                                                                         newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).CANCELED.name()},
+                                                                         SubscriptionDto=${SubscriptionDto},
+                                                                         buttonText=${'Leave Group'}">
+                                                                    </th:block>
                                                                 </th:block>
-
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                 </th:block>
                                             </div>
