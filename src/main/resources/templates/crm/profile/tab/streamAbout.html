@@ -75,6 +75,25 @@
                                                 to Group
                                             </button>
                                         </a>
+
+                                    <th:block th:include="profile/elements/manageSubscriptionButton :: button"
+                                              th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
+                                                                     userProfileId=${subscription.getSubscriberProfileId()},
+                                                                     endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_APPROVE},
+                                                                     newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).APPROVED.name()},
+                                                                     SubscriptionDto=${SubscriptionDto},
+                                                                     buttonText=${'Approve'}">
+                                    </th:block>
+
+                                    <th:block th:include="profile/elements/manageSubscriptionButton :: button"
+                                              th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
+                                                                     userProfileId=${subscription.getSubscriberProfileId()},
+                                                                     endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_REJECT},
+                                                                     newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).REJECTED.name()},
+                                                                     SubscriptionDto=${SubscriptionDto},
+                                                                     buttonText=${'Reject'}">
+                                    </th:block>
+
                                 </div>
                             </div>
 
