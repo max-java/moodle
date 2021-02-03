@@ -83,7 +83,7 @@ public class StreamController {
     public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
 
-        mov.addObject("profile", request.getSession().getAttribute("notification"));
+        mov.addObject("notification", request.getSession().getAttribute("notification"));
         request.getSession().removeAttribute("notification");
 
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);

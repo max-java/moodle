@@ -71,7 +71,7 @@ public class ProfileCardController {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
 
-        mov.addObject("profile", request.getSession().getAttribute("notification"));
+        mov.addObject("notification", request.getSession().getAttribute("notification"));
         request.getSession().removeAttribute("notification");
 
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
