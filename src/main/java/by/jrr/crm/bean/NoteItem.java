@@ -22,9 +22,8 @@ public class NoteItem implements History {
     LocalDateTime timestamp;
     @Column(columnDefinition = "TEXT")
     String text;
-    @Column(columnDefinition = "")
-            @Transient
-    HistoryType type = HistoryType.NOTE;
+    @Enumerated(value = EnumType.STRING)
+    HistoryType type;
 
     public Long getProfileId() {
         return profileId;

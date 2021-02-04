@@ -1,0 +1,9 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="toast">
+        <div class="toasts-top-right">
+            <div aria-atomic="true" aria-live="assertive" class="toast bg-success fade show" role="alert">
+                <div class="toast-body" th:text="${notification}"></div>
+            </div>
+        </div>
+    </th:block>
+</html>

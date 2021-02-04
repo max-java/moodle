@@ -38,7 +38,8 @@
                                 <h3 class="profile-username text-center"
                                     th:text="${profile.getUser().getFullUserName()}"></h3>
 
-                                <p class="text-muted text-center" id="userRoles" th:text="${profile.getUser().getAllRoles()}">Software
+                                <p class="text-muted text-center" id="userRoles"
+                                   th:text="${profile.getUser().getAllRoles()}">Software
                                     Engineer</p>
 
                                 <h2>Прогресс обучения</h2>
@@ -87,60 +88,63 @@
 
                     </div>
                     <!-- /.col -->
+
                     <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-header p-2">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab"
-                                                            href="#activity">
-                                                            Activity</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#timeline">
-                                                            Timeline</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#settings">
-                                                            Settings</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#groupActions">
-                                                            Actions In Group</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#userAction">
-                                                            User Actions</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#billing">
-                                                            Billing</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#contract">
-                                        Contracts</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#messages">
-                                        Messages</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"
-                                                            href="#lead-detail">
-                                                            CRM</a>
-                                    </li>
-                                </ul>
-                            </div><!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="tab-content">
+                            <div class="card">
+                                <div class="card-header p-2">
+                                    <ul class="nav nav-pills">
+                                        <li class="nav-item"><a class="nav-link active" data-toggle="tab"
+                                                                href="#activity">
+                                            Activity</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#timeline">
+                                            Timeline</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#settings">
+                                            Settings</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#groupActions">
+                                            Actions In Group</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#userAction">
+                                            User Actions</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#billing">
+                                            Billing</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#contract">
+                                            Contracts</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#messages">
+                                            Messages</a></li>
+                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                                href="#lead-detail">
+                                            CRM</a>
+                                        </li>
+                                    </ul>
+                                </div><!-- /.card-header -->
+                                <div class="card-body">
+                                    <div class="tab-content">
 
-                                    <th:block th:include="crm/profile/tab/streamAbout :: streamAbout" th:with="active='active'" />
-                                    <th:block th:include="crm/profile/tab/billing :: billing" />
-                                    <th:block th:include="crm/profile/tab/contract :: contract" />
-                                    <th:block th:include="crm/profile/tab/streamSettings :: streamSettings" />
-                                    <th:block th:include="crm/profile/tab/streamActivity :: streamActivity" />
-                                    <th:block th:include="crm/profile/tab/userActions :: userActions" />
-                                    <th:block th:include="crm/profile/tab/timeline :: timeline" />
-                                    <th:block th:include="crm/profile/tab/messages :: messages" />
-                                    <th:block th:include="crm/profile/tab/leadDetailHistory :: history" th:with="active=''" />
+                                        <th:block th:include="crm/profile/tab/streamAbout :: streamAbout"
+                                                  th:with="active='active'"/>
+                                        <th:block th:include="crm/profile/tab/billing :: billing"/>
+                                        <th:block th:include="crm/profile/tab/contract :: contract"/>
+                                        <th:block th:include="crm/profile/tab/streamSettings :: streamSettings"/>
+                                        <th:block th:include="crm/profile/tab/streamActivity :: streamActivity"/>
+                                        <th:block th:include="crm/profile/tab/userActions :: userActions"/>
+                                        <th:block th:include="crm/profile/tab/timeline :: timeline"/>
+                                        <th:block th:include="crm/profile/tab/messages :: messages"/>
+                                        <th:block th:include="crm/profile/tab/leadDetailHistory :: history"
+                                                  th:with="active=''"/>
 
-                                </div>
-                                <!-- /.tab-content -->
-                            </div><!-- /.card-body -->
+                                    </div>
+                                    <!-- /.tab-content -->
+                                </div><!-- /.card-body -->
+                            </div>
+                            <!-- /.nav-tabs-custom -->
                         </div>
-                        <!-- /.nav-tabs-custom -->
-                    </div>
-                    <!-- /.col -->
+                        <!-- /.col -->
                 </div>
                 <!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -172,5 +176,8 @@
 
     });
 </script>
+<th:block th:if="${notification}"
+          th:include="toast :: toast"
+          th:with="notification=${notification}" />
 </body>
 </html>

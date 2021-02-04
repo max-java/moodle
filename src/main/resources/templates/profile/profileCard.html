@@ -204,68 +204,64 @@
                                         <!-- /.post -->
 
                                         <!-- Post -->
-                                        <div th:if="${profile.getSubscribers().size()>0}">
-                                            <div th:include="profile/list :: subscribers"></div>
+                                        <div th:if="${profile.getSubscribersRequested().size()>0}">
+                                            <div th:include="profile/list :: subscribers"
+                                                 th:with="subscribers = ${profile.getSubscribersRequested()}"></div>
+                                        </div>
+
+                                        <div th:if="${profile.getSubscribersApproved().size()>0}">
+                                            <div th:include="profile/list :: subscribers"
+                                                 th:with="subscribers = ${profile.getSubscribersApproved()}"></div>
                                         </div>
                                         <!-- /.post -->
 
                                         <!-- Post -->
                                         <div class="post clearfix" th:if="${profile.getSubscriptions().size()>0}">
                                             <h2> Подписки </h2>
-                                            <table class="table table-hover text-nowrap">
-                                                <thead>
-                                                <tr>
-                                                    <th>Статус</th>
-                                                    <th>Имя</th>
-                                                    <th>Профиль</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="subscription : ${profile.getSubscriptions()}">
-                                                    <td th:text="${subscription.getStatus()}"></td>
-                                                    <td th:text="${subscription.getFullSubscriptionName()}"></td>
-                                                    <td>
-                                                        <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">open</a>
-                                                    </td>
-                                                </tr>
+                                            <div class="row">
+                                                <th:block th:each="subscription : ${profile.getSubscriptions()}">
+                                                    <div class="col-md-6">
+                                                        <div class="card card-widget widget-user shadow-lg">
 
-                                                </tbody>
-                                            </table>
+                                                            <div class="widget-user-header text-white bg-info">
+                                                                <h3 class="widget-user-username text-right"
+                                                                    th:text="${subscription.getSubscriptionName()}"></h3>
+                                                                <h5 class="widget-user-desc text-right"
+                                                                    th:text="${subscription.getSubscriptionLastName()}"></h5>
+                                                                <h5 class="widget-user-desc text-right"
+                                                                    th:text="${subscription.getStatus()}"></h5>
+                                                            </div>
+
+                                                            <!--                                                            <div class="card-body">-->
+                                                            <!--                                                                <h3></h3>-->
+                                                            <!--                                                            </div>-->
+
+                                                            <div class="card-footer p-1" th:if="${couldUpdate}">
+                                                                <th:block
+                                                                        th:if="${subscription.getStatus().toString().equals('REQUESTED') or subscription.getStatus().toString().equals('APPROVED')}">
+                                                                    <a th:href="${'/profile/'+subscription.getStreamTeamProfileId()}">
+                                                                        <button class="btn btn-primary">
+                                                                            to Group
+                                                                        </button>
+                                                                    </a>
+
+                                                                    <th:block
+                                                                            th:include="profile/elements/manageSubscriptionButton :: button"
+                                                                            th:with="streamTeamProfileId=${subscription.getStreamTeamProfileId()},
+                                                                         userProfileId=${profile.getId()},
+                                                                         endpointUrl=${T(by.jrr.constant.Endpoint).SUBSCRIPTIONS_UNSUBSCRIBE},
+                                                                         newStatus=${T(by.jrr.profile.bean.SubscriptionStatus).CANCELED.name()},
+                                                                         SubscriptionDto=${SubscriptionDto},
+                                                                         buttonText=${'Leave Group'}">
+                                                                    </th:block>
+                                                                </th:block>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </th:block>
+                                            </div>
                                         </div>
-                                        <!-- /.post -->
-                                        <!--                                        <h1>Best student</h1>-->
-                                        <!--                                        &lt;!&ndash; Post &ndash;&gt;-->
-                                        <!--                                        <div class="post clearfix">-->
-                                        <!--                                            <table class="table table-hover text-nowrap"-->
-                                        <!--                                                   th:if="${bestStudentList.size()>0}">-->
-                                        <!--                                                <thead>-->
-                                        <!--                                                <tr>-->
-                                        <!--                                                    <th>Имя</th>-->
-                                        <!--                                                    <th></th>-->
-                                        <!--                                                    <th>Лекции</th>-->
-                                        <!--                                                    <th></th>-->
-                                        <!--                                                    <th>Фидбеки</th>-->
-                                        <!--                                                    <th></th>-->
-                                        <!--                                                    <th>Стендапы</th>-->
-                                        <!--                                                </tr>-->
-                                        <!--                                                </thead>-->
-                                        <!--                                                <tbody>-->
-                                        <!--                                                <tr th:each="statistic : ${bestStudentList}">-->
-                                        <!--                                                    <td th:text="${statistic.getUserFirstAndLastName()}"></td>-->
-                                        <!--                                                    <td th:text="${statistic.getLectures().size()}"></td>-->
-                                        <!--                                                    <td th:text="${statistic.printLectures()}"></td>-->
-                                        <!--                                                    <td th:text="${statistic.getFeedbacks().size()}"></td>-->
-                                        <!--                                                    <td th:text="${statistic.printFeedbacks()}"></td>-->
-                                        <!--                                                    <td th:text="${statistic.getStandups().size()}"></td>-->
-                                        <!--                                                    <td th:text="${statistic.printStandups()}"></td>-->
-                                        <!--                                                </tr>-->
-
-                                        <!--                                                </tbody>-->
-                                        <!--                                            </table>-->
-                                        <!--                                        </div>-->
-                                        <!--                                        &lt;!&ndash; /.post &ndash;&gt;-->
-
-
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="timeline">
@@ -341,7 +337,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="dateEnd">Планируемая дата
+                                                <label class="col-sm-2 col-form-label" for="dateEnd">Планируемая
+                                                    дата
                                                     окончания</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="dateEnd" name="dateEnd"
@@ -351,7 +348,8 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="gitLink">GitHub link</label>
+                                                <label class="col-sm-2 col-form-label" for="gitLink">GitHub
+                                                    link</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="gitLink" name="gitLink"
                                                            placeholder="" th:value="${profile.getGitLink()}"
@@ -370,13 +368,15 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label" for="gitLink">Фамилия</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" id="userLastName" name="userLastName"
+                                                    <input class="form-control" id="userLastName"
+                                                           name="userLastName"
                                                            placeholder="" th:value="${profile.userLastName}"
                                                            type="text">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="gitLink">Отчество</label>
+                                                <label class="col-sm-2 col-form-label"
+                                                       for="gitLink">Отчество</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="userMiddleName"
                                                            name="userMiddleName"
@@ -401,7 +401,8 @@
                                                 <label class="col-sm-2 col-form-label" for="telegramLink">Ссылка на
                                                     телеграм чат</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" id="telegramLink" name="telegramLink"
+                                                    <input class="form-control" id="telegramLink"
+                                                           name="telegramLink"
                                                            placeholder="" th:value="${profile.getTelegramLink()}"
                                                            type="text">
                                                 </div>
@@ -412,7 +413,8 @@
                                                 <div class="col-sm-10">
                                                     <input class="form-control" id="telegramLinkName"
                                                            name="telegramLinkName"
-                                                           placeholder="" th:value="${profile.getTelegramLinkText()}"
+                                                           placeholder=""
+                                                           th:value="${profile.getTelegramLinkText()}"
                                                            type="text">
                                                 </div>
                                             </div>
@@ -438,10 +440,12 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback form
+                                                <label class="col-sm-2 col-form-label" for="feedbackLink">Feedback
+                                                    form
                                                     link</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" id="feedbackLink" name="feedbackLink"
+                                                    <input class="form-control" id="feedbackLink"
+                                                           name="feedbackLink"
                                                            placeholder="" th:value="${profile.getFeedbackLink()}"
                                                            type="text">
                                                 </div>
@@ -464,7 +468,8 @@
                                             </div>
                                             <div class="form-group row">
                                                 <div class="offset-sm-2 col-sm-10">
-                                                    <button class="btn btn-danger" name="updateProfile" type="submit">
+                                                    <button class="btn btn-danger" name="updateProfile"
+                                                            type="submit">
                                                         Update
                                                     </button>
                                                 </div>
@@ -493,7 +498,8 @@
 
                                         <!-- add timeline form -->
                                         <form class="form-horizontal"
-                                              method="post" th:action="${T(by.jrr.constant.Endpoint).PROFILE_TIMELINE}"
+                                              method="post"
+                                              th:action="${T(by.jrr.constant.Endpoint).PROFILE_TIMELINE}"
                                               th:if="${isUserIsAdmin}">
                                             <h1> Add Timeline </h1>
 
@@ -554,7 +560,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">eventName (goes to log)</label>
+                                                <label class="col-sm-2 col-form-label">eventName (goes to
+                                                    log)</label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control"
                                                            name="eventName"
@@ -562,7 +569,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">notes (info for user) </label>
+                                                <label class="col-sm-2 col-form-label">notes (info for
+                                                    user) </label>
                                                 <div class="col-sm-10">
                                                     <input class="form-control"
                                                            name="notes"
@@ -588,7 +596,8 @@
                                         <div th:insert="moodle/lectureList :: lectureList"></div>
                                     </div>
 
-                                    <th:block th:include="crm/profile/tab/userBillingForUserView :: billing" th:if="${isUserOpensHisPersonalProfile}"/>
+                                    <th:block th:if="${isUserOpensHisPersonalProfile}"
+                                              th:include="crm/profile/tab/userBillingForUserView :: billing"/>
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
@@ -628,5 +637,8 @@
     });
 </script>
 <script src="https://use.fontawesome.com/eec5925178.js"></script>
+<th:block th:if="${notification}"
+          th:include="toast :: toast"
+          th:with="notification=${notification}"/>
 </body>
 </html>

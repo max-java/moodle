@@ -36,10 +36,16 @@ public class CurrencyService {
         BynUsdRate bynUsdRate = bynUsdRateService.getRateOnDate(date);
 
         if (bynUsdRate.getId() == null) {
-            logger.debug("Rates on date {} not found in database.", date);
-            RateDto rateDto = nbrbService.getBynToUsdOnDate(date);
-            bynUsdRate = bynUsdRateService.saveRate(rateDto);
-            logger.debug("New rates {} saved in database.", rateDto);
+            try {
+                logger.debug("Rates on date {} not found in database.", date);
+                RateDto rateDto = nbrbService.getBynToUsdOnDate(date);
+                bynUsdRate = bynUsdRateService.saveRate(rateDto);
+                logger.debug("New rates {} saved in database.", rateDto);
+            } catch (Exception ex) {
+                //todo: get last known value from db or set default 0
+                //todo: send exception and notification, that billing not working.
+                bynUsdRate.setSum(BigDecimal.ZERO);
+            }
         }
         return bynUsdRate.getSum();
     }

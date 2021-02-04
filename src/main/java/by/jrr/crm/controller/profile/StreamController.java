@@ -22,6 +22,7 @@ import by.jrr.files.service.FileService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.SubscriptionStatus;
 import by.jrr.profile.bean.TimeLine;
+import by.jrr.profile.model.SubscriptionDto;
 import by.jrr.profile.service.*;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.service.RedirectionLinkService;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.util.List;
@@ -78,8 +80,12 @@ public class StreamController {
     UserAccessService userAccessService;
 
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
-    public ModelAndView openProfileById(@PathVariable Long profileId) {
+    public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+
+        mov.addObject("notification", request.getSession().getAttribute("notification"));
+        request.getSession().removeAttribute("notification");
+
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
 
@@ -134,6 +140,8 @@ public class StreamController {
                     UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM)
                             || UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM)
             ));
+
+            mov.addObject("SubscriptionDto", new SubscriptionDto());
 
         } else {
             mov.setViewName(View.PAGE_404);

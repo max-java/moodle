@@ -22,6 +22,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Deprecated //to be deprecated. Need to be renamed to Subscriptions. only db related fields should left, All other fields should be removed from this entity
+/***
+ * subscriptions is a many to many relation of one profile Id to another. Left should be userId, right - stream of team Id;
+ * status - is a enum status.
+ */
 public class StreamAndTeamSubscriber {
 
 
@@ -53,6 +58,25 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
+
+    public String getUserName() {
+        try {
+            return this.getSubscriberProfile().getUser().getUserName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
+    public String getUserLastName() {
+        try {
+            return this.getSubscriberProfile().getUser().getLastName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
     public String getFullSubscriptionName() {
         try {
             return this.getSubscriptionProfile().getUser().getFullUserName();
@@ -61,6 +85,25 @@ public class StreamAndTeamSubscriber {
             return "";
         }
     }
+
+    public String getSubscriptionName() {
+        try {
+            return this.getSubscriptionProfile().getUser().getUserName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
+    public String getSubscriptionLastName() {
+        try {
+            return this.getSubscriptionProfile().getUser().getLastName();
+        } catch (Exception ex) {
+            // TODO: 17/06/20 log exception with details!!
+            return "";
+        }
+    }
+
     public String getSubscriberLogin() {
         try {
             return this.getSubscriberProfile().getUser().getUserName();
@@ -119,7 +162,7 @@ public class StreamAndTeamSubscriber {
         return status.equals(SubscriptionStatus.APPROVED);
     }
 
-    public int totalLecturesLogged() { // TODO: 08/10/2020 bind this with timeline item by urlToRedirect
+    public int totalLecturesLogged() { // TODO: 08/10/2020 bind this with timeline item by guid or urlToRedirect if guid is absent
         return studentActivity.stream()
                 .filter(l -> l.getEventType().equals(EventType.LECTURE))
                 .map(l -> l.getUrlToRedirect())

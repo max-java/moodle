@@ -13,7 +13,7 @@ import by.jrr.profile.bean.Profile;
 import by.jrr.project.bean.Issue;
 
 /**
- * Thi class is Used to simplify link creation in templates
+ * This class is Used to simplify link creation in templates
  */
 
 public class LinkGenerator {

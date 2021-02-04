@@ -2,6 +2,7 @@ package by.jrr.email.service;
 
 
 import by.jrr.moodle.bean.Lecture;
+import by.jrr.profile.bean.TimeLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -90,7 +91,7 @@ public class EMailService {
         emailSender.send(message);
     }
 
-    public void sendStreamSubscriptionConfirmation(String firstAndLastName,
+    public void sendStreamSubscriptionConfirmation(String firstAndLastName, //todo: set message text from stream page.
                                                    String teamStreamName,
                                                    String streamTeamLink,
                                                    String telegramLink,
@@ -101,37 +102,28 @@ public class EMailService {
         messageText.append("\nТеперь Вам доступны материалы группы.");
         messageText.append("\n\n\t адрес группы: " + streamTeamLink);
         messageText.append("\n\n");
-        messageText.append("\nОбязательно вступите в чат-телеграмм группы, что бы получать актуальную информацию!");
+        messageText.append("\nОбязательно вступите в чат телеграмм группы, что бы получать актуальную информацию!");
         messageText.append("\n\n\t telegram: " + telegramLink);
         messageText.append("\n");
-        messageText.append("\nПервое занятие пройдет 6 июля 2020 в формате Zoom конференции.");
-        messageText.append("\nДата: 6 июля 2020 года.");
-        messageText.append("\nВремя: 19:00 - 22:00.");
-        messageText.append("\nМесто: ссылка в чате за 15 минут до начала.");
-        messageText.append("\nСтоимость: бесплатно.");
+        messageText.append("\nЗанятие пройдет в формате Zoom конференции.");
+        messageText.append("\nРасписание в профиле группы" + streamTeamLink);
         messageText.append("\nВаш куратор: Илья +375(29) 3333-600.");
         messageText.append("\n");
         messageText.append("\nУ Вас есть есть возможность бесплатно обучиться на курсе Java Intensive!");
         messageText.append("\nДля этого нужно:");
-        messageText.append("\n1. Посещать подготовительные занятия;");
-        messageText.append("\n2. Быть готовым всё свое свободное время на ближайшие три месяца посвятить изучению программирования;");
+        messageText.append("\n1. Записаться подготовительные занятия preIntensive;");
+        messageText.append("\n2. Быть готовым всё свое свободное время на ближайшие 4 месяца посвятить изучению программирования;");
         messageText.append("\n3. Не бояться трудностей и быть готовым к новым вызовам и испытаниям;");
         messageText.append("\n4. Освоить навыки командной работы, принципы современной методологии разработки и инструменты production development за 1 месяц подготовительного курса;");
         messageText.append("\n5. Сделать все возможное и не возможное, что бы достигнуть отличных результатов за время подготовки к Java Intensive!");
         messageText.append("\n");
         messageText.append("\nНачните готовиться уже сейчас, что бы получить возможность обучиться на курсе Java Intensive с отсрочкой платежа до трудоустройства!");
-        messageText.append("\nДля этого нужно:");
-        messageText.append("\n");
-        messageText.append("\n1. Подписаться на чат школы в Telegram https://t.me/joinchat/CxUOGRRNPKd3vDxzt9YI4A");
-        messageText.append("\n- здесь уже сейчас Вы можете начать общаться с нашими выпускниками");
-        messageText.append("\n");
-        messageText.append("\n2. Подписаться на чат группы в Telegram " + telegramLink);
-        messageText.append("\n");
-        messageText.append("\n3. Зарегистрироваться в github.com");
-        messageText.append("\n");
         messageText.append("\nНаша задача - освоить навыки командной работы и инструменты production development за 1 месяц!");
+        messageText.append("\nДля этого нужно не откладывая начать выполнять задания на платформе.");
         messageText.append("\n");
-        messageText.append("\nЖду Вас на первом занятии!");
+
+        messageText.append("\n");
+        messageText.append("\nДо встречи на занятиях!");
         messageText.append("\nС уважением,");
         messageText.append("\nУправляющий JavaGuru в Беларуси");
         messageText.append("\nМаксим Шелкович");
@@ -159,7 +151,7 @@ public class EMailService {
         messageText.append("\n\n\t telegram: " + telegramLink);
         messageText.append("\n");
         messageText.append("\nЗанятие пройдет в формате Zoom конференции.");
-        messageText.append("\nРасписание в профиле группы");
+        messageText.append("\nРасписание в профиле группы" + streamTeamLink);
         messageText.append("\nВаш куратор: Илья +375(29) 3333-600.");
         messageText.append("\n");
         messageText.append("\nУ Вас есть есть возможность бесплатно обучиться на курсе Java Intensive!");
@@ -171,16 +163,10 @@ public class EMailService {
         messageText.append("\n5. Сделать все возможное и не возможное, что бы достигнуть отличных результатов за время подготовки к Java Intensive!");
         messageText.append("\n");
         messageText.append("\nНачните готовиться уже сейчас, что бы получить возможность обучиться на курсе Java Intensive с отсрочкой платежа до трудоустройства!");
-        messageText.append("\nДля этого нужно:");
-        messageText.append("\n");
-        messageText.append("\n1. Подписаться на чат школы в Telegram https://t.me/joinchat/CxUOGRRNPKd3vDxzt9YI4A");
-        messageText.append("\n- здесь уже сейчас Вы можете начать общаться с нашими выпускниками");
-        messageText.append("\n");
-        messageText.append("\n2. Подписаться на чат группы в Telegram " + telegramLink);
-        messageText.append("\n");
-        messageText.append("\n3. Зарегистрироваться в github.com");
-        messageText.append("\n");
         messageText.append("\nНаша задача - освоить навыки командной работы и инструменты production development за 1 месяц!");
+        messageText.append("\nДля этого нужно не откладывая начать выполнять задания на платформе.");
+        messageText.append("\n");
+
         messageText.append("\n");
         messageText.append("\nДо встречи на занятиях!");
         messageText.append("\nС уважением,");
@@ -266,6 +252,29 @@ public class EMailService {
         } catch (Exception ex) {
             System.out.println("ex = " + ex);
         }
+    }
+
+    public void appendMessageFooter(StringBuffer messageText, String streamLink) {
+//        ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
+        messageText.append("\n");
+        messageText.append("\nРасписание, ссылки на занятия и записи уроков в профиле группы: "+streamLink);
+        messageText.append("\nТам же в профиле группы ссылка на наш чат, где куратор отвечает на организационные вопросы");
+        messageText.append("\nТвой куратор: Илья +375(29) 3333-600.");
+        messageText.append("\n");
+
+        messageText.append("\nДо встречи на занятиях!");
+        messageText.append("\nС уважением,");
+        messageText.append("\nУправляющий JavaGuru в Беларуси");
+        messageText.append("\nМаксим Шелкович");
+        messageText.append("\n+375(44) 750 6666");
+        messageText.append("\n___________________________________");
+        messageText.append("\nStop receiving email  |  Перестать получать уведомления");
+        messageText.append("\nОтписаться от сообщений группы можно:");
+        messageText.append("\n1. В профиле группы на платформе");
+        messageText.append("\n2. В своем профиле на платформе");
+        messageText.append("\n3. По телефону куратора");
+        messageText.append("\n4. В чате телеграмм группы");
+        messageText.append("\n5. Ответив на это письмо с отметкой \"Важно\" и запросом на отмену доступа к платформе");
     }
 }
 

@@ -14,6 +14,7 @@ public class NbrbService {
     NbrbProxy nbrbProxy;
 
     public RateDto getBynToUsdOnDate(LocalDate date) {
+//        todo: if rate not found or service unavailable - return last rate from database.
         return nbrbProxy.getBynToCurrencyOnDate("USD", date.toString());
     }
 }
