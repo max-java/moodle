@@ -65,14 +65,13 @@ public class ProfileCardController {
     TimeLineService timeLineService;
     @Autowired
     OperationRowService operationRowService;
+    @Autowired
+    SubscriptionService subscriptionService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+        ModelAndView mov = userDataToModelService.setDataWithSessionData(new ModelAndView(), request);
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
-
-        mov.addObject("notification", request.getSession().getAttribute("notification"));
-        request.getSession().removeAttribute("notification");
 
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
 
@@ -185,7 +184,12 @@ public class ProfileCardController {
             // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it. That is why I moved it in ProfileCardUpdateController
         }
         if (subscribe.isPresent()) {
-            profileService.enrollToStreamTeamProfile(profileId, profileService.getCurrentUserProfile().getId());
+            SubscriptionDto.Request subscriptionRequest = new SubscriptionDto.Request();
+            subscriptionRequest.setStatus(SubscriptionStatus.REQUESTED);
+            subscriptionRequest.setSubscriberProfileId(profileService.getCurrentUserProfile().getId());
+            subscriptionRequest.setStreamTeamProfileId(profileId);
+
+            request.getSession().setAttribute("notification", subscriptionService.requestSubscription(subscriptionRequest).getNotes());
         }
         if (pss.isCurrentUserOwner(profileId)) {
             if (command.isPresent() && command.get().equals(ProfileCardController.Commands.APPROVE_SUBSCRIPTION)) {

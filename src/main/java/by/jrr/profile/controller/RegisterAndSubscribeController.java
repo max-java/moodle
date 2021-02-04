@@ -13,9 +13,12 @@ import by.jrr.message.service.MessageService;
 import by.jrr.moodle.bean.Course;
 import by.jrr.moodle.service.CourseService;
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.SubscriptionStatus;
+import by.jrr.profile.model.SubscriptionDto;
 import by.jrr.profile.service.ProfilePossessesService;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.ProfileStatisticService;
+import by.jrr.profile.service.SubscriptionService;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.StudentActionToLog;
 import by.jrr.registration.service.StudentActionToLogService;
@@ -59,10 +62,13 @@ public class RegisterAndSubscribeController {
     StudentActionToLogService satls;
 
     @Autowired
-    HttpServletRequest request;
+    HttpServletRequest request; //todo: looks like this should be deleted?
 
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    SubscriptionService subscriptionService;
 
 
     // TODO: 16/09/20 should be refactored
@@ -93,6 +99,7 @@ public class RegisterAndSubscribeController {
                     Optional<Profile> courseProfileOp = profileService.findProfileByProfileId(streamId.get());
                     if (courseProfileOp.isPresent()) {
                         courseProfile = courseProfileOp.get();
+
                         enroll(courseProfile.getId(), userProfile.getId());
 
                         redirectView.setUrl(Endpoint.PROFILE_CARD + "/" + courseProfile.getId());
@@ -151,7 +158,11 @@ public class RegisterAndSubscribeController {
     }
 
     private void enroll(Long streamProfileId, Long currentUserId) {
-        profileService.enrollToStreamTeamProfile(streamProfileId, currentUserId);
+        SubscriptionDto.Request subscriptionRequest = new SubscriptionDto.Request();
+        subscriptionRequest.setStatus(SubscriptionStatus.REQUESTED);
+        subscriptionRequest.setStreamTeamProfileId(streamProfileId);
+        subscriptionRequest.setSubscriberProfileId(currentUserId);
+        subscriptionService.requestSubscription(subscriptionRequest);
     }
 
     private Optional<Profile> findStreamProfileByCourseId(Long courseId) {

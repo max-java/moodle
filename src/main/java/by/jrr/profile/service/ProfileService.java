@@ -279,13 +279,6 @@ public class ProfileService {
         return createProfile(profile);
     }
 
-    public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
-        streamAndTeamSubscriberService.updateSubscription(
-                streamTeamProfileId,
-                subscriberProfileId,
-                SubscriptionStatus.REQUESTED);
-    }
-
     private List<User> searchUsersByAnyUserField(String searchTerm) {
         return userSearchService.searchUserByAllUserFields(searchTerm);
     }
