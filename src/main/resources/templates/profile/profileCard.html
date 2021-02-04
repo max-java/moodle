@@ -35,6 +35,8 @@
                         <div th:if="${TEAM}" th:include="profile/student::card"></div>
                         <div th:if="${STUDENT}" th:include="profile/student::card"></div>
 
+                        <p th:text="${notification}"></p>
+
                     </div>
                     <!-- /.col -->
                     <div class="col-md-9">
