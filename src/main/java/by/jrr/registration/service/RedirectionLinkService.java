@@ -11,6 +11,7 @@ import by.jrr.registration.repository.RedirectionLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Clock;
@@ -39,7 +40,7 @@ public class RedirectionLinkService {
     public void setDefaultClock() {
         this.clock = Clock.systemDefaultZone();
     }
-
+    //ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     private static final String REDIRECTION_PAGE_BASE_URL = "https://moodle.jrr.by/redirect/"; //todo: make it url based
     private static final int DEFAULT_EXPIRATION = 15;
 

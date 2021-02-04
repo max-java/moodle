@@ -34,6 +34,12 @@ public class Endpoint {
     public static final String PROFILE_LIST = "/profiles";
     public static final String PROFILE_TIMELINE = "/timeline";
 
+    //manage subscriptions
+    public static final String SUBSCRIPTIONS_REQUEST = "/subscriptions/request";
+    public static final String SUBSCRIPTIONS_APPROVE = "/subscriptions/approve";
+    public static final String SUBSCRIPTIONS_REJECT = "/subscriptions/reject";
+    public static final String SUBSCRIPTIONS_UNSUBSCRIBE = "/subscriptions/unsubscribe";
+
 
     @ToDeprecated("use request for review forms")
     public static final String REVIEW_REQUEST_FORM = "/reviewRequest/newRequest"; // TODO: 27/05/20 change mapping names, maybe add ?newRequest=true for this?

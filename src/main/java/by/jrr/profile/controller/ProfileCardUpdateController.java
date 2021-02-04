@@ -57,6 +57,7 @@ public class ProfileCardUpdateController {
                                 @RequestParam Optional<String> feedbackName,
                                 @RequestParam Optional<String> updateProfile,
                                 @RequestParam Optional<Boolean> openForEnroll,
+                                @RequestParam Optional<Boolean> free,
 
                                 @RequestParam Optional<String> userName,
                                 @RequestParam Optional<String> userMiddleName,
@@ -133,6 +134,12 @@ public class ProfileCardUpdateController {
                     } else {
                         profile.setOpenForEnroll(false);
                     }
+                    if (free.isPresent()) {
+                        profile.setFree(true);
+                    } else {
+                        profile.setFree(false);
+                    }
+
                     profileService.updateProfile(profile);
                 }
             }

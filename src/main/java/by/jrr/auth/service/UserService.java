@@ -94,6 +94,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
     @Deprecated //use method with two parameters
     private User encryptAndUpdateUserPassword(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -293,6 +297,7 @@ public class UserService {
         return user;
     }
 
+    @Deprecated //move to UserAccessService
     public static boolean isCurrentUserHasRole(UserRoles role) {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role.name()));

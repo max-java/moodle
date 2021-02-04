@@ -4,6 +4,7 @@ import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserData;
 import by.jrr.balance.bean.Currency;
 import by.jrr.balance.bean.OperationRow;
+import by.jrr.balance.constant.Http;
 import by.jrr.balance.dto.UserBalanceSummaryDto;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.profile.bean.Profile;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -37,6 +39,15 @@ public class UserDataToModelService {
         setUserBalance(mov);
         return mov;
     }
+
+    public ModelAndView setDataWithSessionData(ModelAndView mov, HttpServletRequest request) { // TODO: 28/05/20 replace by different methods simmilar to getInstance with zero parameters and cache it
+        mov = setData(mov);
+        mov.addObject("notification", request.getSession().getAttribute("notification"));
+        request.getSession().removeAttribute("notification");
+        return mov;
+    }
+
+
 
     private ModelAndView setUserDTOToRegisterAndEnrollModalForm(ModelAndView mov) {
         // need to work with quick register form.

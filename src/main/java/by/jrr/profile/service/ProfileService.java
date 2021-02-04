@@ -3,6 +3,7 @@ package by.jrr.profile.service;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
+import by.jrr.auth.service.UserRoleManager;
 import by.jrr.auth.service.UserSearchService;
 import by.jrr.auth.service.UserService;
 import by.jrr.balance.bean.Currency;
@@ -60,6 +61,8 @@ public class ProfileService {
     HistoryItemService historyItemService;
     @Autowired
     OperationRowService operationRowService;
+    @Autowired
+    UserRoleManager userRoleManager;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -276,13 +279,6 @@ public class ProfileService {
         return createProfile(profile);
     }
 
-    public void enrollToStreamTeamProfile(Long streamTeamProfileId, Long subscriberProfileId) {
-        streamAndTeamSubscriberService.updateSubscription(
-                streamTeamProfileId,
-                subscriberProfileId,
-                SubscriptionStatus.REQUESTED);
-    }
-
     private List<User> searchUsersByAnyUserField(String searchTerm) {
         return userSearchService.searchUserByAllUserFields(searchTerm);
     }
@@ -477,5 +473,29 @@ public class ProfileService {
         chatButtonDto.setStreamTeamProfileId(profile.getId());
         chatButtonDto.setUrlToRedirect(profile.getTelegramLink());
         return chatButtonDto;
+    }
+
+    public String findStreamNameByStreamProfileId(long id) {
+        try {
+            Profile profile = this.findProfileByProfileId(id).get();
+            return String.format("%s : %s",
+                    profile.getUser().getName(),
+                    profile.getUser().getLastName());
+        } catch (Exception ex) {
+            return String.valueOf(id);
+        }
+    }
+
+    public boolean isStreamFree(long id) {
+        Boolean isFree = this.findProfileByProfileIdLazy(id).get().getFree();
+        if (isFree == null) {
+            return false;
+        }
+        return isFree;
+    }
+
+    public void addRoleIfAbsent(long profileId, UserRoles userRole) {
+        long userId = findProfileByProfileIdLazy(profileId).get().getUserId();
+        userRoleManager.addRoleIfAbsent(userId, userRole);
     }
 }

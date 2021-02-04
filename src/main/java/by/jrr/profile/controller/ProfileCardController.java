@@ -17,6 +17,7 @@ import by.jrr.files.service.FileService;
 import by.jrr.moodle.bean.Lecture;
 import by.jrr.moodle.service.CourseToLectureService;
 import by.jrr.profile.bean.*;
+import by.jrr.profile.model.SubscriptionDto;
 import by.jrr.profile.service.*;
 import by.jrr.registration.service.StudentActionToLogService;
 import org.checkerframework.checker.units.qual.A;
@@ -64,10 +65,12 @@ public class ProfileCardController {
     TimeLineService timeLineService;
     @Autowired
     OperationRowService operationRowService;
+    @Autowired
+    SubscriptionService subscriptionService;
 
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
-    public ModelAndView openProfileById(@PathVariable Long profileId) {
-        ModelAndView mov = userDataToModelService.setData(new ModelAndView());
+    public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
+        ModelAndView mov = userDataToModelService.setDataWithSessionData(new ModelAndView(), request);
         Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
 
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
@@ -129,6 +132,7 @@ public class ProfileCardController {
                 mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
             }
             mov.addObject("isUserOpensHisPersonalProfile", isUserOpensHisPersonalProfile);
+            mov.addObject("SubscriptionDto", new SubscriptionDto());
 
         }
         else {
@@ -180,7 +184,12 @@ public class ProfileCardController {
             // TODO: 15/06/20 throws exception on bind LocalDate. Debug and fix it. That is why I moved it in ProfileCardUpdateController
         }
         if (subscribe.isPresent()) {
-            profileService.enrollToStreamTeamProfile(profileId, profileService.getCurrentUserProfile().getId());
+            SubscriptionDto.Request subscriptionRequest = new SubscriptionDto.Request();
+            subscriptionRequest.setStatus(SubscriptionStatus.REQUESTED);
+            subscriptionRequest.setSubscriberProfileId(profileService.getCurrentUserProfile().getId());
+            subscriptionRequest.setStreamTeamProfileId(profileId);
+
+            request.getSession().setAttribute("notification", subscriptionService.requestSubscription(subscriptionRequest).getNotes());
         }
         if (pss.isCurrentUserOwner(profileId)) {
             if (command.isPresent() && command.get().equals(ProfileCardController.Commands.APPROVE_SUBSCRIPTION)) {

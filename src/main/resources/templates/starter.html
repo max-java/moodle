@@ -351,5 +351,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <noscript><img alt="" src="https://vk.com/rtrg?p=VK-RTRG-523509-gJw4l" style="position:fixed; left:-999px;"/>
     </noscript>
 </div>
+<th:block th:if="${notification}"
+          th:include="toast :: toast"
+          th:with="notification=${notification}" />
 </body>
 </html>

@@ -29,6 +29,8 @@ public class UserAccessService {
     ProfileService profileService;
     @Autowired
     TimeLineService timeLineService;
+    @Autowired
+    UserService userService;
 
     public boolean isCurrentUserAuthenticated() {
         boolean isUserAuthenticated = false;
@@ -63,6 +65,11 @@ public class UserAccessService {
     }
 
     public static boolean isUserHasRole(User user, UserRoles role) {
+        return user.getAllRoles().contains(role.name());
+    }
+
+    public boolean isUserHasRole(long userId, UserRoles role) {
+        User user = userService.getUserById(userId);
         return user.getAllRoles().contains(role.name());
     }
 

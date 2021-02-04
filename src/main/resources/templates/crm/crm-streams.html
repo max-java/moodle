@@ -15,6 +15,8 @@
                                 <th>Стрим</th>
                                 <th>Реквестов</th>
                                 <th>Апрувов</th>
+                                <th>Реджектов</th>
+                                <th>Отписок</th>
                                 <th>Старт</th>
                                 <th>Финиш</th>
                             </tr>
@@ -28,6 +30,8 @@
                                 </td>
                                 <td th:text="${profile.getSubscribersRequested().size()}"></td>
                                 <td th:text="${profile.getSubscribersApproved().size()}"></td>
+                                <td th:text="${profile.getSubscribersRejected().size()}"></td>
+                                <td th:text="${profile.getSubscribersCanceled().size()}"></td>
                                 <td th:text="${profile.getDateStart()}"></td>
                                 <td th:text="${profile.getDateEnd()}"></td>
                             </tr>
