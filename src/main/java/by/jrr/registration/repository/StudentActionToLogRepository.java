@@ -12,4 +12,6 @@ public interface StudentActionToLogRepository extends PagingAndSortingRepository
     List<StudentActionToLog> findAllBystudentProfileIdAndTimestampBetween(Long id, LocalDateTime start, LocalDateTime finish);
     List<StudentActionToLog> findAllBystudentProfileId(Long id);
     List<StudentActionToLog> findAllByTimelineUUID(String uuid);
+    List<StudentActionToLog> findAllByTimelineUUIDAndTimestampBetween(String uuid, LocalDateTime start, LocalDateTime finish);
+
 }
