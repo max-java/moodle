@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="layout-navbar-fixed sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+<!--                        depend on timeline entity -->
+                        <th:block th:insert="crm/profile/tab/timelineItem :: item"></th:block>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table table-striped">
+                            <tr>
+                                <th >total</th>
+                                <th th:text="|actions ${timelineActions.size()}|"></th>
+                                <th th:text="|unic ${totalUniqVisitors}|"></th>
+                                <th th:text="|in time ${totalUniqVisitorsInTime}|"></th>
+                            </tr>
+                            <tr th:each="action : ${timelineActions}">
+                                <td th:text="${action.timestamp}"></td>
+                                <td><a th:href="|/crm/profile/${action.studentProfileId}|"
+                                       th:text="${action.studentProfile.fullName}"/>
+                                </td>
+                                <td><a th:href="|/crm/profile/${action.studentProfileId}|"
+                                       th:text="${action.studentProfile.user.firstAndLastName}"/>
+                                </td>
+                                <td th:text="${action.studentProfile.user.phone}"/>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

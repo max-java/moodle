@@ -51,6 +51,7 @@ public class View {
     public static final String CRM_DASHBOARD = "crm/dashboard";
     public static final String CRM_VIEW_STREAM_CARD = "crm/profile/stream";
     public static final String CRM_VIEW_USER_CARD = "crm/profile/user";
+    public static final String CRM_TIMELINE_ITEM_PAGE = "crm/profile/tab/timelineItemPage";
 
     public static final String CRM_OPERATION_CATEGORIES = "crm/balanceElements/operationCategory";
 }

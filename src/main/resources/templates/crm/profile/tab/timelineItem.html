@@ -6,8 +6,15 @@
     <th:block th:if="${timeline.getEventType().equals(T(by.jrr.registration.bean.EventType).LECTURE)}">
         <div class="timeline-item">
             <h3 style="padding: 10px;"><i class="far fa-clock"></i>
-                <th:block
-                        th:text="${timeline.getTime()}">
+                <th:block th:if="${STUDENT}">
+                    <th:block
+                            th:text="|${timeline.getTime()}|">
+                    </th:block>
+                </th:block>
+                <th:block th:unless="${STUDENT}">
+                    <th:block
+                            th:text="|${timeline.getTime()} in time ${timeline.totalUniqVisitorsForTimelineEventAroundTimestamp}|">
+                    </th:block>
                 </th:block>
                 <th:block th:if="${STUDENT}">
                     <th:block th:if="${isUserIsAdmin}">
@@ -30,9 +37,8 @@
                     </th:block>
                 </th:block>
             </h3>
-
             <h3 class="timeline-header">
-                <a href="#" th:text="${timeline.getEventType()}"/>
+                <a th:href="|/crm/timeline/${timeline.getTimelineUUID()}|" th:text="${timeline.getEventType()}"/>
                 <span th:text="${timeline.getEventName()}"/>
             </h3>
 
@@ -76,7 +82,6 @@
                         <!-- /.info-box -->
                     </button>
                 </form>
-
             </div>
         </div>
     </th:block>

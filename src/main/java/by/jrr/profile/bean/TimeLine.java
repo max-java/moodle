@@ -40,6 +40,9 @@ public class TimeLine {
     private String notes;
     private Instant timeStamp;
 
+    @Transient //todo: store in db and update periodically or forceUpdate
+    private int totalUniqVisitorsForTimelineEventAroundTimestamp;
+
     @PrePersist
     protected void onCreate() {
         this.timeStamp = Instant.now();

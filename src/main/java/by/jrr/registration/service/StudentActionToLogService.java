@@ -1,6 +1,7 @@
 package by.jrr.registration.service;
 
 import by.jrr.profile.bean.Profile;
+import by.jrr.profile.bean.TimeLine;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.profile.service.StreamAndTeamSubscriberService;
 import by.jrr.registration.bean.EventType;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,6 +48,32 @@ public class StudentActionToLogService {
             studentActionToLog.setStudentProfileId(profileService.getCurrentUserProfileId());
         }
         satlR.save(studentActionToLog);
+    }
+
+    public List<StudentActionToLog> findActionsByTimelineId(String uuid) {
+        List<StudentActionToLog> actions = satlR.findAllByTimelineUUID(uuid);
+        actions.stream()
+            .sorted(Comparator.comparing(StudentActionToLog::getTimestamp))
+            .forEach(a -> a.setStudentProfile(profileService.findProfileByProfileId(a.getStudentProfileId()).orElseGet(Profile::new)));
+        return actions;
+    }
+
+    public int findTotalUniqVisitorsForTimelineEvent(String uuid) {
+        List<StudentActionToLog> actions = satlR.findAllByTimelineUUID(uuid);
+        return actions.stream()
+                .map(StudentActionToLog::getStudentProfileId)
+                .collect(Collectors.toSet())
+                .size();
+    }
+
+    public int findTotalUniqVisitorsForTimelineEventAroundTimestamp(TimeLine timeLine, int deltaMinutesBefore, int deltaMinutesAfter) {
+        LocalDateTime start = timeLine.getDateTime().minusMinutes(deltaMinutesBefore);
+        LocalDateTime finish = timeLine.getDateTime().plusMinutes(deltaMinutesAfter);
+        List<StudentActionToLog> actions = satlR.findAllByTimelineUUIDAndTimestampBetween(timeLine.getTimelineUUID(), start, finish);
+        return actions.stream()
+                .map(StudentActionToLog::getStudentProfileId)
+                .collect(Collectors.toSet())
+                .size();
     }
 
     public LogActionAndRedirectController.UserActivityDTO findActionForStreamBetweenTimestamps(Long streamProfileId, LocalDateTime start, LocalDateTime end) {
