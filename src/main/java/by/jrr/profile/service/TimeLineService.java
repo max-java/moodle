@@ -6,6 +6,9 @@ import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.TimeLine;
 import by.jrr.profile.repository.TimeLineRepository;
 import by.jrr.registration.bean.EventType;
+import by.jrr.registration.bean.StudentActionToLog;
+import by.jrr.registration.service.StudentActionToLogService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ public class TimeLineService {
     TimeLineRepository timeLineRepository;
     @Autowired
     UserAccessService userAccessService;
+    @Autowired
+    StudentActionToLogService studentActionToLogService;
 
     public void save(TimeLine timeLine) {
         setUuidIfItNull(timeLine);
@@ -136,7 +141,17 @@ public class TimeLineService {
         timeline.addAll(getTimelineByStreamId(profile.getId()));
         timeline.addAll(getTimelineForProfileSubscriptions(profile.getSubscriptions()));
         distinctTimelineItems(timeline);
+        setTotalLectureVisitorsInTime(timeline);
         return groupTimelineByDates(timeline);
+    }
+
+    private void setTotalLectureVisitorsInTime(List<TimeLine> timeline) {
+        timeline.stream()
+                .filter(t -> t.getEventType().equals(EventType.LECTURE))
+                .forEach(t -> t.setTotalUniqVisitorsForTimelineEventAroundTimestamp(
+                        studentActionToLogService.findTotalUniqVisitorsForTimelineEventAroundTimestamp(
+                                t, 30, 60
+                        )));
     }
 
     private void setUuidIfItNull(TimeLine timeLine) {
