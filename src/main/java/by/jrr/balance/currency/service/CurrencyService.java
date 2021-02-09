@@ -36,18 +36,24 @@ public class CurrencyService {
         BynUsdRate bynUsdRate = bynUsdRateService.getRateOnDate(date);
 
         if (bynUsdRate.getId() == null) {
-            try {
-                logger.debug("Rates on date {} not found in database.", date);
-                RateDto rateDto = nbrbService.getBynToUsdOnDate(date);
-                bynUsdRate = bynUsdRateService.saveRate(rateDto);
-                logger.debug("New rates {} saved in database.", rateDto);
-            } catch (Exception ex) {
-                //todo: get last known value from db or set default 0
-                //todo: send exception and notification, that billing not working.
-                bynUsdRate.setSum(BigDecimal.ZERO);
-            }
+//            getFromNbRbAndSaveToDbOrSetToZero(date, bynUsdRate);
+            //todo: @max !cito! fix call to NbRb Service.
+            bynUsdRate.setSum(BigDecimal.valueOf(2.63));
         }
         return bynUsdRate.getSum();
+    }
+
+    private void getFromNbRbAndSaveToDbOrSetToZero(LocalDate date, BynUsdRate bynUsdRate) {
+        try {
+            logger.debug("Rates on date {} not found in database.", date);
+            RateDto rateDto = nbrbService.getBynToUsdOnDate(date);
+            bynUsdRate = bynUsdRateService.saveRate(rateDto);
+            logger.debug("New rates {} saved in database.", rateDto);
+        } catch (Exception ex) {
+            //todo: get last known value from db or set default 0
+            //todo: send exception and notification, that billing not working.
+            bynUsdRate.setSum(BigDecimal.ZERO);
+        }
     }
 
     public BigDecimal getOperationRowSumInBynOnOperationDate(OperationRow operationRow) {
