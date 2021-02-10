@@ -1,15 +1,14 @@
 package by.jrr.profile.service;
 
-import by.jrr.auth.bean.Role;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserService;
 import by.jrr.constant.LinkGenerator;
 import by.jrr.email.service.EMailService;
+import by.jrr.profile.repository.SubscriptionsStatisticViewDto;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
 import by.jrr.profile.bean.SubscriptionStatus;
-import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.profile.repository.StreamAndTeamSubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class StreamAndTeamSubscriberService {
@@ -39,6 +37,11 @@ public class StreamAndTeamSubscriberService {
     public StreamAndTeamSubscriber findSubscribtion(Long userProfileId, Long streamProfileId) throws Exception{
         return streamAndTeamSubscriberRepository.findBySubscriberProfileIdAndStreamTeamProfileId(userProfileId, streamProfileId)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<SubscriptionsStatisticViewDto> getSubscriptionsStatistic() {
+        List<SubscriptionsStatisticViewDto> result = streamAndTeamSubscriberRepository.getSubscriptionsStatistic();
+        return result;
     }
 
     @Deprecated //to be moved to SubscriptionService

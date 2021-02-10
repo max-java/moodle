@@ -22,18 +22,18 @@
                             </tr>
                             </thead>
                             <tr th:each="profile : ${streams}">
-                                <td th:text="${profile.getCourse().getTitle()}"></td>
+                                <td th:text="${profile.getTitle()}"></td>
                                 <td>
-                                    <a th:href="${'/crm/profile/'+profile.getId()}"
-                                       th:text="${profile.getUser().getFullUserName()}">
+                                    <a th:href="${'/crm/profile/'+profile.getProfile_id()}"
+                                       th:text="|${profile.getName()} ${profile.getLast_name()}|">
                                     </a>
                                 </td>
-                                <td th:text="${profile.getSubscribersRequested().size()}"></td>
-                                <td th:text="${profile.getSubscribersApproved().size()}"></td>
-                                <td th:text="${profile.getSubscribersRejected().size()}"></td>
-                                <td th:text="${profile.getSubscribersCanceled().size()}"></td>
-                                <td th:text="${profile.getDateStart()}"></td>
-                                <td th:text="${profile.getDateEnd()}"></td>
+                                <td th:text="${profile.getTOTAL_REQUESTED()}"></td>
+                                <td th:text="${profile.getTOTAL_APPROVED()}"></td>
+                                <td th:text="${profile.getTOTAL_REJECTED()}"></td>
+                                <td th:text="${profile.getTOTAL_CANCELED()}"></td>
+                                <td th:text="${profile.getDate_start()}"></td>
+                                <td th:text="${profile.getDate_end()}"></td>
                             </tr>
                         </table>
                     </div>
