@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="starter :: head"></head>
+<body class="layout-navbar-fixed sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <div th:include="navbar :: navbar"></div>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <div th:include="starter :: asideLeft"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div th:include="starter :: page_header"></div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+
+            <th:block th:include="crm/crm-streams :: streamsTable"
+                      th:with="tableName='Текущие группы',
+                                       streams=${ongoingStreams}"/>
+
+            <th:block th:include="crm/crm-streams :: streamsTable"
+                      th:with="tableName='Идет запись в группы',
+                                       streams=${openForEnrollStreams}"/>
+
+            <th:block th:include="crm/crm-streams :: streamsTable"
+                      th:with="tableName='Все группы',
+                                       streams=${streams}"/>
+
+
+        </section>
+    </div>
+
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Control Sidebar -->
+<div th:include="starter :: asideRight"></div>
+</div>
+<!-- /.control-sidebar -->
+
+<!-- Main Footer -->
+<div th:include="starter :: footer"></div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<div th:include="starter :: scripts"></div>
+</body>
+</html>

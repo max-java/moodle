@@ -74,6 +74,9 @@ public class Endpoint {
     public static final String CRM_NEW_HISTORY_ITEM = "/crm/historyItem";
     public static final String CRM_DASHBOARD = "/crm/dashboard";
     public static final String CRM_TIMELINE = "/crm/timeline";
+    public static final String CRM_STREAM = "/crm/stream";
+    public static final String CRM_DEBTOR = "/crm/debtor";
+    public static final String CRM_CASHFLOW = "/crm/cashflow";
 
     public static final String CRM_CONTRACTS = "/crm/contracts";
     public static final String CRM_OPERATION_CATEGORIES = "/crm/operationCategories";

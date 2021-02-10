@@ -112,7 +112,6 @@ public class ContractService {
         List<Contract> contractsList = contractRepository.findAllByIdIn(contractIds);
         contractsList.stream()
                 .peek(this::setContractTypeToContract)
-                .peek(this::setContractTypeToContract)
                 .peek(this::setAcceptanceActToContract)
                 .peek(this::setIncomesToContract)
                 .forEach(this::setUserProfileToContract);
