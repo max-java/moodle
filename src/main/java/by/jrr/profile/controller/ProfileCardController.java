@@ -114,6 +114,7 @@ public class ProfileCardController {
             else {
                 mov.addObject("topicIdMapToFullName", new HashMap<>());
             }
+            mov.addObject("emptyString", "");
             // end of lectures;
 
             mov.addObject("bestStudentList", calculateBestStudent(profile.get().getSubscribers()));
