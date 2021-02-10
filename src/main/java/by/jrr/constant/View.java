@@ -48,6 +48,9 @@ public class View {
 
     public static final String CRM = "crm/crm";
     public static final String CRM_CONTRACTS = "crm/contracts";
+    public static final String CRM_PAGE_STREAMS = "crm/pageStreams";
+    public static final String CRM_PAGE_DEBTORS = "crm/pageDebtors";
+    public static final String CRM_PAGE_CASH_FLOW = "crm/pageCashFlow";
     public static final String CRM_DASHBOARD = "crm/dashboard";
     public static final String CRM_VIEW_STREAM_CARD = "crm/profile/stream";
     public static final String CRM_VIEW_USER_CARD = "crm/profile/user";

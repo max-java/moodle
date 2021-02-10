@@ -27,204 +27,21 @@
                     <div class="row">
                         <a th:href="${T(by.jrr.constant.Endpoint).CRM_OPERATION_CATEGORIES}">Категории операций</a>
                     </div>
-                </div>
-            </div>
-
-            <th:block th:include="crm/crm-streams :: streamsTable"
-                      th:with="tableName='Текущие группы',
-                                       streams=${ongoingStreams}"/>
-
-            <th:block th:include="crm/crm-streams :: streamsTable"
-                      th:with="tableName='Идет запись в группы',
-                                       streams=${openForEnrollStreams}"/>
-
-            <th:block th:include="crm/crm-streams :: streamsTable"
-                      th:with="tableName='Все группы',
-                                       streams=${streams}"/>
-
-            <th:block th:include="crm/crm-streams :: debtorsTable"
-                      th:with="tableName='Должники',
-                                       debtors=${debtors}"/>
-
-            <div class="card card-solid">
-                <div class="card-header">
-                    <h2>Cash Flow</h2>
-                </div>
-                <div class="card-body">
-                    <!--                    <div class="row">-->
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="row">
-
-                                <div class="col-md-3">
-                                    <div th:include="crm/balanceElements/operationRowButton :: button"
-                                         th:with="categoryList=${incomeCategoryList},
-                                       direction=${T(by.jrr.balance.constant.OperationRowDirection).INCOME},
-                                       row=${blankRow},
-                                       buttonText=${'Доход - общие'}">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div th:include="crm/balanceElements/operationRowButton :: button"
-                                         th:with="categoryList=${incomeCategoryList},
-                                             direction=${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME},
-                                             row=${blankRow},
-                                             buttonText=${'Расход - общие'}">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
                     <div class="row">
-                        <table class="table table-bordered table-striped">
-                            <tbody>
-
-                            <tr>
-                                <td th:text="${total.profit}"></td>
-                                <td colspan="4"> текущий профит: разница фактических доходов и расходов</td>
-                            </tr>
-                            <tr>
-                                <td th:text="${total.planProfit}"></td>
-                                <td colspan="4"> прогнозный профит: разница всех (совершенных и будущих) доходов и расходов</td>
-                            </tr>
-                            <tr>
-                                <td th:text="${total.contractProfit}"></td>
-                                <td colspan="4"> сумма заключенных договоров минус все расходы</td>
-                            </tr>
-                            <tr>
-                                <td th:text="${total.invoiceProfit}"></td>
-                                <td colspan="4"> сумма оплат за услуги с установленным сроком исполнения минус все расходы</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-sm table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INCOME}"/>
-                                <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME}"/>
-                                <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT}"/>
-                                <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE}"/>
-                                <th colspan="2">Примечание</th>
-                            </tr>
-                            <tr>
-                                <th>totals</th>
-                                <th th:text="${total.income}"/>
-                                <th th:text="${total.outcome}"/>
-                                <th th:text="${total.contract}"/>
-                                <th th:text="${total.invoice}"/>
-                                <th colspan="2"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="operation : ${operationRows}" th:unless="${operation.operationRowDirection.isPlan()}">
-                                <td nowrap th:text="${operation.date}"></td>
-                                <td>
-                                    <th:block
-                                            th:if="${T(by.jrr.balance.constant.OperationRowDirection).INCOME == operation.operationRowDirection}"
-                                            th:text="|${operation.sum}${operation.currency}|"/>
-                                </td>
-                                <td>
-                                    <th:block
-                                            th:if="${T(by.jrr.balance.constant.OperationRowDirection).OUTCOME == operation.operationRowDirection}"
-                                            th:text="|${operation.sum}${operation.currency}|"/>
-                                </td>
-                                <td>
-                                    <th:block
-                                            th:if="${T(by.jrr.balance.constant.OperationRowDirection).CONTRACT == operation.operationRowDirection}"
-                                            th:text="|${operation.sum}${operation.currency}|"/>
-                                </td>
-                                <td>
-                                    <th:block
-                                            th:if="${T(by.jrr.balance.constant.OperationRowDirection).INVOICE == operation.operationRowDirection}"
-                                            th:text="|${operation.sum}${operation.currency}|"/>
-                                </td>
-
-                                <td colspan="2" nowrap>
-                                    <th:block th:include="crm/balanceElements/operationRowButtonSmall :: button_sm"
-                                              th:with="categoryList=${incomeCategoryList},
-                                       direction=${operation.operationRowDirection},
-                                       row=${operation},
-                                       buttonText=''">
-                                    </th:block>
-
-                                    <a th:unless="${operation.subscriber.id == null}"
-                                       th:href="${'/crm/profile/'+operation.subscriber.getId()}"
-                                       th:text="${operation.subscriber.getFullName()}"></a>
-                                    <span class="small" th:text="|${operation.operationCategory.name} ${operation.note}|"></span>
-
-
-                                </td>
-
-                            </tr>
-                            </tbody>
-
-                        </table>
-
-                        <table class="table table-sm table-bordered table-striped">
-                            <thead>
-
-
-                            <tr>
-                                <th>Дата</th>
-
-                                <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_INCOME}"/>
-                                <th th:text="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_OUTCOME}"/>
-
-                                <th>Примечание</th>
-
-                            </tr>
-                            <tr>
-                                <th>totals</th>
-                                <th th:text="${total.planIncome}"/>
-                                <th th:text="${total.planOutcome}"/>
-                                <th> </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="operation : ${operationRows}" th:if="${operation.operationRowDirection.isPlan()}">
-                                <td nowrap th:text="${operation.date}"></td>
-                                <td>
-                                    <th:block
-                                            th:if="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_INCOME == operation.operationRowDirection}"
-                                            th:text="|${operation.sum}${operation.currency}|"/>
-                                </td>
-                                <td>
-                                    <th:block
-                                            th:if="${T(by.jrr.balance.constant.OperationRowDirection).PLAN_OUTCOME == operation.operationRowDirection}"
-                                            th:text="|${operation.sum}${operation.currency}|"/>
-                                </td>
-                                <td nowrap>
-                                    <th:block th:include="crm/balanceElements/operationRowButtonSmall :: button_sm"
-                                              th:with="categoryList=${incomeCategoryList},
-                                       direction=${operation.operationRowDirection},
-                                       row=${operation},
-                                       buttonText=''">
-                                    </th:block>
-
-                                    <a th:unless="${operation.subscriber.id == null}"
-                                       th:href="${'/crm/profile/'+operation.subscriber.getId()}"
-                                       th:text="${operation.subscriber.getFullName()}"></a>
-                                    <span class="small" th:text="|${operation.operationCategory.name} ${operation.note}|"></span>
-
-                                </td>
-
-                            </tr>
-                            </tbody>
-
-                        </table>
+                        <a th:href="${T(by.jrr.constant.Endpoint).CRM_STREAM}">Группы</a>
+                    </div>
+                    <div class="row">
+                        <a th:href="${T(by.jrr.constant.Endpoint).CRM_DEBTOR}">Должники</a>
+                    </div>
+                    <div class="row">
+                        <a th:href="${T(by.jrr.constant.Endpoint).CRM_CASHFLOW}">Обороты</a>
                     </div>
                 </div>
-                <!--                    </div>-->
-                <!-- /.row -->
             </div>
+
+        </section>
     </div>
 
-    </section>
-    <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
