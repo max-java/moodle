@@ -2,10 +2,7 @@ package by.jrr.profile.service;
 
 import by.jrr.common.annotations.VisibleForTesting;
 import by.jrr.email.service.EMailService;
-import by.jrr.profile.bean.Notification;
-import by.jrr.profile.bean.Profile;
-import by.jrr.profile.bean.TimeLine;
-import by.jrr.profile.bean.TimeLineNotification;
+import by.jrr.profile.bean.*;
 import by.jrr.profile.repository.TimeLineNotificationRepository;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.model.RedirectionLinkDto;
@@ -182,6 +179,7 @@ public class TimeLineNotificationService {
             case VIDEO_EVENT:
                 events = findTimeLineItemsByEventDayInNextDays(eventType, LocalDate.now(), 4);
                 events.addAll(findTimeLineItemsByEventDayPastDays(eventType, LocalDate.now(), 7));
+                break;
         }
 
         //prevent NPE
@@ -196,8 +194,9 @@ public class TimeLineNotificationService {
                 .filter(timeLine -> timeLine.getTimeStamp().isBefore(Instant.now().minusSeconds(3600))) //todo: test it
                 .collect(Collectors.toList());
 
+        //create notifications for selected events
         for (TimeLine timeLine : filteredEvents) {
-            List<Long> studentsIds = findStreamStudentsProfileIds(timeLine.getStreamTeamProfileId());
+            List<Long> studentsIds = findApprovedStreamStudentsProfileIds(timeLine.getStreamTeamProfileId());
             for (Long studentId : studentsIds) {
                 createAndSaveTimeLineNotifications(timeLine.getTimelineUUID(), studentId, notificationType);
             }
@@ -237,6 +236,10 @@ public class TimeLineNotificationService {
 
     private List<Long> findStreamStudentsProfileIds(Long streamTeamProfileId) throws EntityNotFoundException {
         return profileService.findStudentsProfilesIdForStreamWithSubscriptionStatusAny(streamTeamProfileId);
+    }
+
+    private List<Long> findApprovedStreamStudentsProfileIds(Long streamTeamProfileId) throws EntityNotFoundException {
+        return profileService.findStudentsProfilesIdForStreamWithSubscriptionStatus(streamTeamProfileId, SubscriptionStatus.APPROVED);
     }
 
     @VisibleForTesting
