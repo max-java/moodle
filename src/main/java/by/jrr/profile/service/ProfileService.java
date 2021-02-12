@@ -339,6 +339,14 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
+    public List<Long> findStudentsProfilesIdForStreamWithSubscriptionStatus(Long streamProfileId, SubscriptionStatus status) throws EntityNotFoundException {
+        return streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(streamProfileId)
+                .stream()
+                .filter(subscriber -> subscriber.getStatus().equals(status))
+                .map(subscriber -> subscriber.getSubscriberProfileId())
+                .collect(Collectors.toList());
+    }
+
     private void setFirstLecture(List<StudentActionToLog> userActionsLog, UserProfileStatisticDTO userProfileStatisticDTO) {
         List<StudentActionToLog> firstLection = userActionsLog.stream()
 //                .peek(e -> System.out.println("before filter date is after: " + e))
