@@ -40,14 +40,12 @@ public class RedirectionLinkService {
     public void setDefaultClock() {
         this.clock = Clock.systemDefaultZone();
     }
-    //ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-    private static final String REDIRECTION_PAGE_BASE_URL = "https://moodle.jrr.by/redirect/"; //todo: make it url based
     private static final int DEFAULT_EXPIRATION = 15;
 
 
     public RedirectionLinkDto.Response createRedirectionLink(RedirectionLinkDto.Request request) {
         String uuid = UUID.randomUUID().toString();
-        String redirectionPage = REDIRECTION_PAGE_BASE_URL.concat(uuid);
+        String redirectionPage = getBaseRedirectionUrl().concat(uuid);
 
         RedirectionLink redirectionLink = RedirectionLinkMapper.OF.getRedirectionLinkFromRequest(request);
 
@@ -119,5 +117,14 @@ public class RedirectionLinkService {
 
     protected void markLinkExpired(RedirectionLink redirectionLink) {
         redirectionLinkRepository.updateStatus(RedirectionLinkStatus.EXPIRED.name(), redirectionLink.getUuid());
+    }
+
+    private String getBaseRedirectionUrl() {
+        try {
+            return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()+"/redirect/";
+        } catch (Exception ex){
+            ex.printStackTrace();
+            return "/redirect/";
+        }
     }
 }

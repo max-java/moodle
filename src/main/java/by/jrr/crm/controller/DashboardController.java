@@ -1,5 +1,6 @@
 package by.jrr.crm.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.constant.Endpoint;
 import by.jrr.constant.View;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
+@AdminOnly
 public class DashboardController {
     @Autowired
     HistoryItemService historyItemService;

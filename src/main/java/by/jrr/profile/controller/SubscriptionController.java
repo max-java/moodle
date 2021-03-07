@@ -1,6 +1,7 @@
 package by.jrr.profile.controller;
 
-import by.jrr.common.MyHeaders;
+import by.jrr.auth.configuration.annotations.AccessAdminAndSales;
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.constant.Endpoint;
 import by.jrr.profile.mapper.SubscriptionMapper;
 import by.jrr.profile.model.SubscriptionDto;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -29,6 +29,7 @@ public class SubscriptionController {
         return "redirect:".concat(cameFrom(request));
     }
 
+    @AccessAdminAndSales
     @PostMapping(Endpoint.SUBSCRIPTIONS_APPROVE)
     public String approveSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
         SubscriptionDto.Request subscReq = SubscriptionMapper.OF.getSubscriptionRequestFromMap(paramMap);
@@ -37,6 +38,7 @@ public class SubscriptionController {
 
     }
 
+    @AccessAdminAndSales
     @PostMapping(Endpoint.SUBSCRIPTIONS_REJECT)
     public String rejectSubscription(@RequestParam Map<String,String> paramMap, HttpServletRequest request) {
         SubscriptionDto.Request subscReq = SubscriptionMapper.OF.getSubscriptionRequestFromMap(paramMap);

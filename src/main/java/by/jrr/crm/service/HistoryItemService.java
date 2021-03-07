@@ -1,5 +1,6 @@
 package by.jrr.crm.service;
 
+import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.crm.bean.History;
 import by.jrr.crm.bean.NoteItem;
@@ -32,7 +33,7 @@ public class HistoryItemService {
 
 
     public List<History> getHistoryForProfile(Long profileId) {
-        if (uas.isCurrentUserIsAdmin()) {
+        if (uas.isCurrentUserIsAdmin() || uas.isUserhasRole(UserRoles.ROLE_SALES)) {
             List<History> historyList = new ArrayList<>();
             historyList.addAll(noteItemRepository.findByProfileId(profileId));
             historyList.addAll(taskRepository.findByProfileId(profileId));
@@ -68,14 +69,14 @@ public class HistoryItemService {
     }
 
     public Task findTaskById(Long taskId) {
-        if (uas.isCurrentUserIsAdmin()) {
+        if (uas.isCurrentUserIsAdmin() || uas.isUserhasRole(UserRoles.ROLE_SALES)) {
             return taskRepository.findById(taskId).orElseGet(Task::new);
         }
         return null; // TODO: 01/08/20 throw Access denied exception everywhere, catch in controller and redirect to 403
     }
 
     public void saveTaskForProfile(Task task) {
-        if (uas.isCurrentUserIsAdmin()) {
+        if (uas.isCurrentUserIsAdmin() || uas.isUserhasRole(UserRoles.ROLE_SALES)) {
             taskRepository.save(task);
         }
     }
@@ -87,14 +88,14 @@ public class HistoryItemService {
     }
 
     public List<Task> findAllNotFinishedTasks() {
-        if (uas.isCurrentUserIsAdmin()) {
+        if (uas.isCurrentUserIsAdmin() || uas.isUserhasRole(UserRoles.ROLE_SALES)) {
             return taskRepository.findByIsFinishedFalse();
         }
         return null; // TODO: 08/10/2020 make NPE safety
     }
 
     public List<Task> findActiveTasksForProfile(Long id) {
-        if (uas.isCurrentUserIsAdmin()) {
+        if (uas.isCurrentUserIsAdmin() || uas.isUserhasRole(UserRoles.ROLE_SALES)) {
             return taskRepository.findByProfileIdAndIsFinishedFalse(id);
         }
         return new ArrayList<>();

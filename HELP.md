@@ -3,6 +3,7 @@
 # Roles and passwords:
 lecturer - lecturer - ROLE_LECTURER
 student - student - ROLE_STUDENT
+sales - sales - ROLE_SALES
 userdev - sercret - ROLE_ADMIN
 
 ### Reference Documentation

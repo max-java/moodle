@@ -1,5 +1,6 @@
 package by.jrr.balance.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.balance.bean.OperationCategory;
 import by.jrr.balance.constant.Action;
@@ -23,6 +24,7 @@ import static by.jrr.common.MyHeaders.cameFrom;
 // TODO: 05/10/2020 move this to crm package
 
 @Controller
+@AdminOnly
 public class OperationCategoryController {
 
     @Autowired
