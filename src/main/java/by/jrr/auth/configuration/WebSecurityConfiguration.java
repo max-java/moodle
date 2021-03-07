@@ -52,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(Endpoint.HOME).permitAll()
                     .antMatchers(Endpoint.COURSE+"/*").permitAll()
 
-                    .antMatchers(Endpoint.REDIRECT+"/*").permitAll()
+                    .antMatchers(Endpoint.REDIRECT+"/**").permitAll()
 
                     .antMatchers(Endpoint.COURSE_LIST).permitAll()
                     .antMatchers(Endpoint.TOPIC_LIST).permitAll()
@@ -76,7 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/registerForm/validate/phone/*").permitAll() // TODO: 23/06/20 make it psfs
                     .antMatchers(Endpoint.PROFILE_CARD+"/*").permitAll()
                     .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                    .antMatchers("/crm/**").hasAuthority("ROLE_ADMIN")
+                    .antMatchers("/crm/**").hasAnyRole("ADMIN", "SALES")
                     .antMatchers("/"+Endpoint.REGISTER_USER_ADMIN_REST_ERRORS+"/**").hasAuthority("ROLE_ADMIN")
                     .anyRequest()
                     .authenticated()

@@ -99,25 +99,25 @@
                                         <li class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#timeline">
                                             Timeline</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#settings">
                                             Settings</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#groupActions">
                                             Actions In Group</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#userAction">
                                             User Actions</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#billing">
                                             Billing</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#contract">
                                             Contracts</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#messages">
                                             Messages</a></li>
-                                        <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                        <li th:if="${isUserIsAdmin}" class="nav-item"><a class="nav-link" data-toggle="tab"
                                                                 href="#lead-detail">
                                             CRM</a>
                                         </li>
@@ -128,14 +128,14 @@
 
                                         <th:block th:include="crm/profile/tab/streamAbout :: streamAbout"
                                                   th:with="active='active'"/>
-                                        <th:block th:include="crm/profile/tab/billing :: billing"/>
-                                        <th:block th:include="crm/profile/tab/contract :: contract"/>
-                                        <th:block th:include="crm/profile/tab/streamSettings :: streamSettings"/>
-                                        <th:block th:include="crm/profile/tab/streamActivity :: streamActivity"/>
-                                        <th:block th:include="crm/profile/tab/userActions :: userActions"/>
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/billing :: billing"/>
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/contract :: contract"/>
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/streamSettings :: streamSettings"/>
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/streamActivity :: streamActivity"/>
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/userActions :: userActions"/>
                                         <th:block th:include="crm/profile/tab/timeline :: timeline"/>
-                                        <th:block th:include="crm/profile/tab/messages :: messages"/>
-                                        <th:block th:include="crm/profile/tab/leadDetailHistory :: history"
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/messages :: messages"/>
+                                        <th:block th:if="${isUserIsAdmin}" th:include="crm/profile/tab/leadDetailHistory :: history"
                                                   th:with="active=''"/>
 
                                     </div>

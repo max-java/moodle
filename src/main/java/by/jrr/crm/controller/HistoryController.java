@@ -46,6 +46,7 @@ public class HistoryController {
 
         return "redirect:".concat(cameFrom(request));
     }
+
     private void saveNote(Long profileId, Optional<String> note) {
         historyItemService.saveNoteForProfile(NoteItem.builder()
                 .profileId(profileId)
@@ -53,6 +54,7 @@ public class HistoryController {
                 .timestamp(LocalDateTime.now())
                 .build());
     }
+
     private void saveTask(Long profileId, Optional<String> task, Optional<String> taskDL) {
         LocalDateTime deadline = LocalDateTime.parse(taskDL.get()+":00");
         historyItemService.saveTaskForProfile(Task.builder()
@@ -63,6 +65,7 @@ public class HistoryController {
                 .timestamp(LocalDateTime.now())
                 .build());
     }
+
     private void finishTask(Optional<Long> taskId, Optional<Boolean> isFinished) {
         if(isFinished.isPresent()) {
             Task savedTask = historyItemService.findTaskById(taskId.get());
@@ -75,6 +78,5 @@ public class HistoryController {
             savedTask.setIsFinished(false);
             historyItemService.saveTaskForProfile(savedTask);
         }
-
     }
 }

@@ -1,5 +1,7 @@
 package by.jrr.crm.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AccessAdminAndSales;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.balance.bean.OperationRow;
 import by.jrr.balance.constant.Action;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@AdminOnly
 public class CrmController {
 
     @Autowired
@@ -37,6 +40,7 @@ public class CrmController {
     @Autowired
     StreamAndTeamSubscriberService streamAndTeamSubscriberService;
 
+    @AccessAdminAndSales
     @GetMapping(Endpoint.CRM)
     public ModelAndView openCrm() {
         ModelAndView modelAndView = userDataToModelService.setData(new ModelAndView());
@@ -46,6 +50,7 @@ public class CrmController {
     }
 
 
+    @AccessAdminAndSales
     @GetMapping(Endpoint.CRM_STREAM)
     public ModelAndView openStreams() {
         ModelAndView modelAndView = userDataToModelService.setData(new ModelAndView());
