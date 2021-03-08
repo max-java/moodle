@@ -2,6 +2,7 @@ package by.jrr.crm.controller.profile;
 
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AccessAdminAndSales;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.auth.service.UserService;
@@ -15,7 +16,6 @@ import by.jrr.balance.service.ContractService;
 import by.jrr.balance.service.OperationCategoryService;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.constant.Endpoint;
-import by.jrr.constant.LinkGenerator;
 import by.jrr.constant.View;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.files.service.FileService;
@@ -44,6 +44,7 @@ import java.util.Optional;
 
 @Controller
 @CrossOrigin
+@AdminOnly
 public class StreamController {
 
     @Autowired
@@ -79,6 +80,7 @@ public class StreamController {
     @Autowired
     UserAccessService userAccessService;
 
+    @AccessAdminAndSales
     @GetMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -115,39 +117,45 @@ public class StreamController {
             //blank instances for forms can work to add
             mov.addObject("blankRow", new OperationRow());
             mov.addObject("contract", new Contract());
+            mov.addObject("SubscriptionDto", new SubscriptionDto());
 
-            mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
-            mov.addObject("total", operationRowService.summariesForStream(profileId));
-            mov.addObject("contracts", contractService.findContractsForStream(profileId));
-            mov.addObject("contractTypes", contractService.getContractTypes());
+            if(userAccessService.isUserhasRole(UserRoles.ROLE_ADMIN)) {
+                mov.addObject("operationRows", operationRowService.getOperationsForStream(profileId));
+                mov.addObject("total", operationRowService.summariesForStream(profileId));
+                mov.addObject("contracts", contractService.findContractsForStream(profileId));
+                mov.addObject("contractTypes", contractService.getContractTypes());
+                mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
+
+                //user billing -> should be moved to userProfileController for admins
+                //todo create Dto for this ? Rest endpoint? Separate controller for user? Move to separate controller for user.
+                List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
+                UserBalanceSummaryDto userTotal = operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN);
+                operationRowService.calculateAndSetTotalUserSalary(userOperations, userTotal);
+                mov.addObject("userOperationRows", userOperations);
+                mov.addObject("userTotal", userTotal);
+                mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
+            }
+
 
             mov.addObject("history", historyItemService.getHistoryForProfile(profileId));
-            mov.addObject("operationCategories", operationCategoryService.getAllOperationCategories());
-
-            //user billing -> should be moved to userProfileController for admins
-            //todo create Dto for this ? Rest endpoint? Separate controller for user? Move to separate controller for user.
-            List<OperationRow> userOperations = operationRowService.getAllOperationsForUser(profileId);
-            UserBalanceSummaryDto userTotal = operationRowService.getSummariesForProfileOperations(profileId, Currency.BYN);
-            operationRowService.calculateAndSetTotalUserSalary(userOperations, userTotal);
-            mov.addObject("userOperationRows", userOperations);
-            mov.addObject("userTotal", userTotal);
-            mov.addObject("isUserGetSalary", pss.isUserGetSalary(profile.get()));
 
             mov.addObject("redirectionLinks", redirectionLinkService.findRedirectionLinksForProfile(profileId));
 
             mov.addObject("isUserIsAdmin", userAccessService.isCurrentUserIsAdmin()); // TODO: 31/07/20 set here null, or "", or  and see result
+            mov.addObject("isUserCanGenerateRedirectionLink", isUserCanGenerateRedirectionLink()); // TODO: 31/07/20 set here null, or "", or  and see result
             mov.addObject("STUDENT", !(
                     UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_STREAM)
                             || UserAccessService.isUserHasRole(profile.get().getUser(), UserRoles.ROLE_TEAM)
             ));
-
-            mov.addObject("SubscriptionDto", new SubscriptionDto());
-
         } else {
             mov.setViewName(View.PAGE_404);
         }
         return mov;
 //        <a href="/stream/register">new Stream</a> | <a href="/team/register">new Team</a> // TODO: 07/06/20
+    }
+
+    private boolean isUserCanGenerateRedirectionLink() {
+        return userAccessService.isCurrentUserIsAdmin() || userAccessService.isUserhasRole(UserRoles.ROLE_SALES);
     }
 
     @PostMapping(Endpoint.PROFILE_CARD_ADMIN_VIEW + "/{profileId}")

@@ -1,5 +1,6 @@
 package by.jrr.profile.service;
 
+import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.bean.StreamAndTeamSubscriber;
@@ -87,8 +88,10 @@ public class TimeLineService {
 
     public List<TimeLine> getTimelineByStreamId(Long streamTeamProfileId) {
         List<TimeLine> timeline = timeLineRepository.findAllByStreamTeamProfileId(streamTeamProfileId);
-        if(!userAccessService.isUserHasAccessToSubcription(streamTeamProfileId)) {
-            closeLinksInTimeline(timeline);
+        if(!userAccessService.isUserhasRole(UserRoles.ROLE_SALES)) {
+            if(!userAccessService.isUserHasAccessToSubcription(streamTeamProfileId)) {
+                closeLinksInTimeline(timeline);
+            }
         }
         return timeline;
     }

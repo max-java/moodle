@@ -69,6 +69,20 @@
             </dependencies>
         </profile>
 
+        <profile>
+            <id>aws</id>
+            <properties>
+                <spring-profile>aws</spring-profile>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
     </profiles>
 
     <dependencies>

@@ -1,5 +1,6 @@
 package by.jrr.balance.controller;
 
+import by.jrr.auth.configuration.annotations.AdminOnly;
 import by.jrr.auth.service.UserDataToModelService;
 import by.jrr.balance.bean.*;
 import by.jrr.balance.constant.Action;
@@ -26,6 +27,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 // TODO: 05/10/2020 move this to crm package
 
 @Controller
+@AdminOnly
 public class ContractController {
 
     @Autowired
