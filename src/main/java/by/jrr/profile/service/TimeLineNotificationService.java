@@ -10,7 +10,6 @@ import by.jrr.registration.service.RedirectionLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
@@ -120,7 +119,8 @@ public class TimeLineNotificationService {
                     subject = "{JG} Доступна видеозапись лекции.";
                 }
                 break;
-
+            case CUSTOM_FIRST_LECTURE:
+                messageText = makeMessageForCustomFirstLectureNotification(event, student);
         }
 
         System.out.println("sending to " + email);
@@ -184,7 +184,7 @@ public class TimeLineNotificationService {
 
         //prevent NPE
         for (TimeLine timeLine : events) {
-            if(timeLine.getTimeStamp() == null) {
+            if (timeLine.getTimeStamp() == null) {
                 timeLine.setTimeStamp(Instant.MIN);
             }
         }
@@ -202,6 +202,7 @@ public class TimeLineNotificationService {
             }
         }
     }
+
 
     private void createAndSaveTimeLineNotifications(String timeLineUUID,
                                                     Long studentProfileId,
@@ -240,6 +241,10 @@ public class TimeLineNotificationService {
 
     private List<Long> findApprovedStreamStudentsProfileIds(Long streamTeamProfileId) throws EntityNotFoundException {
         return profileService.findStudentsProfilesIdForStreamWithSubscriptionStatus(streamTeamProfileId, SubscriptionStatus.APPROVED);
+    }
+
+    private List<Long> findRequestedStreamStudentsProfileIds(Long streamTeamProfileId) throws EntityNotFoundException {
+        return profileService.findStudentsProfilesIdForStreamWithSubscriptionStatus(streamTeamProfileId, SubscriptionStatus.REQUESTED);
     }
 
     @VisibleForTesting
@@ -330,6 +335,31 @@ public class TimeLineNotificationService {
         return messageText.toString();
     }
 
+    //this should be updated every time, runs manually.
+    private String makeMessageForCustomFirstLectureNotification(TimeLine event, Profile student) {
+        StringBuffer messageText = new StringBuffer();
+        messageText.append("Привет, " + student.getUser().getName() + "!");
+        messageText.append("\n");
+        messageText.append("\nМы хотим убедиться что вы готовы к занятию!");
+
+        messageText.append("\nЧто важно сделать:");
+        messageText.append("\n1.Войти в свой профиль на образовательной платформе (https://moodle.jrr.by/profile/"+student.getId()+"), логин и пароль есть в предыдущих письмах.");
+        messageText.append("\n2.Добавиться в чат в телеграме ( https://t.me/joinchat/Sek-qkbSGS2mufT2 ) и написать \n\n\"Доступ!\". \n\nC вами свяжется куратор и даст доступ к материалам курса и заданиям.");
+        messageText.append("\n3.Забрать бонусную лекцию о том, как презентовать свой проект на github.com");
+        messageText.append("\n4.Выполнить задания, которые даст вам куратор!");
+
+        messageText.append("\n\nПоддержка:");
+        messageText.append("\nномер куратора +375293333600");
+        messageText.append("\nтелеграм куратора @curatorJavaGuru\n");
+
+        appendMessageEventData(messageText, event);
+        messageText.append("\nЧасовой пояс:\tМинск, Беларусь (на 1 час раньше для Украины)");
+
+        appendMessageFooter(messageText, event);
+
+        return messageText.toString();
+    }
+
     private void makeRedirectionLinkTextWithExpiration(TimeLine event, Profile student, int expirationInMinutes, StringBuffer messageText) {
         RedirectionLinkDto.Request request = RedirectionLinkDto.Request.builder() //todo: replace with Mapstruct
                 .timelineUUID(event.getTimelineUUID())
@@ -350,7 +380,7 @@ public class TimeLineNotificationService {
 
     private void appendMessageFooter(StringBuffer messageText, TimeLine event) {
 //        ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
-        String streamLing =  "https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId();
+        String streamLing = "https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId();
         eMailService.appendMessageFooter(messageText, "https://moodle.jrr.by/profile/" + event.getStreamTeamProfileId());
     }
 
@@ -359,5 +389,16 @@ public class TimeLineNotificationService {
         messageText.append("\nФормат:\t" + event.getEventType());
         messageText.append("\nТема:\t" + event.getEventName());
         messageText.append("\nОписание:\t" + event.getNotes());
+    }
+
+    //fd7a75f5-e649-44fb-b384-00f83ae5764d
+    public void sendCustomNotificationForTimeLine(String timelineUUID) {
+        TimeLine timeLine = timeLineService.findTimeLineByTimeLineUUID(timelineUUID);
+        List<Long> studentsIds = findRequestedStreamStudentsProfileIds(timeLine.getStreamTeamProfileId());
+        for (Long studentId : studentsIds) {
+            createAndSaveTimeLineNotifications(timeLine.getTimelineUUID(), studentId, Notification.Type.CUSTOM_FIRST_LECTURE);
+        }
+
+        sendNotificationsFor(Notification.Type.CUSTOM_FIRST_LECTURE);
     }
 }

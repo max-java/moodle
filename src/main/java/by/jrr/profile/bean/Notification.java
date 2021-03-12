@@ -11,7 +11,8 @@ public class Notification {
         TOMORROW_EVENT("Завтра у тебя занятие!"),
         REDIRECTION_LINK("Ссылка на трансляцию."),
         FEEDBACK_EXTERNAL_FORM("We Agile! Нам важно твое мнение."),
-        VIDEO_EVENT("Запись лекции доступна на платформе.");
+        VIDEO_EVENT("Запись лекции доступна на платформе."),
+        CUSTOM_FIRST_LECTURE("Первое занятие уже в Среду! Вы готовы!?");
 
         String subjectText;
 
