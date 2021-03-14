@@ -16,9 +16,9 @@ import org.springframework.context.annotation.PropertySource;
 public class AwsClientConfig {
 
     @Value("${aws.accessKey}")
-    private String accessKey = "AKIAXTI5SUCSKSFT5RLL";
+    private String accessKey;
     @Value("${aws.secretKey}")
-    private String secretKey = "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";
+    private String secretKey;
     Regions clientRegion = Regions.EU_CENTRAL_1;
 
 
