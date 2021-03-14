@@ -27,7 +27,7 @@ public interface StreamAndTeamSubscriberRepository extends PagingAndSortingRepos
 //    CREATE VIEW SUBSCRIPTIONS_APPROVED_VIEW AS SELECT stream_team_profile_id, status, count(id) as TOTAL_APPROVED from stream_and_team_subscriber where status = 'APPROVED' group by stream_team_profile_id;
 //    CREATE VIEW SUBSCRIPTIONS_CANCELED_VIEW AS SELECT stream_team_profile_id, status, count(id) as TOTAL_CANCELED from stream_and_team_subscriber where status = 'CANCELED' group by stream_team_profile_id;
 //    CREATE VIEW SUBSCRIPTIONS_REJECTED_VIEW AS SELECT stream_team_profile_id, status, count(id) as TOTAL_REJECTED from stream_and_team_subscriber where status = 'REJECTED' group by stream_team_profile_id;
-//    CREATE VIEW SUBSCRIPTIONS_REQUESTED_VIEW AS SELECT stream_team_profile_id, status, count(id) as TOTAL_REQUESTED from stream_and_team_subscriber where status = 'REQUESTED' group by stream_team_profile_id;
+//    CREATE VIEW SUBSCRIPTIONS_REQUESTED_VIEW AS SELECT stream_team_profile_id, status, count(id) as TOTAL_REQUESTED from stre        am_and_team_subscriber where status = 'REQUESTED' group by stream_team_profile_id;
 
 //CREATE VIEW SUBSCRIPTIONS_STATISTIC_VIEW AS SELECT distinct stream_and_team_subscriber.stream_team_profile_id as profile_id, TOTAL_REQUESTED, TOTAL_APPROVED, TOTAL_REJECTED, TOTAL_CANCELED from stream_and_team_subscriber
 //    left outer join SUBSCRIPTIONS_APPROVED_VIEW on stream_and_team_subscriber.stream_team_profile_id = SUBSCRIPTIONS_APPROVED_VIEW.stream_team_profile_id

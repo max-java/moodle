@@ -6,6 +6,9 @@ import by.jrr.files.constant.FileType;
 import by.jrr.files.repository.FileBytesRepository;
 import by.jrr.files.repository.FileMetaRepository;
 import by.jrr.profile.service.ProfilePossessesService;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -30,8 +33,12 @@ public class FileService {
     FileBytesRepository fileBytesRepository;
     @Autowired
     ProfilePossessesService pss;
+    @Autowired
+    AmazonS3 amazonS3;
+
 
     public static final String FILE_STORAGE = "/home/max/web/files/";
+    public static final String AWS_BUCKET_NAME = "tutrit-public-files";
 
 
     public String saveUploaded(MultipartFile file, Optional<String> description) throws IOException {
@@ -42,8 +49,8 @@ public class FileService {
         fileMeta = fileMetaRepository.save(fileMeta);
 
         if(fileMeta.getExtension().equals("pdf")) {
-            Path path = Paths.get(FILE_STORAGE + fileMeta.getNameWithExtension());
-            Files.copy(file.getInputStream(), path);
+//            uploadToFileSystem(fileMeta, file)
+            uploadToS3(fileMeta, file);
         } else {
             FileBytes fileBytes = new FileBytes(file, fileMeta);
             fileBytesRepository.save(fileBytes);
@@ -75,4 +82,33 @@ public class FileService {
         }
     }
 
+    public byte[] getFileBytesFromS3(String name) {
+        try {
+            return amazonS3
+                    .getObject(new GetObjectRequest(AWS_BUCKET_NAME, name))
+                    .getObjectContent()
+                    .readAllBytes();
+        } catch (Exception ex) {
+            return "".getBytes();
+        }
+    }
+
+    private void uploadToS3(FileMeta fileMeta, MultipartFile file) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        try {
+            amazonS3.putObject(AWS_BUCKET_NAME, fileMeta.getNameWithExtension(), file.getInputStream(), new ObjectMetadata());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Deprecated
+    private void uploadToFileSystem(FileMeta fileMeta, MultipartFile file) {
+        try {
+            Path path = Paths.get(FILE_STORAGE + fileMeta.getNameWithExtension());
+            Files.copy(file.getInputStream(), path);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

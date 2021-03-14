@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+
 class TimeLineRepositoryTest {
 
     @Autowired
