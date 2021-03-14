@@ -115,42 +115,69 @@ public class ProfileService {
     private void setUserDataToProfile(Profile profile) {
         userService.findUserById(profile.getUserId()).ifPresent(user -> profile.setUser(user));
 
-        if (profile.getUser().hasRole(UserRoles.ROLE_STREAM) // TODO: 07/06/20 split to setProfileData & setSubscribers
+        if (profile.getUser().hasRole(UserRoles.ROLE_STREAM)
                 || profile.getUser().hasRole(UserRoles.ROLE_TEAM)) {
-            List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
-            subscribers.stream().forEach(s -> s.setActiveTasks(historyItemService.findActiveTasksForProfile(s.getSubscriberProfileId())));
-            try {
-                subscribers.stream().forEach(s -> s.setStudentActivity(satls.findAllActionsForProfileIdBetwenDates(
-                        s.getSubscriberProfileId(),
-                        LocalDateTime.of(profile.getDateStart(), LocalTime.of(00, 00)),
-                        LocalDateTime.of(profile.getDateEnd(), LocalTime.of(23, 59))))
-                );
-            } catch (Exception ex) {
-                // no date end present
-            }
-
-            // TODO: 24/06/20 what happens here? refactor: set subscribers to streamTeam
-            for (StreamAndTeamSubscriber subscriber : subscribers) {
-                Optional<Profile> optionalProfile = this.findProfileByProfileId(subscriber.getSubscriberProfileId());
-                if (optionalProfile.isPresent()) {
-                    Profile userProfile = optionalProfile.get();
-                    userProfile.setUserBalanceSummaryDto(operationRowService.getSummariesForProfileOperations(userProfile.getId(), Currency.BYN));
-                    subscriber.setSubscriberProfile(userProfile); // TODO: 07/06/20 consider refactoring to Java8 style
-                }
-            }
-            profile.setSubscribers(subscribers);
+            setSubscribersData(profile);
         } else {
-            List<StreamAndTeamSubscriber> subscriptions = streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId());
-            // TODO: 24/06/20 what happens here? refactor: set subscriptions to user profile
-            for (StreamAndTeamSubscriber subscription : subscriptions) {
-                Optional<Profile> optionalProfile = this.findProfileByProfileIdLazy(subscription.getStreamTeamProfileId());
-                if (optionalProfile.isPresent()) {
-                    subscription.setSubscriptionProfile(optionalProfile.get()); // TODO: 07/06/20 consider refactoring to Java8 style
-                    subscription.getSubscriptionProfile().setUser(userService.findUserById(subscription.getSubscriptionProfile().getUserId()).get()); // TODO: 24/06/20 get? consider to handle null
-                }
-            }
-            profile.setSubscriptions(subscriptions);
+            setSubscriptions(profile);
             setStudentProfileChats(profile);
+        }
+    }
+
+    private void setUserDataToProfileAndNoSubsribersListed(Profile profile) {
+        userService.findUserById(profile.getUserId()).ifPresent(user -> profile.setUser(user));
+
+        if (profile.getUser().hasRole(UserRoles.ROLE_STREAM)
+                || profile.getUser().hasRole(UserRoles.ROLE_TEAM)) {
+        } else {
+            setSubscriptions(profile);
+            setStudentProfileChats(profile);
+        }
+    }
+
+
+    private void setSubscriptions(Profile profile) {
+        List<StreamAndTeamSubscriber> subscriptions = streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId());
+        // TODO: 24/06/20 what happens here? refactor: set subscriptions to user profile
+        for (StreamAndTeamSubscriber subscription : subscriptions) {
+            Optional<Profile> optionalProfile = this.findProfileByProfileIdLazy(subscription.getStreamTeamProfileId());
+            if (optionalProfile.isPresent()) {
+                subscription.setSubscriptionProfile(optionalProfile.get()); // TODO: 07/06/20 consider refactoring to Java8 style
+                subscription.getSubscriptionProfile().setUser(userService.findUserById(subscription.getSubscriptionProfile().getUserId()).get()); // TODO: 24/06/20 get? consider to handle null
+            }
+        }
+        profile.setSubscriptions(subscriptions);
+    }
+
+    private void setSubscribersData(Profile profile) {
+        List<StreamAndTeamSubscriber> subscribers = streamAndTeamSubscriberService.getAllSubscribersForProfileByProfileId(profile.getId());
+        subscribers.stream().forEach(s -> s.setActiveTasks(historyItemService.findActiveTasksForProfile(s.getSubscriberProfileId())));
+        setStudentActivity(profile, subscribers);
+        setBalanceForSubscribers(subscribers);
+        profile.setSubscribers(subscribers);
+    }
+
+    private void setBalanceForSubscribers(List<StreamAndTeamSubscriber> subscribers) {
+        // TODO: 24/06/20 what happens here? refactor: set subscribers to streamTeam
+        for (StreamAndTeamSubscriber subscriber : subscribers) {
+            Optional<Profile> optionalProfile = this.findProfileByProfileId(subscriber.getSubscriberProfileId());
+            if (optionalProfile.isPresent()) {
+                Profile userProfile = optionalProfile.get();
+                userProfile.setUserBalanceSummaryDto(operationRowService.getSummariesForProfileOperations(userProfile.getId(), Currency.BYN));
+                subscriber.setSubscriberProfile(userProfile); // TODO: 07/06/20 consider refactoring to Java8 style
+            }
+        }
+    }
+
+    private void setStudentActivity(Profile profile, List<StreamAndTeamSubscriber> subscribers) {
+        try {
+            subscribers.stream().forEach(s -> s.setStudentActivity(satls.findAllActionsForProfileIdBetwenDates(
+                    s.getSubscriberProfileId(),
+                    LocalDateTime.of(profile.getDateStart(), LocalTime.of(00, 00)),
+                    LocalDateTime.of(profile.getDateEnd(), LocalTime.of(23, 59))))
+            );
+        } catch (Exception ex) {
+            // no date end present
         }
     }
 
@@ -178,6 +205,19 @@ public class ProfileService {
         }
         Optional<Profile> profile = profileRepository.findById(id);
         profile.ifPresent(p -> setUserDataToProfile(p));
+        return profile;
+    }
+
+    public Optional<Profile> findProfileByProfileIdAndNoSubsribersListed(Long id) {
+        if (id == null) {
+            return Optional.empty();
+            // TODO: 17/06/20 поймал ошибку на CI, что из Бд пришел null.
+            // возможно, что из-за того, что руками удалял поля с any-to-many//
+            // TODO: 17/06/20 детально залогировать, потому что ложит вьюху
+
+        }
+        Optional<Profile> profile = profileRepository.findById(id);
+        profile.ifPresent(p -> setUserDataToProfileAndNoSubsribersListed(p));
         return profile;
     }
 

@@ -71,7 +71,7 @@ public class ProfileCardController {
     @GetMapping(Endpoint.PROFILE_CARD + "/{profileId}")
     public ModelAndView openProfileById(@PathVariable Long profileId, HttpServletRequest request) {
         ModelAndView mov = userDataToModelService.setDataWithSessionData(new ModelAndView(), request);
-        Optional<Profile> profile = profileService.findProfileByProfileId(profileId);
+        Optional<Profile> profile = profileService.findProfileByProfileIdAndNoSubsribersListed(profileId);
 
         if (profile.isPresent() && pss.isUserHasAccessToReadProfile(profile.get())) {
 
