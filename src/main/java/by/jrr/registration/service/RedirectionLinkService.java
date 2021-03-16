@@ -1,6 +1,7 @@
 package by.jrr.registration.service;
 
 import by.jrr.common.annotations.VisibleForTesting;
+import by.jrr.config.Props;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.registration.bean.RedirectionLink;
@@ -28,6 +29,9 @@ public class RedirectionLinkService {
 
     @Autowired
     RedirectionLinkRepository redirectionLinkRepository;
+
+    @Autowired
+    Props props;
 
     Clock clock = Clock.systemDefaultZone();
 
@@ -119,9 +123,9 @@ public class RedirectionLinkService {
         redirectionLinkRepository.updateStatus(RedirectionLinkStatus.EXPIRED.name(), redirectionLink.getUuid());
     }
 
-    private String getBaseRedirectionUrl() {
+    private String getBaseRedirectionUrl() { //@max: redirection
         try {
-            return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()+"/redirect/";
+            return props.getBaseUrl()+"/redirect/";
         } catch (Exception ex){
             ex.printStackTrace();
             return "/redirect/";

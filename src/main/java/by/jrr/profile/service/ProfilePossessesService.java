@@ -128,8 +128,8 @@ public class ProfilePossessesService {
 
     public boolean isUserCanUpdateTimelineOn(Profile profile) {
         return (UserAccessService.hasRole(UserRoles.ROLE_ADMIN)
-                || UserAccessService.hasRole(UserRoles.ROLE_LECTURER))
-                && isUserSubscriptionApproved(profile);
+                || UserAccessService.hasRole(UserRoles.ROLE_LECTURER));
+//                && isUserSubscriptionApproved(profile); //todo: currently, there is no subcribers for /profie/{id} endpoint. this should be granted with TOA
     }
 
     public boolean isUserGetSalary(Profile profile) {
