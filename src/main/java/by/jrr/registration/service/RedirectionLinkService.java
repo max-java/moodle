@@ -1,7 +1,6 @@
 package by.jrr.registration.service;
 
 import by.jrr.common.annotations.VisibleForTesting;
-import by.jrr.config.Props;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import by.jrr.registration.bean.RedirectionLink;
@@ -12,7 +11,6 @@ import by.jrr.registration.repository.RedirectionLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Clock;
@@ -30,8 +28,7 @@ public class RedirectionLinkService {
     @Autowired
     RedirectionLinkRepository redirectionLinkRepository;
 
-    @Autowired
-    Props props;
+    String baseUrl = "https://moodle.jrr.by";
 
     Clock clock = Clock.systemDefaultZone();
 
@@ -125,7 +122,7 @@ public class RedirectionLinkService {
 
     private String getBaseRedirectionUrl() { //@max: redirection
         try {
-            return props.getBaseUrl()+"/redirect/";
+            return baseUrl+"/redirect/";
         } catch (Exception ex){
             ex.printStackTrace();
             return "/redirect/";
