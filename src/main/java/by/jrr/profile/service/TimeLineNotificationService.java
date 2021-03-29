@@ -35,7 +35,7 @@ public class TimeLineNotificationService {
     @Autowired
     RedirectionLinkService redirectionLinkService;
 
-    @Scheduled(cron = "0 0 9,15 ? * * ")
+    @Scheduled(cron = "0 0 6,9,15 ? * * ")
     public void createAndSendRemindersForLectures() {
         System.out.println("creating And Sending Reminders");
         createNotificationsFor(EventType.LECTURE, Notification.Type.TODAY_EVENT);
@@ -53,7 +53,7 @@ public class TimeLineNotificationService {
         sendNotificationsFor(Notification.Type.REDIRECTION_LINK);
     }
 
-    @Scheduled(cron = "0 0 12,17 ? * * ")
+    @Scheduled(cron = "0 0 9,12,17 ? * * ")
     public void createAndSendExternalLinkToFeedbackForm() {
         System.out.println("creating And Sending Redirection links for feedback form");
         createNotificationsFor(EventType.FEEDBACK, Notification.Type.FEEDBACK_EXTERNAL_FORM);
@@ -254,7 +254,7 @@ public class TimeLineNotificationService {
 
     @VisibleForTesting  //i.e. to send redirection link for event that starts in about hour
     protected List<TimeLine> findTimeLineItemsByEventTimeNearTo(EventType type, LocalDateTime time) {
-        return timeLineService.findByEventTimeNearTo(type, time, 70);
+        return timeLineService.findByEventTimeNearTo(type, time, 250);
     }
 
     @VisibleForTesting
@@ -323,12 +323,12 @@ public class TimeLineNotificationService {
         messageText.append("\n");
         messageText.append("\n" + notificationType.getSubjectText());
         if (notificationType.equals(Notification.Type.REDIRECTION_LINK)) {
-            makeRedirectionLinkTextWithExpiration(event, student, 120, messageText);
+            makeRedirectionLinkTextWithExpiration(event, student, 240, messageText);
         }
         messageText.append("\n");
 
         appendMessageEventData(messageText, event);
-        messageText.append("\nЧасовой пояс:\tМинск, Беларусь (на 1 час раньше для Украины)");
+        messageText.append("\nЧасовой пояс:\tМинск, Беларусь");
 
         appendMessageFooter(messageText, event);
 
@@ -353,7 +353,7 @@ public class TimeLineNotificationService {
         messageText.append("\nтелеграм куратора @curatorJavaGuru\n");
 
         appendMessageEventData(messageText, event);
-        messageText.append("\nЧасовой пояс:\tМинск, Беларусь (на 1 час раньше для Украины)");
+        messageText.append("\nЧасовой пояс:\tМинск, Беларусь");
 
         appendMessageFooter(messageText, event);
 
