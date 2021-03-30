@@ -18,8 +18,8 @@ and operation_row_direction = 'INCOME'
 select SUM(sum), currency, any_value(operation_row_direction)
 from operation_row
 where QUARTER(date) = 1 AND YEAR(date) = '2021' and operation_row_direction = 'OUTCOME'
-group by currency;
-
+group by currency
+union
 select SUM(sum), currency, any_value(operation_row_direction)
 from operation_row
 where QUARTER(date) = 1 AND YEAR(date) = '2021' and operation_row_direction = 'INCOME'
@@ -176,3 +176,79 @@ where QUARTER(date) = 1
   and operation_row.operation_row_direction = 'OUTCOME'
   and note like '%a1%'
 group by currency, notes;
+
+# contracts
+select
+    contract.date,
+    contract_type.name as contract_type,
+    operation_row.currency,
+    operation_row.sum,
+    student_user.first_and_last_name as student,
+    stream_user.name as stream
+from contract
+         join contract_type on contract.contract_type_id=contract_type.id
+         join contract_to_operation_row on contract_to_operation_row.contract_id=contract.id
+         join operation_row on operation_row.id=contract_to_operation_row.operation_row_id
+         join contract_to_profile on contract_to_profile.contract_id=contract.id
+         join profile as stream on stream.id=contract_to_profile.stream_id
+         join profile as student on student.id=contract_to_profile.subscriber_id
+         join users as stream_user on stream_user.user_id=stream.user_id
+         join users as student_user on student_user.user_id=student.user_id
+where QUARTER(contract.date) = 1 AND YEAR(contract.date) = '2021';
+
+# contracts by types with count
+select
+    count(*) as total,
+    contract_type.name as contract_type
+from contract
+         join contract_type on contract.contract_type_id=contract_type.id
+         join contract_to_operation_row on contract_to_operation_row.contract_id=contract.id
+         join operation_row on operation_row.id=contract_to_operation_row.operation_row_id
+         join contract_to_profile on contract_to_profile.contract_id=contract.id
+         join profile as stream on stream.id=contract_to_profile.stream_id
+         join profile as student on student.id=contract_to_profile.subscriber_id
+         join users as stream_user on stream_user.user_id=stream.user_id
+         join users as student_user on student_user.user_id=student.user_id
+where QUARTER(contract.date) = 1 AND YEAR(contract.date) = '2021'
+group by contract_type
+with rollup;
+
+# contracts by streams
+select
+    count(*) as total,
+    stream_user.name
+from contract
+         join contract_type on contract.contract_type_id=contract_type.id
+         join contract_to_operation_row on contract_to_operation_row.contract_id=contract.id
+         join operation_row on operation_row.id=contract_to_operation_row.operation_row_id
+         join contract_to_profile on contract_to_profile.contract_id=contract.id
+         join profile as stream on stream.id=contract_to_profile.stream_id
+         join profile as student on student.id=contract_to_profile.subscriber_id
+         join users as stream_user on stream_user.user_id=stream.user_id
+         join users as student_user on student_user.user_id=student.user_id
+where QUARTER(contract.date) = 1 AND YEAR(contract.date) = '2021'
+group by stream_user.name
+with rollup;
+
+# contracts by streams and types
+select
+    count(*) as total,
+    stream_user.name as stream_name,
+    contract_type.name as contract_type,
+    sum(operation_row.sum),
+    operation_row.currency
+from contract
+         join contract_type on contract.contract_type_id=contract_type.id
+         join contract_to_operation_row on contract_to_operation_row.contract_id=contract.id
+         join operation_row on operation_row.id=contract_to_operation_row.operation_row_id
+         join contract_to_profile on contract_to_profile.contract_id=contract.id
+         join profile as stream on stream.id=contract_to_profile.stream_id
+         join profile as student on student.id=contract_to_profile.subscriber_id
+         join users as stream_user on stream_user.user_id=stream.user_id
+         join users as student_user on student_user.user_id=student.user_id
+where QUARTER(contract.date) = 1 AND YEAR(contract.date) = '2021'
+group by stream_user.name, contract_type, operation_row.currency
+order by stream_name;
+
+
+
