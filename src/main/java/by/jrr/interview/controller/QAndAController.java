@@ -2,6 +2,7 @@ package by.jrr.interview.controller;
 
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.configuration.annotations.AdminOnly;
+import by.jrr.auth.configuration.annotations.AtLeastFreeStudent;
 import by.jrr.auth.configuration.annotations.AtLeatStudent;
 import by.jrr.auth.service.UserAccessService;
 import by.jrr.auth.service.UserDataToModelService;
@@ -49,7 +50,6 @@ public class QAndAController {
         return mov;
     }
 
-    @AtLeatStudent
     @GetMapping(Endpoint.Q_AND_A + "/{id}")
     public ModelAndView openQAndAById(@PathVariable Long id) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
@@ -82,7 +82,7 @@ public class QAndAController {
         return new ModelAndView("redirect:" + Endpoint.Q_AND_A + "/" + qAndA.getId());
     }
 
-    @AtLeatStudent
+    @AtLeastFreeStudent
     @PostMapping(Endpoint.Q_AND_A + "/{id}")
     public ModelAndView saveNewQAndA(@PathVariable Long id,
                                      @RequestParam(value = "question", required = false) String question,
