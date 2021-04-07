@@ -52,7 +52,7 @@ public class StreamAndTeamSubscriberService {
     @Deprecated //to be moved to SubscriptionService
     public List<StreamAndTeamSubscriber> getAllSubscriptionsForProfileByProfileId(Long id) {
         List<StreamAndTeamSubscriber> streamAndTeamSubscriberList = streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
-        streamAndTeamSubscriberList.forEach(s -> s.setSubscriptionProfile(profileService.findProfileByProfileIdLazy(s.getStreamTeamProfileId()).get())); // TODO: 24/06/20  get rid of strange .get(), maybe use orElseGet, but what else to get?
+        streamAndTeamSubscriberList.forEach(s -> s.setSubscriptionProfile(profileService.findProfileByProfileIdLazy(s.getStreamTeamProfileId()).orElseGet(Profile::new)));
         return streamAndTeamSubscriberRepository.findAllBySubscriberProfileId(id);
     }
 
