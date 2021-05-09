@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -24,49 +22,63 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "users")
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "user_id")
-    private long id;
+    protected long id;
 
     @Column(name = "user_name") //it is a login )
     @Length(min = 5, message = "Имя пользователя не может быть меньше 5 символов")
     @NotEmpty(message = "Пожалуйста, заполните имя пользователя")
-    private String userName; // TODO: 09/06/20 refactor to "login"
+    protected String userName; // TODO: 09/06/20 refactor to "login"
 
     @Column(name = "email")
     @Email(message = "Реальный емейл важно указать для получения важных сообщений")
     @NotEmpty(message = "Пожалуйста, укажите емейл")
-    private String email;
+    protected String email;
 
     @Column(name = "password")
     @Length(min = 5, message = "Пожалуйста, выберите пароль длиннее 5 символов")
     @NotEmpty(message = "Пожалуйста, укажите  пароль")
-    private String password;
+    protected String password;
 
     @Column(name = "name")
     @NotEmpty(message = "Пожалуйста, укажите  Имя")
-    private String name;
+    protected String name;
 
     @Column(name = "last_name")
     @NotEmpty(message = "Пожалуйста, укажите  Фамилию")
-    private String lastName;
+    protected String lastName;
 
     @Column(name = "first_and_last_name")
-    private String firstAndLastName; //I use it in a registerAndSubscribe form
+    protected String firstAndLastName; //I use it in a registerAndSubscribe form
 
     @Column(name = "phone")
     @NotEmpty(message = "Пожалуйста, укажите номер телефона, по которому с Вами может связаться куратор")
-    private String phone;
+    protected String phone;
 
     @Column(name = "active")
-    private Boolean active;
+    protected Boolean active;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    protected Set<Role> roles;
+
+    public User(User user) {
+        this.id = user.id;
+        this.userName = user.userName;
+        this.email = user.email;
+        this.password = user.password;
+        this.name = user.name;
+        this.lastName = user.lastName;
+        this.firstAndLastName = user.firstAndLastName;
+        this.phone = user.phone;
+        this.active = user.active;
+        this.roles = user.roles;
+    }
 
     public String getFullUserName() {
         return name + " " + lastName;

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -93,6 +94,7 @@ public class StreamCardController {
                                             BindingResult bindingResult,
                                             @RequestParam Optional<String> retypePassword,
                                             @RequestParam Optional<Long> courseId
+
     ) {
         ModelAndView mov = userDataToModelService.setData(new ModelAndView());
         User userExists = userService.findUserByUserName(user.getUserName());

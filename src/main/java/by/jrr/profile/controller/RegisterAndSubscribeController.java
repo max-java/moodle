@@ -71,9 +71,8 @@ public class RegisterAndSubscribeController {
     SubscriptionService subscriptionService;
 
 
-    // TODO: 16/09/20 should be refactored
+    @Deprecated//to be deleted because switching to keycloak
     @PostMapping(Endpoint.REGISTER_USER_AND_ENROLL_TO_STREAM)
-    // TODO: 09/06/20 request params names against UserFields enum validation
     public RedirectView registerAndSubscribe(@RequestParam Optional<String> firstAndLastName,
                                              @RequestParam Optional<String> phone,
                                              @RequestParam Optional<String> email,
@@ -91,7 +90,13 @@ public class RegisterAndSubscribeController {
             if (firstAndLastName.isPresent()
                     && phone.isPresent()
                     && email.isPresent()) {
-                User user = quickRegisterUser(firstAndLastName.get(), phone.get(), email.get());
+//
+//
+//                User user = quickRegisterUser(firstAndLastName.get(), phone.get(), email.get());
+//
+//
+//
+                User user = new User(); //this is only for code to compile while switching to keycloak
                 Profile userProfile = profileService.findProfileByUserId(user.getId());
 
                 if (streamId.isPresent()) {
@@ -121,13 +126,7 @@ public class RegisterAndSubscribeController {
                 //  user info incomplete. add validation message and redirect back where it come from
                 System.out.println("information incomplite");
             }
-        } catch (UserNameConversionException ex) {
-            // TODO: 10/06/20 add user message from exceptions
-            // TODO: 16/06/20 and remove this costyl and courzzzeId .... Ugrrr...
-            ex.printStackTrace();
-//            return handleFormValidationException("Ошибка в поле Имя и Фамилия "+ex.getMessage(), courzeId);
-            redirectView.setUrl(Endpoint.COURSE + "/" + courseProfile.getId());
-            return redirectView;
+
         } catch (MailParseException ex) {
             ex.printStackTrace();
 //            return handleFormValidationException("Ошибка в email", courzeId);
@@ -147,10 +146,6 @@ public class RegisterAndSubscribeController {
 //        mov.setViewName(View.PAGE_404);
         redirectView.setUrl(Endpoint.COURSE_LIST + "/");
         return redirectView;
-    }
-
-    private User quickRegisterUser(String firstAndLastName, String phone, String email) throws UserServiceException {
-        return userService.quickRegisterUser(firstAndLastName, phone, email);
     }
 
     private Profile createProfile(User user) {

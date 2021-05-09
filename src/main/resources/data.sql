@@ -5,25 +5,25 @@
 -- );
 -- INSERT INTO `` VALUES ();
 DROP TABLE IF EXISTS user_role;
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS `lecture` cascade;
 DROP TABLE IF EXISTS `practice_question` cascade;
 DROP TABLE IF EXISTS `stream_and_team_subscriber`;
+-- DROP TABLE IF EXISTS users;
 
 
-CREATE TABLE users
-(
-    user_id             int(11) NOT NULL AUTO_INCREMENT,
-    active              boolean      DEFAULT false,
-    email               varchar(255) DEFAULT NULL,
-    last_name           varchar(255) DEFAULT NULL,
-    name                varchar(255) DEFAULT NULL,
-    password            varchar(255) DEFAULT NULL,
-    user_name           varchar(255) DEFAULT NULL,
-    first_and_last_name varchar(255) DEFAULT NULL,
-    phone               varchar(255) DEFAULT NULL
-);
+-- CREATE TABLE users
+-- (
+--     user_id             int(11) NOT NULL AUTO_INCREMENT,
+--     active              boolean      DEFAULT false,
+--     email               varchar(255) DEFAULT NULL,
+--     last_name           varchar(255) DEFAULT NULL,
+--     name                varchar(255) DEFAULT NULL,
+--     password            varchar(255) DEFAULT NULL,
+--     user_name           varchar(255) DEFAULT NULL,
+--     first_and_last_name varchar(255) DEFAULT NULL,
+--     phone               varchar(255) DEFAULT NULL
+-- );
 
 
 CREATE TABLE roles
@@ -50,7 +50,7 @@ VALUES (1, 'ROLE_ADMIN'),
        (8, 'ROLE_SALES'),
        (80, 'ROLE_STREAM');
 
-INSERT INTO users
+INSERT INTO users (user_id, active, email, last_name, name, password, user_name, first_and_last_name, phone)
 VALUES (1, TRUE, 'user@dev', 'Adic', 'Administrator', '$2a$10$XizdxtpAW8xUbxSW.3q4k.bwhqMOcac8OTm8/vKo0VwzKux/8Smnu',
         'userdev', 'User Developer', '123123123'),
        (2, TRUE, 'guest@dev', 'Gosha', 'Guest', '$2a$10$j3WpiyKaAmAbLU//BnrAb.8bijT23gsqBSwLs1hobq8L6b3JPUqmG', 'guest',

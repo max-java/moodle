@@ -136,7 +136,7 @@ public class StreamAndTeamSubscriberService {
         try {
             Profile subscriberProfile = profileService.findProfileByProfileId(subscriberOptional.get().getSubscriberProfileId()).get(); // TODO: 23/06/20 I should have entity with all fields populated in this place
             if(!userAccessService.isUserhasRole(UserRoles.ROLE_FREE_STUDENT)){
-                userService.addRoleToUser(UserRoles.ROLE_FREE_STUDENT, subscriberProfile.getUserId()); // TODO: 25/06/20 role should be changed, but in SubscriptionService depend on course type.
+                //should update role to STUDENT
             }
         } catch (Exception ex) {
             System.out.println(" [ error on attempt to extract userId from subscriber]");

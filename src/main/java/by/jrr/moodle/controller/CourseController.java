@@ -88,7 +88,6 @@ public class CourseController { // TODO: 30/05/20  make it like in userProfile &
         return mov;
     }
 
-    @AdminOnly
     @PostMapping(Endpoint.COURSE)
     public ModelAndView saveNewTopic(
             @RequestParam(value = "title", required = false) String title,

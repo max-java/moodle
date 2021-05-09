@@ -2,11 +2,9 @@ package by.jrr.profile.service;
 
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
-import by.jrr.auth.service.UserAccessService;
-import by.jrr.auth.service.UserRoleManager;
-import by.jrr.auth.service.UserSearchService;
-import by.jrr.auth.service.UserService;
+import by.jrr.auth.service.*;
 import by.jrr.balance.bean.Currency;
+import by.jrr.balance.constant.Http;
 import by.jrr.balance.service.OperationRowService;
 import by.jrr.crm.service.HistoryItemService;
 import by.jrr.feedback.bean.EntityType;
@@ -17,6 +15,7 @@ import by.jrr.profile.repository.ProfileRepository;
 import by.jrr.registration.bean.EventType;
 import by.jrr.registration.bean.StudentActionToLog;
 import by.jrr.registration.service.StudentActionToLogService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -63,6 +63,8 @@ public class ProfileService {
     OperationRowService operationRowService;
     @Autowired
     UserRoleManager userRoleManager;
+    @Autowired
+    KeycloakSecurityContext securityContext;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -240,9 +242,9 @@ public class ProfileService {
     }
 
     public Profile getCurrentUserProfile() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (userAccessService.isCurrentUserAuthenticated()){
-            User user = userService.findUserByUserName(auth.getName());
+        Optional<User> userOp = securityContext.getCurrentMoodleUser();
+        if (userOp.isPresent()){
+            User user = userOp.get();
             Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));
             profile.setUser(user);
             profile.setSubscriptions(this.streamAndTeamSubscriberService.getAllSubscriptionsForProfileByProfileId(profile.getId()));

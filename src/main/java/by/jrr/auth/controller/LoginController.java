@@ -22,10 +22,8 @@ public class LoginController {
     private UserService userService;
 
     @GetMapping(value={"/login"})
-    public ModelAndView login(){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
+    public String login(){
+        return "redirect:/";
     }
 
 

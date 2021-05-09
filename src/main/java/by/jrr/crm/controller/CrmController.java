@@ -23,6 +23,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static by.jrr.crm.controller.CrmController.*;
+
 @Controller
 @AdminOnly
 public class CrmController {
@@ -49,7 +51,6 @@ public class CrmController {
         return modelAndView;
     }
 
-
     @AccessAdminAndSales
     @GetMapping(Endpoint.CRM_STREAM)
     public ModelAndView openStreams() {
@@ -75,7 +76,6 @@ public class CrmController {
 
         return modelAndView;
     }
-
 
     @GetMapping(Endpoint.CRM_DEBTOR)
     public ModelAndView openDebtors() {
@@ -104,6 +104,4 @@ public class CrmController {
 
         return modelAndView;
     }
-
-
 }

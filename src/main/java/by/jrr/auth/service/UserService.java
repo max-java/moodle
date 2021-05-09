@@ -1,12 +1,14 @@
 package by.jrr.auth.service;
 
 import by.jrr.api.model.UserContactsDto;
+import by.jrr.auth.bean.KeycloakUser;
 import by.jrr.auth.bean.Role;
 import by.jrr.auth.bean.User;
 import by.jrr.auth.bean.UserRoles;
 import by.jrr.auth.exceptios.UserNameConversionException;
 import by.jrr.auth.exceptios.UserServiceException;
 import by.jrr.auth.model.DropUserPassword;
+import by.jrr.auth.repository.KeycloakUserRepository;
 import by.jrr.auth.repository.RoleRepository;
 import by.jrr.auth.repository.UserRepository;
 import by.jrr.email.service.EMailService;
@@ -37,32 +39,22 @@ public class UserService {
 
     public static final String USER_NOT_FOUND_EXCEPTION = "user with id %s not found";
 
+    private KeycloakUserRepository keycloakUserRepository;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private EMailService eMailService;
-    //    @Autowired
-//    private MessageService tgMessageService;
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Autowired
     MessageService messageService;
     @Autowired
     ProfileService profileService;
 
-
-    Logger log = LoggerFactory.getLogger(UserService.class); // TODO: 04/11/2020 moveto bean
-
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder,
-                       EMailService eMailService) {
+                       KeycloakUserRepository keycloakUserRepository) {
+        this.keycloakUserRepository = keycloakUserRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.eMailService = eMailService;
     }
 
     public User findUserByEmail(String email) {
@@ -70,9 +62,22 @@ public class UserService {
         // TODO: 10/06/20 handle org.springframework.dao.IncorrectResultSizeDataAccessException:
         //  query did not return a unique result: 2;
         //  nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2
-        return userRepository.findByEmail(email);
+        // I use user email to register teams and streams, and registration is the same as for user. That is why
+        // I've got several rows with the same emails.
+        // when switching to keycloak, I need to bind keycloak users with moodle users, and I choose to do it by email.
+        //
+        try {
+            return userRepository.findByEmail(email);
+        } catch (Exception ex) {
+            User user = findUserByUserName(email);
+            if(user == null) {
+                return userRepository.findFirstByEmailOrderByIdAsc(email);
+            }
+            return user;
+        }
     }
 
+    @Deprecated//use KeycloakSecurityContext
     public User findUserByUserName(String userName) {
 //        return erasePasswordDataBeforeResponse(userRepository.findByUserName(userName)); todo: delete user password data if necessary
         return userRepository.findByUserName(userName);
@@ -83,7 +88,6 @@ public class UserService {
      */
     public User saveUser(User user, Optional<UserRoles> userRoleOp) {
         UserRoles newUserRole = userRoleOp.orElseGet(() -> UserRoles.ROLE_GUEST);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
 
         Role userRole = roleRepository.findByRole(newUserRole);
@@ -98,202 +102,30 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @Deprecated //use method with two parameters
-    private User encryptAndUpdateUserPassword(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    private User encryptAndUpdateUserPassword(User user, String password) {
-        user.setPassword(bCryptPasswordEncoder.encode(password));
-        return userRepository.save(user);
-    }
-
-    public void registerNewUserAsAdmin(UserDTO userDTO) throws UserServiceException {
-        if (ifWordExistAsLoginOrEmail(userDTO.getEmail())) {
-            throw new UserServiceException(userDTO.getEmail() + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
-        }
-        String password = generateRandomPassword();
-        User user = User.builder()
-                .email(userDTO.getEmail())
-                .userName(userDTO.getEmail())
-                .name(userDTO.getName())
-                .lastName(userDTO.getLastName())
-                .firstAndLastName(userDTO.getName() + " " + userDTO.getLastName())
-                .phone(userDTO.getPhone())
-                .password(password)
-                .active(true)
-                .build();
-        this.saveUser(user, Optional.empty());
-        new Thread(() -> eMailService.sendAdminRegisterYouEmailConfirmation(user.getName(), user.getEmail(), password)).start();
-    }
-
-
-    public User quickRegisterUser(String firstAndLastName, String phone, String email) throws UserServiceException {
-        if (ifWordExistAsLoginOrEmail(email)) {
-            throw new UserServiceException(email + " already exist in database as login or email"); // TODO: 23/06/20 validate users with exceptions
-        }
-        String password = generateRandomPassword();
-
-        String login = email;
-        User user = User.builder().email(email).userName(login).phone(phone).password(password).active(true).build();
-        user = this.setFirstNameAndLastNameByFirstLastName(firstAndLastName, user);
-        final User saveduser = this.saveUser(user, Optional.empty()); // TODO: 10/06/20 consider if user should have different role on registerAndEnroll
-        autoLogin(login, password);
-        Profile userProfile = profileService.createAndSaveProfileForUser(user);
-        System.out.println(" before executing in threads ");
-
-        UserContactsDto userContactsDto = new UserContactsDto(); // TODO: 02/11/2020 replace with mapStruct
-        userContactsDto.setEmail(email);
-        userContactsDto.setFirstName(saveduser.getName());
-        userContactsDto.setLastName(saveduser.getLastName());
-        userContactsDto.setPhoneNumber(phone);
-
-        //@max: send notifications
-        log.info("starting sendQuickRegostrationConfirmation: {}, {}, {}", email, password, firstAndLastName);
-        new Thread(() -> eMailService.sendQuickRegostrationConfirmation(email, password, firstAndLastName)).start();
-        log.info("starting amoCrmTrigger: {}, {}, {}", email, firstAndLastName, phone);
-        new Thread(() -> eMailService.amoCrmTrigger(email, firstAndLastName, phone)).start(); // TODO: 17/06/20 move this to stream profile
-        log.info("starting sendMessageDtoWitContactData: {}, {}", userContactsDto, userProfile.getId());
-        new Thread(() -> messageService.sendMessageDtoWitContactData(userContactsDto, userProfile.getId())).start();
-
-        return saveduser;
-    }
-
-    private void autoLogin(String username, String password) {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(UserRoles.ROLE_GUEST.name()); // TODO: 05/08/20 this is autologin after registration. consider if I should get it from user object
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(authority));
-        authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-        // TODO: 05/08/20 consider if it right way to autologin in Springboot
-
-//        Collection<SimpleGrantedAuthority> oldAuthorities = (Collection<SimpleGrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-//        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_ANOTHER");
-//        List<SimpleGrantedAuthority> updatedAuthorities = new ArrayList<SimpleGrantedAuthority>();
-//        updatedAuthorities.add(authority);
-//        updatedAuthorities.addAll(oldAuthorities);
-//
-//        SecurityContextHolder.getContext().setAuthentication(
-//                new UsernamePasswordAuthenticationToken(
-//                        SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
-//                        SecurityContextHolder.getContext().getAuthentication().getCredentials(),
-//                        updatedAuthorities)
-//        );
-
-    }
-
-    private String generateRandomPassword() {
-        return new Random().ints(6, 33, 122)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-    }
-
-    @Deprecated //use restore password
-    public String generateNewPasswordForUser(Long id) {
-        Optional<User> userOp = userRepository.findById(id);
-        //todo: should throw exception when moved to serviceApi
-        if (userOp.isPresent()) {
-            User user = userOp.get();
-            String newPass = generateRandomPassword();
-            user.setPassword(newPass);
-            this.encryptAndUpdateUserPassword(user);
-            // TODO: 30/06/20 send email with hew password
-            return newPass;
-        } else {
-            return "error on updating user Password";
-        }
-    }
-
-    public DropUserPassword.Response dropUserPassword(Long userId) {
-        DropUserPassword.Response response = new DropUserPassword.Response();
-        try {
-            generateAndSetPassword(response, userId);
-        } catch (Exception ex) {
-            response.setError(ex.getMessage());
-        }
-        return response;
-    }
-
-    private void generateAndSetPassword(DropUserPassword.Response response, Long userId) throws EntityNotFoundException {
-        User user = this.getUserById(userId);
-        String password = generateRandomPassword();
-        response.setPassword(password);
-        encryptAndUpdateUserPassword(user, password);
-    }
-
     //rename to findUserById(Long id) after clashes method will be deleted
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND_EXCEPTION, id)));
     }
 
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: 06/06/20 replace with template method                                              //
-//                                                                                          //
-    public void addRoleToUser(UserRoles userRole, Long userId) {                            //
-        Role role = roleRepository.findByRole(userRole);
-        if (role == null) {
-            role = roleRepository.save(new Role(null, userRole));
-        }//
-        Optional<User> userOp = userRepository.findById(userId);                            //
-        if (userOp.isPresent()) {                                                           //
-            User user = userOp.get();                                                       //
-            user.getRoles().add(role);                                                      //
-            userRepository.save(user);                                                      //
-        }                                                                                   //
-    }                                                                                       //
-
-    public void removeRoleFromUser(UserRoles userRole, Long userId) {                       //
-        Role role = roleRepository.findByRole(userRole);                                    //
-        Optional<User> userOp = userRepository.findById(userId);                            //
-        if (userOp.isPresent()) {                                                           //
-            User user = userOp.get();                                                       //
-            user.getRoles().remove(role);                                                   //
-            userRepository.save(user);                                                      //
-        }                                                                                   //
-    }                                                                                       //
-//                                                                                          //
-//                                                                                          //
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-
     public List<User> findAllUsers() {
         return userRepository.findAll().stream()
-//                .map(user -> erasePasswordDataBeforeResponse(user)) //todo: delete user password data if necessary
                 .collect(Collectors.toList());
+    }
+
+    public Optional<KeycloakUser> findUserByUuid(String uuid) {
+        return keycloakUserRepository.findByUuid(uuid);
+    }
+
+    public KeycloakUser saveKeycloakUser(KeycloakUser keycloakUser) {
+        return keycloakUserRepository.save(keycloakUser);
     }
 
     @Deprecated //use getUserById and delete this.
     public Optional<User> findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-//            user = Optional.of(erasePasswordDataBeforeResponse(user.get())); todo: delete user password data if necessary
         }
-        return user;
-    }
-
-    public static User erasePasswordDataBeforeResponse(User user) {
-        user.setPassword("");
-        return user;
-    }
-
-    private boolean ifWordExistAsLoginOrEmail(String word) {
-        if (findUserByUserName(word) != null
-                || findUserByEmail(word) != null) {
-            return true;
-        }
-        return false;
-    }
-
-    private User setFirstNameAndLastNameByFirstLastName(String firstAndLastName, User user) throws UserNameConversionException {
-        String[] name = firstAndLastName.split(" ");
-        if (name.length != 2) {
-            throw new UserNameConversionException("Expect two words in FirstAndLastName field, but got " + name.length);
-        }
-        user.setFirstAndLastName(firstAndLastName);
-        user.setName(name[0]);
-        user.setLastName(name[1]);
         return user;
     }
 
