@@ -250,5 +250,32 @@ where QUARTER(contract.date) = 1 AND YEAR(contract.date) = '2021'
 group by stream_user.name, contract_type, operation_row.currency
 order by stream_name;
 
+# incomes by streams
+select SUM(sum), currency, any_value(operation_row_direction), users.name
+from operation_row
+         join operation_to_profile otp on operation_row.id = otp.operation_row_id
+         join profile on otp.stream_id = profile.id
+         join users on profile.user_id = users.user_id
+where MONTH(date) = 6 AND YEAR(date) = '2021' and operation_row_direction = 'INCOME'
+group by currency, name;
 
+#incoms Victor groups
+select SUM(sum), currency, any_value(operation_row_direction), name
+from operation_row
+         join operation_to_profile otp on operation_row.id = otp.operation_row_id
+         join profile on otp.stream_id = profile.id
+         join users on profile.user_id = users.user_id
+where YEAR(date) = '2021' and operation_row_direction = 'INCOME'
+  AND (name = 'Java 1: Core' or name = 'Java EE web' or name like '%javaAz%')
+group by currency, name
+with rollup;
 
+#outcoms by trainers
+select SUM(sum), currency, name, last_name
+from operation_row
+         join operation_to_profile otp on operation_row.id = otp.operation_row_id
+         join profile on otp.subscriber_id = profile.id
+         join users on profile.user_id = users.user_id
+where YEAR(date) = '2021' and operation_row_direction = 'OUTCOME'
+group by currency, name, last_name
+with rollup;
