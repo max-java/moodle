@@ -19,7 +19,7 @@ public class FileDownloadingController {
     @Autowired
     UserAccessService uas;
 
-    @RequestMapping(value = Endpoint.IMAGE + "/{fileName}")
+    @RequestMapping(value = Endpoint.IMAGE + "/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public byte[] getFileBytesByFilename(@PathVariable String fileName) {
         return fileService.getFileBytes(fileName);

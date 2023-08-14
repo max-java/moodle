@@ -10,8 +10,8 @@ import by.jrr.balance.service.OperationRowService;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,8 +30,8 @@ public class UserDataToModelService {
     ProfileService profileService; // TODO: 01/06/20 this doesn't belong here. set current user profile otherwise
     @Autowired
     OperationRowService operationRowService;
-    @Autowired
-    KeycloakSecurityContext securityContext;
+//    @Autowired
+//    KeycloakSecurityContext securityContext;
 
 
     public ModelAndView setData(ModelAndView mov) { // TODO: 28/05/20 replace by different methods simmilar to getInstance with zero parameters and cache it
@@ -66,7 +66,7 @@ public class UserDataToModelService {
      * set authenticated user data
      */
     private ModelAndView setCurrentUserProfile(ModelAndView modelAndView) {
-        Optional<User> user = securityContext.getCurrentMoodleUser();
+        Optional<User> user = Optional.empty(); //securityContext.getCurrentMoodleUser();
         if (user.isPresent()) {
             modelAndView.addObject(UserData.USER_NAME_AND_LASTNAME.name(), user.get().getName() + " " + user.get().getLastName());
             modelAndView.addObject(UserData.CURRENT_PROFILE.name(), profileService.getCurrentUserProfile()); // TODO: 04/06/20 erase password data

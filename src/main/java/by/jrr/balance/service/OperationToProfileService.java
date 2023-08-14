@@ -6,7 +6,7 @@ import by.jrr.balance.repository.OperationToProfileRepository;
 import by.jrr.profile.bean.Profile;
 import by.jrr.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+//import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.NonUniqueResultException;

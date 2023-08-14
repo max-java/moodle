@@ -28,3 +28,8 @@ AdminLTE used for presentation layer
 https://github.com/ColorlibHQ/AdminLTE/releases
 
 VM Options -Djasypt.encryptor.password= to run with encoded properties
+
+# endpoints
+/crm
+CREATE USER 'tutorio'@'%' IDENTIFIED BY '1234';
+moodledump.sql is located at mydrive/javaguru/moodledump.sql.zip
