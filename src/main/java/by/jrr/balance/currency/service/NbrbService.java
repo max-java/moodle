@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Service
 public class NbrbService {
 
-    @Autowired
+    @Autowired(required = false)
     NbrbProxy nbrbProxy;
 
     public RateDto getBynToUsdOnDate(LocalDate date) {

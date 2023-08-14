@@ -20,9 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+//import org.springframework.data.domain.Pageable;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -63,8 +64,8 @@ public class ProfileService {
     OperationRowService operationRowService;
     @Autowired
     UserRoleManager userRoleManager;
-    @Autowired
-    KeycloakSecurityContext securityContext;
+//    @Autowired
+//    KeycloakSecurityContext securityContext;
 
     public Page<Profile> findAllProfilesPageable(Optional<Integer> userFriendlyNumberOfPage,
                                                  Optional<Integer> numberOfElementsPerPage,
@@ -242,7 +243,7 @@ public class ProfileService {
     }
 
     public Profile getCurrentUserProfile() {
-        Optional<User> userOp = securityContext.getCurrentMoodleUser();
+        Optional<User> userOp = Optional.empty();//securityContext.getCurrentMoodleUser();
         if (userOp.isPresent()){
             User user = userOp.get();
             Profile profile = profileRepository.findByUserId(user.getId()).orElseGet(() -> createAndSaveProfileForUser(user));

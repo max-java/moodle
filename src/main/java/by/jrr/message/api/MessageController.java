@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class MessageController {
 
-    @Autowired
+    @Autowired(required = false)
     MessageProxy messageProxy;
 
     @PostMapping(value = Endpoint.CRM_MESSAGES, consumes = "application/json")

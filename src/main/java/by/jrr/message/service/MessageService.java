@@ -17,7 +17,7 @@ public class MessageService {
 
     @Autowired
     ObjectMapper objectMapper;
-    @Autowired
+    @Autowired (required = false)
     MessageProxy messageProxy;
 
     Logger log = LoggerFactory.getLogger(MessageService.class); // TODO: 04/11/2020 moveto bean

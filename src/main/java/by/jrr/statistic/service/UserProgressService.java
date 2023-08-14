@@ -36,24 +36,34 @@ public class UserProgressService {
 
     public void saveProgress(Trackable item,
                              TrackStatus trackStatus) {
-        Optional<UserProgress> up = userProgressRepository.findByTrackableIdAndProfileId(item.getId(), profileService.getCurrentUserProfile().getId());
-        if (up.isPresent()) {
-            updateProgress(item, profileService.getCurrentUserProfile().getId(), trackStatus, up.get());
+        try {
+            Optional<UserProgress> up = userProgressRepository.findByTrackableIdAndProfileId(item.getId(), profileService.getCurrentUserProfile().getId());
+            if (up.isPresent()) {
+                updateProgress(item, profileService.getCurrentUserProfile().getId(), trackStatus, up.get());
 
-        } else {
-            createAndSaveProgress(item, profileService.getCurrentUserProfile().getId(), trackStatus);
+            } else {
+                createAndSaveProgress(item, profileService.getCurrentUserProfile().getId(), trackStatus);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+
     }
 
     public TrackStatus getUserProfileForTrackable(Trackable item) { // TODO: 05/06/20 should be named getStatus for Trackable for current user?
-        Optional<UserProgress> up = userProgressRepository          // TODO: 05/06/20 What this method does?
-                .findByTrackableIdAndProfileId(item.getId(), profileService.getCurrentUserProfile().getId());
-        if (up.isPresent()) {
-            return up.get().getTrackStatus();
+        try {
+            Optional<UserProgress> up = userProgressRepository          // TODO: 05/06/20 What this method does?
+                    .findByTrackableIdAndProfileId(item.getId(), profileService.getCurrentUserProfile().getId());
+            if (up.isPresent()) {
+                return up.get().getTrackStatus();
 
-        } else {
-            return TrackStatus.NONE;
+            } else {
+                return TrackStatus.NONE;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+        return TrackStatus.NONE;
     }
 
 

@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MOODLE
+    volumes:
+      - ./moodledump.sql:/docker-entrypoint-initdb.d/mysqldump.sql
+    ports:
+      - "13306:3306"
